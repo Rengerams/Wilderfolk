@@ -83,9 +83,9 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       { label: 'Header ⭐ reputation badge — click opens Progress → Trade', status: 'done' },
       { label: 'Roads benefit copy — Infra hint in build catalog + Guide', status: 'done' },
       {
-        label: 'Simulation perf — throttles, entity maps, wildlife byType, wildlifeCounts',
+        label: 'Simulation perf — throttles, entity maps, wildlife byType, wildlifeCounts, compaction',
         status: 'partial',
-        note: 'Headless ~1.8 ms/tick avg @ ~550 entities — finishes in v0.5.0',
+        note: '~1.8 ms/tick avg @ ~550 entities — v0.5.0 finishes partial-first + grid + Worker',
       },
       { label: 'Walls, Watchtowers, Barracks — barricade & militia bonuses', status: 'done' },
       { label: 'Barracks guard patrols around village core (work hours)', status: 'done' },
@@ -109,7 +109,7 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       {
         label: 'Perf at 500+ entities',
         status: 'partial',
-        note: 'v0.4.2 throttles + maps — spatial grid + compaction + benchmark gate',
+        note: 'Compaction ✅ — finish renderer byType, benchmark gate; then spatial grid + Worker',
       },
       {
         label: 'UI at 150+ population',
@@ -139,6 +139,53 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
     ],
   },
   {
+    id: 'v050-partial-first',
+    title: '🟡 Finish partial first',
+    subtitle: 'Code audit 2026-07-05 — closest to done; ship these before greenfield work',
+    items: [
+      {
+        label: 'Renderer cache — wire sim byType into render snapshot',
+        status: 'partial',
+        note: 'updateCachedEntities() exists; still scans all entities each tick',
+      },
+      {
+        label: 'buildingById go-home — drop updatedBuildings.find on commute',
+        status: 'partial',
+        note: 'buildingById in sim ctx; lifeSimulation.ts still .find() for residences',
+      },
+      {
+        label: 'Grass render spatial buckets',
+        status: 'partial',
+        note: 'Viewport cull in drawGrass — add buckets for large maps',
+      },
+      {
+        label: 'Benchmark gate — SIM_PROFILE village/town/city + p95 exit code',
+        status: 'partial',
+        note: 'simulate-30min reports p95; no profiles or exit-on-fail yet',
+      },
+      {
+        label: 'simulate:20year full run — 172800 ticks PASS (town)',
+        status: 'partial',
+        note: 'Script exists; smoke PASS only (8640 ticks) — primary ship gatekeeper',
+      },
+      {
+        label: 'Sim regression — exit codes on simulate-30min + battery docs',
+        status: 'partial',
+        note: 'simulate-10year exits non-zero; 30min does not',
+      },
+      {
+        label: 'App tab split + memo — Village / Nature / Progress',
+        status: 'partial',
+        note: 'memo on 4 panels; App.tsx still monolithic (~3500 lines)',
+      },
+      {
+        label: 'Dead-entity compaction — alive-only state.entities each tick',
+        status: 'done',
+        note: 'gameEngine.ts allAlive — audit 2026-07-05',
+      },
+    ],
+  },
+  {
     id: 'v050-p0-sim1',
     title: 'v0.5.0 P0 — Sim Phase 1',
     subtitle: 'Must ship · end July 2026 · p95 < 16 ms/tick @ town profile',
@@ -146,17 +193,17 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       {
         label: 'Spatial grid — graze, hunt, flee, wolf pack neighbor queries',
         status: 'open',
-        note: 'spatialGrid.ts + lifeSimulation.ts',
+        note: 'spatialGrid.ts + lifeSimulation.ts — after partial items',
       },
       {
         label: 'Dead-entity compaction — drop alive: false each tick',
-        status: 'open',
-        note: 'gameEngine.ts + entityById refresh',
+        status: 'done',
+        note: 'state.entities = allAlive each tick',
       },
       {
         label: 'Renderer cache reuse — consume sim byType buckets',
-        status: 'open',
-        note: 'renderer.ts updateCachedEntities()',
+        status: 'partial',
+        note: '→ Finish partial first section',
       },
       {
         label: 'Settler count denorm — working/idle on WorldState',
@@ -165,8 +212,8 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       },
       {
         label: 'Benchmark gate — 50 / 100 / 200 human profiles',
-        status: 'open',
-        note: 'simulate-30min.ts — exit non-zero if p95 over budget',
+        status: 'partial',
+        note: '→ Finish partial first section',
       },
     ],
   },
@@ -177,11 +224,11 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
     items: [
       { label: 'Incremental entityById — update on birth/death only', status: 'open' },
       { label: 'buildingActions.ts scan cleanup — assign/recruit paths', status: 'open' },
-      { label: 'buildingById go-home — drop updatedBuildings.find', status: 'open' },
-      { label: 'Grass render spatial buckets + viewport cull', status: 'open' },
+      { label: 'buildingById go-home — drop updatedBuildings.find', status: 'partial', note: '→ Finish partial first' },
+      { label: 'Grass render spatial buckets + viewport cull', status: 'partial', note: 'Cull done; buckets open' },
       { label: 'Partner id map for relationship lines', status: 'open' },
       { label: 'Particle / floating-text pooling', status: 'open' },
-      { label: 'App tab split + memo — Village / Nature / Progress', status: 'open' },
+      { label: 'App tab split + memo — Village / Nature / Progress', status: 'partial', note: '→ Finish partial first' },
     ],
   },
   {
@@ -211,18 +258,18 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       },
       {
         label: '20-year simulation gatekeeper — npm run simulate:20year PASS (town)',
-        status: 'open',
-        note: 'Primary v0.5 ship blocker — 172800 ticks, 20 winters, Y20 pop gate; exit 0 to tag',
+        status: 'partial',
+        note: 'Smoke PASS only — full 172800 ticks required to tag',
       },
       {
         label: 'Headless simulation battery — all scripts green before ship',
-        status: 'open',
-        note: 'simulate · simulate:30min · simulate:20year · simulate:10year (regression) · balance:militia',
+        status: 'partial',
+        note: 'Scripts exist; full battery not green yet',
       },
       {
         label: 'Simulation regression gate — exit non-zero on invariant fail',
-        status: 'open',
-        note: 'Document checks in TECHNICAL.md',
+        status: 'partial',
+        note: '10year exits on fail; 30min does not',
       },
       {
         label: 'Manual playtest matrix — large map, 10×, save/reload, raid/forge/peace',
@@ -237,8 +284,8 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
     items: [
       {
         label: 'Counter-raid militia march — line + sprites to rival camp',
-        status: 'open',
-        note: 'Abstract resolve stays — prep-focused combat',
+        status: 'partial',
+        note: 'Incoming march lines ✅ — outgoing march + sprites missing',
       },
       {
         label: 'Large-map playtests at 10× after benchmark gate green',
@@ -253,7 +300,7 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
         label: 'Perf UX — optional dev overlay (ms/tick, entity count, grid rebuild)',
         status: 'open',
       },
-      { label: 'Reputation arc UI — milestones beyond ⭐ tooltip', status: 'open' },
+      { label: 'Reputation arc UI — milestones beyond ⭐ tooltip', status: 'partial', note: '⭐ + Village explainer — no milestone beats' },
       { label: 'Footstep / work SFX by surface', status: 'open' },
       { label: 'One visitor multi-step quest chain (Scholars or Nomads)', status: 'open' },
       { label: 'npm run benchmark:gate — CI-friendly wrapper', status: 'open' },
@@ -273,29 +320,37 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
 ];
 
 export const ROADMAP_NEXT_ACTIONS: string[] = [
-  'v0.5.0 — Add spatialGrid.ts + wire flee/hunt (USE_SPATIAL_GRID flag)',
-  'v0.5.0 — Dead-entity compaction + renderer cache + villageCounts denorm',
-  'v0.5.0 — simulate-30min profiles: village / town / city + p95 exit code',
-  'v0.5.0 — Incremental entityById; buildingActions + go-home cleanup',
-  'v0.5.0 — Grass buckets, partner map, particle pooling, App tab split',
-  'v0.5.0 — Web Worker gameTick + OffscreenCanvas terrain/entity layers',
-  'v0.5.0 P1 — Counter-raid march line; large-map playtests; reputation arc',
-  'v0.5.0 — npm run simulate:20year PASS (town) — primary ship gatekeeper',
-  'v0.5.0 — Big bug checkup + logic invariants + full headless sim battery',
-  'v0.5.0 — Bump GAME_VERSION to 0.5.0 + migration + CHANGELOG + tag',
+  '🟡 FINISH — Renderer cache: wire sim byType into render snapshot',
+  '🟡 FINISH — buildingById go-home: drop updatedBuildings.find in lifeSimulation.ts',
+  '🟡 FINISH — Grass spatial buckets in drawGrass (viewport cull exists)',
+  '🟡 FINISH — simulate-30min: SIM_PROFILE village/town/city + p95 exit non-zero',
+  '🟡 FINISH — simulate:20year full run (172800 ticks) — primary ship gatekeeper',
+  '🟡 FINISH — Sim regression exit codes on simulate-30min + battery docs',
+  '🟡 FINISH — App tab split: Village / Nature / Progress from App.tsx',
+  '✅ DONE — Dead-entity compaction (allAlive each tick)',
+  'P0 — Settler count denorm: workingSettlers / idleSettlers on WorldState',
+  'P0 — spatialGrid.ts + wire flee/hunt/graze (USE_SPATIAL_GRID)',
+  'P0 — incremental entityById; buildingActions scan cleanup; partner map; pooling',
+  'P0 — Web Worker gameTick + OffscreenCanvas terrain/entity layers',
+  'P0 — big bug checkup + logic invariants + manual matrix playtest',
+  'P1 — Outgoing counter-raid march line; reputation arc milestones',
+  'SHIP — Bump GAME_VERSION 0.5.0 + migration + CHANGELOG + tag',
 ];
 
-/** Open fixes — all remaining work targets v0.5.0 */
+/** Open fixes — partial items first, then greenfield P0 */
 export const ROADMAP_OPEN_FIXES: string[] = [
+  '🟡 FINISH renderer byType cache (updateCachedEntities still full-scan)',
+  '🟡 FINISH buildingById go-home (commute still uses .find)',
+  '🟡 FINISH grass spatial buckets + benchmark gate profiles/exit code',
+  '🟡 FINISH simulate:20year full 172800-tick PASS + 30min exit codes',
+  '🟡 FINISH App tab split (memo on 4 panels; App.tsx monolithic)',
+  'P0 — settler count denorm (workingSettlers / idleSettlers)',
   'P0 — spatial grid for graze/hunt/flee at 100+ entities',
-  'P0 — dead-entity compaction + renderer cache reuse + benchmark gate',
-  'P0 — incremental entityById, buildingActions scans, App tab split, pooling',
+  'P0 — incremental entityById, buildingActions scans, partner map, pooling',
   'P0 — Web Worker gameTick + OffscreenCanvas layers',
   'P0 — big bug checkup after perf refactors (frontier, save, raids, forge, eco)',
-  'P0 — simulate:20year PASS (town) — primary gatekeeper before v0.5 tag',
-  'P0 — logical invariant checks + headless sim battery (5min, 30min, 10year regression, militia)',
-  'P1 — counter-raid militia march visuals (prep-focused; no battle screen)',
-  'P1 — large-map playtests at 10×; reputation arc; visitor quest chain',
+  'P0 — logical invariant checks + full headless sim battery',
+  'P1 — outgoing counter-raid march; reputation arc; visitor quest chain',
   'P1 — footstep SFX; npm run benchmark:gate CI wrapper',
   'Event log uncapped in saves by design — full chronicle kept forever',
 ];

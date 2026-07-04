@@ -417,7 +417,7 @@ Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** — sim scale, UI split, 
 | **Architecture** | Web Worker `gameTick`, OffscreenCanvas terrain/entity layers |
 | **Quality** | Big bug checkup, logic invariant checks, **`simulate:20year` ship gatekeeper**, sim battery |
 
-Open work checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
+Open work checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (code audit 2026-07-05: **1 P0 done, 4 partial, 16 open** — finish partial items first).
 
 ---
 

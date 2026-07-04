@@ -46,37 +46,49 @@ Players on **large maps** with **100–200+ settlers** should not feel sim hitch
 
 ---
 
+## Code audit (2026-07-05 vs `GAME_VERSION = 0.4.2`)
+
+Compared repo plan to code. **~1 P0 done, ~4 partial, ~16 P0 open.** v0.4.2 carry-over (throttles, per-tick `entityById`/`buildingById`, `byType`, `wildlifeCounts`, partial `React.memo`) is in place but does not satisfy v0.5.0 ship criteria alone.
+
+| Status | Count (P0) | Meaning |
+|--------|------------|---------|
+| ✅ Done | 1 | Shippable as-is |
+| 🟡 Partial | 4 | Started — **finish these first** |
+| ❌ Open | 16 | Not started |
+
+---
+
 ## P0 — Must ship (end July 2026)
 
 ### Sim & render — Phase 1
 
-| # | Item | Hotspot | Deliverable |
-|---|------|---------|-------------|
-| 1 | **Spatial grid** | `lifeSimulation.ts` | Cell-based graze/hunt/flee/wolf-pack queries |
-| 2 | **Dead-entity compaction** | `gameEngine.ts` | Drop `alive: false` from `state.entities` each tick |
-| 3 | **Renderer cache reuse** | `renderer.ts` | Reuse sim `byType`; stop parallel rebuilds every frame |
-| 4 | **Settler count denorm** | `WorldState`, `App.tsx` | `workingSettlers` / `idleSettlers` once per tick |
-| 5 | **Benchmark gate** | `simulate-30min.ts` | Profiles at **50 / 100 / 200** humans; exit non-zero if p95 &gt; budget |
+| # | Item | Status | Hotspot | Deliverable |
+|---|------|--------|---------|-------------|
+| 1 | **Spatial grid** | ❌ Open | `lifeSimulation.ts` | Cell-based graze/hunt/flee/wolf-pack queries |
+| 2 | **Dead-entity compaction** | ✅ Done | `gameEngine.ts` | `state.entities = allAlive` each tick — alive only |
+| 3 | **Renderer cache reuse** | 🟡 Partial | `renderer.ts` | `updateCachedEntities()` exists; still full scan — wire sim `byType` |
+| 4 | **Settler count denorm** | ❌ Open | `WorldState`, `App.tsx` | `workingSettlers` / `idleSettlers` once per tick |
+| 5 | **Benchmark gate** | 🟡 Partial | `simulate-30min.ts` | p95 reported; missing `SIM_PROFILE` 50/100/200 + exit non-zero |
 
 ### Sim & UI — Phase 2
 
-| # | Item | Hotspot | Deliverable |
-|---|------|---------|-------------|
-| 6 | **Incremental `entityById`** | `gameEngine.ts` | Update on birth/death only |
-| 7 | **`buildingActions` scan cleanup** | `buildingActions.ts` | Maps + `villageCounts` instead of entity filters |
-| 8 | **`buildingById` go-home** | `lifeSimulation.ts` | Drop `updatedBuildings.find` on commute |
-| 9 | **Grass render buckets** | `renderer.ts` `drawGrass` | Spatial cull for large maps |
-| 10 | **Partner id map** | `renderer.ts` | O(1) relationship-line lookup |
-| 11 | **Particle / float pooling** | `gameEngine.ts` | Reuse death particles + `floatingTexts` |
-| 12 | **App tab split / memo** | `App.tsx` | `VillageTab` / `NatureTab` / `ProgressTab` + `React.memo` |
+| # | Item | Status | Hotspot | Deliverable |
+|---|------|--------|---------|-------------|
+| 6 | **Incremental `entityById`** | ❌ Open | `gameEngine.ts` | Update on birth/death only |
+| 7 | **`buildingActions` scan cleanup** | ❌ Open | `buildingActions.ts` | Maps + `villageCounts` instead of entity filters |
+| 8 | **`buildingById` go-home** | 🟡 Partial | `lifeSimulation.ts` | `buildingById` in ctx; commute still uses `updatedBuildings.find` |
+| 9 | **Grass render buckets** | 🟡 Partial | `renderer.ts` `drawGrass` | Viewport cull exists; spatial buckets still needed |
+| 10 | **Partner id map** | ❌ Open | `renderer.ts` | O(1) relationship-line lookup |
+| 11 | **Particle / float pooling** | ❌ Open | `gameEngine.ts` | Reuse death particles + `floatingTexts` |
+| 12 | **App tab split / memo** | 🟡 Partial | `App.tsx` | `memo` on 4 panels; no tab extract; `App.tsx` still monolithic |
 
 ### Architecture — Web Worker & canvas layers
 
-| # | Item | Hotspot | Deliverable |
-|---|------|---------|-------------|
-| 13 | **Web Worker `gameTick`** | `gameEngine.ts`, `gameLoop.ts` | Serializable state contract; sim off main thread |
-| 14 | **OffscreenCanvas layers** | `renderer.ts` | Split terrain (static) vs entities (dynamic) |
-| 15 | **Version bump** | `version.ts`, `saveLoad.ts` | `GAME_VERSION = '0.5.0'`; migrate from `0.4.2` |
+| # | Item | Status | Hotspot | Deliverable |
+|---|------|--------|---------|-------------|
+| 13 | **Web Worker `gameTick`** | ❌ Open | `gameEngine.ts`, `gameLoop.ts` | Serializable state contract; sim off main thread |
+| 14 | **OffscreenCanvas layers** | ❌ Open | `renderer.ts` | Split terrain (static) vs entities (dynamic) |
+| 15 | **Version bump** | ❌ Open | `version.ts`, `saveLoad.ts` | `GAME_VERSION = '0.5.0'`; migrate from `0.4.2` |
 
 ### Benchmark budgets
 
@@ -92,14 +104,14 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 
 *v0.5.0 is not perf-only — ship only after a deliberate correctness pass, same spirit as the July 4 v0.4.2 comprehensive bug-fix rounds.*
 
-| # | Item | Deliverable |
-|---|------|-------------|
-| 16 | **Big bug checkup** | Full-code audit: frontier/diplomacy, save/load, raids, forge, prison, visitors, eco streaks, UI dead-ends; fix + document in CHANGELOG |
-| 17 | **Logical invariant checks** | Assert or test: entity lifecycle (birth/death/compaction), `entityById`/`buildingById` consistency, peace vs active raids, migration round-trip `0.4.2`→`0.5.0`, no ghost workers/prisoners |
-| 18 | **20-year simulation gatekeeper** | **`npm run simulate:20year`** (town profile) — **primary v0.5 ship blocker**; exit 0 required to tag. 172800 ticks, 20 winters, Y20 pop gate |
-| 19 | **Headless simulation battery** | All green before tag: `npm run build` · `npm run lint` · `npm run simulate` · `npm run simulate:30min` (village/town/city) · **`npm run simulate:20year`** · `npm run simulate:10year` (regression) · `npm run balance:militia` |
-| 20 | **Simulation regression gate** | Headless scripts exit non-zero on invariant fail (pop negative, food NaN, orphaned raids, challenge regressions); document env vars in TECHNICAL.md |
-| 21 | **Manual matrix playtest** | Large map + 10× + save/reload + raid respond + forge queue + peace treaty + year-10/20 spot-check; notes in playtest doc or [TECHNICAL.md](TECHNICAL.md#dev-log) |
+| # | Item | Status | Deliverable |
+|---|------|--------|-------------|
+| 16 | **Big bug checkup** | ❌ Open | Full-code audit after perf refactors; fix + document in CHANGELOG |
+| 17 | **Logical invariant checks** | ❌ Open | Entity maps, peace vs raids, migration `0.4.2`→`0.5.0`, no ghost workers |
+| 18 | **20-year simulation gatekeeper** | 🟡 Partial | Script + smoke PASS (8640 ticks); **full 172800-tick run still required** |
+| 19 | **Headless simulation battery** | 🟡 Partial | Scripts exist; full battery not green for v0.5 tag |
+| 20 | **Simulation regression gate** | 🟡 Partial | `simulate-10year` exits non-zero on fail; `simulate-30min` does not yet |
+| 21 | **Manual matrix playtest** | ❌ Open | Large map + 10× matrix for v0.5 (v0.4.2 playtests done) |
 
 **Reference:** v0.4.2 pass fixed welcomed-refugee deaths, peace vs raids, diplomacy event loss, eco streak 24×/year — v0.5 must re-verify these paths after perf refactors.
 
@@ -145,7 +157,7 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 
 | Feature | What works today | What's missing | Target |
 |---------|------------------|----------------|--------|
-| **Perf at 500+ entities** | v0.4.2 throttles + maps | Grid + compaction + gate + Worker | **FINISH** v0.5.0 P0 |
+| **Perf at 500+ entities** | v0.4.2 throttles + maps + compaction ✅ | Finish partial: renderer `byType`, benchmark gate; then grid + Worker | **FINISH** v0.5.0 P0 |
 | **UI at 150+ pop** | Partial memo | Tab split + denorm counts | **FINISH** v0.5.0 P0 |
 | **Frontier counter-raid visuals** | `flashMilitia` + float text | March line to rival camp | **FINISH** v0.5.0 P1 |
 | **Reputation arc** | ⭐ + Village explainer | Milestone beats UI | **FINISH** v0.5.0 P1 |
@@ -171,28 +183,37 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 
 | When | Milestone |
 |------|-----------|
-| **2026-07-06 – 2026-07-13** | Sim Phase 1 — spatial grid + compaction |
-| **2026-07-14 – 2026-07-21** | Sim Phase 2 + UI — renderer denorm, App tab split, benchmark profiles |
+| **2026-07-06 – 2026-07-13** | **Finish partial** — renderer `byType`, go-home `buildingById`, grass buckets, benchmark gate; then spatial grid |
+| **2026-07-14 – 2026-07-21** | Sim Phase 2 + UI — settler denorm, App tab split, partner map, pooling |
 | **2026-07-22 – 2026-07-31** | Architecture — Web Worker + OffscreenCanvas; bug audit + sim battery; P1 polish; **ship v0.5.0** |
 
 ---
 
-## Next actions (ordered)
+## Next actions (ordered — **finish partial first**)
 
-1. [ ] Add `spatialGrid.ts` + wire flee/hunt (`USE_SPATIAL_GRID`)
-2. [ ] Dead-entity compaction in `gameTick`
-3. [ ] `simulate-30min.ts` profiles + p95 exit code
-4. [ ] Renderer cache + `villageCounts` denorm
-5. [ ] Incremental `entityById`; `buildingActions` + go-home cleanup
-6. [ ] Grass buckets + partner map + pooling
-7. [ ] Extract Village / Nature / Progress tabs from `App.tsx`
-8. [ ] Web Worker `gameTick` contract + OffscreenCanvas split
-9. [ ] Counter-raid march line (P1)
-10. [ ] **Big bug checkup** — audit frontier, save, raids, forge, eco, UI; fix regressions from perf refactors
-11. [ ] **Logic checks** — entity maps, migration round-trip, peace/raid invariants
-12. [ ] **`npm run simulate:20year` PASS** — town profile; log to `scripts/logs/sim-20year-town-*.txt`
-13. [ ] **Simulation battery** — remaining headless scripts + exit codes; manual large-map matrix
-14. [ ] Bump `GAME_VERSION` to `0.5.0` + migration + docs + tag (only after step 12 green)
+### 🟡 Finish partial (closest to done)
+
+1. [ ] **Renderer cache** — pass sim `byType` into render snapshot; stop `updateCachedEntities` full scan
+2. [ ] **`buildingById` go-home** — replace `updatedBuildings.find` in `lifeSimulation.ts` commute paths
+3. [ ] **Grass buckets** — spatial buckets in `drawGrass` (viewport cull exists)
+4. [ ] **Benchmark gate** — `simulate-30min.ts`: `SIM_PROFILE` village/town/city (50/100/200 humans) + p95 exit non-zero
+5. [ ] **`simulate:20year` full run** — unset `SIM_MAX_TICKS`; 172800 ticks PASS → `scripts/logs/sim-20year-town-*.txt`
+6. [ ] **Sim regression** — add exit codes to `simulate-30min`; document battery in TECHNICAL.md
+7. [ ] **App tab split** — extend existing `memo` panels; extract Village / Nature / Progress from `App.tsx`
+8. [x] **Dead-entity compaction** — `state.entities = allAlive` each tick ✅ (2026-07-05 audit)
+
+### ❌ New work (after partial green)
+
+9. [ ] **Settler count denorm** — `workingSettlers` / `idleSettlers` on `WorldState`
+10. [ ] **Incremental `entityById`** — update on birth/death only
+11. [ ] **`buildingActions` scan cleanup** — maps instead of entity filters
+12. [ ] **Partner id map** + **particle / float pooling**
+13. [ ] **`spatialGrid.ts`** + wire flee/hunt/graze (`USE_SPATIAL_GRID`)
+14. [ ] **Web Worker `gameTick`** + **OffscreenCanvas** terrain/entity split
+15. [ ] **Big bug checkup** + **logic invariant checks**
+16. [ ] **Manual matrix playtest** — large map, 10×, save/reload, raid/forge/peace
+17. [ ] Counter-raid march line (P1)
+18. [ ] Bump `GAME_VERSION` to `0.5.0` + migration + docs + tag (only after #5 + battery green)
 
 ### When closing an item
 
