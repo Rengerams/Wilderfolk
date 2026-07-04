@@ -1,3 +1,6 @@
 # IDE / agent session logs (not project files)
 terminals/
 log.txt
+
+# Local-only notes (not for GitHub)
+private/
