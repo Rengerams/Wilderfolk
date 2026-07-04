@@ -387,6 +387,23 @@ Tribes diplomacy v2, frontier raids MVP, Trade Empire + Harmony victory paths, m
 
 `GAME_VERSION` 0.4.2, 10-year town PASS, 10-user beta playtests, docs synced; next target **v0.5.0** → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
+### July 5, 2026 — Docs hygiene + v0.5.0 audit session
+
+| Area | What changed |
+|------|----------------|
+| **Doc consolidation** | `SESSION_SUMMARY*.md` → `TECHNICAL.md` (dev log, fix history, playtest, audio credits); `app/*.md` → root (`CHANGELOG.md`) + `TECHNICAL.md`; **`app/README.md` only markdown in `app/`** |
+| **Repo cleanup** | Deleted `terminals/`, `log.txt`; root `.gitignore` for both |
+| **License** | `LICENSE` — MIT, Copyright **Renffr**; third-party audio notice |
+| **Roadmap dates** | All v0.5.0 targets → **end July 2026**; removed stale `ex-Q1 2027`; `post-0.4.2` deferrals → `post-0.5.0` |
+| **v0.5.0 code audit** | Compared roadmap to code: **1 P0 done** (compaction), **4 partial**, **16 P0 open** — see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md#code-audit-2026-07-05-vs-game_version--042) |
+| **Next-action order** | **Finish partial first** in `ROADMAP_0.5.0.md` + in-game `roadmapContent.ts` (`v050-partial-first` section) |
+
+**Partial-first todo (dev):** renderer `byType` cache → `buildingById` go-home → grass buckets → `simulate-30min` profiles/exit → full `simulate:20year` → App tab split → then spatial grid + Worker.
+
+**Sim note:** `simulate:20year` smoke PASS (8640 ticks); full 172800-tick run still required for v0.5 tag.
+
+**Git (session):** `b69a865` … `4f157ca` on `main`.
+
 ---
 
 ## Fix history
