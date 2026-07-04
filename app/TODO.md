@@ -75,7 +75,7 @@ Shipped work → [CHANGELOG.md](CHANGELOG.md) · Priorities → [../ROADMAP.md](
 | **Moon howler** | Hunt/combat state cleared on revert |
 | **Eco** | Year rollover once; player-only building impact |
 
-Full table → [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` → Bug fixes.
+Full table → [CHANGELOG.md](CHANGELOG.md) `[0.4.2]` → Bug fixes.
 
 ---
 

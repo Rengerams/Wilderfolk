@@ -265,11 +265,11 @@ npm run simulate:30min # headless sim — env SIM_MINUTES, PERF_SAMPLE_EVERY
 
 ## What's not done (see ROADMAP)
 
-Half-done items tracked in [ROADMAP.md](ROADMAP.md) with FINISH / CUT / DEFER rule. **v0.4.2 remaining:**
+**v0.4.2 ship checklist — closed 2026-07-05** (tag `v0.4.2`, `GAME_VERSION = 0.4.2`).
 
-- ~~10-year balance pass~~ **Done** (2026-07-04) · ~~external playtests~~ **Done** · ~~v0.4.2 ship~~ **Done** (2026-07-05)
-- Version bump to `0.4.2` + save migration on ship
-- All open perf + architecture → **v0.5.0** end July 2026 (merged ex-0.4.3 / 0.4.4 scope)
+**Next — v0.5.0** (end July 2026):
+
+- All open perf + architecture → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (merged ex-0.4.3 / 0.4.4 scope)
 - Desktop installer (Tauri/Electron) — post-alpha
 
 ---

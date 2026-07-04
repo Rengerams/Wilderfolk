@@ -213,7 +213,7 @@
 - lifetimeStats only in exports, not surfaced in More tab.
 
 ### Verdict
-**Best-in-class logging.** Version bump is ship blocker for save nerds.
+**Best-in-class logging.** `GAME_VERSION` 0.4.2 shipped — save migration in place.
 
 ---
 

@@ -153,7 +153,7 @@ Status: ✅ Shipped · 🟡 Partial · ❌ Not started / deferred
 ### Gameplay
 - **Guaranteed first-week visitor** — pilgrims or performers on days 4–7 once a house exists (`groupEvents.ts`, `firstWeekVisitorSpawned`)
 - **`road_bonus` wired** — Urban Planning research; completed roads grant reputation + `+rep (roads)` float text (`gameEngine.ts`)
-- **Roads in sim** — 1.5× walk speed on roads (`lifeSimulation.ts`); adjacency bonuses in placement — *not yet explained in-game UI*
+- **Roads in sim** — 1.5× walk speed on roads (`lifeSimulation.ts`); adjacency bonuses in placement; Infra hint in build catalog + Guide (v0.4.2)
 - **Prison + Guard job** — adultery arrests, prisoner sentences, prison panel UI (`gameTypes.ts`, `lifeSimulation.ts`, `App.tsx`)
 - **Eco Master tracking** — `ecoHealthYearsAbove80` yearly counter (`gameEngine.ts`)
 
@@ -313,7 +313,7 @@ Everything below was the **v0.4.2** build target. Most rows are implemented loca
 | **Active challenge** highlight in UI | ✅ Done | 🎯 on first incomplete |
 | 5–10 external playtests with notes | ✅ v0.4.2 | [PLAYTEST_BETA_10_USERS.md](app/docs/PLAYTEST_BETA_10_USERS.md) |
 | 10 full in-game year balance pass | ✅ v0.4.2 | Town PASS 2026-07-04, 9/9 gates |
-| Perf check: 500+ entities, large map | ⚠️ v0.4.2 | Throttles shipped (~1.8 ms/tick avg); → [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) Phase 1 · [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) Phase 2 |
+| Perf check: 500+ entities, large map | ⚠️ v0.4.2 | Throttles shipped (~1.8 ms/tick avg); finishes in [v0.5.0](ROADMAP_0.5.0.md) |
 | **In-game roadmap tab** (read-only slice of this doc) | ✅ Done | `RoadmapPanel.tsx`, `roadmapContent.ts` |
 
 ### Deferred (not v0.4.2)
@@ -393,13 +393,13 @@ Path B — extend existing PNG humans.
 5. ~~**Walls / guards / combat log**~~ ✅ — defense buildings, guard patrols, Log → Combat panel, raid march lines
 6. ~~**Juice pass**~~ ✅ — night glow, build confetti, camera nudge; intro screen refine
 7. ~~10-year balance pass~~ **Done** (2026-07-04) · external playtests (5–10 sessions)
-8. Bump `GAME_VERSION` to `0.4.2` + save migration on ship
+8. ~~Bump `GAME_VERSION` to `0.4.2` + save migration on ship~~ ✅
 9. Scale + architecture → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** (end Jul 2026) — not a v0.4.2 ship blocker
 
 ### Balance & stability → **v0.4.2**
 
 - [x] 10 full in-game year playtest pass (town PASS 2026-07-04)
-- [ ] Winter food curve
+- [x] Winter food curve (validated in 10-year PASS — 10/10 winters)
 - [x] Save version `0.4` / `0.4.1` with migration from legacy `2.x` and `0.4` saves
 - [x] Perf check: 500+ entities — partial (throttles + maps shipped; → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md))
 - [x] Bump save/game version to `0.4.2` on ship
