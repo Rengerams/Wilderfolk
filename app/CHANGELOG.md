@@ -108,7 +108,7 @@ Inspired by **RimWorld** (priority alerts, contextual inspector), **Banished** (
 |-------|---------|-----------|
 | All open perf + UI + architecture | **v0.5.0** | End Jul 2026 |
 
-- **v0.5.0 (consolidated):** spatial grid, compaction, benchmark gate, incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling, Web Worker `gameTick`, OffscreenCanvas layers — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md). Former v0.4.3 / v0.4.4 schedules merged into this milestone.
+- **v0.5.0 (consolidated):** spatial grid, compaction, benchmark gate, incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling, Web Worker `gameTick`, OffscreenCanvas layers — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).
 
 #### Frontier raid polish
 - **Distance-scaled raid deadline** — incoming raids get **2–6 days** to respond based on camp distance (`expiresAtTick`, `marchDistanceTiles` on `RaidEvent`).

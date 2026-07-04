@@ -10,8 +10,6 @@ Living document for where the game is and where it's going.
 |------|---------|
 | **[ROADMAP.md](ROADMAP.md)** | **This file** — master plan, phases, half-done registry |
 | **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0 release plan** (scale + architecture — end Jul 2026) |
-| **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** | ~~v0.4.3~~ superseded — merged into v0.5.0 |
-| **[ROADMAP_0.4.4.md](ROADMAP_0.4.4.md)** | ~~v0.4.4~~ superseded — merged into v0.5.0 |
 | **[app/TODO.md](app/TODO.md)** | Open ship blockers & dev checklist |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
 
@@ -65,7 +63,7 @@ Ship a cozy frontier eco-sim where settlers live on a schedule, the food chain m
 
 ## Version roadmaps
 
-Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**. Former v0.4.3 / v0.4.4 schedules are **merged** into the accelerated v0.5.0 milestone.
+Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**.
 
 | Version | Theme | Target | Plan |
 |---------|-------|--------|------|
@@ -306,7 +304,7 @@ Everything below was the **v0.4.2** build target. Most rows are implemented loca
 | More visitor kinds polished | ⚠️ v0.4.2 | 7 kinds exist; shallow |
 | Chimney glow, build-complete particles | ✅ v0.4.2 | `juiceEffects.ts` — night glow + confetti on build complete |
 | Intro screen refine (~20s, skip after logo) | ✅ v0.4.2 | `IntroScreen.tsx` timeline + `App.css` intro-* classes |
-| Optional footstep or work SFX by surface | ❌ [v0.4.4](ROADMAP_0.4.4.md) | P1 in v0.4.4 roadmap |
+| Optional footstep or work SFX by surface | ❌ [v0.5.0](ROADMAP_0.5.0.md) | P1 in v0.5.0 roadmap |
 | Smooth camera nudge on select | ✅ v0.4.2 | `nudgeCameraToward()` — 28% lerp on map click |
 | Nature tab warning when deer pressure > grass recovery | ✅ Done | `ecosystemPressure.ts` caution/critical card |
 | **Eco Master challenge** UI progress bar | ✅ Done | `challengeProgress.ts` |
@@ -410,7 +408,7 @@ Path B — extend existing PNG humans.
 
 ## Phase 3 — v0.5.0 *(in progress — end July 2026)*
 
-Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**. Consolidates former v0.4.3 (sim Phase 1), v0.4.4 (sim Phase 2 + UI), and architecture (Worker + canvas layers).
+Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** — sim scale, UI split, quality gates, and architecture (Worker + canvas layers).
 
 | Track | P0 focus |
 |-------|----------|

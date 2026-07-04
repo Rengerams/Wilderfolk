@@ -5,9 +5,7 @@
 Living plan for the **consolidated scale & architecture** release.  
 **Parent index** → [ROADMAP.md](ROADMAP.md) · Open work → [app/TODO.md](app/TODO.md) · Technical → [TECHNICAL.md](TECHNICAL.md)
 
-*Updated: July 5, 2026 — **v0.5.0** accelerates former v0.4.3 + v0.4.4 + architecture work into one July ship.*
-
-> **Supersedes** the separate [v0.4.3](ROADMAP_0.4.3.md) (Sep 2026) and [v0.4.4](ROADMAP_0.4.4.md) (Nov 2026) release schedules. Scope from those docs rolls into this milestone.
+*Updated: July 5, 2026 — **v0.5.0** consolidates scale, UI, quality, and architecture work into one July ship.*
 
 ---
 
@@ -32,7 +30,7 @@ Players on **large maps** with **100–200+ settlers** should not feel sim hitch
 | Off-screen throttles, `entityById` / `buildingById`, `wildlifeCounts` | Hot paths still **O(n)** — graze scans, flee loops, UI population scans |
 | Headless avg ~1.8 ms/tick @ ~550 entities | **p95** and **large-map / city UI** not gated |
 | Partial React memo on a few panels | `App.tsx` still re-renders heavy tabs; assign flows scan all entities |
-| Perf roadmap split across 0.4.3 → 0.4.4 → 0.5.0 | **One July ship** — sim Phase 1 + Phase 2 + Worker/layers |
+| Perf work was planned across multiple releases | **One July ship** — sim Phase 1 + Phase 2 + Worker/layers |
 | ~40-fix bug pass in v0.4.2; headless sims for balance | **No v0.5-wide regression gate** — logic invariants + multi-profile sim battery not yet required to ship |
 
 ---
@@ -50,7 +48,7 @@ Players on **large maps** with **100–200+ settlers** should not feel sim hitch
 
 ## P0 — Must ship (end July 2026)
 
-### Sim & render — Phase 1 (ex-v0.4.3)
+### Sim & render — Phase 1
 
 | # | Item | Hotspot | Deliverable |
 |---|------|---------|-------------|
@@ -60,7 +58,7 @@ Players on **large maps** with **100–200+ settlers** should not feel sim hitch
 | 4 | **Settler count denorm** | `WorldState`, `App.tsx` | `workingSettlers` / `idleSettlers` once per tick |
 | 5 | **Benchmark gate** | `simulate-30min.ts` | Profiles at **50 / 100 / 200** humans; exit non-zero if p95 &gt; budget |
 
-### Sim & UI — Phase 2 (ex-v0.4.4)
+### Sim & UI — Phase 2
 
 | # | Item | Hotspot | Deliverable |
 |---|------|---------|-------------|
@@ -204,8 +202,6 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 |---------|-------|--------|
 | 0.4.1 | Tribes, raids, victories, leadership | ✅ Shipped |
 | 0.4.2 | Craft, walls/guards, juice, UI/UX | ✅ Shipped Jul 2026 |
-| ~~0.4.3~~ | ~~Scale Phase 1~~ | 🔀 Merged into **v0.5.0** |
-| ~~0.4.4~~ | ~~Perf Phase 2 + UI~~ | 🔀 Merged into **v0.5.0** |
 | **0.5.0** | **Scale + architecture** | 📋 **This document — end Jul 2026** |
 
 ---

@@ -71,7 +71,7 @@
 - Rival label when pop=0: “distant camp” not “0 settlers.”
 
 ### Verdict
-**Unique hook undermined at town scale.** Would return if reforestation or eco tooling ships in v0.4.3+.
+**Unique hook undermined at town scale.** Would return if reforestation or eco tooling ships in v0.5.0+.
 
 ---
 
@@ -261,7 +261,7 @@
 ### Explicitly out of scope (design confirmed)
 - Fancy fight screen / tactical battles
 - Outgoing counter-raid march as spectacle (incoming march = warning only)
-- Counter-raid militia sprites → v0.4.3 optional polish
+- Counter-raid militia sprites → v0.5.0 P1 polish
 
 ### Endorsement tally
 - **7/10** would endorse playtest to friends (with eco/growth caveats)

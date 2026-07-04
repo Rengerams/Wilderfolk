@@ -269,7 +269,7 @@ npm run simulate:30min # headless sim — env SIM_MINUTES, PERF_SAMPLE_EVERY
 
 **Next — v0.5.0** (end July 2026):
 
-- All open perf + architecture → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (merged ex-0.4.3 / 0.4.4 scope)
+- All open perf + architecture → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)
 - Desktop installer (Tauri/Electron) — post-alpha
 
 ---

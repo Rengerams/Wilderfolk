@@ -119,7 +119,7 @@ Player guide → [README.md](README.md#frontier-raids--militia) · Code → `fro
 | **Shipped** | **v0.4.2** | July 2026 | Throttles, entity maps, UI memo, headless ms/tick metrics |
 | **All open perf + UI + architecture** | **v0.5.0** | **End Jul 2026** | Spatial grid, compaction, benchmark gate, scan cleanup, App tab split, Worker, canvas layers |
 
-*Former v0.4.3 / v0.4.4 schedules merged into **v0.5.0** — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).*
+*See [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md) for the full v0.5.0 plan.*
 
 **Informal budget (headless, ~700 alive entities):** p95 &lt; 16 ms/tick · avg &lt; 8 ms/tick. Gate in Phase 1.
 
