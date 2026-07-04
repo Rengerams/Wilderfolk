@@ -9,7 +9,7 @@ Developer-facing overview of the playtest build.
 | [app/README.md](app/README.md) | Players |
 | [ROADMAP.md](ROADMAP.md) | Plan & half-done registry |
 | [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) | **v0.5.0** — scale + architecture (end Jul 2026) |
-| [app/CHANGELOG.md](app/CHANGELOG.md) | Detailed change log |
+| [CHANGELOG.md](CHANGELOG.md) | Detailed change log |
 
 ---
 
@@ -21,8 +21,9 @@ wilderfolk/
 ├── README.md             # Short landing page
 ├── TECHNICAL.md          # This file
 ├── ROADMAP.md            # Release plan + backlog
+├── CHANGELOG.md          # Feature-level change log
 └── app/
-    ├── CHANGELOG.md      # Feature-level change log
+    ├── README.md         # Player guide (only markdown in app/)
     ├── package.json
     ├── vite.config.ts    # Dev server port 5173 (3000 blocked on some Windows hosts)
     ├── public/           # Static assets (sprites, logo)
@@ -252,7 +253,7 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 
 **UI:** `CombatPreviewPanel.tsx`, `CombatLogPanel.tsx` (filters `type === 'combat'`), raid banner + `FrontierPanel` in `App.tsx`.
 
-**Gaps (v0.4.2):** player militia march on counter-raid; real-time tactical battles deferred post-0.4.2. See [app/TODO.md](app/TODO.md#frontier-combat--polish--gaps).
+**Gaps (v0.4.2):** player militia march on counter-raid → **v0.5.0 P1**; real-time tactical battles deferred post-0.4.2. Full status → [Frontier combat — polish & gaps](#frontier-combat--polish--gaps).
 
 ---
 
@@ -300,13 +301,13 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 
 ## Performance
 
-**Shipped (v0.4.2):** off-screen sim throttles, per-tick `entityById` / `buildingById`, wildlife `byType` loop, `wildlifeCounts`, UI memoization. See [app/CHANGELOG.md](app/CHANGELOG.md) `[0.4.2]` → Performance.
+**Shipped (v0.4.2):** off-screen sim throttles, per-tick `entityById` / `buildingById`, wildlife `byType` loop, `wildlifeCounts`, UI memoization. See [CHANGELOG.md](CHANGELOG.md) `[0.4.2]` → Performance.
 
 **Benchmark:** `cd app && npm run simulate:30min` — env `SIM_MINUTES` (default 1200 ≈ 30 game-min), `PERF_SAMPLE_EVERY` (default 120). July 2026 sanity run (72k ticks, ~8 game years, ~557 entities): avg **1.81 ms/tick**, p50 **1.30 ms**, p95 **4.83 ms**, max **105 ms**. Informal budget: p95 &lt; 16 ms/tick @ ~700 alive entities.
 
 **v0.5 ship gatekeeper:** `npm run simulate:20year` — headless **20 in-game years** (172800 ticks, 20 winters). Env: `SIM_PROFILE=town|village|eco` (default `town`), `SIM_YEARS=20` (set by `simulate-20year.ts`), `SIM_MAX_TICKS` for smoke only. Logs → `app/scripts/logs/sim-20year-<profile>-<timestamp>.txt`. **Exit 0 required** before tagging v0.5.0. `npm run simulate:10year` remains a faster regression check (`SIM_YEARS=10`).
 
-**Future phases** (version + finish target) — full table in [app/TODO.md](app/TODO.md):
+**Future phases** (version + finish target) — full table in [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md):
 
 | Phase | Version | Finish by |
 |-------|---------|-----------|
@@ -427,7 +428,7 @@ Road/wall/gate rotation (**R**), juice pass (night glow, build confetti, camera 
 
 ### July 4, 2026 — Comprehensive bug-fix pass (~40 fixes)
 
-Four review rounds — full P0/P1/P2 table in [app/CHANGELOG.md](app/CHANGELOG.md) → **Bug fixes — comprehensive pass**. Summary in [app/TODO.md](app/TODO.md).
+Four review rounds — full P0/P1/P2 table in [CHANGELOG.md](CHANGELOG.md) → **Bug fixes — comprehensive pass**.
 
 | Round | Focus | Highlights |
 |-------|-------|------------|
@@ -439,6 +440,96 @@ Four review rounds — full P0/P1/P2 table in [app/CHANGELOG.md](app/CHANGELOG.m
 **Verified:** `npm run build`, `npm run lint` (0 errors), `npm run simulate`, `npm run simulate:30min`.
 
 Key areas: `App.tsx`, `groupEvents.ts`, `gameEngine.ts`, `frontierCombat.ts`, `saveLoad.ts`, `stats.ts`, `militiaBalance.ts`, `moonHowler.ts`, `forge.ts`.
+
+---
+
+## Frontier combat — polish & gaps
+
+Player guide → [app/README.md](app/README.md#frontier-raids--militia) · Code → `frontierCombat.ts`, `defenseStructures.ts`, `CombatLogPanel.tsx`, `CombatPreviewPanel.tsx`
+
+| Item | Priority | Status | Notes |
+|------|----------|--------|-------|
+| **Village tab raid shortcut** | — | Done | Incoming raid card + Frontier `🏹 Raid` + map banner + alert strip |
+| **Raid deadline vs distance** | — | Done | `expiresAtTick` 2–6 days; `marchDistanceTiles`; slower rival march in `lifeSimulation.ts` |
+| **Pay-off vs raid tooltip** | — | Done | `CombatPreviewPanel` cyan hint when `incomingPayoffFood` &lt; `outgoingRaidFoodCost` |
+| **Combat preview panel** | — | Done | Militia vs rival, defend/barricade/counter tiers, block reasons |
+| **Dedicated combat log panel** | — | Done | Log → **Combat** — stats, scroll, .txt/.json/.csv export |
+| **Walls / Watchtowers / Barracks** | — | Done | `defenseStructures.ts`; guard patrols in `lifeSimulation.ts` |
+| **Raid march map overlay** | — | Done | `drawRaidMarchLines` — dashed red line + ⚔️ midpoint |
+| **Rival war-band march** | — | Done | Rival settlers path to village while raid pending; ⚔️ badge when close |
+| **Weapon / status map icons** | Low | Partial | Settler badges: 🏹 hunt, 🛡️ shields, 🪖 guard, ⚔️ `combatTicks` ✅ · **Missing:** player militia march on **outgoing** counter-raid → **v0.5.0 P1** |
+| **Spear tier stacking** | — | Done | `militiaBalance.ts` — iron replaces stone; iron shields replace wooden |
+| **Real-time map battles** | — | Deferred | Abstract `resolveDefenseRatio` / `launchRaidOnRival` — no tactical combat (post-0.4.2) |
+
+---
+
+## Playtest report
+
+**10 external beta sessions** (v0.4.2 ship gate, July 4–5, 2026). Large map (1600×1200), 75–120 min each, 1×/5×/10×. Balance reference: 10-year town PASS (`app/scripts/logs/sim-10year-town-2026-07-04T21-23-57-948Z.txt`).
+
+**Design note:** Fighting is **not** the main goal — **preparation** is (walls, forge tier, militia, tribute math, winter stockpiles). No battle screen; abstract resolution + combat preview + Log → Combat is intentional.
+
+### Session index
+
+| # | Tester | Profile | Duration | Speed | Years |
+|---|--------|---------|----------|-------|-------|
+| 1 | Mara “Ledger” Okonkwo | Colony-sim veteran | 110 min | 5× | Y4 |
+| 2 | Jesse “Rewild” Chen | Eco / Nature-tab | 95 min | 1×→10× | Y6 |
+| 3 | Dmitri “Bulwark” Volkov | Defense / militia | 120 min | 10× | Y5 |
+| 4 | Priya “TabFlow” Sharma | UI / hotkeys | 80 min | 5× | Y3 |
+| 5 | Alex “FrameBudget” Nakamura | Perf stress | 90 min | 10× | Y4 |
+| 6 | Elena “Treaty” Rossi | Diplomacy / trade | 100 min | 5× | Y5 |
+| 7 | Tom “Dynasty” Bergström | Population / families | 105 min | 3× | Y4 |
+| 8 | Kenji “Grid” Watanabe | Builder / layout | 115 min | 5× | Y5 |
+| 9 | Sofia “Archive” Petrov | Chronicle / exports | 85 min | 1×+5× | Y4 |
+| 10 | Ravi “Sprint” Malhotra | Efficiency runner | 75 min | 10× | Y5 |
+
+### Cross-session synthesis
+
+**Ship-ready:** winter/food loop (4.5), 6-tab UI + alerts (4.5), diplomacy (4.0), defense prep UX (4.0), large-map 10× perf (4.0), combat log/exports (4.5).
+
+**Fixed before v0.4.2 ship (July 5):** eco breakdown on Nature tab; population growth report; rival “distant camp” label; Frontier readiness card; juice toggle; raid prep copy; death filter hints; combat log readability.
+
+**Out of scope:** tactical battle screen; outgoing counter-raid march spectacle (incoming march = warning only); counter-raid militia sprites → v0.5.0 P1.
+
+**Endorsement:** 7/10 would recommend to friends (eco/growth caveats); 3/10 wanted eco copy or mid-game goals first.
+
+Per-session notes (10 testers) were archived in git history when `app/docs/PLAYTEST_BETA_10_USERS.md` was merged here (commit July 2026).
+
+---
+
+## Audio credits
+
+Wilderfolk uses royalty-free music and sound effects from [OpenGameArt.org](https://opengameart.org). Files live under `app/public/audio/`. Track paths are defined in `src/audio/tracks.ts`.
+
+If a sample fails to load, the game falls back to procedural Web Audio tones (`src/audio/introMusic.ts`, `src/audio/backgroundMusic.ts`).
+
+### Music
+
+| In-game file | Original title | Author | License | Source |
+|---|---|---|---|---|
+| `music/intro-frontier.mp3` | Settlement of the Frontier (Full) | [TAD](https://opengameart.org/users/tad) | [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) | https://opengameart.org/content/settlement-of-the-frontier-full |
+| `music/day-village-loop.mp3` | Abeth (*Peaceful village loop*) | [elerya](https://opengameart.org/users/elerya) | [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/) | https://opengameart.org/content/peaceful-village-loop |
+| `music/night-calm.ogg` | Slow Stride Loop | [isaiah658](https://opengameart.org/users/isaiah658) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | https://opengameart.org/content/slow-stride |
+
+### Ambient & sound effects
+
+| In-game file | Original title | Author | License | Source |
+|---|---|---|---|---|
+| `ambient/birds-loop.ogg` | Ambient Bird Sounds | [isaiah658](https://opengameart.org/users/isaiah658) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | https://opengameart.org/content/ambient-bird-sounds |
+| `ambient/bird-chirp.mp3` | Bird chirping sounds | [syncopika](https://opengameart.org/users/syncopika) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | https://opengameart.org/content/bird-chirping-sounds |
+| `ambient/cricket-frog-night.mp3` | Ambient Bird, Cricket and Frog | [Blender Foundation](http://apricot.blender.org) | [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/) | https://opengameart.org/content/ambient-bird-cricket-and-frog |
+| `ambient/wolf-howl.mp3` | Wolf Monster Sound | [CaveboyTup](https://opengameart.org/users/caveboytup) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | https://opengameart.org/content/wolf-monster-sound |
+| `ambient/animals/*.wav` | Animal or beast sounds pack | [pauliuw](https://opengameart.org/users/pauliuw) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | https://opengameart.org/content/animal-or-beast-sounds |
+
+### Attribution (CC-BY tracks)
+
+When distributing or publishing Wilderfolk, include credit for CC-BY assets:
+
+> **Music:** "Settlement of the Frontier (Full)" by Tad Miller (CC-BY 4.0); "Abeth" by Audibert jd / Eleryan Tales (CC-BY 3.0).  
+> **Sound:** Ambient bird/cricket/frog audio from the Blender Foundation / *Yo Frankie!* project (CC-BY 3.0).
+
+CC0 assets do not require attribution.
 
 ---
 

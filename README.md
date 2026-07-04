@@ -40,7 +40,7 @@ You are not conquering a blank map. You are sharing a valley with grass, rabbits
 
 ## Latest update — v0.4.2 (July 5, 2026)
 
-**Shipped.** `GAME_VERSION` is **0.4.2**; `0.4.1` saves migrate on load. Full notes → [app/CHANGELOG.md](app/CHANGELOG.md) `[0.4.2]`.
+**Shipped.** `GAME_VERSION` is **0.4.2**; `0.4.1` saves migrate on load. Full notes → [CHANGELOG.md](CHANGELOG.md) `[0.4.2]`.
 
 | Area | Highlights |
 |------|------------|
@@ -49,7 +49,7 @@ You are not conquering a blank map. You are sharing a valley with grass, rabbits
 | **Raids** | Preparation-focused — combat preview + Frontier readiness card; **no battle screen** |
 | **Craft** | Blacksmith forge queue for iron spears & shields (research + staffed smith) |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
-| **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](app/docs/PLAYTEST_BETA_10_USERS.md) |
+| **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](TECHNICAL.md#playtest-report) |
 | **Fixes** | ~40 bug fixes (July 4) + beta UX feedback |
 
 ### What's next — v0.5.0 (end July 2026)
@@ -120,12 +120,11 @@ Running `npm install` at the repo root also installs the `app/` package (via `po
 
 | Doc | For |
 |-----|-----|
-| **[app/README.md](app/README.md)** | Players — how to play, tips, controls |
-| **[TECHNICAL.md](TECHNICAL.md)** | Developers — architecture, tick model, file map |
+| **[app/README.md](app/README.md)** | Players — how to play, tips, controls *(only markdown in `app/`)* |
+| **[TECHNICAL.md](TECHNICAL.md)** | Developers — architecture, dev log, playtests, audio credits |
 | **[ROADMAP.md](ROADMAP.md)** | Plan — alpha → v1 → Steam |
-| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — scale + architecture (end Jul 2026) |
-| **[TECHNICAL.md](TECHNICAL.md#dev-log)** | Dev log — what shipped, when |
-| **[app/AUDIO_CREDITS.md](app/AUDIO_CREDITS.md)** | Music & SFX — OpenGameArt sources and licenses |
+| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — scale + architecture + open work (end Jul 2026) |
+| **[CHANGELOG.md](CHANGELOG.md)** | Detailed change log by version |
 
 ### Optional (developers)
 

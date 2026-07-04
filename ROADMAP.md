@@ -8,12 +8,12 @@ Living document for where the game is and where it's going.
 
 | File | Purpose |
 |------|---------|
+| **[app/README.md](app/README.md)** | **Players** — how to play *(only markdown in `app/`)* |
+| **[TECHNICAL.md](TECHNICAL.md)** | **Developers** — architecture, dev log, playtests, audio credits |
 | **[ROADMAP.md](ROADMAP.md)** | **This file** — master plan, phases, half-done registry |
-| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0 release plan** (scale + architecture — end Jul 2026) |
-| **[app/TODO.md](app/TODO.md)** | Open ship blockers & dev checklist |
+| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — release plan + open work checklist |
+| **[CHANGELOG.md](CHANGELOG.md)** | Detailed change log by version |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
-
-Also: [app/README.md](app/README.md) (players) · [TECHNICAL.md](TECHNICAL.md) (devs + dev log)
 
 *Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).*
 
@@ -67,7 +67,7 @@ Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**.
 
 | Version | Theme | Target | Plan |
 |---------|-------|--------|------|
-| **0.4.2** | Craft, walls/guards, juice, UI/UX | **Shipped** Jul 2026 | [app/CHANGELOG.md](app/CHANGELOG.md) `[0.4.2]` |
+| **0.4.2** | Craft, walls/guards, juice, UI/UX | **Shipped** Jul 2026 | [CHANGELOG.md](CHANGELOG.md) `[0.4.2]` |
 | **0.5.0** | Scale + architecture (sim, UI, Worker, canvas) | **End Jul 2026** | **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** |
 | **1.0 / Steam** | Installer or store release | TBD | post-0.5.0 |
 
@@ -84,7 +84,7 @@ Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**.
 | Tribe diplomacy v2 + raids (2–6d deadline, preview, peace, march lines) | [v0.5.0](ROADMAP_0.5.0.md) spatial grid + benchmark gate |
 | **Walls / towers / barracks** + guards + combat log | Counter-raid march polish (v0.5.0 P1) |
 | **6-tab UI**, alert strip, hotbar, focus Go → | [v0.5.0](ROADMAP_0.5.0.md) App tab split at city scale |
-| **10-year balance PASS** + **10-user beta** ([playtest doc](app/docs/PLAYTEST_BETA_10_USERS.md)) | Mid-game goals past year 4–5 |
+| **10-year balance PASS** + **10-user beta** ([playtest doc](TECHNICAL.md#playtest-report)) | Mid-game goals past year 4–5 |
 | Sim perf (~1.8 ms/tick avg @ ~550 entities; 10-year p95 5.46ms) | 100+ entity benchmark gate ([v0.5.0](ROADMAP_0.5.0.md)) |
 
 **Rough rating:** promising alpha (~8/10 shipped v0.4.2, ~8.5/10 vision).
@@ -185,7 +185,7 @@ Status: ✅ Shipped · 🟡 Partial · ❌ Not started / deferred
 
 ## Shipped in v0.4.2 ✅
 
-*`GAME_VERSION = 0.4.2` · tagged `v0.4.2` · see [app/CHANGELOG.md](app/CHANGELOG.md) `[0.4.2]`.*
+*`GAME_VERSION = 0.4.2` · tagged `v0.4.2` · see [CHANGELOG.md](CHANGELOG.md) `[0.4.2]`.*
 
 ### UI / UX
 - 6-tab sidebar (Village, Frontier, Nature, Progress, Log, More) + sub-tabs
@@ -220,7 +220,7 @@ Status: ✅ Shipped · 🟡 Partial · ❌ Not started / deferred
 
 ### Bug-fix pass (July 4, 2026) — ~40 fixes ✅
 
-Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/check-work` PASS. Full categorized table → [app/CHANGELOG.md](app/CHANGELOG.md) → **Bug fixes — comprehensive pass**.
+Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/check-work` PASS. Full categorized table → [CHANGELOG.md](CHANGELOG.md) → **Bug fixes — comprehensive pass**.
 
 **Critical:** map setup GameLoop sync; faction human ages; welcomed refugees killed on camp departure; eco streak 24×/year.
 
@@ -246,7 +246,7 @@ Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/
 |---|--------------|--------|
 | 1 | 10-year balance pass | **Done** — town PASS 2026-07-04, 9/9 gates |
 | 2 | Spear / militia balance review | **Done** (`militiaBalance.ts`) |
-| 3 | External playtests (5–10 sessions) | **Done** — [PLAYTEST_BETA_10_USERS.md](app/docs/PLAYTEST_BETA_10_USERS.md) |
+| 3 | External playtests (5–10 sessions) | **Done** — [playtest report](TECHNICAL.md#playtest-report) |
 | 4 | Bump to `0.4.2` + save migration | **Done** |
 | 5 | CHANGELOG, README, `roadmapContent.ts` on release | **Done** |
 
@@ -269,7 +269,7 @@ Everything below was the **v0.4.2** build target. Most rows are implemented loca
 | **Peace treaties** — player sign + diplomacy events; raids blocked at peace | ✅ Done | Full war/embassy tree deferred |
 | **Village leadership** — merit elections every 10 years | ✅ Done | Leader perks/decisions deferred |
 | **Trade Empire + Harmony victories** — active in Goals tab | ✅ Done | |
-| **Frontier raids MVP** — defend, barricade, pay off, counter-raid | ✅ Done | Raid polish + walls/guards + combat log — see `app/TODO.md` |
+| **Frontier raids MVP** — defend, barricade, pay off, counter-raid | ✅ Done | Raid polish + walls/guards + combat log — see [TECHNICAL.md](TECHNICAL.md#frontier-combat--polish--gaps) |
 | **Guaranteed first-week visitor** | ✅ Done | Days 4–7 after first house |
 | **Rival events player can respond to** (tribute, border dispute, alliance) | ✅ Done | `pendingDiplomacyEvents` + banner/inspector choices |
 | Click rival camp → diplomacy panel (not buried in Village tab) | ✅ Done | Camp marker + rival building inspector |
@@ -309,7 +309,7 @@ Everything below was the **v0.4.2** build target. Most rows are implemented loca
 | Nature tab warning when deer pressure > grass recovery | ✅ Done | `ecosystemPressure.ts` caution/critical card |
 | **Eco Master challenge** UI progress bar | ✅ Done | `challengeProgress.ts` |
 | **Active challenge** highlight in UI | ✅ Done | 🎯 on first incomplete |
-| 5–10 external playtests with notes | ✅ v0.4.2 | [PLAYTEST_BETA_10_USERS.md](app/docs/PLAYTEST_BETA_10_USERS.md) |
+| 5–10 external playtests with notes | ✅ v0.4.2 | [playtest report](TECHNICAL.md#playtest-report) |
 | 10 full in-game year balance pass | ✅ v0.4.2 | Town PASS 2026-07-04, 9/9 gates |
 | Perf check: 500+ entities, large map | ⚠️ v0.4.2 | Throttles shipped (~1.8 ms/tick avg); finishes in [v0.5.0](ROADMAP_0.5.0.md) |
 | **In-game roadmap tab** (read-only slice of this doc) | ✅ Done | `RoadmapPanel.tsx`, `roadmapContent.ts` |
@@ -341,7 +341,7 @@ Everything below was the **v0.4.2** build target. Most rows are implemented loca
 - [x] Save migration 2.0/2.1/2.2 → 0.4 (in `loadGame`)
 - [x] Chronicle log + file export
 - [x] Focus hints + armament checklist
-- [x] 5–10 external playtests with notes → **v0.4.2** ([PLAYTEST_BETA_10_USERS.md](app/docs/PLAYTEST_BETA_10_USERS.md))
+- [x] 5–10 external playtests with notes → **v0.4.2** ([playtest report](TECHNICAL.md#playtest-report))
 - [x] Save migration story fully documented in TECHNICAL.md
 
 **Exit:** Testers play 2+ hours unaided and can name their current goal.
@@ -417,7 +417,7 @@ Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** — sim scale, UI split, 
 | **Architecture** | Web Worker `gameTick`, OffscreenCanvas terrain/entity layers |
 | **Quality** | Big bug checkup, logic invariant checks, **`simulate:20year` ship gatekeeper**, sim battery |
 
-See also [app/TODO.md](app/TODO.md) — v0.5.0 preview table.
+Open work checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
 ---
 
@@ -465,7 +465,7 @@ See also [app/TODO.md](app/TODO.md) — v0.5.0 preview table.
 2. [x] **Frontier raid polish** — distance-scaled deadline, Village/Frontier UI (`frontierCombat.ts`)
 3. [x] **Walls / Watchtowers / Barracks** + guard patrols
 4. [x] **Dedicated combat log panel** — Log → Combat sub-tab
-5. [x] **External playtests** — 10 sessions ([PLAYTEST_BETA_10_USERS.md](app/docs/PLAYTEST_BETA_10_USERS.md))
+5. [x] **External playtests** — 10 sessions ([playtest report](TECHNICAL.md#playtest-report))
 6. [x] **10-year balance pass** — town PASS 2026-07-04 (`simulate:10year`, 86400 ticks)
 7. [x] **Road rotation** — **R** key (`buildingRotation.ts`)
 8. [x] **Juice pass** — chimney glow, build-complete particles, camera nudge

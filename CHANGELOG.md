@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-**Targeting v0.5.0** (end July 2026) — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).
+**Targeting v0.5.0** (end July 2026) — see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
 ### Planned (v0.5.0 P0)
 - Spatial grid, dead-entity compaction, renderer cache reuse, settler count denorm, benchmark gate
@@ -25,7 +25,7 @@
 ### Ship checklist (closed)
 - [x] 10-year balance pass — town PASS 2026-07-04 (`npm run simulate:10year`, 9/9 gates)
 - [x] Spear / militia balance review (`militiaBalance.ts`, `balance:militia`)
-- [x] External playtests — 10 sessions ([docs/PLAYTEST_BETA_10_USERS.md](docs/PLAYTEST_BETA_10_USERS.md))
+- [x] External playtests — 10 sessions ([TECHNICAL.md](TECHNICAL.md#playtest-report))
 - [x] `GAME_VERSION` **0.4.2** + `COMPATIBLE_SAVE_VERSIONS` migration
 - [x] Docs + in-game Roadmap sync
 
@@ -108,7 +108,7 @@ Inspired by **RimWorld** (priority alerts, contextual inspector), **Banished** (
 |-------|---------|-----------|
 | All open perf + UI + architecture | **v0.5.0** | End Jul 2026 |
 
-- **v0.5.0 (consolidated):** spatial grid, compaction, benchmark gate, incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling, Web Worker `gameTick`, OffscreenCanvas layers — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).
+- **v0.5.0 (consolidated):** spatial grid, compaction, benchmark gate, incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling, Web Worker `gameTick`, OffscreenCanvas layers — see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
 #### Frontier raid polish
 - **Distance-scaled raid deadline** — incoming raids get **2–6 days** to respond based on camp distance (`expiresAtTick`, `marchDistanceTiles` on `RaidEvent`).
@@ -257,7 +257,7 @@ Four code-review rounds (~40 fixes). Verified: `npm run build`, `npm run lint` (
 - **Stable village anchor** — `getPlayerCampCenter()` prefers Town Hall / House over wandering settler centroid (shared with `groupEvents.ts` spawn distance).
 - **Focus hint** — counter-raid note mentions distance-scaled food (not flat 30🍖).
 
-### Deferred to v0.4.2 (see `app/TODO.md`)
+### Deferred to v0.4.2 (see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md))
 - Village tab raid shortcut, distance-based raid deadline/march, spear tier stacking review, dedicated combat log panel, walls/guards, Blacksmith forge queue.
 
 ## [0.4.1] - Frontier raids & militia combat (2026-07-04)
@@ -277,7 +277,7 @@ Four code-review rounds (~40 fixes). Verified: `npm run build`, `npm run lint` (
 ## [0.4.1] - Docs: TODO + roadmap sync (2026-07-04)
 
 ### Added
-- **`app/TODO.md`** — open fixes checklist (frontier raid polish, v0.4.1 backlog, deferred items).
+- **`ROADMAP_0.5.0.md`** — open work checklist (frontier raid polish, perf, architecture).
 - **In-game roadmap** — `ROADMAP_OPEN_FIXES` section in Roadmap tab (“Still to fix / implement”).
 
 ### Changed
@@ -342,7 +342,7 @@ v0.4.1 partial — deeper frontier diplomacy and ecosystem coaching.
 ## [Unreleased] - Audio credits (2026-06-24)
 
 ### Added
-- **`AUDIO_CREDITS.md`**: OpenGameArt sources, authors, and licenses for all music and ambient SFX. Linked from root `README.md` and `app/README.md`.
+- **Audio credits** in [TECHNICAL.md](TECHNICAL.md#audio-credits): OpenGameArt sources, authors, and licenses for all music and ambient SFX.
 
 ## [Unreleased] - Terrain rendering restored (2026-06-24)
 

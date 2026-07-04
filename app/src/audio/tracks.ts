@@ -1,4 +1,4 @@
-/** Licensed royalty-free tracks — see app/AUDIO_CREDITS.md */
+/** Licensed royalty-free tracks — see TECHNICAL.md#audio-credits */
 
 function audioUrl(path: string): string {
   const base = import.meta.env.BASE_URL;

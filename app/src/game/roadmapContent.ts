@@ -96,7 +96,7 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       { label: 'Intro screen refine — ~20s timeline, skip after logo', status: 'done' },
       { label: '10-year balance pass — town PASS 9/9 gates (2026-07-04)', status: 'done' },
       { label: 'Spear / militia balance — iron replaces stone/wooden (militiaBalance.ts)', status: 'done' },
-      { label: 'External playtests — 10 power users (PLAYTEST_BETA_10_USERS.md)', status: 'done' },
+      { label: 'External playtests — 10 power users (TECHNICAL.md playtest report)', status: 'done' },
       { label: 'Eco breakdown + population growth report (beta feedback)', status: 'done' },
       { label: '~40 bug fixes (July 4 comprehensive pass)', status: 'done' },
     ],

@@ -13,7 +13,7 @@
 
 ## Latest update — v0.4.2 (July 5, 2026)
 
-**Shipped.** You are on **v0.4.2** (`GAME_VERSION` in saves). `0.4.1` saves migrate on load. Full notes → [CHANGELOG](CHANGELOG.md) `[0.4.2]`.
+**Shipped.** You are on **v0.4.2** (`GAME_VERSION` in saves). `0.4.1` saves migrate on load. Full notes → [CHANGELOG](../CHANGELOG.md) `[0.4.2]`.
 
 | Area | Highlights |
 |------|------------|
@@ -22,7 +22,7 @@
 | **Raids** | Preparation-focused — combat preview + Frontier readiness card; **no battle screen** |
 | **Craft** | Blacksmith forge queue for iron spears & shields (research + staffed smith) |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
-| **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](docs/PLAYTEST_BETA_10_USERS.md) |
+| **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](../TECHNICAL.md#playtest-report) |
 | **Fixes** | ~40 bug fixes (July 4) + beta UX feedback |
 
 ### What's coming — v0.5.0 (end July 2026)
@@ -250,7 +250,7 @@ Adult settlers contribute base strength; bonuses stack from:
 - **Barracks guards** — manual assign; patrol village core (🪖); +14 militia strength each
 - **Log → Combat** sub-tab + export
 - Settler map badges — 🏹 hunt, 🛡️ shields, 🪖 guard, ⚔️ combat
-- **Bug-fix pass (July 4)** — ~40 fixes — full list in [CHANGELOG.md](CHANGELOG.md)
+- **Bug-fix pass (July 4)** — ~40 fixes — full list in [CHANGELOG.md](../CHANGELOG.md)
 
 **Intentionally not planned:**
 
@@ -538,8 +538,8 @@ Some nights, if the higher gods are in a mood, something **golden** might cross 
 ## For developers
 
 Architecture, tick model, and file layout → **[TECHNICAL.md](../TECHNICAL.md)** (repo root).  
-Music and sound-effect sources → **[AUDIO_CREDITS.md](AUDIO_CREDITS.md)**.  
-Release plan → **[ROADMAP.md](../ROADMAP.md)** · **[v0.5.0](../ROADMAP_0.5.0.md)**.
+Music and sound-effect sources → **[TECHNICAL.md](../TECHNICAL.md#audio-credits)**.  
+Release plan → **[ROADMAP.md](../ROADMAP.md)** · **[v0.5.0](../ROADMAP_0.5.0.md)** · **[CHANGELOG](../CHANGELOG.md)**.
 What shipped → **[TECHNICAL.md](../TECHNICAL.md#dev-log)**.
 
 Regenerate human outfit sprites:

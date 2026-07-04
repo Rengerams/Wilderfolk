@@ -3,7 +3,7 @@
 **Target:** **End of July 2026** · **Prerequisite:** [v0.4.2](ROADMAP.md) shipped (`GAME_VERSION = 0.4.2`)
 
 Living plan for the **consolidated scale & architecture** release.  
-**Parent index** → [ROADMAP.md](ROADMAP.md) · Open work → [app/TODO.md](app/TODO.md) · Technical → [TECHNICAL.md](TECHNICAL.md)
+**Parent index** → [ROADMAP.md](ROADMAP.md) · Technical → [TECHNICAL.md](TECHNICAL.md) · Changelog → [CHANGELOG.md](CHANGELOG.md)
 
 *Updated: July 5, 2026 — **v0.5.0** consolidates scale, UI, quality, and architecture work into one July ship.*
 
@@ -193,6 +193,12 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 12. [ ] **`npm run simulate:20year` PASS** — town profile; log to `scripts/logs/sim-20year-town-*.txt`
 13. [ ] **Simulation battery** — remaining headless scripts + exit codes; manual large-map matrix
 14. [ ] Bump `GAME_VERSION` to `0.5.0` + migration + docs + tag (only after step 12 green)
+
+### When closing an item
+
+1. Mark done in this file (or delete the row).
+2. Add a bullet under [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` or the shipping version section.
+3. Update [ROADMAP.md](ROADMAP.md) half-done registry + `roadmapContent.ts` if player-facing.
 
 ---
 
