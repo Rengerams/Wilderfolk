@@ -502,7 +502,7 @@ Unlock trade routes in the **Trade** tab as reputation grows (the fifth route, *
 | **Log → Chronicle** | Births, marriages, hunts, diplomacy, disasters, howls — filter, copy, export |
 | **Log → Combat** | Raid and militia history with stats + export |
 | **More → Guide** | Full help + replay the tutorial |
-| **More → Roadmap** | v0.4.1 shipped · v0.4.2 **not shipped** (ship checklist open) · v0.4.3/0.4.4 preview ([index](../ROADMAP.md)) |
+| **More → Roadmap** | v0.4.2 shipped · targeting v0.4.3 ([index](../ROADMAP.md)) |
 
 **Left side:** collapsible **Construction** panel (full catalog) plus the map **build hotbar** for fast placement.
 

@@ -125,7 +125,7 @@ Status: ✅ Shipped · 🟡 Partial · ❌ Not started / deferred
 - `npm run simulate:30min` headless sim + `run-sim.mjs` wrapper
 
 ### UI / clarity (recent playtest pass)
-- **Sidebar reorganized (v0.4.2 unreleased)** — 8 tabs → 6 (Village, Frontier, Nature, Progress, Log, More); Research/Trade/Goals under Progress; Guide/Roadmap under More
+- **Sidebar reorganized (v0.4.2)** — 8 tabs → 6 (Village, Frontier, Nature, Progress, Log, More); Research/Trade/Goals under Progress; Guide/Roadmap under More
 - **Alert strip** — RimWorld-style priority alerts under header (click to jump: raids, diplomacy, food, trade ready)
 - **Map build hotbar** — Banished-style bottom strip (House, Farm, Lumber, Quarry, Well, Road); collapsed left rail deduped (catalog only via `B`)
 - **Focus hints** — actionable **Go →** buttons; tab hotkeys `V/F/N/P/L/M`; Frontier tab badge for pending events
@@ -185,7 +185,7 @@ Status: ✅ Shipped · 🟡 Partial · ❌ Not started / deferred
 - **Trade Empire + Harmony victories** — active in Goals tab; 5th route Silkmarket (`victory.ts`, `economy.ts`)
 - **Village leadership** — merit elections every 10 years, founding + succession (`villageLeadership.ts`, `VillageLeadershipPanel.tsx`)
 
-## Shipped in v0.4.2 (local, unreleased) ✅
+## Shipped in v0.4.2 ✅
 
 *Not yet version-bumped in `version.ts` — see [app/CHANGELOG.md](app/CHANGELOG.md) `[Unreleased]`.*
 

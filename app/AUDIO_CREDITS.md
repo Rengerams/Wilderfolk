@@ -2,7 +2,7 @@
 
 Wilderfolk uses royalty-free music and sound effects from [OpenGameArt.org](https://opengameart.org). Files live under `public/audio/`. Track paths are defined in `src/audio/tracks.ts`.
 
-*Last verified: July 2026 · Early Alpha v0.4.1 shipped · v0.4.2 unreleased · see [README.md](README.md) and [../TECHNICAL.md](../TECHNICAL.md) for build/audio bootstrap notes.*
+*Last verified: July 2026 · Early Alpha **v0.4.2 shipped** · see [README.md](README.md) and [../TECHNICAL.md](../TECHNICAL.md) for build/audio bootstrap notes.*
 
 If a sample fails to load, the game falls back to procedural Web Audio tones (`src/audio/introMusic.ts`, `src/audio/backgroundMusic.ts`).
 

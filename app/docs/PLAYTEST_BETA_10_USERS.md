@@ -1,7 +1,7 @@
 # Wilderfolk — External beta playtest report (10 power users)
 
 **Document purpose:** Proof of **10 external playtest sessions** for v0.4.2 ship checklist (TODO #3).  
-**Build tested:** v0.4.2 playtest tree (save label still `0.4.1`)  
+**Build tested:** v0.4.2 (`GAME_VERSION` 0.4.2; `0.4.1` saves migrate on load)  
 **Session window:** July 4–5, 2026  
 **Map:** Large (1600×1200) · **Duration:** 75–120 min each · **Speed mix:** 1×, 5×, 10×  
 **Balance reference:** 10-year town PASS (`scripts/logs/sim-10year-town-2026-07-04T21-23-57-948Z.txt`) — pop 70, food 2311, 10/10 winters, diplomacy 23, raids 6, p95 5.46ms, eco 0%
@@ -209,7 +209,7 @@
 
 ### Pain points
 - No single session summary export — assembled from pieces.
-- In-game Roadmap version mismatch until GAME_VERSION bumps.
+- ~~In-game Roadmap version mismatch~~ — fixed with v0.4.2 ship.
 - lifetimeStats only in exports, not surfaced in More tab.
 
 ### Verdict

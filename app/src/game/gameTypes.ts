@@ -936,10 +936,7 @@ export function snapToGrid(value: number, gridSize: number = GRID_SIZE): number 
   return Math.round(value / gridSize) * gridSize;
 }
 
-export const GAME_VERSION = '0.4';
-export const GAME_PHASE = 'Early Alpha';
-export const GAME_TITLE = 'Wilderfolk';
-export const GAME_SUBTITLE = 'Where Beasts and Kin Unite';
+export { GAME_VERSION, GAME_PHASE, GAME_TITLE, GAME_SUBTITLE } from './version';
 
 export const WEREWOLF_CURSE_LINES = [
   (name: string) => `${name} was touched by the full moon. They seem fine… for now.`,

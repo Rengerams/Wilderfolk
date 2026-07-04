@@ -1,5 +1,5 @@
 import type { GameEventLog } from './gameTypes';
-import { GAME_VERSION } from './gameTypes';
+import { GAME_VERSION } from './version';
 
 export interface ChronicleExportMeta {
   villageName: string;

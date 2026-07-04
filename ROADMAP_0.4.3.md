@@ -213,7 +213,7 @@ Items listed under **Defer — not v0.4.3** below are the v0.4.4 P0 backlog — 
 | Version | Theme | Status |
 |---------|-------|--------|
 | 0.4.1 | Tribes, raids, victories, leadership | ✅ Shipped |
-| 0.4.2 | Craft, walls/guards, juice, UI/UX | 🟡 Mostly done (unreleased) |
+| 0.4.2 | Craft, walls/guards, juice, UI/UX | ✅ Shipped Jul 2026 |
 | **0.4.3** | **Scale & perf Phase 1** | 📋 This document |
 | **0.4.4** | **Perf Phase 2 + UI split** | 📋 [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) |
 | 0.5.0 | Web Worker + canvas layers | Planned Q1 2027 |
