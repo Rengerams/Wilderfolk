@@ -70,7 +70,7 @@ Players on **large maps** with **100–200+ settlers** should not feel sim hitch
 | 11 | **Particle / float pooling** | `gameEngine.ts` | Reuse death particles + `floatingTexts` |
 | 12 | **App tab split / memo** | `App.tsx` | `VillageTab` / `NatureTab` / `ProgressTab` + `React.memo` |
 
-### Architecture (ex-Q1 2027)
+### Architecture — Web Worker & canvas layers
 
 | # | Item | Hotspot | Deliverable |
 |---|------|---------|-------------|
