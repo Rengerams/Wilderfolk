@@ -1,7 +1,0 @@
----
-pid: 2824
-cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
-command: "cd \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\"; $env:SIM_MAX_TICKS='8640'; npm run simulate:20year 2>&1 | Select-Object -Last 20"
-started_at: 2026-07-04T23:16:43.333Z
-running_for_ms: 229991   
----

@@ -1,7 +1,0 @@
----
-pid: 12312
-cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
-command: "sleep 30"
-started_at: 2026-07-04T19:08:38.609Z
-running_for_ms: 35038    
----
