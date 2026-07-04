@@ -562,6 +562,16 @@ For now: name your settlement, respect the wolves, and try not to pave the whole
 
 ---
 
+## Feedback & questions
+
+**Feedback and questions are appreciated!** You're playtesting the trail — your notes shape what ships next.
+
+- **Email:** [info@autosolid.nl](mailto:info@autosolid.nl)
+- **In-game:** Log → Chronicle → **Download .txt** and send what confused you, what felt great, or what you'd love next
+- **Bugs:** [GitHub Issues](https://github.com/Rengerams/Wilderfolk/issues)
+
+---
+
 <p align="center">
   <strong>Wilderfolk</strong><br>
   <em>Build inside the food chain — or watch it collapse.</em>

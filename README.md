@@ -135,3 +135,18 @@ npm run lint             # ESLint
 npm run simulate:20year  # v0.5 ship gatekeeper (20 in-game years)
 npm run sprites:humans   # regenerate human outfit variant PNGs
 ```
+
+---
+
+## Feedback & questions
+
+**Feedback and questions are appreciated!** You're helping shape what ships for real.
+
+- **Email:** [info@autosolid.nl](mailto:info@autosolid.nl)
+- **Playtest notes:** export your village chronicle (Log → Chronicle → Download .txt) and mention what confused you or what you'd love next
+- **Issues:** [GitHub Issues](https://github.com/Rengerams/Wilderfolk/issues) for bugs and reproducible steps
+
+<p align="center">
+  <strong>Wilderfolk</strong><br>
+  <em>Build inside the food chain — or watch it collapse.</em>
+</p>
