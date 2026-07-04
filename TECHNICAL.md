@@ -9,7 +9,6 @@ Developer-facing overview of the playtest build.
 | [app/README.md](app/README.md) | Players |
 | [ROADMAP.md](ROADMAP.md) | Plan & half-done registry |
 | [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) | **v0.5.0** — scale + architecture (end Jul 2026) |
-| [SESSION_SUMMARY.md](SESSION_SUMMARY.md) | What shipped, when |
 | [app/CHANGELOG.md](app/CHANGELOG.md) | Detailed change log |
 
 ---
@@ -22,7 +21,6 @@ wilderfolk/
 ├── README.md             # Short landing page
 ├── TECHNICAL.md          # This file
 ├── ROADMAP.md            # Release plan + backlog
-├── SESSION_SUMMARY.md    # Consolidated dev log
 └── app/
     ├── CHANGELOG.md      # Feature-level change log
     ├── package.json
@@ -344,13 +342,103 @@ Current alpha intentionally uses `npm start` + browser.
 
 ---
 
-## Bug fixes (July 4, 2026)
+## Dev log
 
-~40 fixes across four review rounds — full P0/P1/P2 table in [app/CHANGELOG.md](app/CHANGELOG.md) → **Bug fixes — comprehensive pass**. Summary in [app/TODO.md](app/TODO.md) and [SESSION_SUMMARY.md](SESSION_SUMMARY.md).
+**North star:** Ship a cozy frontier eco-sim where settlers live on a schedule, the food chain matters, and the valley feels alive — without asking players to touch a terminal.
 
-Key areas: `App.tsx` (loop/map setup, raid/diplomacy UI), `groupEvents.ts` (visitors, refugees, diplomacy, trade), `gameEngine.ts` (year rollover, economy, challenges), `frontierCombat.ts`, `saveLoad.ts`, `stats.ts`, `militiaBalance.ts`, `moonHowler.ts`, `forge.ts`.
+**Winning moment for a new player:** *"I built a house, assigned workers, didn't kill all the wolves, and everyone came home at night."*
 
-Verified: `npm run build`, `npm run lint` (0 errors), `npm run simulate`, `npm run simulate:30min`.
+### June 21 — Early alpha foundation
+
+| Area | What shipped |
+|------|----------------|
+| **Branding** | `GAME_PHASE = 'Early Alpha'`; badges in header, intro, Guide |
+| **Humans** | Movement fixes; procedural 4-frame walk sheets (`humanSprites.ts`) |
+| **Social** | Speech bubbles (`humanChat.ts`); day/night schedule — 24 ticks = 1 day |
+| **Housing** | `residenceBuildingId` for sleep; `homeBuildingId` = workplace |
+| **World** | Visitor caravans + rival camps (`groupEvents.ts`); Moon Howlers + Church cure |
+| **UX** | Collapsible build panel, Inspector, Guide tab, `IntroScreen.tsx` |
+| **Audio** | Procedural music/SFX rewrite; `beginAudio()` unlock on user gesture |
+| **Docs** | `README.md`, `app/README.md`, `TECHNICAL.md`, `ROADMAP.md` split |
+| **Dev** | Root `package.json` — `npm start` / `npm run build` from repo root |
+
+### June 24 — v2.2 playtest pass
+
+First-night tutorial, save migration (`GAME_VERSION` → `2.2`), terrain placement rules, victory scope (Eco-Utopia + Great City active), balance tweaks, PNG human sprites, `desktop:note` stub.
+
+### June 25 — Event log overhaul + Prison building
+
+Uncapped event log in saves (UI still shows latest 500); `.json` / `.csv` exports; Prison building + arrests; terrain cache fix; stronger map presets.
+
+### June 24 → v0.4 — Playtest & logic audit
+
+~200-pop sims: building assignment guards, meal timing, workshop recipes, Town Hall unlock chain, housing cap/expand, commute snap, event log UI, focus hints, weapons/armament, rival diplomacy basics.
+
+### July 4, 2026 — v0.4.1 shipped
+
+Tribes diplomacy v2, frontier raids MVP, Trade Empire + Harmony victory paths, merit elections, in-game Roadmap tab.
+
+### July 2026 — v0.4.2 feature work (shipped July 5)
+
+6-tab sidebar, `AlertBar`, `BuildHotbar`, `FrontierPanel`, forge queue, raid deadlines, perf pass (`entityById`, off-screen throttles, `wildlifeCounts`), `simulate:30min` benchmark. P1 defense buildings + `CombatLogPanel`; P2 rotation, juice pass, intro refine.
+
+### July 5, 2026 — v0.4.2 shipped
+
+`GAME_VERSION` 0.4.2, 10-year town PASS, 10-user beta playtests, docs synced; next target **v0.5.0** → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
+
+---
+
+## Fix history
+
+### June 24, 2026 — Sprite & interaction fixes
+
+**Tests:** `npm run build`, `npm run lint`, `npx tsc --noEmit` — all pass.
+
+| Problem | Fix | Files |
+|---------|-----|-------|
+| Humans looked like "only heads" | Full-body PNG for idle + moving; procedural fallback only | `spriteLoader.ts`, `renderer.ts` |
+| Style switched while walking | Same PNG path for both states | `renderer.ts` |
+| Settlers gigantic vs world | Reduced `HUMAN_DRAW_SCALE` (5.5→2.8), `HUMAN_SPRITE_HEIGHT_MULT` (3.2→2.5), `HUMAN_MIN_SCREEN_PX` (80→55) | `humanSprites.ts` |
+| Clicks missed settlers | `getHumanSelectionBounds()` from real sprite bounds | `humanSprites.ts`, `App.tsx` |
+| Houses showed "+ Worker" | Hidden for residences; guard in `assignIdleWorkerToBuilding()` | `App.tsx`, `gameEngine.ts` |
+| Speed 3x/5x felt weak | Doubled `BASE_TICKS_PER_SECOND` (1→2); added 10× option | `gameLoop.ts`, `App.tsx` |
+| Large populations lagged | `SimulationFocus`: off-screen humans skip pathfinding every 5th tick | `gameEngine.ts`, `gameLoop.ts` |
+| Unchecked population growth | `getFemaleFertility()` — decline after 35, infertility after 50 | `dayCycle.ts`, `gameEngine.ts` |
+| Everyone died at 200 days | `getOldAgeDeathChance()` — varied lifespans 60–95 | `dayCycle.ts`, `gameEngine.ts` |
+| Everyone named John/Mary Smith | Sync name load via `?raw` imports; `fixDefaultNames()` on load | `nameLoader.ts`, `data/`, `App.tsx` |
+| Trade routes gave free resources | `updateTradeRoutes()` now deducts `resourcesGiven` | `gameEngine.ts` |
+| Reputation too hard to earn | +2 per building, +10 festival, +3 research | `gameEngine.ts` |
+
+### June 24 — Code cleanup (hygiene only)
+
+Shared `eventLog.ts`; deduped visitor/rival logging in `groupEvents.ts`; victory constants in `victory.ts`; consolidated `App.tsx` imports. Deferred: split `gameEngine.ts`, unify news helpers.
+
+### July 4, 2026 — Lint hygiene
+
+Removed unused `countByType` in `simulate-30min.ts`; inspector auto-expand moved from `useEffect` to selection handlers in `App.tsx`. Sanity sim: 72k ticks, avg **1.81 ms/tick**, p95 **4.83 ms/tick**.
+
+### July 4, 2026 — P1 defense & combat log
+
+Wall, Wall Corner, Wall Gate, Watchtower, Barracks; barricade + militia bonuses; guard patrols; `CombatLogPanel`; raid march lines; defense sprites in `public/sprites/`.
+
+### July 4, 2026 — v0.4.2 polish
+
+Road/wall/gate rotation (**R**), juice pass (night glow, build confetti, camera nudge), intro screen refine (~20s timeline).
+
+### July 4, 2026 — Comprehensive bug-fix pass (~40 fixes)
+
+Four review rounds — full P0/P1/P2 table in [app/CHANGELOG.md](app/CHANGELOG.md) → **Bug fixes — comprehensive pass**. Summary in [app/TODO.md](app/TODO.md).
+
+| Round | Focus | Highlights |
+|-------|-------|------------|
+| **1** | Core sim + loop | Map setup GameLoop sync; faction ages; double aging; winter heating; prison demolish; challenges/eco timing; placement; raid defend |
+| **2** | Frontier + economy | Diplomacy event loss; peace vs raids; rival pop; workshop gold cap; `great_city`; victory buildings; prison ghost workers |
+| **3** | Calendar + save | Eco 24×/year; age display; raid tick timing; save year sync; trade storage cap; forge tick; leadership XP |
+| **4** | Visitors + stats | Refugees killed on departure; pop-cap food charge; save migrations; stats births/disasters; diplomacy/trade/forge UI; moon howler hunt leak |
+
+**Verified:** `npm run build`, `npm run lint` (0 errors), `npm run simulate`, `npm run simulate:30min`.
+
+Key areas: `App.tsx`, `groupEvents.ts`, `gameEngine.ts`, `frontierCombat.ts`, `saveLoad.ts`, `stats.ts`, `militiaBalance.ts`, `moonHowler.ts`, `forge.ts`.
 
 ---
 

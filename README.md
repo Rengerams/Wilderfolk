@@ -124,7 +124,7 @@ Running `npm install` at the repo root also installs the `app/` package (via `po
 | **[TECHNICAL.md](TECHNICAL.md)** | Developers — architecture, tick model, file map |
 | **[ROADMAP.md](ROADMAP.md)** | Plan — alpha → v1 → Steam |
 | **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — scale + architecture (end Jul 2026) |
-| **[SESSION_SUMMARY.md](SESSION_SUMMARY.md)** | Dev log — what shipped, when |
+| **[TECHNICAL.md](TECHNICAL.md#dev-log)** | Dev log — what shipped, when |
 | **[app/AUDIO_CREDITS.md](app/AUDIO_CREDITS.md)** | Music & SFX — OpenGameArt sources and licenses |
 
 ### Optional (developers)

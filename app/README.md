@@ -540,7 +540,7 @@ Some nights, if the higher gods are in a mood, something **golden** might cross 
 Architecture, tick model, and file layout → **[TECHNICAL.md](../TECHNICAL.md)** (repo root).  
 Music and sound-effect sources → **[AUDIO_CREDITS.md](AUDIO_CREDITS.md)**.  
 Release plan → **[ROADMAP.md](../ROADMAP.md)** · **[v0.5.0](../ROADMAP_0.5.0.md)**.
-What shipped → **[SESSION_SUMMARY.md](../SESSION_SUMMARY.md)**.
+What shipped → **[TECHNICAL.md](../TECHNICAL.md#dev-log)**.
 
 Regenerate human outfit sprites:
 

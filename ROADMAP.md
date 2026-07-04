@@ -13,7 +13,7 @@ Living document for where the game is and where it's going.
 | **[app/TODO.md](app/TODO.md)** | Open ship blockers & dev checklist |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
 
-Also: [app/README.md](app/README.md) (players) · [TECHNICAL.md](TECHNICAL.md) (devs) · [SESSION_SUMMARY.md](SESSION_SUMMARY.md) (dev log)
+Also: [app/README.md](app/README.md) (players) · [TECHNICAL.md](TECHNICAL.md) (devs + dev log)
 
 *Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).*
 

@@ -99,7 +99,7 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 | 18 | **20-year simulation gatekeeper** | **`npm run simulate:20year`** (town profile) — **primary v0.5 ship blocker**; exit 0 required to tag. 172800 ticks, 20 winters, Y20 pop gate |
 | 19 | **Headless simulation battery** | All green before tag: `npm run build` · `npm run lint` · `npm run simulate` · `npm run simulate:30min` (village/town/city) · **`npm run simulate:20year`** · `npm run simulate:10year` (regression) · `npm run balance:militia` |
 | 20 | **Simulation regression gate** | Headless scripts exit non-zero on invariant fail (pop negative, food NaN, orphaned raids, challenge regressions); document env vars in TECHNICAL.md |
-| 21 | **Manual matrix playtest** | Large map + 10× + save/reload + raid respond + forge queue + peace treaty + year-10/20 spot-check; notes in playtest doc or SESSION_SUMMARY |
+| 21 | **Manual matrix playtest** | Large map + 10× + save/reload + raid respond + forge queue + peace treaty + year-10/20 spot-check; notes in playtest doc or [TECHNICAL.md](TECHNICAL.md#dev-log) |
 
 **Reference:** v0.4.2 pass fixed welcomed-refugee deaths, peace vs raids, diplomacy event loss, eco streak 24×/year — v0.5 must re-verify these paths after perf refactors.
 
@@ -162,7 +162,7 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 - [ ] Manual: large map, 60+ humans, 30 min at 5× — no sustained frame drops
 - [ ] Manual: all 6 sidebar tabs @ 150 humans — no &gt; 100 ms blocking feel
 - [ ] Save migration `0.4.2` → `0.5.0` tested
-- [ ] CHANGELOG + SESSION_SUMMARY + `roadmapContent.ts` (`ROADMAP_TARGET_VERSION = '0.5.0'`)
+- [ ] CHANGELOG + [TECHNICAL.md](TECHNICAL.md#dev-log) + `roadmapContent.ts` (`ROADMAP_TARGET_VERSION = '0.5.0'`)
 - [ ] Git tag `v0.5.0`
 
 ---
