@@ -18,6 +18,48 @@
 
 **Next:** [v0.4.3](ROADMAP_0.4.3.md) (Sep 2026) — spatial grid, large-map perf, benchmark gate. In-game: **More → Roadmap**.
 
+## How to install
+
+*Early alpha — you need **Node.js** for now. A normal installer or **Steam** build is planned later.*
+
+### Requirements
+
+- **[Node.js 20+](https://nodejs.org)** (LTS recommended)
+- A modern browser (Chrome, Firefox, Edge, Safari)
+- ~500 MB free disk space for dependencies
+
+### Quick start
+
+1. **Get the code**
+   - **With Git:** `git clone https://github.com/Rengerams/Wilderfolk.git`
+   - **Without Git:** on GitHub, click **Code → Download ZIP**, unzip the folder
+
+2. **Open a terminal** in the project root (the folder that contains `app/` and `package.json`)
+
+3. **Install and run:**
+
+```bash
+npm install
+npm start
+```
+
+4. **Play** — open **http://localhost:5173** in your browser (or the URL shown in the terminal)
+
+5. **Stop** — press `Ctrl+C` in the terminal
+
+Running `npm install` at the repo root also installs the `app/` package (via `postinstall`).
+
+### Troubleshooting
+
+| Problem | Try this |
+|---------|----------|
+| `npm` not found | Install Node.js from [nodejs.org](https://nodejs.org), then **restart the terminal** |
+| Port already in use | Close other copies of the game; check the terminal for another port |
+| Blank or stale page | Hard-refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac) |
+| Install fails | Delete `node_modules` in the root **and** in `app/`, then run `npm install` again |
+
+Player guide (controls, tips, first day) → **[app/README.md](app/README.md)**
+
 ---
 
 ### Build your village inside a living food chain — or watch it collapse.
@@ -75,22 +117,7 @@ You are not conquering nature. You are **moving into it**. Grass, rabbits, deer,
 
 The goal is a **normal game release** — download an installer or grab it on **Steam**, launch it, done. No Node.js, no command line.
 
-That's the target. This repo is the **early alpha playtest** while we get there.
-
-## Play the alpha now
-
-*For testers only — temporary setup.*
-
-1. Install [Node.js 20+](https://nodejs.org)
-2. Open a terminal in this folder
-3. Run:
-
-```bash
-npm install
-npm start
-```
-
-4. Open **http://localhost:5173** (or the port shown in the terminal)
+That's the target. Until then, use **[How to install](#how-to-install)** above.
 
 ### Optional (developers)
 

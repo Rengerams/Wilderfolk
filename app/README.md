@@ -38,6 +38,43 @@ Check **More → Roadmap** in-game for the live slice, or the full plan at [ROAD
 
 **Later (not next):** tactical map battles, multiplayer, fog of war, full disease/hospital loop.
 
+## How to install
+
+*Early alpha — you need **Node.js** for now. A normal installer or **Steam** build is planned later.*
+
+### Requirements
+
+- **[Node.js 20+](https://nodejs.org)** (LTS recommended)
+- A modern browser (Chrome, Firefox, Edge, Safari)
+
+### Quick start
+
+1. **Get the code**
+   - **With Git:** `git clone https://github.com/Rengerams/Wilderfolk.git`
+   - **Without Git:** on GitHub, click **Code → Download ZIP**, unzip the folder
+
+2. **Open a terminal** in the **repo root** — the folder that contains `app/` and `package.json` (not inside `app/` alone)
+
+3. **Install and run:**
+
+```bash
+npm install
+npm start
+```
+
+4. **Play** — open **http://localhost:5173** in your browser (or the URL shown in the terminal)
+
+5. **Stop** — press `Ctrl+C` in the terminal
+
+### Troubleshooting
+
+| Problem | Try this |
+|---------|----------|
+| `npm` not found | Install Node.js from [nodejs.org](https://nodejs.org), then **restart the terminal** |
+| Port already in use | Close other copies of the game; check the terminal for another port |
+| Blank or stale page | Hard-refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac) |
+| Install fails | Delete `node_modules` in the root **and** in `app/`, then run `npm install` again |
+
 ---
 
 ### You wanted a frontier. You got a food chain.
@@ -87,35 +124,7 @@ When you launch the game, a short **intro** plays before village setup (~20 seco
 
 ### Play on your computer
 
-> **Coming later:** Wilderfolk is meant to ship as a normal install — download, double-click, play — or on **Steam**. No terminal, no Node.js, no setup wizard anxiety.
->
-> **Right now (early alpha):** you run it locally while we build toward that. Think of this as a rough playtest for friends and testers — bugs and half-finished ideas included.
-
-**Today (early alpha)**
-
-You need **[Node.js](https://nodejs.org)** (version 20+) *only for this early version*. Install the LTS version, then:
-
-1. Open a terminal in the **Wilderfolk** project folder (the one that contains the `app` folder).
-2. Run:
-
-```bash
-npm install
-npm start
-```
-
-3. Your browser should open at **http://localhost:5173** (or the port shown in the terminal).
-
-**To stop:** press `Ctrl+C` in the terminal.
-
-**Troubleshooting (playtest only)**
-
-| Problem | Try this |
-|---------|----------|
-| `npm` not found | Install Node.js from nodejs.org, then restart the terminal |
-| Port already in use | Close other copies of the game; check the terminal for another port (e.g. 3001) |
-| Blank page | Hard-refresh the browser (`Ctrl+Shift+R`) |
-
-When the real release lands, delete this section from your brain — you'll just install and play.
+See **[How to install](#how-to-install)** at the top of this page. When the real release lands, you'll download an installer or grab it on **Steam** — no terminal required.
 
 ---
 
