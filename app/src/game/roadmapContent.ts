@@ -210,9 +210,14 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
         note: 'No ghost workers, orphaned raids, negative food/pop',
       },
       {
+        label: '20-year simulation gatekeeper — npm run simulate:20year PASS (town)',
+        status: 'open',
+        note: 'Primary v0.5 ship blocker — 172800 ticks, 20 winters, Y20 pop gate; exit 0 to tag',
+      },
+      {
         label: 'Headless simulation battery — all scripts green before ship',
         status: 'open',
-        note: 'simulate · simulate:30min (village/town/city) · simulate:10year · balance:militia',
+        note: 'simulate · simulate:30min · simulate:20year · simulate:10year (regression) · balance:militia',
       },
       {
         label: 'Simulation regression gate — exit non-zero on invariant fail',
@@ -275,6 +280,7 @@ export const ROADMAP_NEXT_ACTIONS: string[] = [
   'v0.5.0 — Grass buckets, partner map, particle pooling, App tab split',
   'v0.5.0 — Web Worker gameTick + OffscreenCanvas terrain/entity layers',
   'v0.5.0 P1 — Counter-raid march line; large-map playtests; reputation arc',
+  'v0.5.0 — npm run simulate:20year PASS (town) — primary ship gatekeeper',
   'v0.5.0 — Big bug checkup + logic invariants + full headless sim battery',
   'v0.5.0 — Bump GAME_VERSION to 0.5.0 + migration + CHANGELOG + tag',
 ];
@@ -286,7 +292,8 @@ export const ROADMAP_OPEN_FIXES: string[] = [
   'P0 — incremental entityById, buildingActions scans, App tab split, pooling',
   'P0 — Web Worker gameTick + OffscreenCanvas layers',
   'P0 — big bug checkup after perf refactors (frontier, save, raids, forge, eco)',
-  'P0 — logical invariant checks + headless sim battery (5min, 30min, 10year, militia)',
+  'P0 — simulate:20year PASS (town) — primary gatekeeper before v0.5 tag',
+  'P0 — logical invariant checks + headless sim battery (5min, 30min, 10year regression, militia)',
   'P1 — counter-raid militia march visuals (prep-focused; no battle screen)',
   'P1 — large-map playtests at 10×; reputation arc; visitor quest chain',
   'P1 — footstep SFX; npm run benchmark:gate CI wrapper',

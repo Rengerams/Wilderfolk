@@ -14,6 +14,7 @@
     "simulate:30min": "npm run simulate:30min --prefix app",
     "simulate:family": "npm run simulate:family --prefix app",
     "simulate:10year": "npm run simulate:10year --prefix app",
+    "simulate:20year": "npm run simulate:20year --prefix app",
     "desktop:note": "echo Tauri wrap: npm run build && tauri build",
     "sprites:humans": "python app/scripts/generate_human_variants.py"
   }

@@ -98,9 +98,10 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 |---|------|-------------|
 | 16 | **Big bug checkup** | Full-code audit: frontier/diplomacy, save/load, raids, forge, prison, visitors, eco streaks, UI dead-ends; fix + document in CHANGELOG |
 | 17 | **Logical invariant checks** | Assert or test: entity lifecycle (birth/death/compaction), `entityById`/`buildingById` consistency, peace vs active raids, migration round-trip `0.4.2`→`0.5.0`, no ghost workers/prisoners |
-| 18 | **Headless simulation battery** | All green before tag: `npm run build` · `npm run lint` · `npm run simulate` · `npm run simulate:30min` (village/town/city) · `npm run simulate:10year` · `npm run balance:militia` |
-| 19 | **Simulation regression gate** | Headless scripts exit non-zero on invariant fail (pop negative, food NaN, orphaned raids, challenge regressions); document env vars in TECHNICAL.md |
-| 20 | **Manual matrix playtest** | Large map + 10× + save/reload + raid respond + forge queue + peace treaty + year-10 spot-check; notes in playtest doc or SESSION_SUMMARY |
+| 18 | **20-year simulation gatekeeper** | **`npm run simulate:20year`** (town profile) — **primary v0.5 ship blocker**; exit 0 required to tag. 172800 ticks, 20 winters, Y20 pop gate |
+| 19 | **Headless simulation battery** | All green before tag: `npm run build` · `npm run lint` · `npm run simulate` · `npm run simulate:30min` (village/town/city) · **`npm run simulate:20year`** · `npm run simulate:10year` (regression) · `npm run balance:militia` |
+| 20 | **Simulation regression gate** | Headless scripts exit non-zero on invariant fail (pop negative, food NaN, orphaned raids, challenge regressions); document env vars in TECHNICAL.md |
+| 21 | **Manual matrix playtest** | Large map + 10× + save/reload + raid respond + forge queue + peace treaty + year-10/20 spot-check; notes in playtest doc or SESSION_SUMMARY |
 
 **Reference:** v0.4.2 pass fixed welcomed-refugee deaths, peace vs raids, diplomacy event loss, eco streak 24×/year — v0.5 must re-verify these paths after perf refactors.
 
@@ -157,7 +158,8 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 
 - [ ] All **P0** items merged; `npm run build` + `npm run lint` clean
 - [ ] **Bug checkup closed** — no known P0/P1 regressions; fixes logged in CHANGELOG `[0.5.0]`
-- [ ] **Logic + sim battery green** — `simulate`, `simulate:30min` (all profiles), `simulate:10year`, `balance:militia` pass; invariants documented
+- [ ] **`npm run simulate:20year` PASS** — town profile, all applicable gates (primary ship gatekeeper)
+- [ ] **Logic + sim battery green** — `simulate`, `simulate:30min` (all profiles), `simulate:10year` (regression), `balance:militia` pass; invariants documented
 - [ ] Benchmark gate passes **village** and **town** profiles
 - [ ] Manual: large map, 60+ humans, 30 min at 5× — no sustained frame drops
 - [ ] Manual: all 6 sidebar tabs @ 150 humans — no &gt; 100 ms blocking feel
@@ -190,8 +192,9 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`.
 9. [ ] Counter-raid march line (P1)
 10. [ ] **Big bug checkup** — audit frontier, save, raids, forge, eco, UI; fix regressions from perf refactors
 11. [ ] **Logic checks** — entity maps, migration round-trip, peace/raid invariants
-12. [ ] **Simulation battery** — all headless scripts + exit codes; manual large-map matrix
-13. [ ] Bump `GAME_VERSION` to `0.5.0` + migration + docs + tag
+12. [ ] **`npm run simulate:20year` PASS** — town profile; log to `scripts/logs/sim-20year-town-*.txt`
+13. [ ] **Simulation battery** — remaining headless scripts + exit codes; manual large-map matrix
+14. [ ] Bump `GAME_VERSION` to `0.5.0` + migration + docs + tag (only after step 12 green)
 
 ---
 

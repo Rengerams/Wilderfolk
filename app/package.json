@@ -12,7 +12,8 @@
     "simulate:30min": "node scripts/run-sim.mjs scripts/simulate-30min.ts",
     "simulate:family": "node scripts/run-sim.mjs scripts/simulate-family.ts",
     "balance:militia": "node scripts/run-sim.mjs scripts/balance-militia.ts",
-    "simulate:10year": "node scripts/run-sim.mjs scripts/simulate-10year.ts"
+    "simulate:10year": "node scripts/run-sim.mjs scripts/simulate-10year.ts",
+    "simulate:20year": "node scripts/run-sim.mjs scripts/simulate-20year.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

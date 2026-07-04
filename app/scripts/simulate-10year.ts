@@ -2,10 +2,11 @@
  * Headless 10 in-game year balance pass — exercises buildings, research, forge,
  * diplomacy, raids, visitors, and rival actions with extensive logging.
  *
- * Run: npm run simulate:10year
+ * Run: npm run simulate:10year  (or simulate:20year for v0.5 ship gate)
  * Env:
+ *   SIM_YEARS          — in-game years for official balance test (default 10; v0.5 gate = 20)
  *   SIM_PROFILE        — village | town (default) | eco — population targets & pass gates
- *   SIM_LOG_FILE       — write full log to path (default: scripts/logs/sim-10year-<profile>-<timestamp>.txt)
+ *   SIM_LOG_FILE       — write full log to path (default: scripts/logs/sim-<years>year-<profile>-<timestamp>.txt)
  *   SIM_VERBOSE        — 1 = log every player action to console (default 0)
  *   SIM_STRICT_COVERAGE — 1 = exit 1 if any option category untested
  *   PROGRESS_EVERY     — live heartbeat interval in ticks (default 360 = 15 game days)
@@ -68,8 +69,9 @@ import { getGrazingPressureReport } from '../src/game/ecosystemPressure';
 import { hasStoneSpears, hasIronSpears } from '../src/game/combat';
 
 const TICKS_PER_YEAR = TICKS_PER_DAY * DAYS_PER_YEAR;
-/** Official balance test length: 10 in-game years (10 winters, Y10 gates). */
-const FULL_BALANCE_TICKS = TICKS_PER_YEAR * 10;
+const SIM_YEARS = Math.max(1, parseInt(process.env.SIM_YEARS ?? '10', 10) || 10);
+/** Official balance test length: SIM_YEARS in-game years (winters + Y<n> gates). */
+const FULL_BALANCE_TICKS = TICKS_PER_YEAR * SIM_YEARS;
 const WINTER_ENTER_TICK = 270 * TICKS_PER_DAY;
 const TOTAL_TICKS = process.env.SIM_MAX_TICKS
   ? Math.max(1, parseInt(process.env.SIM_MAX_TICKS, 10) || FULL_BALANCE_TICKS)
@@ -211,7 +213,7 @@ class SimLogger {
   flush(profile: SimProfile): string | null {
     const text = this.lines.join('\n');
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const logPath = process.env.SIM_LOG_FILE ?? join(defaultLogDir, `sim-10year-${profile}-${stamp}.txt`);
+    const logPath = process.env.SIM_LOG_FILE ?? join(defaultLogDir, `sim-${SIM_YEARS}year-${profile}-${stamp}.txt`);
     try {
       mkdirSync(dirname(logPath), { recursive: true });
       writeFileSync(logPath, text, 'utf8');
@@ -856,7 +858,7 @@ function buildScheduledSupports(profile: SimProfile): ScheduledAction[] {
 
   // Pre-winter stockpile handled by bounded topUpPreWinterStockpile at day 250 (no double-dip grants).
 
-  for (let y = 5; y <= 9; y++) {
+  for (let y = 5; y < SIM_YEARS; y++) {
     fund(TICKS_PER_YEAR * y, {
       food: 500 + y * 80,
       wood: 700 + y * 120,
@@ -890,7 +892,7 @@ function resetGrowthYear(year: number): void {
 }
 
 function targetPopForYear(year: number): number {
-  const t = Math.min(1, Math.max(0, year / 10));
+  const t = Math.min(1, Math.max(0, year / SIM_YEARS));
   return Math.round(profileCfg.popMin + (profileCfg.popMax - profileCfg.popMin) * t);
 }
 
@@ -1248,46 +1250,57 @@ function assignTicks(
   return out;
 }
 
+/** Per-decade injection offsets (repeated for 20-year and longer full balance runs). */
+const DECADE_INJECTION_TEMPLATE: { offset: number; injection: InjectionKind }[] = [
+  { offset: 4000, injection: { type: 'rival', relationship: 'tense' } },
+  { offset: 4200, injection: { type: 'rival', relationship: 'competitive' } },
+  { offset: 4400, injection: { type: 'rival', relationship: 'neutral' } },
+  { offset: 4800, injection: { type: 'visitor', kind: 'traders' } },
+  { offset: 5000, injection: { type: 'visitor', kind: 'hunters' } },
+  { offset: 5200, injection: { type: 'visitor', kind: 'pilgrims' } },
+  { offset: 5500, injection: { type: 'visitor', kind: 'performers' } },
+  { offset: 5800, injection: { type: 'visitor', kind: 'scholars' } },
+  { offset: 6000, injection: { type: 'visitor', kind: 'refugees' } },
+  { offset: 8000, injection: { type: 'diplomacy', kind: 'tribute' } },
+  { offset: 8300, injection: { type: 'diplomacy', kind: 'tribute' } },
+  { offset: 8600, injection: { type: 'diplomacy', kind: 'tribute' } },
+  { offset: 10000, injection: { type: 'diplomacy', kind: 'border_dispute' } },
+  { offset: 10300, injection: { type: 'diplomacy', kind: 'border_dispute' } },
+  { offset: 10600, injection: { type: 'diplomacy', kind: 'border_dispute' } },
+  { offset: 12000, injection: { type: 'diplomacy', kind: 'alliance' } },
+  { offset: 12300, injection: { type: 'diplomacy', kind: 'alliance' } },
+  { offset: 12600, injection: { type: 'diplomacy', kind: 'alliance' } },
+  { offset: 14000, injection: { type: 'diplomacy', kind: 'peace_treaty' } },
+  { offset: 14300, injection: { type: 'diplomacy', kind: 'peace_treaty' } },
+  { offset: 14600, injection: { type: 'diplomacy', kind: 'peace_treaty' } },
+  { offset: 18000, injection: { type: 'visitor', kind: 'hunters' } },
+  { offset: 19000, injection: { type: 'visitor', kind: 'nomads' } },
+  { offset: 20000, injection: { type: 'raid' } },
+  { offset: 22000, injection: { type: 'visitor', kind: 'performers' } },
+  { offset: 22000, injection: { type: 'raid' } },
+  { offset: 24000, injection: { type: 'visitor', kind: 'pilgrims' } },
+  { offset: 24000, injection: { type: 'raid' } },
+  { offset: 26000, injection: { type: 'visitor', kind: 'refugees' } },
+  { offset: 52000, injection: { type: 'visitor', kind: 'refugees' } },
+  { offset: 52000, injection: { type: 'raid' } },
+  { offset: 54000, injection: { type: 'visitor', kind: 'scholars' } },
+  { offset: 54000, injection: { type: 'raid' } },
+  { offset: 56000, injection: { type: 'visitor', kind: 'nomads' } },
+  { offset: 56000, injection: { type: 'raid' } },
+];
+
 function buildInjectionSchedule(totalTicks: number): ScheduledInjection[] {
   if (totalTicks >= FULL_BALANCE_TICKS) {
-    const full: ScheduledInjection[] = [
-      { tick: 4000, injection: { type: 'rival', relationship: 'tense' } },
-      { tick: 4200, injection: { type: 'rival', relationship: 'competitive' } },
-      { tick: 4400, injection: { type: 'rival', relationship: 'neutral' } },
-      { tick: 4800, injection: { type: 'visitor', kind: 'traders' } },
-      { tick: 5000, injection: { type: 'visitor', kind: 'hunters' } },
-      { tick: 5200, injection: { type: 'visitor', kind: 'pilgrims' } },
-      { tick: 5500, injection: { type: 'visitor', kind: 'performers' } },
-      { tick: 5800, injection: { type: 'visitor', kind: 'scholars' } },
-      { tick: 6000, injection: { type: 'visitor', kind: 'refugees' } },
-      { tick: 8000, injection: { type: 'diplomacy', kind: 'tribute' } },
-      { tick: 8300, injection: { type: 'diplomacy', kind: 'tribute' } },
-      { tick: 8600, injection: { type: 'diplomacy', kind: 'tribute' } },
-      { tick: 10000, injection: { type: 'diplomacy', kind: 'border_dispute' } },
-      { tick: 10300, injection: { type: 'diplomacy', kind: 'border_dispute' } },
-      { tick: 10600, injection: { type: 'diplomacy', kind: 'border_dispute' } },
-      { tick: 12000, injection: { type: 'diplomacy', kind: 'alliance' } },
-      { tick: 12300, injection: { type: 'diplomacy', kind: 'alliance' } },
-      { tick: 12600, injection: { type: 'diplomacy', kind: 'alliance' } },
-      { tick: 14000, injection: { type: 'diplomacy', kind: 'peace_treaty' } },
-      { tick: 14300, injection: { type: 'diplomacy', kind: 'peace_treaty' } },
-      { tick: 14600, injection: { type: 'diplomacy', kind: 'peace_treaty' } },
-      { tick: 18000, injection: { type: 'visitor', kind: 'hunters' } },
-      { tick: 19000, injection: { type: 'visitor', kind: 'nomads' } },
-      { tick: 20000, injection: { type: 'raid' } },
-      { tick: 22000, injection: { type: 'visitor', kind: 'performers' } },
-      { tick: 22000, injection: { type: 'raid' } },
-      { tick: 24000, injection: { type: 'visitor', kind: 'pilgrims' } },
-      { tick: 24000, injection: { type: 'raid' } },
-      { tick: 26000, injection: { type: 'visitor', kind: 'refugees' } },
-      { tick: 52000, injection: { type: 'visitor', kind: 'refugees' } },
-      { tick: 52000, injection: { type: 'raid' } },
-      { tick: 54000, injection: { type: 'visitor', kind: 'scholars' } },
-      { tick: 54000, injection: { type: 'raid' } },
-      { tick: 56000, injection: { type: 'visitor', kind: 'nomads' } },
-      { tick: 56000, injection: { type: 'raid' } },
-    ];
-    return full.filter((e) => e.tick <= totalTicks);
+    const decades = Math.ceil(SIM_YEARS / 10);
+    const full: ScheduledInjection[] = [];
+    for (let d = 0; d < decades; d++) {
+      const base = d * TICKS_PER_YEAR * 10;
+      for (const { offset, injection } of DECADE_INJECTION_TEMPLATE) {
+        const tick = base + offset;
+        if (tick <= totalTicks) full.push({ tick, injection });
+      }
+    }
+    return full;
   }
 
   // Partial run — compress all coverage into the available window after rivals spawn.
@@ -1808,20 +1821,20 @@ function runSimulation(): void {
   const start = performance.now();
   let lastProgressTick = 0;
 
-  logger.live('=== Wilderfolk 10-year balance simulation (live) ===');
+  logger.live(`=== Wilderfolk ${SIM_YEARS}-year balance simulation (live) ===`);
   logger.live(`Profile: ${SIM_PROFILE} — ${profileCfg.label}`);
-  logger.live(`Targets @ Y10: pop ${profileCfg.popMin}–${profileCfg.popMax}`);
+  logger.live(`Targets @ Y${SIM_YEARS}: pop ${profileCfg.popMin}–${profileCfg.popMax}`);
   logger.live(`Target: ${formatRunLength(TOTAL_TICKS)} | map ${state.width}×${state.height}`);
   if (IS_SMOKE_RUN) {
     const winterNote = HAS_SCHEDULED_WINTER
       ? 'on'
       : `off (winter starts tick ${FIRST_WINTER_TICK}, smoke run is ${TOTAL_TICKS})`;
     logger.live(
-      `⚠ Smoke run — NOT the 10-year balance test. Unset SIM_MAX_TICKS for official verdict`
-      + ` (${FULL_BALANCE_TICKS} ticks = 10 years, 10 winters).`,
+      `⚠ Smoke run — NOT the ${SIM_YEARS}-year balance test. Unset SIM_MAX_TICKS for official verdict`
+      + ` (${FULL_BALANCE_TICKS} ticks = ${SIM_YEARS} years).`,
     );
     logger.live(
-      `Smoke gates: Y10/pop-range skipped; winter=${winterNote};`
+      `Smoke gates: Y${SIM_YEARS}/pop-range skipped; winter=${winterNote};`
       + ` diplomacy=${HAS_SCHEDULED_DIPLOMACY ? 'on' : 'off'};`
       + ` raids=${HAS_SCHEDULED_RAIDS ? 'on' : 'off'}`,
     );
@@ -1989,9 +2002,9 @@ function runSimulation(): void {
   const researchEvents = log.filter((e) => e.type === 'research').length;
 
   logger.live(`\n✓ Simulation complete in ${elapsed}s`);
-  logger.log('=== Wilderfolk 10-year balance simulation ===');
+  logger.log(`=== Wilderfolk ${SIM_YEARS}-year balance simulation ===`);
   logger.log(`Profile: ${SIM_PROFILE} — ${profileCfg.label}`);
-  logger.log(`Targets @ Y10: pop ${profileCfg.popMin}–${profileCfg.popMax}`);
+  logger.log(`Targets @ Y${SIM_YEARS}: pop ${profileCfg.popMin}–${profileCfg.popMax}`);
   logger.log(`Ticks: ${formatRunLength(TOTAL_TICKS)} | Wall time: ${elapsed}s`);
   logger.log(`Calendar: Year ${state.year}, Day ${state.dayInYear} | Total days: ${Math.floor(state.tick / TICKS_PER_DAY)}`);
   logger.log(`Map: ${state.width}×${state.height} (large)`);
@@ -2007,7 +2020,7 @@ function runSimulation(): void {
     );
   }
 
-  logger.section('Winter log (10-year test judgment)');
+  logger.section(`Winter log (${SIM_YEARS}-year test judgment)`);
   const winterLines = winterTracker.formatReport();
   if (winterLines.length === 0) {
     logger.log('(no winters captured)');
@@ -2077,16 +2090,16 @@ function runSimulation(): void {
   };
   const gates: BalanceGate[] = [
     {
-      name: 'Reached year 10',
+      name: `Reached year ${SIM_YEARS}`,
       applicable: IS_FULL_BALANCE_RUN,
-      skipReason: `smoke run — 10-year test needs ${FULL_BALANCE_TICKS} ticks (have ${TOTAL_TICKS})`,
-      pass: state.year >= 10,
+      skipReason: `smoke run — ${SIM_YEARS}-year test needs ${FULL_BALANCE_TICKS} ticks (have ${TOTAL_TICKS})`,
+      pass: state.year >= SIM_YEARS,
       detail: `year=${state.year}`,
     },
     {
       name: `Population ${profileCfg.popMin}–${profileCfg.popMax}`,
       applicable: IS_FULL_BALANCE_RUN,
-      skipReason: `smoke run — 10-year test needs ${FULL_BALANCE_TICKS} ticks (have ${TOTAL_TICKS})`,
+      skipReason: `smoke run — ${SIM_YEARS}-year test needs ${FULL_BALANCE_TICKS} ticks (have ${TOTAL_TICKS})`,
       pass: popInRange,
       detail: `pop=${humans.length}`,
     },
@@ -2164,7 +2177,7 @@ function runSimulation(): void {
   const profilePass = failedGates === 0;
   const failedGateSummary = failedGateList.map((g) => `${g.name} (${g.detail})`).join('; ');
   logger.section('VERDICT');
-  logger.log(`${profilePass ? 'PASS' : 'FAIL'} — 10-year ${SIM_PROFILE} balance test`);
+  logger.log(`${profilePass ? 'PASS' : 'FAIL'} — ${SIM_YEARS}-year ${SIM_PROFILE} balance test`);
   logger.log(
     `Gates: ${applicableGates.length} tested, ${skippedGates.length} skipped`
     + (IS_SMOKE_RUN ? ` (smoke run — official test is ${FULL_BALANCE_TICKS} ticks)` : ''),
@@ -2176,11 +2189,11 @@ function runSimulation(): void {
     }
   }
   if (skippedGates.length > 0 && IS_SMOKE_RUN) {
-    logger.log(`Skipped ${skippedGates.length} gates — run the full 10-year test (unset SIM_MAX_TICKS).`);
+    logger.log(`Skipped ${skippedGates.length} gates — run the full ${SIM_YEARS}-year test (unset SIM_MAX_TICKS).`);
   }
   const verdictLabel = IS_SMOKE_RUN
-    ? `smoke run (${SIM_PROFILE}, ${TOTAL_TICKS} ticks — not the 10-year test)`
-    : `10-year ${SIM_PROFILE} balance test`;
+    ? `smoke run (${SIM_PROFILE}, ${TOTAL_TICKS} ticks — not the ${SIM_YEARS}-year test)`
+    : `${SIM_YEARS}-year ${SIM_PROFILE} balance test`;
   logger.live(
     profilePass
       ? `\n✓ VERDICT: PASS — ${verdictLabel} (${applicableGates.length} gates tested)`

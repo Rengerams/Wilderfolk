@@ -163,7 +163,8 @@ Full plan → [../ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md)
 | `GAME_VERSION` **0.5.0** + save migration | `version.ts`, `saveLoad.ts` |
 | **Big bug checkup** | Full audit after perf refactors — frontier, save, raids, forge, prison, visitors, eco, UI |
 | **Logical invariant checks** | Entity maps, migration round-trip, peace vs raids, no ghost workers / orphaned state |
-| **Headless simulation battery** | `simulate` · `simulate:30min` (village/town/city) · `simulate:10year` · `balance:militia` — all green |
+| **20-year simulation gatekeeper** | **`npm run simulate:20year`** (town) — **primary v0.5 ship blocker**; exit 0 required |
+| **Headless simulation battery** | `simulate` · `simulate:30min` · **`simulate:20year`** · `simulate:10year` (regression) · `balance:militia` — all green |
 | **Simulation regression gate** | Scripts exit non-zero on invariant fail; document in TECHNICAL.md |
 | **Manual playtest matrix** | Large map, 10×, save/reload, raid/forge/peace/year-10 spot-check |
 

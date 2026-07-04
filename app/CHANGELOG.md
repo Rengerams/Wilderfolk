@@ -10,7 +10,8 @@
 - Web Worker `gameTick`, OffscreenCanvas terrain/entity layers
 - **Big bug checkup** — full-code audit after perf refactors (frontier, save, raids, forge, eco, UI)
 - **Logical invariant checks** — entity lifecycle, maps consistency, migration `0.4.2`→`0.5.0`, peace vs raids
-- **Simulation battery** — `simulate`, `simulate:30min` (all profiles), `simulate:10year`, `balance:militia`; exit codes on fail
+- **20-year simulation gatekeeper** — `npm run simulate:20year` (town profile) must PASS before v0.5 tag
+- **Simulation battery** — `simulate`, `simulate:30min` (all profiles), `simulate:20year`, `simulate:10year` (regression), `balance:militia`; exit codes on fail
 - `GAME_VERSION` **0.5.0** + save migration
 
 ### Planned (v0.5.0 P1)

@@ -61,6 +61,8 @@ npm start      # vite dev server → http://127.0.0.1:5173
 npm run build  # tsc + production bundle → app/dist/
 npm run lint   # ESLint (0 errors as of July 2026 sanity check)
 npm run simulate:30min   # Headless playtest sim — env SIM_MINUTES (default 1200), PERF_SAMPLE_EVERY
+npm run simulate:20year  # v0.5 ship gatekeeper — 20 in-game years (SIM_YEARS=20), town profile; exit 0 = PASS
+npm run simulate:10year  # 10-year balance regression (SIM_YEARS=10 default)
 ```
 
 Requires **Node.js 20+**.
@@ -303,6 +305,8 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 **Shipped (v0.4.2):** off-screen sim throttles, per-tick `entityById` / `buildingById`, wildlife `byType` loop, `wildlifeCounts`, UI memoization. See [app/CHANGELOG.md](app/CHANGELOG.md) `[0.4.2]` → Performance.
 
 **Benchmark:** `cd app && npm run simulate:30min` — env `SIM_MINUTES` (default 1200 ≈ 30 game-min), `PERF_SAMPLE_EVERY` (default 120). July 2026 sanity run (72k ticks, ~8 game years, ~557 entities): avg **1.81 ms/tick**, p50 **1.30 ms**, p95 **4.83 ms**, max **105 ms**. Informal budget: p95 &lt; 16 ms/tick @ ~700 alive entities.
+
+**v0.5 ship gatekeeper:** `npm run simulate:20year` — headless **20 in-game years** (172800 ticks, 20 winters). Env: `SIM_PROFILE=town|village|eco` (default `town`), `SIM_YEARS=20` (set by `simulate-20year.ts`), `SIM_MAX_TICKS` for smoke only. Logs → `app/scripts/logs/sim-20year-<profile>-<timestamp>.txt`. **Exit 0 required** before tagging v0.5.0. `npm run simulate:10year` remains a faster regression check (`SIM_YEARS=10`).
 
 **Future phases** (version + finish target) — full table in [app/TODO.md](app/TODO.md):
 

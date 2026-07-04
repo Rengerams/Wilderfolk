@@ -1,6 +1,42 @@
 # Wilderfolk
 
-**Where Beasts and Kin Unite** · *Early Alpha*
+<p align="center">
+  <img src="app/public/logo.png" alt="Wilderfolk" width="120" />
+</p>
+
+<p align="center">
+  <strong>Where Beasts and Kin Unite</strong><br>
+  <em>A cozy frontier settlement sim — built inside the food chain, not on top of it.</em>
+</p>
+
+---
+
+## What is Wilderfolk?
+
+Most settlement games ask you to **tame** the wild. Wilderfolk asks you to **move into it** — and not wreck the neighborhood on your way in.
+
+You are not conquering a blank map. You are sharing a valley with grass, rabbits, deer, wolves, rival camps, caravans, winter, and the occasional curse under a full moon. Every choice ripples through the chain: wipe out the wolves and your hunters go hungry two seasons later. Pave too fast and the ecosystem buckles. Arm your militia, sign a peace treaty, or pay tribute — but **raids test preparation**, not a fancy battle screen.
+
+```
+🌿 → 🐰 🦌 → 🐺 🦊 → 🏹 → 🏘️
+```
+
+**Build homes. Assign workers. Watch families grow.** Meet neighbor tribes on the map, queue iron at the Blacksmith, survive Moon Howlers, and chase four victory paths — from Eco-Utopia to Trade Empire. The valley feels alive because the sim treats predators, prey, and people as one system.
+
+> **Early alpha today** — playtest the trail in your browser. **Installer and Steam** are the destination; this repo is the open development build.
+
+| You get | Why it matters |
+|---------|----------------|
+| **Living food chain** | Grass, prey, predators, and your village share one ecology — balance or collapse |
+| **Settlers with schedules** | Day jobs, nights at home, courtship, families, walk animations on the map |
+| **Frontier diplomacy** | Visitor caravans, rival camps, trade, peace treaties, incoming raids you can *prepare* for |
+| **Craft & defense** | Research tiers, Blacksmith forge queue, walls, towers, barracks, guard patrols |
+| **Clear goals** | Focus hints, alert strip, six sidebar tabs — you always know what to do next |
+| **Four victory paths** | Eco-Utopia, Great City, Trade Empire, Harmony — plus a full village chronicle |
+
+**Don't kill all the wolves.** Seriously. That's the whole game in one sentence.
+
+---
 
 ## Latest update — v0.4.2 (July 5, 2026)
 
@@ -16,11 +52,29 @@
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](app/docs/PLAYTEST_BETA_10_USERS.md) |
 | **Fixes** | ~40 bug fixes (July 4) + beta UX feedback |
 
-**Next:** **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026) — scale, UI split, Web Worker, canvas layers. In-game: **More → Roadmap**.
+### What's next — v0.5.0 (end July 2026)
+
+All open scale, quality, and architecture work ships in one release → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md). In-game: **More → Roadmap**.
+
+| Track | Highlights |
+|-------|------------|
+| **Scale** | Spatial grid, large-map perf, Web Worker sim, canvas layers |
+| **UI** | App tab split so city-size villages stay snappy |
+| **Quality** | Big bug audit, logic checks, **`npm run simulate:20year` ship gatekeeper** |
+| **Polish** | Counter-raid march visuals, reputation arc, visitor quests |
+| **After v0.5** | Installer or **Steam** — download and play, no terminal |
+
+**Not on the near-term list:** tactical map battles, multiplayer, fog of war, hospital disease loop — [ROADMAP.md](ROADMAP.md).
+
+### Prior release — v0.4.1
+
+Tribes & diplomacy v2, frontier raids, peace treaties, visitor leader talk, village leadership elections, four victory paths, population panel, chronicle export, and the in-game roadmap tab. Details → [ROADMAP.md](ROADMAP.md).
+
+---
 
 ## How to install
 
-*Early alpha — you need **Node.js** for now. A normal installer or **Steam** build is planned later.*
+*Early alpha — you need **Node.js** for now. A normal installer or **Steam** build is planned after v0.5.*
 
 ### Requirements
 
@@ -58,30 +112,9 @@ Running `npm install` at the repo root also installs the `app/` package (via `po
 | Blank or stale page | Hard-refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac) |
 | Install fails | Delete `node_modules` in the root **and** in `app/`, then run `npm install` again |
 
-Player guide (controls, tips, first day) → **[app/README.md](app/README.md)**
+**Player guide** (first day, controls, raids, tips) → **[app/README.md](app/README.md)**
 
 ---
-
-### Build your village inside a living food chain — or watch it collapse.
-
-You are not conquering nature. You are **moving into it**. Grass, rabbits, deer, wolves, foxes, Moon Howlers, rival camps, and winter all have opinions about your town hall.
-
-```
-🌿 → 🐰 🦌 → 🐺 🦊 → 🏹 → 🏘️
-```
-
-**Don't kill all the wolves.** That's not a cute tagline — it's a warning. Wipe out the predators and your village starves two seasons later.
-
-> **Early alpha** — bugs, rough edges, and features in flux. You're playtesting the trail before installer / Steam.
-
-## What's coming
-
-| Version | When (target) | Theme | Highlights |
-|---------|---------------|-------|------------|
-| **0.5.0** | **End Jul 2026** | Scale + quality | Spatial grid, App tab split, Web Worker, canvas layers, **bug audit + sim gates** → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) |
-| **1.0 / Steam** | TBD | Real release | Installer or Steam — no Node.js, no terminal |
-
-**Not on the near-term list:** real-time tactical battles on the map, multiplayer, fog of war, hospital disease loop — [ROADMAP.md](ROADMAP.md).
 
 ## Documentation
 
@@ -94,32 +127,11 @@ You are not conquering nature. You are **moving into it**. Grass, rabbits, deer,
 | **[SESSION_SUMMARY.md](SESSION_SUMMARY.md)** | Dev log — what shipped, when |
 | **[app/AUDIO_CREDITS.md](app/AUDIO_CREDITS.md)** | Music & SFX — OpenGameArt sources and licenses |
 
-## Prior release — v0.4.1
-
-- **PNG walk-sheet settlers** — 4-frame animation, 4 outfit variants per gender
-- **First-night tutorial** — Quick Start walks you through building a house before 8pm
-- **Visible hunting** — chase lines, floating hunt/combat text, predator prey dynamics on the map
-- **Weapons & shields** — Defense research (stone spears → iron gear at the Blacksmith)
-- **Frontier raids** — defend, barricade, pay tribute, counter-raid; combat preview with distance-scaled provisions
-- **Tribe diplomacy v2** — map camp panels, rival events, visitor trade, refugee negotiate, peace treaties, talk to visitor leaders
-- **Village leadership** — merit-based elections every 10 years (👑 village head)
-- **Day/night schedule** — settlers sleep at home, work during the day
-- **Food chain sim** — wolves, deer, grass, pollution, seasons
-- **Visitors & rival camps** on the same map
-- **Moon Howlers**, festivals, disasters
-- **Four active victory paths** — Eco-Utopia, Great City, Trade Empire, Harmony
-- **Terrain-aware building** — can't place on water, mountains, or snow
-
-## Coming soon: install & play (or Steam)
-
-The goal is a **normal game release** — download an installer or grab it on **Steam**, launch it, done. No Node.js, no command line.
-
-That's the target. Until then, use **[How to install](#how-to-install)** above.
-
 ### Optional (developers)
 
 ```bash
-npm run build      # production build
-npm run lint       # ESLint
+npm run build            # production build
+npm run lint             # ESLint
+npm run simulate:20year  # v0.5 ship gatekeeper (20 in-game years)
 npm run sprites:humans   # regenerate human outfit variant PNGs
 ```
