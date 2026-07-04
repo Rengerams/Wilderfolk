@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ensureIntroAudio, getMuteState, toggleMute } from '../audio';
-import { GAME_PHASE, GAME_VERSION } from './gameEngine';
+import { GAME_PHASE, GAME_SUBTITLE, GAME_VERSION } from './version';
 
 // ---------------------------------------------------------------------------
 // Types & constants
@@ -32,7 +32,7 @@ interface FoodChainItem {
   label: string;
 }
 
-const FULL_SUBTITLE = 'Where Beasts and Kin Unite';
+const FULL_SUBTITLE = GAME_SUBTITLE;
 const HOOK_LINE = "Don't kill all the wolves.";
 const HOOK_DETAIL = 'Build inside the food chain — or watch it collapse.';
 const TYPEWRITER_MS = 98;
@@ -397,6 +397,21 @@ export default function IntroScreen({ onContinue }: IntroScreenProps) {
       <div className="intro-grain pointer-events-none absolute inset-0" />
 
       <div
+        className={`intro-control absolute left-6 top-6 z-20 flex items-center gap-2 transition-opacity ease-out sm:left-10 sm:top-8 ${
+          logoVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        style={{ transitionDuration: `${FADE_MS}ms` }}
+        aria-hidden={!logoVisible}
+      >
+        <span className="rounded-full bg-stone-900/75 px-3 py-1 text-[10px] font-bold tracking-widest uppercase text-amber-300 ring-1 ring-amber-600/35 backdrop-blur-sm">
+          {GAME_PHASE}
+        </span>
+        <span className="rounded-full bg-stone-900/60 px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] text-stone-400 ring-1 ring-stone-700/50 backdrop-blur-sm">
+          v{GAME_VERSION}
+        </span>
+      </div>
+
+      <div
         className={`intro-moon pointer-events-none absolute right-8 top-8 h-16 w-16 rounded-full sm:right-14 sm:top-12 sm:h-20 sm:w-20 ${
           logoVisible ? 'intro-moon-visible' : 'opacity-0'
         }`}
@@ -615,14 +630,9 @@ export default function IntroScreen({ onContinue }: IntroScreenProps) {
             )}
           </p>
 
-          <div className="mt-1 flex items-center gap-2">
-            <span className="rounded-full bg-amber-900/50 px-3 py-1 text-[10px] font-bold tracking-widest uppercase text-amber-300 ring-1 ring-amber-600/40">
-              {GAME_PHASE}
-            </span>
-            <span className="text-[11px] font-medium tracking-[0.2em] text-stone-600">
-              v{GAME_VERSION}
-            </span>
-          </div>
+          <p className="text-[10px] font-medium tracking-[0.14em] text-stone-600">
+            {GAME_PHASE} · v{GAME_VERSION}
+          </p>
         </div>
       </div>
 
