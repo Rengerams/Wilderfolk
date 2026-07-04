@@ -1,6 +1,6 @@
 # Wilderfolk Roadmap
 
-**Early Alpha v0.4.2 shipped (July 5, 2026) → [v0.4.3](ROADMAP_0.4.3.md) → [v0.4.4](ROADMAP_0.4.4.md)**
+**Early Alpha v0.4.2 shipped (July 5, 2026) → [v0.5.0](ROADMAP_0.5.0.md) (end July 2026)**
 
 Living document for where the game is and where it's going.
 
@@ -9,14 +9,15 @@ Living document for where the game is and where it's going.
 | File | Purpose |
 |------|---------|
 | **[ROADMAP.md](ROADMAP.md)** | **This file** — master plan, phases, half-done registry |
-| **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** | v0.4.3 release plan (scale & perf) |
-| **[ROADMAP_0.4.4.md](ROADMAP_0.4.4.md)** | v0.4.4 release plan (perf Phase 2 + UI) |
+| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0 release plan** (scale + architecture — end Jul 2026) |
+| **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** | ~~v0.4.3~~ superseded — merged into v0.5.0 |
+| **[ROADMAP_0.4.4.md](ROADMAP_0.4.4.md)** | ~~v0.4.4~~ superseded — merged into v0.5.0 |
 | **[app/TODO.md](app/TODO.md)** | Open ship blockers & dev checklist |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
 
 Also: [app/README.md](app/README.md) (players) · [TECHNICAL.md](TECHNICAL.md) (devs) · [SESSION_SUMMARY.md](SESSION_SUMMARY.md) (dev log)
 
-*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). Next: [v0.4.3](ROADMAP_0.4.3.md) (Sep 2026).*
+*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).*
 
 ---
 
@@ -62,18 +63,17 @@ Ship a cozy frontier eco-sim where settlers live on a schedule, the food chain m
 
 ---
 
-## Version roadmaps (0.4.3 → 0.4.4)
+## Version roadmaps
 
-Detailed release plans live in dedicated docs — this file stays the **parent index**. Update those docs when scope changes; keep the version table below in sync.
+Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**. Former v0.4.3 / v0.4.4 schedules are **merged** into the accelerated v0.5.0 milestone.
 
 | Version | Theme | Target | Plan |
 |---------|-------|--------|------|
 | **0.4.2** | Craft, walls/guards, juice, UI/UX | **Shipped** Jul 2026 | [app/CHANGELOG.md](app/CHANGELOG.md) `[0.4.2]` |
-| **0.4.3** | Scale & perf Phase 1 | Sep 2026 | **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** |
-| **0.4.4** | Perf Phase 2 + App tab split | Nov 2026 | **[ROADMAP_0.4.4.md](ROADMAP_0.4.4.md)** |
-| **0.5.0** | Web Worker + canvas layers | Q1 2027 | [app/TODO.md](app/TODO.md) Phase 3 |
+| **0.5.0** | Scale + architecture (sim, UI, Worker, canvas) | **End Jul 2026** | **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** |
+| **1.0 / Steam** | Installer or store release | TBD | post-0.5.0 |
 
-**Release chain:** 0.4.2 ship → [0.4.3 spatial grid + benchmark gate](ROADMAP_0.4.3.md) → [0.4.4 incremental maps + UI split](ROADMAP_0.4.4.md) → 0.5.0 architecture.
+**Release chain:** 0.4.2 ship → **[v0.5.0 consolidated perf + architecture](ROADMAP_0.5.0.md)** (end July 2026) → installer / Steam.
 
 ---
 
@@ -83,11 +83,11 @@ Detailed release plans live in dedicated docs — this file stays the **parent i
 |----------|------------|
 | PNG human walk sheets + 4 outfit variants | Hand-painted outfit art (recolors are programmatic) |
 | Food chain + **Blacksmith forge queue** + raid **preparation** UX (no battle screen) | Real-time tactical battles (deferred) |
-| Tribe diplomacy v2 + raids (2–6d deadline, preview, peace, march lines) | [v0.4.3](ROADMAP_0.4.3.md) spatial grid |
-| **Walls / towers / barracks** + guards + combat log | Counter-raid march polish (optional) |
-| **6-tab UI**, alert strip, hotbar, focus Go → | [v0.4.4](ROADMAP_0.4.4.md) UI split at city scale |
+| Tribe diplomacy v2 + raids (2–6d deadline, preview, peace, march lines) | [v0.5.0](ROADMAP_0.5.0.md) spatial grid + benchmark gate |
+| **Walls / towers / barracks** + guards + combat log | Counter-raid march polish (v0.5.0 P1) |
+| **6-tab UI**, alert strip, hotbar, focus Go → | [v0.5.0](ROADMAP_0.5.0.md) App tab split at city scale |
 | **10-year balance PASS** + **10-user beta** ([playtest doc](app/docs/PLAYTEST_BETA_10_USERS.md)) | Mid-game goals past year 4–5 |
-| Sim perf (~1.8 ms/tick avg @ ~550 entities; 10-year p95 5.46ms) | 100+ entity benchmark gate (v0.4.3) |
+| Sim perf (~1.8 ms/tick avg @ ~550 entities; 10-year p95 5.46ms) | 100+ entity benchmark gate ([v0.5.0](ROADMAP_0.5.0.md)) |
 
 **Rough rating:** promising alpha (~8/10 shipped v0.4.2, ~8.5/10 vision).
 
@@ -252,7 +252,7 @@ Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/
 | 4 | Bump to `0.4.2` + save migration | **Done** |
 | 5 | CHANGELOG, README, `roadmapContent.ts` on release | **Done** |
 
-**Tagged `v0.4.2`.** Next: [v0.4.3](ROADMAP_0.4.3.md) spatial grid (Sep 2026).
+**Tagged `v0.4.2`.** Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).
 
 ---
 
@@ -394,43 +394,46 @@ Path B — extend existing PNG humans.
 6. ~~**Juice pass**~~ ✅ — night glow, build confetti, camera nudge; intro screen refine
 7. ~~10-year balance pass~~ **Done** (2026-07-04) · external playtests (5–10 sessions)
 8. Bump `GAME_VERSION` to `0.4.2` + save migration on ship
-9. Perf Phase 1 → **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** (Sep 2026) — not a v0.4.2 ship blocker
+9. Scale + architecture → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** (end Jul 2026) — not a v0.4.2 ship blocker
 
 ### Balance & stability → **v0.4.2**
 
 - [x] 10 full in-game year playtest pass (town PASS 2026-07-04)
 - [ ] Winter food curve
 - [x] Save version `0.4` / `0.4.1` with migration from legacy `2.x` and `0.4` saves
-- [x] Perf check: 500+ entities — partial (throttles + maps shipped; → [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md))
+- [x] Perf check: 500+ entities — partial (throttles + maps shipped; → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md))
 - [x] Bump save/game version to `0.4.2` on ship
 
 **Exit:** Founding couple → town that trades or fights with neighbors — player chose which.
 
 ---
 
-## Phase 3 — v0.4.3 & v0.4.4 *(planned releases)*
+## Phase 3 — v0.5.0 *(in progress — end July 2026)*
 
-| Phase | Doc | P0 focus |
-|-------|-----|----------|
-| **v0.4.3** Sep 2026 | **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** | Spatial grid, dead-entity compaction, renderer cache reuse, benchmark gate |
-| **v0.4.4** Nov 2026 | **[ROADMAP_0.4.4.md](ROADMAP_0.4.4.md)** | Incremental `entityById`, grass buckets, App tab split, particle pooling |
+Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**. Consolidates former v0.4.3 (sim Phase 1), v0.4.4 (sim Phase 2 + UI), and architecture (Worker + canvas layers).
 
-See also [app/TODO.md](app/TODO.md) — v0.4.3 / v0.4.4 preview tables.
+| Track | P0 focus |
+|-------|----------|
+| **Sim Phase 1** | Spatial grid, compaction, renderer cache, settler denorm, benchmark gate |
+| **Sim Phase 2 + UI** | Incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling |
+| **Architecture** | Web Worker `gameTick`, OffscreenCanvas terrain/entity layers |
+
+See also [app/TODO.md](app/TODO.md) — v0.5.0 preview table.
 
 ---
 
-## Phase 4 — After v0.4.4 *(ongoing backlog)*
+## Phase 4 — After v0.5.0 *(ongoing backlog)*
 
 | Track | Examples | Target |
 |-------|----------|--------|
-| **Architecture** | Web Worker `gameTick`, OffscreenCanvas layers | **v0.5.0** Q1 2027 |
-| **Victory paths** | Legacy system, endless scaling challenges | post-0.4.4 |
-| **Tribes & diplomacy** | Full wars, sieges, embassies, player caravans | post-0.4.4 |
-| **Crafting** | Full production chains (ore → iron → tools) | post-0.4.4 |
-| Content | Fog of war, new biomes, building tiers | post-0.4.4 |
+| **Distribution** | Installer, Steam | post-0.5.0 |
+| **Victory paths** | Legacy system, endless scaling challenges | post-0.5.0 |
+| **Tribes & diplomacy** | Full wars, sieges, embassies, player caravans | post-0.5.0 |
+| **Crafting** | Full production chains (ore → iron → tools) | post-0.5.0 |
+| Content | Fog of war, new biomes, building tiers | post-0.5.0 |
 | Social | Multiplayer, async rival ghosts | post-1.0 |
 | Art | Hand-painted outfits, animal walk cycles | ongoing |
-| Systems | Hospital disease loop, disasters v2, moddable JSON | post-0.4.4 |
+| Systems | Hospital disease loop, disasters v2, moddable JSON | post-0.5.0 |
 
 ---
 
@@ -441,8 +444,7 @@ See also [app/TODO.md](app/TODO.md) — v0.4.3 / v0.4.4 preview tables.
 | 1 | Walk sprites + tutorial + v0.4 clarity pass | **✅ done** |
 | 2 | **v0.4.1** — tribes, diplomacy, raids, victories, leadership | **✅ done** |
 | 3 | **v0.4.2** — craft, walls/guards, juice, balance | **✅ done** |
-| 4 | **v0.4.3** — scale & perf Phase 1 | [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) · Sep 2026 |
-| 5 | **v0.4.4** — perf Phase 2 + UI split | [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) · Nov 2026 |
+| 4 | **v0.5.0** — scale + architecture | [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) · end Jul 2026 |
 
 ---
 
@@ -471,16 +473,15 @@ See also [app/TODO.md](app/TODO.md) — v0.4.3 / v0.4.4 preview tables.
 9. [x] **Intro screen refine** — ~20s timeline, skip after logo
 10. [x] **Header reputation tooltip** — ⭐ click → Trade
 11. [x] **Bump version** to `0.4.2` in `version.ts` + save migration on ship
-12. [ ] **Perf Phase 1** → [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) (Sep 2026) — **next**
+12. [ ] **v0.5.0** → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (end Jul 2026) — **next**
 
-## Next actions (v0.4.3 → v0.4.4)
+## Next actions (v0.5.0)
 
-*Full checklists live in the version roadmaps — not duplicated here.*
+*Full checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).*
 
 | Version | Doc | Start when |
 |---------|-----|------------|
-| **0.4.3** | [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) | v0.4.2 tagged and shipped |
-| **0.4.4** | [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) | v0.4.3 benchmark gate green |
+| **0.5.0** | [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) | v0.4.2 tagged and shipped ✅ |
 
 ---
 
@@ -491,11 +492,10 @@ See also [app/TODO.md](app/TODO.md) — v0.4.3 / v0.4.4 preview tables.
 | Clarity + chronicle + housing | 0.4 | Playtest feedback addressed | **✅ Shipped** |
 | Tribes + diplomacy + raids + victories + leadership | 0.4.1 | Tribe diplomacy v2, raids, peace, 4 victories, leadership, roadmap tab | **✅ Shipped** |
 | Craft + walls/guards + juice + balance | 0.4.2 | 10-year PASS, beta playtests, version bump | **✅ Shipped** Jul 2026 |
-| Scale & perf Phase 1 (spatial grid, benchmark gate) | 0.4.3 | Large-map / 100+ settler stability | **Planned** — [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) |
-| Perf Phase 2 + App tab split (incremental maps, pooling) | 0.4.4 | City-scale UI + render polish | **Planned** — [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) |
+| Scale + architecture (grid, UI split, Worker, canvas) | 0.5.0 | Large-map / city-scale stability | **In progress** — [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) end Jul 2026 |
 
 ---
 
 <p align="center">
-  <em><strong>v0.4.2 shipped</strong> → <a href="ROADMAP_0.4.3.md">v0.4.3</a> → <a href="ROADMAP_0.4.4.md">v0.4.4</a>.</em>
+  <em><strong>v0.4.2 shipped</strong> → <a href="ROADMAP_0.5.0.md">v0.5.0</a> (end July 2026).</em>
 </p>

@@ -1,9 +1,9 @@
-# Wilderfolk — Open work (v0.4.2)
+# Wilderfolk — Open work (v0.5.0)
 
 Living checklist for fixes and features **not yet done**.  
-Shipped work → [CHANGELOG.md](CHANGELOG.md) · Priorities → [../ROADMAP.md](../ROADMAP.md) · In-game slice → `src/game/roadmapContent.ts`
+Shipped work → [CHANGELOG.md](CHANGELOG.md) · Priorities → [../ROADMAP.md](../ROADMAP.md) · Plan → [../ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md) · In-game slice → `src/game/roadmapContent.ts`
 
-*Last updated: July 5, 2026 · **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`) · Next target **v0.4.3** (Sep 2026) · perf Phases 1–3 → **Q1 2027***
+*Last updated: July 5, 2026 · **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`) · Next target **v0.5.0** (end July 2026)*
 
 ---
 
@@ -16,7 +16,7 @@ Shipped work → [CHANGELOG.md](CHANGELOG.md) · Priorities → [../ROADMAP.md](
 | 3 | **External playtests (5–10 sessions)** | P0 | **Done** | [docs/PLAYTEST_BETA_10_USERS.md](docs/PLAYTEST_BETA_10_USERS.md) |
 | 4 | **Spear / militia balance review** | P0 | **Done** | `militiaBalance.ts` · `npm run balance:militia` |
 | 5 | **CHANGELOG + docs sync** on ship | P0 | **Done** | `[0.4.2]` in CHANGELOG; README, ROADMAP, `roadmapContent.ts` |
-| 6 | **In-game Roadmap tab** | P0 | **Done** | `ROADMAP_TARGET_VERSION = '0.4.3'`; v0.4.2 slice under Shipped |
+| 6 | **In-game Roadmap tab** | P0 | **Done** | `ROADMAP_TARGET_VERSION = '0.5.0'`; v0.4.2 slice under Shipped |
 
 **Exit:** Tag `v0.4.2` · saves migrate · playtests signed off · balance pass documented.
 
@@ -93,7 +93,7 @@ Player guide → [README.md](README.md#frontier-raids--militia) · Code → `fro
 | **Walls / Watchtowers / Barracks** | — | Done | `defenseStructures.ts`; guard patrols in `lifeSimulation.ts` |
 | **Raid march map overlay** | — | Done | `drawRaidMarchLines` — dashed red line + ⚔️ midpoint |
 | **Rival war-band march** | — | Done | Rival settlers path to village while raid pending; ⚔️ badge when close |
-| **Weapon / status map icons** | Low | Partial | Settler badges: 🏹 hunt, 🛡️ shields, 🪖 guard, ⚔️ `combatTicks` ✅ · **Missing:** player militia march line/sprites on **outgoing** counter-raid (instant `flashMilitia` only) |
+| **Weapon / status map icons** | Low | Partial | Settler badges: 🏹 hunt, 🛡️ shields, 🪖 guard, ⚔️ `combatTicks` ✅ · **Missing:** player militia march line/sprites on **outgoing** counter-raid → **v0.5.0 P1** |
 | **Spear tier stacking** | — | Done | `militiaBalance.ts` — iron replaces stone; iron shields replace wooden |
 | **Real-time map battles** | — | Deferred | Abstract `resolveDefenseRatio` / `launchRaidOnRival` — no tactical combat (post-0.4.2) |
 
@@ -110,18 +110,16 @@ Player guide → [README.md](README.md#frontier-raids--militia) · Code → `fro
 | Combat log, raid polish, 6-tab UI, intro | ✅ | ✅ |
 | Header ⭐ → Trade | ✅ | ✅ |
 | Perf throttles + entity maps | ✅ | ✅ |
-| Perf at 500+ entities (spatial grid) | Partial | → **v0.4.3** (not a v0.4.2 blocker) |
+| Perf at 500+ entities (spatial grid) | Partial | → **v0.5.0** P0 |
 
 ### Perf — version & finish targets
 
 | Phase | Target version | Finish by | Goal |
 |-------|----------------|-----------|------|
 | **Shipped** | **v0.4.2** | July 2026 | Throttles, entity maps, UI memo, headless ms/tick metrics |
-| **Phase 1** | **v0.4.3** | **Sep 2026** | Close “perf at 500+ entities” — spatial grid, compaction, shared render cache, benchmark CI gate |
-| **Phase 2** | **v0.4.4** | **Nov 2026** | Polish remaining O(n) scans, render buckets, App tab split, object pooling |
-| **Phase 3** | **v0.5.0** | **Q1 2027** | Architecture for large maps / 100+ humans — Web Worker sim, canvas layers, adaptive catch-up |
+| **All open perf + UI + architecture** | **v0.5.0** | **End Jul 2026** | Spatial grid, compaction, benchmark gate, scan cleanup, App tab split, Worker, canvas layers |
 
-*Stretch for v0.4.2 ship (if time): `buildingById` for human go-home path (deferred → **v0.4.4**).*
+*Former v0.4.3 / v0.4.4 schedules merged into **v0.5.0** — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).*
 
 **Informal budget (headless, ~700 alive entities):** p95 &lt; 16 ms/tick · avg &lt; 8 ms/tick. Gate in Phase 1.
 
@@ -140,77 +138,53 @@ Player guide → [README.md](README.md#frontier-raids--militia) · Code → `fro
 - `simulate:30min` reports ms/tick (avg/p50/p95/max)
 - `combatTech.ts` — breaks forge ↔ combat circular import for headless sim
 
-### Perf — future optimizations
+### v0.5.0 — open work (end July 2026)
 
-#### Phase 1 → v0.4.3 (finish Sep 2026)
+Full plan → [../ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md)
 
-| Item | Hotspot | Priority |
-|------|---------|----------|
-| Spatial grid for graze / hunt / flee / wolf pack | `lifeSimulation.ts` — grass scan ~L1426, predator–prey loops | P1 |
-| Dead-entity compaction | `gameEngine.ts` — drop `alive: false` from `state.entities` | P1 |
-| Renderer entity cache reuse | `renderer.ts` `updateCachedEntities()` — reuse sim `byType` | P1 |
-| Denormalize settler working/idle counts | `App.tsx` — extend `wildlifeCounts` pattern on `WorldState` | P1 |
-| Benchmark gate at population milestones | `simulate-30min.ts` — 50/100/200 humans; fail if p95 &gt; budget | P1 |
+#### P0 — must ship
 
-#### Phase 2 → v0.4.4 (finish Nov 2026)
+| Item | Hotspot |
+|------|---------|
+| Spatial grid for graze / hunt / flee / wolf pack | `lifeSimulation.ts` |
+| Dead-entity compaction | `gameEngine.ts` |
+| Renderer entity cache reuse | `renderer.ts` `updateCachedEntities()` |
+| Denormalize settler working/idle counts | `WorldState`, `App.tsx` |
+| Benchmark gate — 50 / 100 / 200 human profiles | `simulate-30min.ts` |
+| Incremental `entityById` (birth/death only) | `gameEngine.ts` |
+| `buildingActions.ts` entity scan cleanup | assign/recruit flows |
+| `buildingById` for human go-home | `lifeSimulation.ts` |
+| Grass render spatial buckets | `renderer.ts` `drawGrass` |
+| Partner id map for relationship lines | `renderer.ts` |
+| Particle / floating-text pooling | `gameEngine.ts` |
+| App tab split + memo (Village / Nature / Progress) | `App.tsx` |
+| Web Worker `gameTick` | `gameEngine.ts`, `gameLoop.ts` |
+| OffscreenCanvas terrain vs entity layers | `renderer.ts` |
+| `GAME_VERSION` **0.5.0** + save migration | `version.ts`, `saveLoad.ts` |
 
-| Item | Hotspot | Priority |
-|------|---------|----------|
-| Incremental `entityById` updates | `gameEngine.ts` — update on birth/death only | P2 |
-| `buildingActions.ts` entity scans | ~20 `filter`/`find` on assign/recruit flows | P2 |
-| `buildingById` for human go-home | `lifeSimulation.ts` `updatedBuildings.find` | P2 |
-| Grass render spatial buckets | `renderer.ts` `drawGrass` — grid buckets for large maps | P2 |
-| Partner id map for relationship lines | `renderer.ts` `_cachedHumans.find` ~L1290 | P2 |
-| Particle / floating-text pooling | `gameEngine.ts` death/float arrays | P2 |
-| Memoize Village / Nature / Progress tab bodies | `App.tsx` — cut 100 ms UI re-renders | P2 |
+#### P1 — should ship
 
-#### Phase 3 → v0.5.0 (finish Q1 2027)
+| Item | Notes |
+|------|-------|
+| Counter-raid militia march visuals | Prep-focused; no battle screen |
+| Large-map playtests at 10× | After benchmark gate green |
+| Spear tier balance validation | City-scale militia preview |
+| Perf dev overlay | ms/tick, entity count, grid rebuild |
+| Reputation arc UI | Milestones beyond ⭐ tooltip |
+| Footstep / work SFX by surface | Juice deferred since v0.4.2 |
+| One visitor multi-step quest chain | Scholars or Nomads |
+| `npm run benchmark:gate` | CI-friendly wrapper |
 
-| Item | Hotspot | Priority |
-|------|---------|----------|
-| Web Worker `gameTick` | `gameEngine.ts` + `gameLoop.ts` — serializable state | P3 |
-| Save load / size (optional append-only log index) | `eventLog.ts`, `saveLoad.ts` — **no cap**; index if needed | P3 |
-| Adaptive catch-up / sim decimation at 10× | `gameLoop.ts` `MAX_CATCHUP_STEPS` | P3 |
-| Canvas LOD for trees / animals / sprites | `renderer.ts` — extend low-zoom grass skip | P3 |
-| OffscreenCanvas terrain vs entity layers | `renderer.ts` — split static/dynamic redraw | P3 |
+#### P2 — stretch (mid-July green only)
+
+| Item | Hotspot |
+|------|---------|
+| Adaptive catch-up at 10× | `gameLoop.ts` |
+| Canvas LOD (trees, animals, sprites) | `renderer.ts` |
+| Save-size report in Game menu | `saveLoad.ts` |
+| Optional append-only event log index | only if save size forces it |
 
 **Tooling:** `npm run simulate:30min` · env `SIM_MINUTES`, `PERF_SAMPLE_EVERY`
-
----
-
-## v0.4.3 — preview (not started)
-
-Full plan → [../ROADMAP_0.4.3.md](../ROADMAP_0.4.3.md) · Target **Sep 2026** after v0.4.2 ships.
-
-| P0 (perf Phase 1) | P1 (polish) |
-|-------------------|-------------|
-| Spatial grid (`lifeSimulation.ts`) | v0.4.3 perf (10-year balance pass done 2026-07-04) |
-| Dead-entity compaction (`gameEngine.ts`) | External playtests on large-map builds |
-| Renderer cache reuse (`renderer.ts`) | Counter-raid militia march visuals |
-| Settler count denorm (`WorldState`) | Spear tier balance validation |
-| Benchmark gate — 50/100/200 human profiles | |
-| `GAME_VERSION` 0.4.3 + save migration | |
-
-**Defer to v0.4.4:** see [../ROADMAP_0.4.4.md](../ROADMAP_0.4.4.md)
-
----
-
-## v0.4.4 — preview (not started)
-
-Full plan → [../ROADMAP_0.4.4.md](../ROADMAP_0.4.4.md) · Target **Nov 2026** after v0.4.3 ships.
-
-| P0 (perf Phase 2) | P1 (UX / content) |
-|-------------------|-------------------|
-| Incremental `entityById` (birth/death only) | Reputation arc UI |
-| `buildingActions.ts` entity scan cleanup | Footstep / work SFX by surface |
-| `buildingById` go-home in `lifeSimulation.ts` | One visitor multi-step quest chain |
-| Grass render spatial buckets (`drawGrass`) | `npm run benchmark:gate` (if not in v0.4.3) |
-| Partner id map for relationship lines | |
-| Particle / floating-text pooling | |
-| App tab split + memo (Village / Nature / Progress) | |
-| `GAME_VERSION` 0.4.4 + save migration | |
-
-**Defer to v0.5.0:** Web Worker `gameTick`, OffscreenCanvas layers, adaptive 10× catch-up.
 
 ---
 

@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Where Beasts and Kin Unite</strong><br>
-  <em>Early Alpha · v0.4.2 shipped · targeting v0.4.3</em>
+  <em>Early Alpha · v0.4.2 shipped · targeting v0.5.0</em>
 </p>
 
 ---
@@ -25,14 +25,17 @@
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](docs/PLAYTEST_BETA_10_USERS.md) |
 | **Fixes** | ~40 bug fixes (July 4) + beta UX feedback |
 
-### What's coming
+### What's coming — v0.5.0 (end July 2026)
 
-| Version | Target | What it means for you |
-|---------|--------|------------------------|
-| **v0.4.3** | Sep 2026 | **Bigger villages, smoother sim** — large maps and 100+ settlers without lag ([plan](../ROADMAP_0.4.3.md)) |
-| **v0.4.4** | Nov 2026 | **Snappier UI at city scale** — sidebars stay fast; map polish ([plan](../ROADMAP_0.4.4.md)) |
-| **v0.5.0** | Q1 2027 | Deeper engine work for huge maps and high game speed |
-| **Steam / installer** | Later | Download and play — no terminal setup |
+All open perf, UI, and architecture work ships in one release. Full plan → [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).
+
+| Track | What it means for you |
+|-------|------------------------|
+| **Sim scale** | Large maps, 100+ settlers, spatial grid, benchmark gate — no mystery lag |
+| **UI at city size** | Sidebar tabs stay fast; App split for Village / Nature / Progress |
+| **Architecture** | Web Worker simulation + canvas layers for 10× speed |
+| **Polish** | Counter-raid march visuals, reputation arc, visitor quests, footstep SFX |
+| **Steam / installer** | After v0.5.0 — download and play, no terminal |
 
 Check **More → Roadmap** in-game for the live slice, or the full plan at [ROADMAP.md](../ROADMAP.md).
 
@@ -251,7 +254,7 @@ Adult settlers contribute base strength; bonuses stack from:
 **Intentionally not planned:**
 
 - **Fancy fight screen / tactical battles** — preparation and abstract resolution only
-- **Outgoing counter-raid march** as spectacle — incoming march line is a **warning to prep**, not battle entertainment ([v0.4.3](../ROADMAP_0.4.3.md) may add optional polish only)
+- **Outgoing counter-raid march** as spectacle — incoming march line is a **warning to prep**, not battle entertainment ([v0.5.0](../ROADMAP_0.5.0.md) P1 optional polish)
 
 ---
 
@@ -502,7 +505,7 @@ Unlock trade routes in the **Trade** tab as reputation grows (the fifth route, *
 | **Log → Chronicle** | Births, marriages, hunts, diplomacy, disasters, howls — filter, copy, export |
 | **Log → Combat** | Raid and militia history with stats + export |
 | **More → Guide** | Full help + replay the tutorial |
-| **More → Roadmap** | v0.4.2 shipped · targeting v0.4.3 ([index](../ROADMAP.md)) |
+| **More → Roadmap** | v0.4.2 shipped · targeting v0.5.0 ([index](../ROADMAP.md)) |
 
 **Left side:** collapsible **Construction** panel (full catalog) plus the map **build hotbar** for fast placement.
 
@@ -535,7 +538,7 @@ Some nights, if the higher gods are in a mood, something **golden** might cross 
 
 Architecture, tick model, and file layout → **[TECHNICAL.md](../TECHNICAL.md)** (repo root).  
 Music and sound-effect sources → **[AUDIO_CREDITS.md](AUDIO_CREDITS.md)**.  
-Release plan → **[ROADMAP.md](../ROADMAP.md)** · **[v0.4.3](../ROADMAP_0.4.3.md)** · **[v0.4.4](../ROADMAP_0.4.4.md)**.  
+Release plan → **[ROADMAP.md](../ROADMAP.md)** · **[v0.5.0](../ROADMAP_0.5.0.md)**.
 What shipped → **[SESSION_SUMMARY.md](../SESSION_SUMMARY.md)**.
 
 Regenerate human outfit sprites:
@@ -550,7 +553,7 @@ npm run sprites:humans
 
 Wilderfolk keeps growing — more events, more neighbors, more ways to share the valley. Rival camps and visiting caravans are a taste of a busier frontier.
 
-**Near term:** **[v0.4.3](../ROADMAP_0.4.3.md)** (large-map performance) → **[v0.4.4](../ROADMAP_0.4.4.md)** (city-scale UI polish). See [Latest update](#latest-update--v042-july-5-2026) for what shipped in v0.4.2.
+**Near term:** **[v0.5.0](../ROADMAP_0.5.0.md)** (end July 2026) — all open scale, UI, and architecture work. See [Latest update](#latest-update--v042-july-5-2026) for what shipped in v0.4.2.
 
 **Long term:** ship properly as an **installer or on Steam** — no terminal, no Node.js. This browser alpha is the trail; the boxed (or Steam) version is the destination.
 

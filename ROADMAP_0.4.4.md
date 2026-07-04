@@ -1,6 +1,8 @@
 # Wilderfolk Roadmap — v0.4.4
 
-**Target:** November 2026 · **Prerequisite:** [v0.4.3](ROADMAP_0.4.3.md) shipped (`GAME_VERSION = 0.4.3`)
+> **⚠️ Superseded (July 2026):** Scope merged into accelerated **[v0.5.0 — end July 2026](ROADMAP_0.5.0.md)**. Kept for historical reference only.
+
+**Target:** ~~November 2026~~ → see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) · **Prerequisite:** [v0.4.2](ROADMAP.md) shipped
 
 Living plan for **perf Phase 2 & UI maintainability**.  
 **Parent index** → [ROADMAP.md](ROADMAP.md) (version chain & phases) · **Prior** → [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) · Open work → [app/TODO.md](app/TODO.md)

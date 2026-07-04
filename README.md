@@ -16,7 +16,7 @@
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](app/docs/PLAYTEST_BETA_10_USERS.md) |
 | **Fixes** | ~40 bug fixes (July 4) + beta UX feedback |
 
-**Next:** [v0.4.3](ROADMAP_0.4.3.md) (Sep 2026) — spatial grid, large-map perf, benchmark gate. In-game: **More → Roadmap**.
+**Next:** **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026) — scale, UI split, Web Worker, canvas layers. In-game: **More → Roadmap**.
 
 ## How to install
 
@@ -78,9 +78,7 @@ You are not conquering nature. You are **moving into it**. Grass, rabbits, deer,
 
 | Version | When (target) | Theme | Highlights |
 |---------|---------------|-------|------------|
-| **0.4.3** | Sep 2026 | Scale & perf | Spatial grid, large-map stability, 100+ settlers without hitch → [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) |
-| **0.4.4** | Nov 2026 | Perf Phase 2 + UI | Faster sidebar at city size, grass render polish, App tab split → [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) |
-| **0.5.0** | Q1 2027 | Architecture | Web Worker simulation, canvas layers — [ROADMAP.md](ROADMAP.md) Phase 4 |
+| **0.5.0** | **End Jul 2026** | Scale + architecture | Spatial grid, benchmark gate, App tab split, Web Worker, canvas layers → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) |
 | **1.0 / Steam** | TBD | Real release | Installer or Steam — no Node.js, no terminal |
 
 **Not on the near-term list:** real-time tactical battles on the map, multiplayer, fog of war, hospital disease loop — [ROADMAP.md](ROADMAP.md).
@@ -92,8 +90,7 @@ You are not conquering nature. You are **moving into it**. Grass, rabbits, deer,
 | **[app/README.md](app/README.md)** | Players — how to play, tips, controls |
 | **[TECHNICAL.md](TECHNICAL.md)** | Developers — architecture, tick model, file map |
 | **[ROADMAP.md](ROADMAP.md)** | Plan — alpha → v1 → Steam |
-| **[ROADMAP_0.4.3.md](ROADMAP_0.4.3.md)** | v0.4.3 — scale & perf (Sep 2026) |
-| **[ROADMAP_0.4.4.md](ROADMAP_0.4.4.md)** | v0.4.4 — perf Phase 2 + UI split (Nov 2026) |
+| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — scale + architecture (end Jul 2026) |
 | **[SESSION_SUMMARY.md](SESSION_SUMMARY.md)** | Dev log — what shipped, when |
 | **[app/AUDIO_CREDITS.md](app/AUDIO_CREDITS.md)** | Music & SFX — OpenGameArt sources and licenses |
 

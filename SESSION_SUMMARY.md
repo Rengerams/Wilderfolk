@@ -1,7 +1,7 @@
 # Wilderfolk — Session Summary
 
 **Project:** `D:\Kimi_Agent_Update_Building_Background_Colors`  
-**Current version:** Early Alpha **v0.4.2 shipped** (`GAME_VERSION = '0.4.2'`, July 5, 2026) · Next **v0.4.3** (Sep 2026)  
+**Current version:** Early Alpha **v0.4.2 shipped** (`GAME_VERSION = '0.4.2'`, July 5, 2026) · Next **v0.5.0** (end July 2026)  
 **Stack:** React + TypeScript + Vite + Canvas 2D  
 **Last updated:** 2026-07-05
 
@@ -154,7 +154,7 @@ Major gameplay fixes from extended playtesting (~200 pop sims, 30-min runs):
 | **Balance** | 10-year town PASS (9/9 gates) |
 | **Playtests** | 10-user beta — `app/docs/PLAYTEST_BETA_10_USERS.md` |
 | **Beta UX** | Eco breakdown, growth report, Frontier readiness, juice toggle, raid-prep copy |
-| **Docs** | CHANGELOG `[0.4.2]`, README, ROADMAP, `roadmapContent.ts` → target v0.4.3 |
+| **Docs** | CHANGELOG `[0.4.2]`, README, ROADMAP, `roadmapContent.ts` → target v0.5.0 |
 
 ---
 
@@ -269,7 +269,7 @@ Half-done items tracked in [ROADMAP.md](ROADMAP.md) with FINISH / CUT / DEFER ru
 
 - ~~10-year balance pass~~ **Done** (2026-07-04) · ~~external playtests~~ **Done** · ~~v0.4.2 ship~~ **Done** (2026-07-05)
 - Version bump to `0.4.2` + save migration on ship
-- Perf Phase 1 (spatial grid) → **v0.4.3** Sep 2026 (not a v0.4.2 ship blocker)
+- All open perf + architecture → **v0.5.0** end July 2026 (merged ex-0.4.3 / 0.4.4 scope)
 - Desktop installer (Tauri/Electron) — post-alpha
 
 ---

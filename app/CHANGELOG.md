@@ -2,7 +2,17 @@
 
 ## [Unreleased]
 
-_(Nothing yet — next slice targets **v0.4.3**.)_
+**Targeting v0.5.0** (end July 2026) — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md).
+
+### Planned (v0.5.0 P0)
+- Spatial grid, dead-entity compaction, renderer cache reuse, settler count denorm, benchmark gate
+- Incremental `entityById`, `buildingActions` scan cleanup, grass buckets, App tab split, pooling
+- Web Worker `gameTick`, OffscreenCanvas terrain/entity layers
+- `GAME_VERSION` **0.5.0** + save migration
+
+### Planned (v0.5.0 P1)
+- Counter-raid militia march visuals, large-map playtests, reputation arc UI
+- Footstep SFX, one visitor quest chain, `npm run benchmark:gate`
 
 ## [0.4.2] - 2026-07-05
 
@@ -92,13 +102,9 @@ Inspired by **RimWorld** (priority alerts, contextual inspector), **Banished** (
 
 | Phase | Version | Finish by |
 |-------|---------|-----------|
-| Phase 1 — spatial grid, dead-entity compaction, render cache reuse, UI count denorm, benchmark gate | **v0.4.3** | Sep 2026 |
-| Phase 2 — incremental maps, `buildingActions` scans, render buckets, tab memo, particle pooling | **v0.4.4** | Nov 2026 |
-| Phase 3 — Web Worker `gameTick`, adaptive catch-up, canvas LOD/layers, optional save indexing | **v0.5.0** | Q1 2027 |
+| All open perf + UI + architecture | **v0.5.0** | End Jul 2026 |
 
-- **Phase 1 (v0.4.3):** spatial grid for graze/hunt/flee in `lifeSimulation.ts`; compact dead entities in `gameEngine.ts`; share sim entity lists with `renderer.ts`; settler working/idle counts on `WorldState`; CI-style p95 budget in `simulate-30min.ts` (target p95 &lt; 16 ms @ ~700 entities).
-- **Phase 2 (v0.4.4):** polish O(n) paths in `buildingActions.ts`, `lifeSimulation.ts`, `renderer.ts`; split heavy `App.tsx` tabs; pool particles/floating text.
-- **Phase 3 (v0.5.0):** offload `gameTick` to a Web Worker; tune `gameLoop.ts` catch-up at high speed; terrain/entity layer split; append-only event log indexing only if save size forces it — **full chronicle remains uncapped by default**.
+- **v0.5.0 (consolidated):** spatial grid, compaction, benchmark gate, incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling, Web Worker `gameTick`, OffscreenCanvas layers — see [ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md). Former v0.4.3 / v0.4.4 schedules merged into this milestone.
 
 #### Frontier raid polish
 - **Distance-scaled raid deadline** — incoming raids get **2–6 days** to respond based on camp distance (`expiresAtTick`, `marchDistanceTiles` on `RaidEvent`).

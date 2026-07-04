@@ -8,8 +8,7 @@ Developer-facing overview of the playtest build.
 |-----|-----|
 | [app/README.md](app/README.md) | Players |
 | [ROADMAP.md](ROADMAP.md) | Plan & half-done registry |
-| [ROADMAP_0.4.3.md](ROADMAP_0.4.3.md) | v0.4.3 — scale & perf Phase 1 |
-| [ROADMAP_0.4.4.md](ROADMAP_0.4.4.md) | v0.4.4 — perf Phase 2 + App tab split |
+| [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) | **v0.5.0** — scale + architecture (end Jul 2026) |
 | [SESSION_SUMMARY.md](SESSION_SUMMARY.md) | What shipped, when |
 | [app/CHANGELOG.md](app/CHANGELOG.md) | Detailed change log |
 
@@ -151,7 +150,7 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 | `CombatLogPanel.tsx` | Combat-filtered log sub-tab (stats + export) |
 | `FocusPanel.tsx` | Focus / next-step panel |
 | `PopulationPanel.tsx` | Village population & family overview |
-| `RoadmapPanel.tsx` | In-game read-only roadmap (`roadmapContent.ts` — v0.4.2 shipped, targets v0.4.3) |
+| `RoadmapPanel.tsx` | In-game read-only roadmap (`roadmapContent.ts` — v0.4.2 shipped, targets v0.5.0) |
 | `stats.ts` | Yearly / lifetime statistics |
 | `IntroScreen.tsx` | ~20s opening timeline (aurora → logo → title → food chain → ready); skip after logo; village setup form |
 
@@ -293,7 +292,7 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 |--------|----------|-------|
 | `GAME_VERSION` | `version.ts` | `'0.4.2'` |
 | `GAME_PHASE` | `version.ts` | `'Early Alpha'` |
-| `ROADMAP_TARGET_VERSION` | `roadmapContent.ts` | `'0.4.3'` |
+| `ROADMAP_TARGET_VERSION` | `roadmapContent.ts` | `'0.5.0'` |
 | `package.json` version | root + app | `0.4.2` |
 | `COMPATIBLE_SAVE_VERSIONS` | `saveLoad.ts` | `['2.0', '2.1', '2.2', '0.4', '0.4.1', '0.4.2']` |
 
@@ -309,9 +308,7 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 
 | Phase | Version | Finish by |
 |-------|---------|-----------|
-| 1 — spatial grid, compaction, render cache, benchmark gate | v0.4.3 | Sep 2026 |
-| 2 — scan polish, render buckets, App tab split, pooling | v0.4.4 | Nov 2026 |
-| 3 — Web Worker sim, adaptive catch-up, canvas layers | v0.5.0 | Q1 2027 |
+| All open perf + UI + architecture (grid, compaction, App split, Worker, canvas) | v0.5.0 | End Jul 2026 |
 
 Event log stays uncapped in saves; Phase 3 may add optional append-only indexing only if save size becomes a problem.
 
