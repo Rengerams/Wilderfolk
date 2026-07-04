@@ -543,7 +543,11 @@ CC0 assets do not require attribution.
 
 ## License / contribution
 
-Early alpha playtest — internal/friends testing. No public license stated in repo; treat as private until release.
+Game source code: **[MIT License](LICENSE)** — Copyright (c) 2026 Autosolid.
+
+Bundled audio assets use separate CC-BY / CC0 terms → [Audio credits](#audio-credits).
+
+Early alpha playtest — feedback welcome via [info@autosolid.nl](mailto:info@autosolid.nl) or [GitHub Issues](https://github.com/Rengerams/Wilderfolk/issues).
 
 <p align="center">
   <em>Questions about the code? Start with <code>gameEngine.ts</code> and <code>App.tsx</code>.</em>

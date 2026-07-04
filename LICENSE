@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 amst123456
+Copyright (c) 2026 Autosolid
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Third-party assets
+
+Wilderfolk includes royalty-free music and sound effects under separate
+licenses (CC-BY 3.0, CC-BY 4.0, and CC0). These assets are not covered by
+the MIT license above. See TECHNICAL.md#audio-credits for file paths, authors,
+licenses, and attribution requirements.

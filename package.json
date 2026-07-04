@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.4.2",
   "description": "Wilderfolk — Where Beasts and Kin Unite",
+  "license": "MIT",
+  "author": "Autosolid <info@autosolid.nl>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rengerams/Wilderfolk.git"
+  },
   "scripts": {
     "postinstall": "npm install --prefix app",
     "dev": "npm run dev --prefix app",

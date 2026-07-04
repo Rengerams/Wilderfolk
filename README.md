@@ -145,6 +145,10 @@ npm run sprites:humans   # regenerate human outfit variant PNGs
 - **Playtest notes:** export your village chronicle (Log → Chronicle → Download .txt) and mention what confused you or what you'd love next
 - **Issues:** [GitHub Issues](https://github.com/Rengerams/Wilderfolk/issues) for bugs and reproducible steps
 
+## License
+
+Source code is [MIT](LICENSE) — Copyright (c) 2026 Autosolid. Audio assets have separate CC licenses; see [TECHNICAL.md](TECHNICAL.md#audio-credits).
+
 <p align="center">
   <strong>Wilderfolk</strong><br>
   <em>Build inside the food chain — or watch it collapse.</em>
