@@ -1,0 +1,14 @@
+---
+pid: 12492
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors\app"
+command: "npm run build"
+started_at: 2026-07-04T16:52:06.968Z
+running_for_ms: 15669986 
+---
+
+> wilderfolk@0.4.1 build
+> tsc -b && vite build
+
+src/game/combat.ts(183,5): error TS2739: Type '{ spearsReady: boolean; shieldsReady: boolean; }' is missing the following properties from type 'VillageForgeState': activeOrder, progress
+src/game/forge.ts(193,28): error TS2345: Argument of type '{ id: string; title: string; message: string; type: "success"; }' is not assignable to parameter of type 'GameNotification'.
+  Property 'createdAt' is missing in type '{ id: string; title: string; message: string; type: "success"; }' but required in type 'GameNotification'.

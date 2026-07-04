@@ -1,0 +1,7 @@
+---
+pid: 15336
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\"; $env:SIM_MAX_TICKS=\"52000\"; $env:SIM_PROFILE=\"town\"; npm run simulate:10year 2>&1 | Select-String -Pattern \"Winter Y[5-6]|raid:|retense|VERDICT|Balance gates|wood stockpile|starvation\""
+started_at: 2026-07-04T20:25:37.503Z
+running_for_ms: 2860002  
+---

@@ -1,0 +1,412 @@
+---
+pid: 3312
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "cd \"D:\\Kimi_Agent_Update_Building_Background_Colors\" && npm start 2>&1"
+started_at: 2026-07-04T14:53:26.969Z
+running_for_ms: 22795007 
+---
+
+> wilderfolk@0.4.0 start
+> npm run dev --prefix app
+
+
+> wilderfolk@0.4.0 dev
+> vite
+
+Port 5173 is in use, trying another one...
+
+  VITE v7.3.5  ready in 1017 ms
+
+  ➜  Local:   http://127.0.0.1:5174/
+16:57:23 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+16:57:23 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+16:57:23 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+16:57:23 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+16:57:23 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+16:57:43 [vite] (client) hmr update /src/App.tsx, /src/index.css
+16:57:44 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:03:27 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:03:50 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:03:50 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:03:55 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:03:55 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:03:55 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:03:55 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:03:55 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:04:03 [vite] (client) hmr update /src/index.css, /src/App.tsx
+17:04:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:14 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:04:15 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:04:35 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:35 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:35 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:48 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:48 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:04:51 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:05:04 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:05:27 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:05:33 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:05:33 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:09:33 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:09:33 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:11:04 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:11:04 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:11:04 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:11:04 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:11:04 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:11:04 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:11:12 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:11:12 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:11:12 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:11:12 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:11:12 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:11:22 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:11:22 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:11:31 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:11:31 [vite] (client) hmr update /src/game/EventLogPanel.tsx, /src/index.css
+17:11:31 [vite] (client) hmr update /src/game/EventLogPanel.tsx, /src/index.css
+17:11:31 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:11:39 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:11:44 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:12:03 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:14:07 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:14:13 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:14:13 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:14:19 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:14:19 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:14:31 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:15:32 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:15:32 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:15:56 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:15:56 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:16:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:16:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:18:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:18:03 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:18:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:18:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:18:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:18:21 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:20:39 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:20:39 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:20 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:24:30 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:31 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:31 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:31 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:49 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:49 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:24:49 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:24:49 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:54 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:24:54 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:25:00 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:25:00 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:25:08 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:08 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:25:08 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:19 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:19 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:19 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:19 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:22 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:26 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:25:45 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:27:29 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+17:27:29 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:27:39 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:27:39 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:27:39 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:27:39 [vite] (client) hmr update /src/index.css, /src/App.tsx
+17:27:39 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:27:39 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:27:39 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:27:39 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:27:50 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:27:53 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:28:11 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:28:11 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:28:16 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:28:16 [vite] (client) hmr update /src/game/PopulationPanel.tsx, /src/index.css
+17:28:16 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:28:22 [vite] (client) hmr update /src/game/PopulationPanel.tsx, /src/index.css
+17:28:22 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:28:22 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:28:34 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:31:28 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:31:28 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+17:35:34 [vite] (client) hmr update /src/App.css, /src/index.css
+17:35:53 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:35:53 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:02 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:02 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:09 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:22 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:28 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:34 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:34 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:36:34 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:37:04 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:37:08 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:37:08 [vite] (client) hmr update /src/game/FocusPanel.tsx, /src/index.css
+17:37:20 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:37:25 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:39:37 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:39:37 [vite] (client) hmr update /src/game/FocusPanel.tsx, /src/index.css
+17:39:37 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:39:44 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:39:44 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:39:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:40:00 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:40:00 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:40:10 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:40:11 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:40:11 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:40:51 [vite] (client) hmr update /src/App.css, /src/index.css
+17:40:51 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:41:57 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:41:58 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:41:58 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:41:58 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:44:29 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+17:44:29 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:44:29 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:44:30 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+17:44:39 [vite] (client) hmr update /src/game/FocusPanel.tsx, /src/index.css
+17:44:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:44:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:44:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:44:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:45:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:45:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+17:45:12 [vite] (client) hmr update /src/App.css, /src/index.css
+17:45:12 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:48:10 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+18:48:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+18:48:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:48:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:48:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:48:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+18:48:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+18:48:24 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:48:30 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:48:45 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:48:59 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:49:18 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:49:28 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:49:28 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:49:28 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:49:35 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+18:49:42 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+18:49:45 [vite] (client) hmr update /src/index.css, /src/App.tsx
+18:49:51 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:49:51 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:49:51 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:52:07 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+18:52:35 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+18:56:56 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:56:56 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+18:56:56 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+18:56:56 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:57:03 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:57:03 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:09 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:11 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:15 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:15 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:15 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:27 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:27 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:57:57 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:58:02 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:58:02 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:58:03 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:58:09 [vite] (client) hmr update /src/App.tsx, /src/index.css
+18:58:19 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:58:19 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:58:19 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:58:19 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+18:58:19 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:58:29 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:58:29 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:59:03 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+18:59:03 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+19:04:29 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+19:04:31 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+19:09:44 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+19:09:44 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+19:09:55 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+19:09:55 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+19:09:55 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+19:10:06 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:10:06 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:10:06 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:10:06 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:10:21 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+19:18:40 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+19:18:55 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+19:18:55 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:18:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+19:18:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+19:18:56 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:18:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+19:18:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+19:19:05 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:19:05 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+19:19:05 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+19:30:55 [vite] (client) hmr update /src/App.tsx, /src/index.css
+19:30:55 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:05:57 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+20:05:57 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+20:06:13 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+20:06:24 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:06:33 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:06:37 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:06:37 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/FocusPanel.tsx
+20:06:45 [vite] (client) hmr update /src/index.css, /src/App.tsx
+20:06:45 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:06:45 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:06:45 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:07:13 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:07:13 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:07:13 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:08:06 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:12:46 [vite] (client) hmr update /src/index.css, /src/App.tsx
+20:12:46 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:12:46 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+20:12:56 [vite] (client) hmr update /src/index.css, /src/App.tsx
+20:12:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:12:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:12:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:12:56 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:13:05 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:13:18 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:13:29 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:13:29 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:13:30 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:13:30 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:13:43 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:13:43 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:13:43 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:14 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:47 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:14:47 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:17:21 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:17:21 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:17:33 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:17:36 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:17:52 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:17:52 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:17:52 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:21:06 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:21:06 [vite] (client) hmr update /src/App.css, /src/index.css
+20:21:18 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:21:18 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:21:18 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:21:18 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:34:44 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:34:56 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:42:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:42:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:42:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:42:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:42:49 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:42:59 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:42:59 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:42:59 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:42:59 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:42:59 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:43:03 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:43:10 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:43:17 [vite] (client) hmr update /src/index.css, /src/App.tsx
+20:43:17 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:43:17 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:43:24 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:43:24 [vite] (client) hmr update /src/game/IntroScreen.tsx, /src/index.css
+20:49:55 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:49:56 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:49:56 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:50:15 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:50:15 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:50:15 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:50:22 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+20:50:22 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+20:50:22 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:50:25 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:58:02 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:58:02 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:58:10 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:58:10 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:58:10 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:58:22 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+20:58:22 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:58:22 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+20:58:33 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:58:38 [vite] (client) hmr update /src/App.tsx, /src/index.css
+20:58:51 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:03:44 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:03:44 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:03:44 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:03:44 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:03:50 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:03:50 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:03:50 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:03:50 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:03:51 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:03:51 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:04:02 [vite] (client) hmr update /src/App.tsx, /src/index.css
+21:04:02 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:04:02 [vite] (client) hmr update /src/App.tsx, /src/index.css
+21:04:09 [vite] (client) hmr update /src/App.tsx, /src/index.css
+21:04:30 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+21:06:46 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+21:09:43 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+21:09:43 [vite] (client) hmr update /src/App.tsx, /src/index.css
+21:09:43 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:14:01 [vite] (client) page reload src/audio/tracks.ts
+22:14:01 [vite] (client) page reload src/audio/ambient.ts
+22:15:06 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:15:06 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:15:18 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+22:15:18 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:15:18 [vite] (client) hmr update /src/App.tsx, /src/game/PopulationPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+22:16:35 [vite] (client) hmr update /src/game/FocusPanel.tsx, /src/index.css
+22:16:45 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:16:45 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:16:45 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:16:45 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:00 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:00 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:07 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:07 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:08 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:08 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:24 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:24 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:24 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:24 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:24 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:39 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:39 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:17:39 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:19:34 [vite] (client) hmr update /src/index.css, /src/game/FocusPanel.tsx
+22:19:34 [vite] (client) hmr update /src/App.tsx, /src/game/EventLogPanel.tsx, /src/game/MapSetupScreen.tsx, /src/game/PopulationPanel.tsx, /src/game/IntroScreen.tsx, /src/game/FocusPanel.tsx, /src/index.css
+22:19:34 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:19:55 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:20:01 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:20:01 [vite] (client) hmr update /src/index.css, /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx
+22:20:01 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:20:01 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:20:01 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:21:39 [vite] (client) hmr update /src/App.tsx, /src/game/MapSetupScreen.tsx, /src/game/IntroScreen.tsx, /src/index.css
+22:21:50 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:21:50 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:21:50 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:21:50 [vite] (client) hmr update /src/App.tsx, /src/index.css
+22:21:50 [vite] (client) hmr update /src/App.tsx, /src/index.css

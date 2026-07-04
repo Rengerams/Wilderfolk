@@ -1,0 +1,57 @@
+---
+pid: 14864
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location D:\\Kimi_Agent_Update_Building_Background_Colors\\app; $env:PROGRESS_EVERY='8640'; npm run simulate:10year"
+started_at: 2026-07-04T20:07:25.082Z
+running_for_ms: 3965011  
+---
+
+> wilderfolk@0.4.1 simulate:10year
+> node scripts/run-sim.mjs scripts/simulate-10year.ts
+
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 86400 ticks (10 game years) | map 1600×1200
+Progress every 8640 ticks (~360 game days)
+
+  → inject tick 4000: spawn_rival:MistRidge[tense]
+  → inject tick 4200: spawn_rival:WillowReach[competitive]
+  → inject tick 4400: spawn_rival:WillowRidge[neutral]
+  → inject tick 5000: spawn_visitor:hunters
+  → inject tick 5500: spawn_visitor:performers
+  → inject tick 6000: spawn_visitor:refugees
+  📋 Pre-winter Y0 day 250 | pop=51/51 beds=24 food=12808 (251.1/cap) wood=4400 buffer=400d need=990
+  ❄ Winter Y0 day 270 ENTER | pop=50/51 beds=24 food=12897 wood=4362 need=10/d (900 total) buffer=436d eco=0%
+  → inject tick 8000: diplomacy:tribute
+  → inject tick 8300: diplomacy:tribute
+  → inject tick 8600: diplomacy:tribute
+[10.0%] Year 1 tick 8640 | +803s ETA ~7231s | YEAR END | pop=36 food=12850 wood=3791 stone=2700 gold=12 eco=0% rep=10 | buildings=37 rivals=3 playerDeaths=0
+  ❄ Winter Y0 EXIT PASS | minFood=12867 minWood=3641 minPop=35 playerDeaths=0 netLoss=14 heatingFail=0d
+[10.0%] Y1 day 360 tick 8640 | +803s ETA ~7231s | pop=36/48 beds=24 food=12850 wood=3791 eco=0% | raids=0 dip=0 | avg 5.51ms/tick
+  → scheduled tick 8664: Build Lumber Mill B
+  → scheduled tick 8688: Build Workshop
+  → scheduled tick 8840: Build Store
+  → scheduled tick 9040: Build Church
+  → scheduled tick 9140: Recruit settler [FAILED: at cap or insufficient resources]
+  → scheduled tick 9152: Recruit settler [FAILED: at cap or insufficient resources]
+  → scheduled tick 9164: Recruit settler [FAILED: at cap or insufficient resources]
+  → scheduled tick 9240: Year-2 resource grant
+  → inject tick 10000: diplomacy:border_dispute
+  → inject tick 10300: diplomacy:border_dispute
+  → inject tick 10600: diplomacy:border_dispute
+  → inject tick 12000: diplomacy:alliance
+  → inject tick 12300: diplomacy:alliance
+  → inject tick 12600: diplomacy:alliance
+  → inject tick 14000: diplomacy:peace_treaty
+  → inject tick 14300: diplomacy:peace_treaty
+  → scheduled tick 14592: Pre-winter Y1 stockpile
+  → inject tick 14600: diplomacy:peace_treaty
+  📋 Pre-winter Y1 day 250 | pop=66/72 beds=40 food=12829 (194.4/cap) wood=4800 buffer=342d need=1260
+  ❄ Winter Y1 day 270 ENTER | pop=64/71 beds=40 food=12878 wood=4735 need=13/d (1170 total) buffer=364d eco=0%
+[20.0%] Year 2 tick 17280 | +1515s ETA ~6061s | YEAR END | pop=68 food=12828 wood=4800 stone=3100 gold=6821 eco=0% rep=100 | buildings=88 rivals=3 playerDeaths=0
+  ❄ Winter Y1 EXIT PASS | minFood=12872 minWood=4728 minPop=60 playerDeaths=0 netLoss=0 heatingFail=0d
+[20.0%] Y2 day 720 tick 17280 | +1515s ETA ~6061s | pop=68/73 beds=40 food=12828 wood=4800 eco=0% | raids=0 dip=0 | avg 7.85ms/tick
+  → scheduled tick 17380: Build House C
+  → scheduled tick 17580: Build Road
+  → scheduled tick 17780: Build Taming Post

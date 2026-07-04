@@ -1,0 +1,7 @@
+---
+pid: 13656
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\"; $env:SIM_MAX_TICKS=\"5000\"; $env:SIM_PROFILE=\"town\"; npm run simulate:10year 2>&1 | Select-Object -Last 40"
+started_at: 2026-07-04T20:30:12.789Z
+running_for_ms: 2585011  
+---

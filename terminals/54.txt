@@ -1,0 +1,263 @@
+---
+pid: 13804
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\"; $env:SIM_MAX_TICKS=\"5000\"; $env:SIM_PROFILE=\"town\"; node scripts/run-sim.mjs scripts/simulate-10year.ts 2>&1"
+started_at: 2026-07-04T20:57:20.250Z
+running_for_ms: 954998   
+---
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 5000 ticks (10 game years) | map 1600×1200
+Progress every 360 ticks (~15 game days)
+Build mode: free (needs-based auto_build every 36 ticks; coverage sweep every 192)
+
+[7.2%] Y0 day 15 tick 360 | +2s ETA ~25s | pop=6/14 beds=6 food=581 wood=51 eco=83.75% | raids=0 dip=0 | avg 2.86ms/tick
+[14.4%] Y0 day 30 tick 720 | +17s ETA ~100s | pop=9/21 beds=12 food=578 wood=394 eco=63.25% | raids=0 dip=0 | avg 1.30ms/tick
+[21.6%] Y0 day 45 tick 1080 | +18s ETA ~66s | pop=14/67 beds=54 food=1225 wood=390 eco=56.125% | raids=0 dip=0 | avg 1.51ms/tick
+[28.8%] Y0 day 60 tick 1440 | +60s ETA ~148s | pop=21/93 beds=78 food=2585 wood=1238 eco=2.75% | raids=0 dip=0 | avg 2.46ms/tick
+[36.0%] Y0 day 75 tick 1800 | +110s ETA ~196s | pop=28/93 beds=78 food=2726 wood=2044 eco=0% | raids=0 dip=0 | avg 2.22ms/tick
+[43.2%] Y0 day 90 tick 2160 | +152s ETA ~200s | pop=35/93 beds=78 food=2713 wood=2065 eco=0% | raids=0 dip=0 | avg 3.20ms/tick
+[50.4%] Y0 day 105 tick 2520 | +205s ETA ~202s | pop=39/93 beds=78 food=2706 wood=2090 eco=0% | raids=0 dip=0 | avg 3.62ms/tick
+[57.6%] Y0 day 120 tick 2880 | +236s ETA ~174s | pop=43/93 beds=78 food=2702 wood=2100 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[64.8%] Y0 day 135 tick 3240 | +256s ETA ~139s | pop=41/92 beds=78 food=2701 wood=2090 eco=0% | raids=0 dip=0 | avg 2.34ms/tick
+[72.0%] Y0 day 150 tick 3600 | +276s ETA ~107s | pop=46/101 beds=86 food=2696 wood=2100 eco=0% | raids=0 dip=0 | avg 2.34ms/tick
+[79.2%] Y0 day 165 tick 3960 | +296s ETA ~78s | pop=52/101 beds=86 food=2691 wood=2090 eco=0% | raids=0 dip=0 | avg 2.59ms/tick
+  → inject tick 4000: spawn_rival:CedarHollow[tense]
+  → inject tick 4200: spawn_rival:StoneRidge[competitive]
+[86.4%] Y0 day 180 tick 4320 | +318s ETA ~50s | pop=57/113 beds=86 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 3.07ms/tick
+  → inject tick 4400: spawn_rival:RavenHollow[neutral]
+[93.6%] Y0 day 195 tick 4680 | +340s ETA ~23s | pop=62/119 beds=86 food=2705 wood=2100 eco=0% | raids=0 dip=0 | avg 3.22ms/tick
+  → inject tick 5000: spawn_visitor:hunters
+
+✓ Simulation complete in 358.4s
+
+✗ VERDICT: FAIL — 10-year town balance test (6 gate failures)
+
+=== Final report ===
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 5000 ticks (10 game years) | map 1600×1200
+Progress every 360 ticks (~15 game days)
+Build mode: free (needs-based auto_build every 36 ticks; coverage sweep every 192)
+
+[7.2%] Y0 day 15 tick 360 | +2s ETA ~25s | pop=6/14 beds=6 food=581 wood=51 eco=83.75% | raids=0 dip=0 | avg 2.86ms/tick
+[14.4%] Y0 day 30 tick 720 | +17s ETA ~100s | pop=9/21 beds=12 food=578 wood=394 eco=63.25% | raids=0 dip=0 | avg 1.30ms/tick
+[21.6%] Y0 day 45 tick 1080 | +18s ETA ~66s | pop=14/67 beds=54 food=1225 wood=390 eco=56.125% | raids=0 dip=0 | avg 1.51ms/tick
+[28.8%] Y0 day 60 tick 1440 | +60s ETA ~148s | pop=21/93 beds=78 food=2585 wood=1238 eco=2.75% | raids=0 dip=0 | avg 2.46ms/tick
+[36.0%] Y0 day 75 tick 1800 | +110s ETA ~196s | pop=28/93 beds=78 food=2726 wood=2044 eco=0% | raids=0 dip=0 | avg 2.22ms/tick
+[43.2%] Y0 day 90 tick 2160 | +152s ETA ~200s | pop=35/93 beds=78 food=2713 wood=2065 eco=0% | raids=0 dip=0 | avg 3.20ms/tick
+[50.4%] Y0 day 105 tick 2520 | +205s ETA ~202s | pop=39/93 beds=78 food=2706 wood=2090 eco=0% | raids=0 dip=0 | avg 3.62ms/tick
+[57.6%] Y0 day 120 tick 2880 | +236s ETA ~174s | pop=43/93 beds=78 food=2702 wood=2100 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[64.8%] Y0 day 135 tick 3240 | +256s ETA ~139s | pop=41/92 beds=78 food=2701 wood=2090 eco=0% | raids=0 dip=0 | avg 2.34ms/tick
+[72.0%] Y0 day 150 tick 3600 | +276s ETA ~107s | pop=46/101 beds=86 food=2696 wood=2100 eco=0% | raids=0 dip=0 | avg 2.34ms/tick
+[79.2%] Y0 day 165 tick 3960 | +296s ETA ~78s | pop=52/101 beds=86 food=2691 wood=2090 eco=0% | raids=0 dip=0 | avg 2.59ms/tick
+  → inject tick 4000: spawn_rival:CedarHollow[tense]
+  → inject tick 4200: spawn_rival:StoneRidge[competitive]
+[86.4%] Y0 day 180 tick 4320 | +318s ETA ~50s | pop=57/113 beds=86 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 3.07ms/tick
+  → inject tick 4400: spawn_rival:RavenHollow[neutral]
+[93.6%] Y0 day 195 tick 4680 | +340s ETA ~23s | pop=62/119 beds=86 food=2705 wood=2100 eco=0% | raids=0 dip=0 | avg 3.22ms/tick
+  → inject tick 5000: spawn_visitor:hunters
+
+✓ Simulation complete in 358.4s
+=== Wilderfolk 10-year balance simulation ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Ticks: 5000 (10 game years) | Wall time: 358.4s
+Calendar: Year 0, Day 208 | Total days: 208
+Map: 1600×1200 (large)
+Housing: 86 beds | maxPop=119
+
+--- Year-by-year snapshots ---
+
+--- Winter log (10-year test judgment) ---
+Winter summary: 0/0 winters passed
+
+--- End state — population ---
+Camp population: 56 (adults 55, children 1)
+Village leader id: 1078 | last election year: 0
+Player deaths (entity-tracked): 0 | births: 35
+Death events in log (all entities): 77
+
+--- End state — village & frontier ---
+Completed buildings: 72
+Building types placed: house, farm, barn, lumberMill, silo, well, quarry, blacksmith, mine, greenhouse, workshop, store, market, school, hospital, road, wall, wallCorner, wallGate, church, watchtower, mill, prison, tamingPost, barracks, townHall, mansion
+Resources: food=2778 wood=2100 stone=900 gold=1876
+Reputation: 100 | Ecosystem: 0% | eco≥80% years: 0
+Wildlife: rabbits=15 deer=10 wolves=1 grass=510
+Militia: militia=1331 barricade=1195 (iron/iron) guards=0 | raw strength=1331 barricade=1195
+Forge: spears=true shields=true active=none
+Researched: agriculture_1, agriculture_2, agriculture_3, mining_1, mining_2, forestry_1, forestry_2, architecture_1, architecture_2, medicine_1, medicine_2, trade_1, trade_2, education_1, education_2, defense_1, defense_2, defense_3, defense_4, defense_5
+Rivals (3): CedarHollow[tense pop=5]; StoneRidge[friendly pop=3]; RavenHollow[neutral pop=5]
+
+--- Event totals ---
+Combat events: 1 | Trade events: 7 | Research events: 20
+Diplomacy responses: 0 (coverage choices=0) | Raid responses: 0 (coverage=0)
+Marriages: 35 | Births: 35
+
+--- Option coverage ---
+buildings: 27/27 tested ✓
+diplomacy_tribute: 0/3 tested — missing: pay, negotiate, refuse
+diplomacy_border_dispute: 0/3 tested — missing: concede, stand_firm, militia
+diplomacy_alliance: 0/3 tested — missing: accept, decline, counter
+diplomacy_peace_treaty: 0/3 tested — missing: sign, decline, tribute
+raid_response: 0/3 tested — missing: defend, barricade, payoff
+rival_action: 5/5 tested ✓
+visitor_trade: 3/3 tested ✓
+refugee: 0/3 tested — missing: welcome, screen, turn_away
+visitor_talk: 2/7 tested — missing: pilgrims, scholars, nomads, performers, refugees
+forge: 2/2 tested ✓
+research: 20/20 tested ✓
+
+--- Performance ---
+Tick cost: avg=2.62ms p50=2.52ms p95=4.56ms max=16.09ms
+Budget @ 60fps: 16.7ms/tick | @ 10×: 1.67ms/tick
+
+--- Balance gates — profile: town ---
+FAIL — Reached year 10 (year=0)
+FAIL — Population 70–95 (pop=56)
+FAIL — Ecosystem 35–60% (eco=0%)
+PASS — Population alive (pop=56)
+PASS — Food stockpile > 0 (food=2778)
+FAIL — All winters survived (0/0 winters passed)
+PASS — No winter starvation (min winter food across years: n/a)
+FAIL — Diplomacy exercised (responses=0)
+FAIL — Raids exercised (responses=0)
+PASS — Perf p95 < 16ms (p95=4.56ms)
+
+--- VERDICT ---
+FAIL — 10-year town balance test
+Failed 6/10 gates — see Balance gates above
+
+✗ VERDICT: FAIL — 10-year town balance test (6 gate failures)
+
+Untested options (7 categories with gaps):
+  diplomacy_tribute: 0/3 tested — missing: pay, negotiate, refuse
+  diplomacy_border_dispute: 0/3 tested — missing: concede, stand_firm, militia
+  diplomacy_alliance: 0/3 tested — missing: accept, decline, counter
+  diplomacy_peace_treaty: 0/3 tested — missing: sign, decline, tribute
+  raid_response: 0/3 tested — missing: defend, barricade, payoff
+  refugee: 0/3 tested — missing: welcome, screen, turn_away
+  visitor_talk: 2/7 tested — missing: pilgrims, scholars, nomads, performers, refugees
+
+--- Player action log ---
+tick 0 [research] start:forestry_1 OK
+tick 0 [visitor_talk] traders OK
+tick 0 [visitor_trade] buy_food OK
+tick 1 [visitor_trade] buy_wood OK
+tick 2 [visitor_trade] sell_food OK
+tick 35 [auto_build] place:house OK — pop=2 food=598 wood=500
+tick 71 [auto_build] place:farm OK — pop=2 food=595 wood=460
+tick 100 [research] start:forestry_2 OK
+tick 107 [auto_build] place:farm OK — pop=3 food=594 wood=365
+tick 143 [auto_build] place:barn OK — pop=3 food=599 wood=340
+tick 179 [auto_build] place:lumberMill OK — pop=3 food=600 wood=290
+tick 191 [buildings] place:barn OK
+tick 200 [research] start:defense_2 OK
+tick 215 [auto_build] place:lumberMill OK — pop=4 food=598 wood=165
+tick 251 [auto_build] place:silo OK — pop=4 food=600 wood=130
+tick 287 [auto_build] place:well OK — pop=5 food=596 wood=150
+tick 300 [research] start:defense_1 OK
+tick 323 [auto_build] place:well OK — pop=5 food=599 wood=69
+tick 359 [auto_build] place:quarry OK — pop=6 food=598 wood=71
+tick 383 [buildings] place:barn OK
+tick 395 [auto_build] place:quarry OK — pop=7 food=599 wood=35
+tick 431 [auto_build] place:quarry OK — pop=7 food=598 wood=49
+tick 439 [research] start:mining_1 OK
+tick 467 [auto_build] place:blacksmith OK — pop=6 food=600 wood=37
+tick 500 [scheduled] Year-1 resource grant OK
+tick 503 [auto_build] place:quarry OK — pop=6 food=600 wood=500
+tick 539 [research] start:agriculture_1 OK
+tick 539 [auto_build] place:quarry OK — pop=7 food=598 wood=450
+tick 575 [auto_build] place:mine OK — pop=7 food=596 wood=464
+tick 575 [buildings] place:barn OK
+tick 611 [auto_build] place:house OK — pop=8 food=597 wood=450
+tick 639 [research] start:defense_3 OK
+tick 647 [auto_build] place:house OK — pop=7 food=596 wood=389
+tick 683 [auto_build] place:greenhouse OK — pop=8 food=597 wood=424
+tick 719 [auto_build] place:house OK — pop=8 food=595 wood=434
+tick 739 [research] start:trade_1 OK
+tick 755 [auto_build] place:house OK — pop=9 food=596 wood=422
+tick 767 [buildings] place:greenhouse OK
+tick 791 [auto_build] place:workshop OK — pop=9 food=594 wood=396
+tick 827 [auto_build] place:house OK — pop=10 food=594 wood=449
+tick 839 [research] start:education_1 OK
+tick 863 [auto_build] place:house OK — pop=10 food=592 wood=383
+tick 899 [auto_build] place:store OK — pop=10 food=719 wood=433
+tick 935 [auto_build] place:house OK — pop=11 food=781 wood=452
+tick 939 [research] start:medicine_1 OK
+tick 959 [buildings] place:greenhouse OK
+tick 971 [auto_build] place:house OK — pop=12 food=925 wood=430
+tick 1007 [auto_build] place:market OK — pop=12 food=1000 wood=439
+tick 1016 [research] start:architecture_1 OK
+tick 1043 [auto_build] place:house OK — pop=13 food=1169 wood=416
+tick 1079 [auto_build] place:house OK — pop=14 food=1247 wood=430
+tick 1093 [research] start:defense_4 OK
+tick 1115 [auto_build] place:school OK — pop=15 food=1403 wood=429
+tick 1151 [auto_build] place:house OK — pop=15 food=1465 wood=434
+tick 1151 [buildings] place:greenhouse OK
+tick 1170 [research] start:defense_5 OK
+tick 1187 [auto_build] place:house OK — pop=15 food=1610 wood=394
+tick 1223 [auto_build] place:hospital OK — pop=16 food=1733 wood=437
+tick 1259 [auto_build] place:workshop OK — pop=16 food=1978 wood=565
+tick 1295 [auto_build] place:road OK — pop=17 food=2088 wood=636
+tick 1331 [auto_build] place:wall OK — pop=18 food=2335 wood=844
+tick 1343 [buildings] place:greenhouse OK
+tick 1367 [auto_build] place:wallCorner OK — pop=18 food=2384 wood=943
+tick 1403 [auto_build] place:wallGate OK — pop=20 food=2504 wood=1148
+tick 1535 [buildings] place:market OK
+tick 1547 [auto_build] place:church OK — pop=21 food=2787 wood=1747
+tick 1619 [auto_build] place:church OK — pop=22 food=2790 wood=1900
+tick 1639 [forge] queue:iron_spears OK
+tick 1683 [research] start:agriculture_2 OK
+tick 1691 [auto_build] place:church OK — pop=25 food=2785 wood=2095
+tick 1727 [auto_build] place:church OK — pop=25 food=2775 wood=2100
+tick 1727 [buildings] place:hospital OK
+tick 1760 [research] start:mining_2 OK
+tick 1763 [auto_build] place:watchtower OK — pop=26 food=2785 wood=2020
+tick 1783 [forge] queue:iron_shields OK
+tick 1835 [auto_build] place:farm OK — pop=29 food=2784 wood=2090
+tick 1871 [auto_build] place:mill OK — pop=29 food=2780 wood=2100
+tick 1907 [auto_build] place:farm OK — pop=31 food=2781 wood=2100
+tick 1919 [buildings] place:mill OK
+tick 1927 [research] start:agriculture_3 OK
+tick 1943 [auto_build] place:farm OK — pop=32 food=2773 wood=2030
+tick 1979 [auto_build] place:prison OK — pop=33 food=2787 wood=2090
+tick 2051 [auto_build] place:tamingPost OK — pop=34 food=2784 wood=2100
+tick 2087 [auto_build] place:barracks OK — pop=34 food=2776 wood=2090
+tick 2111 [buildings] place:prison OK
+tick 2123 [auto_build] place:tamingPost OK — pop=35 food=2786 wood=2090
+tick 2159 [auto_build] place:tamingPost OK — pop=34 food=2777 wood=2100
+tick 2195 [auto_build] place:tamingPost OK — pop=35 food=2786 wood=2100
+tick 2231 [auto_build] place:tamingPost OK — pop=36 food=2771 wood=2090
+tick 2267 [auto_build] place:tamingPost OK — pop=36 food=2784 wood=2090
+tick 2303 [auto_build] place:tamingPost OK — pop=36 food=2774 wood=2100
+tick 2303 [buildings] place:prison OK
+tick 2339 [auto_build] place:tamingPost OK — pop=38 food=2785 wood=2100
+tick 2375 [auto_build] place:tamingPost OK — pop=39 food=2775 wood=2090
+tick 2455 [research] start:architecture_2 OK
+tick 2495 [buildings] place:mansion OK
+tick 2599 [research] start:trade_2 OK
+tick 2687 [buildings] place:townHall OK
+tick 2743 [research] start:education_2 OK
+tick 2879 [buildings] place:townHall OK
+tick 2887 [research] start:medicine_2 OK
+tick 3071 [buildings] place:townHall OK
+tick 3263 [buildings] place:mansion OK
+tick 4000 [inject] spawn_rival:CedarHollow[tense] OK
+tick 4031 [rival_action] gift:CedarHollow OK
+tick 4031 [rival_action] show_strength:CedarHollow OK
+tick 4031 [rival_action] peace_treaty:CedarHollow OK
+tick 4031 [rival_action] counter_raid:CedarHollow OK
+tick 4200 [inject] spawn_rival:StoneRidge[competitive] OK
+tick 4247 [rival_action] trade_pact:StoneRidge OK
+tick 4283 [auto_build] place:lumberMill OK — pop=57 food=2774 wood=2090
+tick 4400 [inject] spawn_rival:RavenHollow[neutral] OK
+tick 4535 [auto_build] place:farm OK — pop=62 food=2751 wood=2100
+tick 4571 [auto_build] place:farm OK — pop=61 food=2777 wood=2100
+tick 5000 [inject] spawn_visitor:hunters OK
+tick 4999 [visitor_talk] hunters OK
+tick 4999 [visitor_trade] buy_food OK
+
+[simulate-10year] Log written to D:\Kimi_Agent_Update_Building_Background_Colors\app\scripts\logs\sim-10year-town-2026-07-04T21-03-19-640Z.txt

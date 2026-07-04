@@ -1,0 +1,829 @@
+---
+pid: 14196
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\"; Remove-Item Env:SIM_MAX_TICKS -ErrorAction SilentlyContinue; $env:SIM_PROFILE=\"town\"; node scripts/run-sim.mjs scripts/simulate-10year.ts"
+started_at: 2026-07-04T20:56:53.250Z
+running_for_ms: 1000013  
+---
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 86400 ticks (10 game years) | map 1600×1200
+Progress every 360 ticks (~15 game days)
+Build mode: free (needs-based auto_build every 36 ticks; coverage sweep every 192)
+
+[0.4%] Y0 day 15 tick 360 | +2s ETA ~421s | pop=6/20 beds=12 food=579 wood=12 eco=91% | raids=0 dip=0 | avg 2.45ms/tick
+[0.8%] Y0 day 30 tick 720 | +6s ETA ~693s | pop=11/34 beds=24 food=577 wood=400 eco=65% | raids=0 dip=0 | avg 2.20ms/tick
+[1.3%] Y0 day 45 tick 1080 | +7s ETA ~552s | pop=19/73 beds=60 food=822 wood=617 eco=33.375% | raids=0 dip=0 | avg 1.56ms/tick
+[1.7%] Y0 day 60 tick 1440 | +32s ETA ~1899s | pop=25/87 beds=72 food=1505 wood=1684 eco=9.625% | raids=0 dip=0 | avg 1.75ms/tick
+[2.1%] Y0 day 75 tick 1800 | +86s ETA ~4020s | pop=30/87 beds=72 food=2720 wood=2050 eco=0% | raids=0 dip=0 | avg 1.86ms/tick
+[2.5%] Y0 day 90 tick 2160 | +153s ETA ~5972s | pop=39/93 beds=78 food=2713 wood=2100 eco=0% | raids=0 dip=0 | avg 1.98ms/tick
+[2.9%] Y0 day 105 tick 2520 | +221s ETA ~7341s | pop=46/93 beds=78 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[3.3%] Y0 day 120 tick 2880 | +268s ETA ~7759s | pop=49/93 beds=78 food=2704 wood=2100 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[3.8%] Y0 day 135 tick 3240 | +300s ETA ~7689s | pop=51/93 beds=78 food=2709 wood=2095 eco=0% | raids=0 dip=0 | avg 3.14ms/tick
+[4.2%] Y0 day 150 tick 3600 | +323s ETA ~7437s | pop=47/93 beds=78 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 3.02ms/tick
+[4.6%] Y0 day 165 tick 3960 | +344s ETA ~7171s | pop=50/101 beds=86 food=2703 wood=2095 eco=0% | raids=0 dip=0 | avg 3.57ms/tick
+  → inject tick 4000: spawn_rival:FoxHollow[tense]
+  → inject tick 4200: spawn_rival:WillowHollow[competitive]
+[5.0%] Y0 day 180 tick 4320 | +367s ETA ~6971s | pop=53/112 beds=86 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 5.61ms/tick
+  → inject tick 4400: spawn_rival:CedarCreek[neutral]
+[5.4%] Y0 day 195 tick 4680 | +389s ETA ~6788s | pop=50/119 beds=86 food=2727 wood=2095 eco=0% | raids=0 dip=0 | avg 4.08ms/tick
+  → inject tick 5000: spawn_visitor:hunters
+[5.8%] Y0 day 210 tick 5040 | +409s ETA ~6599s | pop=53/119 beds=86 food=2723 wood=2100 eco=0% | raids=0 dip=0 | avg 2.88ms/tick
+  → inject tick 5200: spawn_visitor:pilgrims
+[6.3%] Y0 day 225 tick 5400 | +429s ETA ~6428s | pop=53/119 beds=86 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 2.93ms/tick
+  → inject tick 5500: spawn_visitor:performers
+[6.7%] Y0 day 240 tick 5760 | +449s ETA ~6282s | pop=54/119 beds=86 food=2726 wood=2100 eco=0% | raids=0 dip=0 | avg 3.15ms/tick
+  → inject tick 5800: spawn_visitor:scholars
+  → inject tick 6000: spawn_visitor:refugees
+  📋 Pre-winter Y0 day 250 | pop=58/119 beds=86 food=2683 (46.3/cap) wood=2100 buffer=175d need=1080
+[7.1%] Y0 day 255 tick 6120 | +469s ETA ~6149s | pop=59/119 beds=86 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 2.87ms/tick
+  ❄ Winter Y0 day 270 ENTER | pop=62/118 beds=86 food=2733 wood=1989 need=13/d (1170 total) buffer=153d eco=0%
+[7.5%] Y0 day 270 tick 6480 | +489s ETA ~6029s | pop=62/118 beds=86 food=2733 wood=1989 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[7.9%] Y0 day 285 tick 6840 | +524s ETA ~6093s | pop=62/119 beds=86 food=2746 wood=1984 eco=0% | raids=0 dip=0 | avg 3.39ms/tick
+[8.3%] Y0 day 300 tick 7200 | +544s ETA ~5980s | pop=62/119 beds=86 food=2746 wood=1989 eco=0% | raids=0 dip=0 | avg 2.89ms/tick
+[8.8%] Y0 day 315 tick 7560 | +563s ETA ~5873s | pop=64/119 beds=86 food=2737 wood=1984 eco=0% | raids=0 dip=0 | avg 2.77ms/tick
+[9.2%] Y0 day 330 tick 7920 | +584s ETA ~5784s | pop=63/119 beds=86 food=2741 wood=1989 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+  → inject tick 8000: diplomacy:tribute
+[9.6%] Y0 day 345 tick 8280 | +605s ETA ~5706s | pop=63/119 beds=86 food=2727 wood=1984 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+  → inject tick 8300: diplomacy:tribute
+  → inject tick 8600: diplomacy:tribute
+[10.0%] Year 1 tick 8640 | +627s ETA ~5643s | YEAR END | pop=57 food=2724 wood=2100 stone=900 gold=4260 eco=0% rep=96 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y0 EXIT PASS | minFood=2713 minWood=1983 minPop=56 playerDeaths=0 netLoss=5 heatingFail=0d
+[10.0%] Y1 day 0 tick 8640 | +627s ETA ~5643s | pop=57/118 beds=86 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.90ms/tick
+[10.4%] Y1 day 15 tick 9000 | +628s ETA ~5402s | pop=58/118 beds=86 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+  → scheduled tick 9240: Year-2 resource grant
+[10.8%] Y1 day 30 tick 9360 | +629s ETA ~5180s | pop=60/119 beds=86 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[11.3%] Y1 day 45 tick 9720 | +631s ETA ~4975s | pop=62/119 beds=86 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 2.93ms/tick
+  → inject tick 10000: diplomacy:border_dispute
+[11.7%] Y1 day 60 tick 10080 | +632s ETA ~4785s | pop=59/118 beds=86 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 2.92ms/tick
+  → inject tick 10300: diplomacy:border_dispute
+[12.1%] Y1 day 75 tick 10440 | +633s ETA ~4607s | pop=58/119 beds=86 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 2.77ms/tick
+  → inject tick 10600: diplomacy:border_dispute
+[12.5%] Y1 day 90 tick 10800 | +634s ETA ~4441s | pop=64/119 beds=86 food=2701 wood=2100 eco=0% | raids=0 dip=0 | avg 2.83ms/tick
+[12.9%] Y1 day 105 tick 11160 | +636s ETA ~4286s | pop=64/118 beds=86 food=2698 wood=2095 eco=0% | raids=0 dip=0 | avg 2.91ms/tick
+[13.3%] Y1 day 120 tick 11520 | +637s ETA ~4140s | pop=65/119 beds=86 food=2696 wood=2100 eco=0% | raids=0 dip=0 | avg 3.01ms/tick
+[13.8%] Y1 day 135 tick 11880 | +638s ETA ~4005s | pop=64/119 beds=86 food=2699 wood=2095 eco=0% | raids=0 dip=0 | avg 3.37ms/tick
+  → inject tick 12000: diplomacy:alliance
+[14.2%] Y1 day 150 tick 12240 | +640s ETA ~3877s | pop=62/117 beds=86 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 3.30ms/tick
+  → inject tick 12300: diplomacy:alliance
+  → inject tick 12600: diplomacy:alliance
+[14.6%] Y1 day 165 tick 12600 | +641s ETA ~3757s | pop=63/117 beds=86 food=2679 wood=2095 eco=0% | raids=0 dip=0 | avg 3.39ms/tick
+[15.0%] Y1 day 180 tick 12960 | +643s ETA ~3644s | pop=65/119 beds=86 food=2711 wood=2100 eco=0% | raids=0 dip=0 | avg 3.93ms/tick
+[15.4%] Y1 day 195 tick 13320 | +645s ETA ~3537s | pop=65/119 beds=86 food=2711 wood=2095 eco=0% | raids=0 dip=0 | avg 3.46ms/tick
+[15.8%] Y1 day 210 tick 13680 | +659s ETA ~3501s | pop=60/119 beds=86 food=2716 wood=2100 eco=0% | raids=0 dip=0 | avg 33.05ms/tick
+  → inject tick 14000: diplomacy:peace_treaty
+[16.3%] Y1 day 225 tick 14040 | +660s ETA ~3401s | pop=53/119 beds=86 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 3.27ms/tick
+  → inject tick 14300: diplomacy:peace_treaty
+[16.7%] Y1 day 240 tick 14400 | +661s ETA ~3305s | pop=55/119 beds=86 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 2.83ms/tick
+  → inject tick 14600: diplomacy:peace_treaty
+  📋 Pre-winter Y1 day 250 | pop=51/119 beds=86 food=2732 (53.6/cap) wood=2100 buffer=190d need=990
+[17.1%] Y1 day 255 tick 14760 | +662s ETA ~3213s | pop=52/119 beds=86 food=2722 wood=2095 eco=0% | raids=0 dip=0 | avg 2.41ms/tick
+  ❄ Winter Y1 day 270 ENTER | pop=51/119 beds=86 food=2749 wood=1992 need=11/d (990 total) buffer=181d eco=0%
+[17.5%] Y1 day 270 tick 15120 | +663s ETA ~3125s | pop=51/119 beds=86 food=2749 wood=1992 eco=0% | raids=0 dip=0 | avg 2.37ms/tick
+[17.9%] Y1 day 285 tick 15480 | +664s ETA ~3041s | pop=51/119 beds=86 food=2747 wood=1865 eco=0% | raids=0 dip=0 | avg 2.27ms/tick
+[18.3%] Y1 day 300 tick 15840 | +665s ETA ~2961s | pop=47/119 beds=86 food=2746 wood=1896 eco=0% | raids=0 dip=0 | avg 2.11ms/tick
+[18.8%] Y1 day 315 tick 16200 | +666s ETA ~2885s | pop=48/119 beds=86 food=2746 wood=1924 eco=0% | raids=0 dip=0 | avg 2.32ms/tick
+[19.2%] Y1 day 330 tick 16560 | +667s ETA ~2812s | pop=52/119 beds=86 food=2744 wood=1991 eco=0% | raids=0 dip=0 | avg 2.32ms/tick
+[19.6%] Y1 day 345 tick 16920 | +668s ETA ~2743s | pop=52/119 beds=86 food=2743 wood=1986 eco=0% | raids=0 dip=0 | avg 2.57ms/tick
+[20.0%] Year 2 tick 17280 | +669s ETA ~2676s | YEAR END | pop=53 food=2721 wood=2100 stone=900 gold=11471 eco=0% rep=100 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y1 EXIT PASS | minFood=2738 minWood=1861 minPop=45 playerDeaths=0 netLoss=0 heatingFail=0d
+[20.0%] Y2 day 0 tick 17280 | +669s ETA ~2676s | pop=53/119 beds=86 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 2.41ms/tick
+[20.4%] Y2 day 15 tick 17640 | +670s ETA ~2612s | pop=52/119 beds=86 food=2726 wood=2095 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+  → scheduled tick 17980: Year-3 resource grant
+  → inject tick 18000: spawn_visitor:hunters
+[20.8%] Y2 day 30 tick 18000 | +671s ETA ~2552s | pop=50/119 beds=86 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.68ms/tick
+[21.3%] Y2 day 45 tick 18360 | +673s ETA ~2493s | pop=47/119 beds=86 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.48ms/tick
+[21.7%] Y2 day 60 tick 18720 | +674s ETA ~2436s | pop=51/119 beds=86 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+  → inject tick 19000: spawn_visitor:nomads
+[22.1%] Y2 day 75 tick 19080 | +675s ETA ~2382s | pop=50/119 beds=86 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[22.5%] Y2 day 90 tick 19440 | +676s ETA ~2330s | pop=55/119 beds=86 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 2.62ms/tick
+[22.9%] Y2 day 105 tick 19800 | +677s ETA ~2279s | pop=55/119 beds=86 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 2.64ms/tick
+  → inject tick 20000: retense_rival:FoxHollow
+  → inject tick 20000: raid:incoming
+[23.3%] Y2 day 120 tick 20160 | +679s ETA ~2230s | pop=57/119 beds=86 food=2710 wood=2100 eco=0% | raids=0 dip=0 | avg 2.78ms/tick
+[23.8%] Y2 day 135 tick 20520 | +680s ETA ~2183s | pop=62/117 beds=86 food=2704 wood=2095 eco=0% | raids=0 dip=0 | avg 2.87ms/tick
+[24.2%] Y2 day 150 tick 20880 | +681s ETA ~2138s | pop=54/118 beds=86 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 2.87ms/tick
+[24.6%] Y2 day 165 tick 21240 | +682s ETA ~2093s | pop=56/119 beds=86 food=2708 wood=2095 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[25.0%] Y2 day 180 tick 21600 | +684s ETA ~2051s | pop=50/119 beds=86 food=2730 wood=2100 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+[25.4%] Y2 day 195 tick 21960 | +685s ETA ~2010s | pop=51/119 beds=86 food=2731 wood=2095 eco=0% | raids=0 dip=0 | avg 2.71ms/tick
+  → inject tick 22000: spawn_visitor:performers
+  → inject tick 22000: retense_rival:FoxHollow
+  → inject tick 22000: raid:incoming
+[25.8%] Y2 day 210 tick 22320 | +686s ETA ~1970s | pop=53/119 beds=86 food=2726 wood=2100 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[26.3%] Y2 day 225 tick 22680 | +687s ETA ~1931s | pop=48/119 beds=86 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[26.7%] Y2 day 240 tick 23040 | +688s ETA ~1893s | pop=43/119 beds=86 food=2730 wood=2100 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+  📋 Pre-winter Y2 day 250 | pop=44/119 beds=86 food=2725 (61.9/cap) wood=2100 buffer=233d need=810
+[27.1%] Y2 day 255 tick 23400 | +689s ETA ~1855s | pop=44/119 beds=86 food=2722 wood=2095 eco=0% | raids=0 dip=0 | avg 2.36ms/tick
+  ❄ Winter Y2 day 270 ENTER | pop=48/119 beds=86 food=2749 wood=1992 need=10/d (900 total) buffer=199d eco=0%
+[27.5%] Y2 day 270 tick 23760 | +690s ETA ~1819s | pop=48/119 beds=86 food=2749 wood=1992 eco=0% | raids=0 dip=0 | avg 2.38ms/tick
+  → inject tick 24000: spawn_visitor:pilgrims
+  → inject tick 24000: retense_rival:FoxHollow
+  → inject tick 24000: raid:incoming
+[27.9%] Y2 day 285 tick 24120 | +691s ETA ~1785s | pop=52/119 beds=86 food=2745 wood=1986 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[28.3%] Y2 day 300 tick 24480 | +692s ETA ~1752s | pop=56/119 beds=86 food=2742 wood=1991 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+[28.7%] Y2 day 315 tick 24840 | +694s ETA ~1719s | pop=56/119 beds=86 food=2743 wood=1985 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[29.2%] Y2 day 330 tick 25200 | +695s ETA ~1687s | pop=61/118 beds=86 food=2736 wood=1990 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[29.6%] Y2 day 345 tick 25560 | +696s ETA ~1656s | pop=59/117 beds=86 food=2738 wood=1985 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+[30.0%] Year 3 tick 25920 | +697s ETA ~1626s | YEAR END | pop=58 food=2718 wood=2100 stone=900 gold=19093 eco=0% rep=100 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y2 EXIT PASS | minFood=2723 minWood=1928 minPop=47 playerDeaths=0 netLoss=0 heatingFail=0d
+[30.0%] Y3 day 0 tick 25920 | +697s ETA ~1626s | pop=58/119 beds=86 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+  → inject tick 26000: spawn_visitor:refugees
+[30.4%] Y3 day 15 tick 26280 | +698s ETA ~1597s | pop=60/119 beds=86 food=2716 wood=2095 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[30.8%] Y3 day 30 tick 26640 | +699s ETA ~1569s | pop=57/119 beds=86 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.51ms/tick
+[31.3%] Y3 day 45 tick 27000 | +700s ETA ~1541s | pop=58/119 beds=86 food=2721 wood=2095 eco=0% | raids=0 dip=0 | avg 2.49ms/tick
+[31.7%] Y3 day 60 tick 27360 | +701s ETA ~1514s | pop=54/119 beds=86 food=2727 wood=2100 eco=0% | raids=0 dip=0 | avg 2.42ms/tick
+[32.1%] Y3 day 75 tick 27720 | +703s ETA ~1487s | pop=57/119 beds=86 food=2718 wood=2095 eco=0% | raids=0 dip=0 | avg 2.42ms/tick
+[32.5%] Y3 day 90 tick 28080 | +704s ETA ~1461s | pop=61/119 beds=86 food=2700 wood=2100 eco=0% | raids=0 dip=0 | avg 2.59ms/tick
+[32.9%] Y3 day 105 tick 28440 | +705s ETA ~1437s | pop=57/119 beds=86 food=2698 wood=2095 eco=0% | raids=0 dip=0 | avg 2.95ms/tick
+[33.3%] Y3 day 120 tick 28800 | +706s ETA ~1412s | pop=60/119 beds=86 food=2706 wood=2100 eco=0% | raids=0 dip=0 | avg 2.88ms/tick
+[33.8%] Y3 day 135 tick 29160 | +708s ETA ~1389s | pop=56/117 beds=86 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 2.99ms/tick
+[34.2%] Y3 day 150 tick 29520 | +709s ETA ~1365s | pop=50/119 beds=86 food=2711 wood=2100 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[34.6%] Y3 day 165 tick 29880 | +710s ETA ~1343s | pop=51/119 beds=86 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 2.43ms/tick
+[35.0%] Y3 day 180 tick 30240 | +711s ETA ~1320s | pop=50/119 beds=86 food=2727 wood=2100 eco=0% | raids=0 dip=0 | avg 2.43ms/tick
+[35.4%] Y3 day 195 tick 30600 | +712s ETA ~1299s | pop=48/119 beds=86 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 2.52ms/tick
+[35.8%] Y3 day 210 tick 30960 | +713s ETA ~1277s | pop=46/119 beds=86 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.28ms/tick
+[36.3%] Y3 day 225 tick 31320 | +714s ETA ~1256s | pop=42/119 beds=86 food=2729 wood=2095 eco=0% | raids=0 dip=0 | avg 2.16ms/tick
+[36.7%] Y3 day 240 tick 31680 | +715s ETA ~1235s | pop=43/119 beds=86 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.03ms/tick
+  📋 Pre-winter Y3 day 250 | pop=45/119 beds=86 food=2734 (60.8/cap) wood=2100 buffer=233d need=810
+[37.1%] Y3 day 255 tick 32040 | +716s ETA ~1214s | pop=43/119 beds=86 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.07ms/tick
+  ❄ Winter Y3 day 270 ENTER | pop=42/119 beds=86 food=2753 wood=1993 need=9/d (810 total) buffer=221d eco=0%
+[37.5%] Y3 day 270 tick 32400 | +716s ETA ~1194s | pop=42/119 beds=86 food=2753 wood=1993 eco=0% | raids=0 dip=0 | avg 2.04ms/tick
+[37.9%] Y3 day 285 tick 32760 | +717s ETA ~1174s | pop=41/119 beds=86 food=2748 wood=1798 eco=0% | raids=0 dip=0 | avg 2.07ms/tick
+[38.3%] Y3 day 300 tick 33120 | +718s ETA ~1156s | pop=43/119 beds=86 food=2752 wood=1676 eco=0% | raids=0 dip=0 | avg 2.29ms/tick
+[38.8%] Y3 day 315 tick 33480 | +719s ETA ~1137s | pop=44/119 beds=86 food=2749 wood=1540 eco=0% | raids=0 dip=0 | avg 2.26ms/tick
+[39.2%] Y3 day 330 tick 33840 | +720s ETA ~1119s | pop=48/118 beds=86 food=2749 wood=1409 eco=0% | raids=0 dip=0 | avg 2.34ms/tick
+[39.6%] Y3 day 345 tick 34200 | +722s ETA ~1101s | pop=53/119 beds=86 food=2747 wood=1497 eco=0% | raids=0 dip=0 | avg 2.53ms/tick
+[40.0%] Year 4 tick 34560 | +723s ETA ~1084s | YEAR END | pop=57 food=2723 wood=2100 stone=900 gold=25733 eco=0% rep=100 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y3 EXIT PASS | minFood=2740 minWood=1381 minPop=39 playerDeaths=0 netLoss=0 heatingFail=0d
+[40.0%] Y4 day 0 tick 34560 | +723s ETA ~1084s | pop=57/119 beds=86 food=2723 wood=2100 eco=0% | raids=0 dip=0 | avg 2.70ms/tick
+  → scheduled tick 34860: Year-5 resource grant
+[40.4%] Y4 day 15 tick 34920 | +724s ETA ~1068s | pop=57/131 beds=98 food=2726 wood=2095 eco=0% | raids=0 dip=0 | avg 3.04ms/tick
+[40.8%] Y4 day 30 tick 35280 | +726s ETA ~1051s | pop=58/131 beds=98 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 2.96ms/tick
+[41.3%] Y4 day 45 tick 35640 | +727s ETA ~1035s | pop=59/129 beds=98 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.74ms/tick
+[41.7%] Y4 day 60 tick 36000 | +728s ETA ~1019s | pop=66/131 beds=98 food=2714 wood=2100 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[42.1%] Y4 day 75 tick 36360 | +730s ETA ~1004s | pop=61/129 beds=98 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 3.48ms/tick
+[42.5%] Y4 day 90 tick 36720 | +731s ETA ~989s | pop=57/129 beds=98 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 3.06ms/tick
+[42.9%] Y4 day 105 tick 37080 | +732s ETA ~974s | pop=56/131 beds=98 food=2707 wood=2095 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[43.3%] Y4 day 120 tick 37440 | +733s ETA ~959s | pop=55/131 beds=98 food=2710 wood=2100 eco=0% | raids=0 dip=0 | avg 2.53ms/tick
+[43.8%] Y4 day 135 tick 37800 | +734s ETA ~944s | pop=52/131 beds=98 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 2.47ms/tick
+[44.2%] Y4 day 150 tick 38160 | +736s ETA ~930s | pop=52/131 beds=98 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 2.51ms/tick
+[44.6%] Y4 day 165 tick 38520 | +737s ETA ~916s | pop=53/131 beds=98 food=2707 wood=2095 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+[45.0%] Y4 day 180 tick 38880 | +738s ETA ~902s | pop=55/131 beds=98 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.59ms/tick
+[45.4%] Y4 day 195 tick 39240 | +739s ETA ~888s | pop=55/131 beds=98 food=2715 wood=2095 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[45.8%] Y4 day 210 tick 39600 | +740s ETA ~875s | pop=59/131 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 2.64ms/tick
+[46.3%] Y4 day 225 tick 39960 | +741s ETA ~862s | pop=61/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[46.7%] Y4 day 240 tick 40320 | +742s ETA ~848s | pop=66/131 beds=98 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+  📋 Pre-winter Y4 day 250 | pop=66/131 beds=98 food=2717 (41.2/cap) wood=2100 buffer=150d need=1260
+[47.1%] Y4 day 255 tick 40680 | +743s ETA ~835s | pop=63/131 beds=98 food=2710 wood=2095 eco=0% | raids=0 dip=0 | avg 2.83ms/tick
+  ❄ Winter Y4 day 270 ENTER | pop=58/131 beds=98 food=2742 wood=1986 need=12/d (1080 total) buffer=165d eco=0%
+[47.5%] Y4 day 270 tick 41040 | +744s ETA ~823s | pop=58/131 beds=98 food=2742 wood=1986 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+[47.9%] Y4 day 285 tick 41400 | +745s ETA ~810s | pop=59/131 beds=98 food=2735 wood=1981 eco=0% | raids=0 dip=0 | avg 2.54ms/tick
+[48.3%] Y4 day 300 tick 41760 | +747s ETA ~798s | pop=58/131 beds=98 food=2739 wood=1986 eco=0% | raids=0 dip=0 | avg 2.48ms/tick
+[48.8%] Y4 day 315 tick 42120 | +748s ETA ~786s | pop=63/131 beds=98 food=2734 wood=1980 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[49.2%] Y4 day 330 tick 42480 | +749s ETA ~774s | pop=67/131 beds=98 food=2736 wood=1984 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[49.6%] Y4 day 345 tick 42840 | +751s ETA ~763s | pop=63/131 beds=98 food=2730 wood=1980 eco=0% | raids=0 dip=0 | avg 3.72ms/tick
+  → scheduled tick 43200: Year-5 resource grant
+[50.0%] Year 5 tick 43200 | +752s ETA ~752s | YEAR END | pop=62 food=2800 wood=2100 stone=900 gold=33628 eco=0% rep=92 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y4 EXIT PASS | minFood=2725 minWood=1979 minPop=55 playerDeaths=0 netLoss=0 heatingFail=0d
+[50.0%] Y5 day 0 tick 43200 | +752s ETA ~752s | pop=62/130 beds=98 food=2800 wood=2100 eco=0% | raids=0 dip=0 | avg 4.54ms/tick
+[50.4%] Y5 day 15 tick 43560 | +754s ETA ~742s | pop=57/131 beds=98 food=2721 wood=2095 eco=0% | raids=0 dip=0 | avg 4.51ms/tick
+[50.8%] Y5 day 30 tick 43920 | +756s ETA ~731s | pop=60/131 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 4.45ms/tick
+[51.2%] Y5 day 45 tick 44280 | +758s ETA ~721s | pop=62/131 beds=98 food=2718 wood=2095 eco=0% | raids=0 dip=0 | avg 4.93ms/tick
+[51.7%] Y5 day 60 tick 44640 | +760s ETA ~711s | pop=66/130 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 5.69ms/tick
+[52.1%] Y5 day 75 tick 45000 | +763s ETA ~702s | pop=62/131 beds=98 food=2717 wood=2095 eco=0% | raids=0 dip=0 | avg 5.50ms/tick
+[52.5%] Y5 day 90 tick 45360 | +765s ETA ~692s | pop=58/131 beds=98 food=2706 wood=2100 eco=0% | raids=0 dip=0 | avg 5.37ms/tick
+[52.9%] Y5 day 105 tick 45720 | +767s ETA ~682s | pop=58/131 beds=98 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 4.31ms/tick
+[53.3%] Y5 day 120 tick 46080 | +768s ETA ~672s | pop=56/131 beds=98 food=2704 wood=2100 eco=0% | raids=0 dip=0 | avg 4.51ms/tick
+[53.8%] Y5 day 135 tick 46440 | +771s ETA ~663s | pop=61/131 beds=98 food=2695 wood=2095 eco=0% | raids=0 dip=0 | avg 5.17ms/tick
+[54.2%] Y5 day 150 tick 46800 | +773s ETA ~654s | pop=67/131 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 7.36ms/tick
+[54.6%] Y5 day 165 tick 47160 | +776s ETA ~646s | pop=65/131 beds=98 food=2700 wood=2095 eco=0% | raids=0 dip=0 | avg 6.80ms/tick
+[55.0%] Y5 day 180 tick 47520 | +779s ETA ~637s | pop=68/131 beds=98 food=2714 wood=2100 eco=0% | raids=0 dip=0 | avg 6.55ms/tick
+[55.4%] Y5 day 195 tick 47880 | +781s ETA ~628s | pop=67/131 beds=98 food=2713 wood=2100 eco=0% | raids=0 dip=0 | avg 5.08ms/tick
+[55.8%] Y5 day 210 tick 48240 | +783s ETA ~619s | pop=67/130 beds=98 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 4.02ms/tick
+[56.3%] Y5 day 225 tick 48600 | +784s ETA ~610s | pop=61/131 beds=98 food=2709 wood=2095 eco=0% | raids=0 dip=0 | avg 3.65ms/tick
+[56.7%] Y5 day 240 tick 48960 | +785s ETA ~601s | pop=64/131 beds=98 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 3.48ms/tick
+  📋 Pre-winter Y5 day 250 | pop=64/131 beds=98 food=2720 (42.5/cap) wood=2100 buffer=161d need=1170
+[57.1%] Y5 day 255 tick 49320 | +787s ETA ~592s | pop=63/131 beds=98 food=2713 wood=2095 eco=0% | raids=0 dip=0 | avg 3.91ms/tick
+  ❄ Winter Y5 day 270 ENTER | pop=59/131 beds=98 food=2739 wood=1986 need=12/d (1080 total) buffer=165d eco=0%
+[57.5%] Y5 day 270 tick 49680 | +788s ETA ~582s | pop=59/131 beds=98 food=2739 wood=1986 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[57.9%] Y5 day 285 tick 50040 | +789s ETA ~573s | pop=62/131 beds=98 food=2737 wood=1980 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[58.3%] Y5 day 300 tick 50400 | +790s ETA ~564s | pop=59/131 beds=98 food=2735 wood=1986 eco=0% | raids=0 dip=0 | avg 2.54ms/tick
+[58.8%] Y5 day 315 tick 50760 | +791s ETA ~556s | pop=59/131 beds=98 food=2733 wood=1981 eco=0% | raids=0 dip=0 | avg 3.09ms/tick
+[59.2%] Y5 day 330 tick 51120 | +793s ETA ~547s | pop=55/131 beds=98 food=2746 wood=1987 eco=0% | raids=0 dip=0 | avg 3.36ms/tick
+[59.6%] Y5 day 345 tick 51480 | +794s ETA ~539s | pop=51/131 beds=98 food=2740 wood=1982 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+  → scheduled tick 51840: Year-6 resource grant
+[60.0%] Year 6 tick 51840 | +795s ETA ~530s | YEAR END | pop=54 food=2750 wood=2100 stone=900 gold=42150 eco=0% rep=100 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y5 EXIT PASS | minFood=2729 minWood=1980 minPop=49 playerDeaths=0 netLoss=5 heatingFail=0d
+[60.0%] Y6 day 0 tick 51840 | +795s ETA ~530s | pop=54/131 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+  → inject tick 52000: spawn_visitor:refugees
+  → inject tick 52000: retense_rival:FoxHollow
+  → inject tick 52000: raid:incoming
+[60.4%] Y6 day 15 tick 52200 | +797s ETA ~522s | pop=56/131 beds=98 food=2714 wood=2095 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+[60.8%] Y6 day 30 tick 52560 | +798s ETA ~514s | pop=57/130 beds=98 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.80ms/tick
+[61.3%] Y6 day 45 tick 52920 | +799s ETA ~506s | pop=56/131 beds=98 food=2716 wood=2095 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[61.7%] Y6 day 60 tick 53280 | +800s ETA ~498s | pop=58/127 beds=98 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 3.08ms/tick
+[62.1%] Y6 day 75 tick 53640 | +802s ETA ~490s | pop=51/128 beds=98 food=2714 wood=2095 eco=0% | raids=0 dip=0 | avg 3.60ms/tick
+  → inject tick 54000: spawn_visitor:scholars
+  → inject tick 54000: retense_rival:FoxHollow
+  → inject tick 54000: raid:incoming
+[62.5%] Y6 day 90 tick 54000 | +804s ETA ~482s | pop=52/131 beds=98 food=2710 wood=2100 eco=0% | raids=0 dip=0 | avg 3.40ms/tick
+[62.9%] Y6 day 105 tick 54360 | +805s ETA ~474s | pop=51/131 beds=98 food=2710 wood=2095 eco=0% | raids=0 dip=0 | avg 3.43ms/tick
+[63.3%] Y6 day 120 tick 54720 | +807s ETA ~467s | pop=51/131 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 3.81ms/tick
+[63.7%] Y6 day 135 tick 55080 | +809s ETA ~460s | pop=54/131 beds=98 food=2708 wood=2095 eco=0% | raids=0 dip=0 | avg 4.44ms/tick
+[64.2%] Y6 day 150 tick 55440 | +810s ETA ~452s | pop=50/131 beds=98 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 3.55ms/tick
+[64.6%] Y6 day 165 tick 55800 | +811s ETA ~445s | pop=46/131 beds=98 food=2711 wood=2095 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+  → inject tick 56000: spawn_visitor:nomads
+  → inject tick 56000: retense_rival:FoxHollow
+  → inject tick 56000: raid:incoming
+[65.0%] Y6 day 180 tick 56160 | +813s ETA ~438s | pop=45/131 beds=98 food=2732 wood=2100 eco=0% | raids=0 dip=0 | avg 2.52ms/tick
+[65.4%] Y6 day 195 tick 56520 | +814s ETA ~430s | pop=41/131 beds=98 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.27ms/tick
+[65.8%] Y6 day 210 tick 56880 | +815s ETA ~423s | pop=40/131 beds=98 food=2731 wood=2100 eco=0% | raids=0 dip=0 | avg 2.37ms/tick
+[66.3%] Y6 day 225 tick 57240 | +816s ETA ~416s | pop=46/131 beds=98 food=2725 wood=2095 eco=0% | raids=0 dip=0 | avg 2.36ms/tick
+[66.7%] Y6 day 240 tick 57600 | +817s ETA ~408s | pop=47/131 beds=98 food=2727 wood=2100 eco=0% | raids=0 dip=0 | avg 2.68ms/tick
+  📋 Pre-winter Y6 day 250 | pop=47/131 beds=98 food=2730 (58.1/cap) wood=2100 buffer=210d need=900
+[67.1%] Y6 day 255 tick 57960 | +818s ETA ~401s | pop=43/131 beds=98 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.54ms/tick
+  ❄ Winter Y6 day 270 ENTER | pop=47/131 beds=98 food=2752 wood=1988 need=10/d (900 total) buffer=198d eco=0%
+[67.5%] Y6 day 270 tick 58320 | +819s ETA ~394s | pop=47/131 beds=98 food=2752 wood=1988 eco=0% | raids=0 dip=0 | avg 2.45ms/tick
+[67.9%] Y6 day 285 tick 58680 | +820s ETA ~387s | pop=50/130 beds=98 food=2749 wood=1867 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+[68.3%] Y6 day 300 tick 59040 | +821s ETA ~381s | pop=54/131 beds=98 food=2744 wood=1987 eco=0% | raids=0 dip=0 | avg 2.93ms/tick
+[68.8%] Y6 day 315 tick 59400 | +823s ETA ~374s | pop=55/131 beds=98 food=2740 wood=1982 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+[69.2%] Y6 day 330 tick 59760 | +824s ETA ~367s | pop=46/131 beds=98 food=2750 wood=1989 eco=0% | raids=0 dip=0 | avg 2.71ms/tick
+[69.6%] Y6 day 345 tick 60120 | +825s ETA ~361s | pop=43/131 beds=98 food=2748 wood=1984 eco=0% | raids=0 dip=0 | avg 2.39ms/tick
+  → scheduled tick 60480: Year-7 resource grant
+[70.0%] Year 7 tick 60480 | +826s ETA ~354s | YEAR END | pop=43 food=2750 wood=2100 stone=900 gold=49706 eco=0% rep=100 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y6 EXIT PASS | minFood=2734 minWood=1863 minPop=41 playerDeaths=0 netLoss=4 heatingFail=0d
+[70.0%] Y7 day 0 tick 60480 | +826s ETA ~354s | pop=43/131 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.42ms/tick
+[70.4%] Y7 day 15 tick 60840 | +827s ETA ~348s | pop=44/131 beds=98 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.56ms/tick
+[70.8%] Y7 day 30 tick 61200 | +828s ETA ~341s | pop=49/131 beds=98 food=2733 wood=2100 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+[71.3%] Y7 day 45 tick 61560 | +830s ETA ~335s | pop=46/130 beds=98 food=2727 wood=2095 eco=0% | raids=0 dip=0 | avg 2.68ms/tick
+[71.7%] Y7 day 60 tick 61920 | +831s ETA ~328s | pop=53/131 beds=98 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+[72.1%] Y7 day 75 tick 62280 | +832s ETA ~322s | pop=56/131 beds=98 food=2718 wood=2095 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+[72.5%] Y7 day 90 tick 62640 | +833s ETA ~316s | pop=57/131 beds=98 food=2705 wood=2100 eco=0% | raids=0 dip=0 | avg 3.04ms/tick
+[72.9%] Y7 day 105 tick 63000 | +835s ETA ~310s | pop=52/129 beds=98 food=2707 wood=2095 eco=0% | raids=0 dip=0 | avg 2.84ms/tick
+[73.3%] Y7 day 120 tick 63360 | +836s ETA ~304s | pop=59/130 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+[73.8%] Y7 day 135 tick 63720 | +837s ETA ~298s | pop=59/131 beds=98 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 2.76ms/tick
+[74.2%] Y7 day 150 tick 64080 | +839s ETA ~292s | pop=64/131 beds=98 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 2.92ms/tick
+[74.6%] Y7 day 165 tick 64440 | +840s ETA ~286s | pop=62/131 beds=98 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 3.98ms/tick
+[75.0%] Y7 day 180 tick 64800 | +842s ETA ~281s | pop=66/131 beds=98 food=2716 wood=2100 eco=0% | raids=0 dip=0 | avg 4.13ms/tick
+[75.4%] Y7 day 195 tick 65160 | +844s ETA ~275s | pop=67/131 beds=98 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 4.53ms/tick
+[75.8%] Y7 day 210 tick 65520 | +846s ETA ~270s | pop=66/131 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 4.91ms/tick
+[76.3%] Y7 day 225 tick 65880 | +848s ETA ~264s | pop=67/131 beds=98 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 4.28ms/tick
+[76.7%] Y7 day 240 tick 66240 | +849s ETA ~258s | pop=63/131 beds=98 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 3.02ms/tick
+  📋 Pre-winter Y7 day 250 | pop=62/131 beds=98 food=2717 (43.8/cap) wood=2100 buffer=161d need=1170
+[77.1%] Y7 day 255 tick 66600 | +850s ETA ~253s | pop=62/131 beds=98 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 3.02ms/tick
+  ❄ Winter Y7 day 270 ENTER | pop=64/131 beds=98 food=2733 wood=1985 need=13/d (1170 total) buffer=152d eco=0%
+[77.5%] Y7 day 270 tick 66960 | +851s ETA ~247s | pop=64/131 beds=98 food=2733 wood=1985 eco=0% | raids=0 dip=0 | avg 3.04ms/tick
+[77.9%] Y7 day 285 tick 67320 | +852s ETA ~242s | pop=61/131 beds=98 food=2736 wood=1980 eco=0% | raids=0 dip=0 | avg 2.86ms/tick
+[78.3%] Y7 day 300 tick 67680 | +854s ETA ~236s | pop=63/131 beds=98 food=2737 wood=1985 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[78.8%] Y7 day 315 tick 68040 | +855s ETA ~231s | pop=58/131 beds=98 food=2739 wood=1981 eco=0% | raids=0 dip=0 | avg 2.91ms/tick
+[79.2%] Y7 day 330 tick 68400 | +856s ETA ~225s | pop=58/131 beds=98 food=2746 wood=1986 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[79.6%] Y7 day 345 tick 68760 | +857s ETA ~220s | pop=53/130 beds=98 food=2744 wood=1982 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+  → scheduled tick 69120: Year-8 resource grant
+[80.0%] Year 8 tick 69120 | +859s ETA ~215s | YEAR END | pop=49 food=2750 wood=2100 stone=900 gold=58008 eco=0% rep=100 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y7 EXIT PASS | minFood=2726 minWood=1980 minPop=48 playerDeaths=0 netLoss=15 heatingFail=0d
+[80.0%] Y8 day 0 tick 69120 | +859s ETA ~215s | pop=49/131 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[80.4%] Y8 day 15 tick 69480 | +860s ETA ~209s | pop=52/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[80.8%] Y8 day 30 tick 69840 | +861s ETA ~204s | pop=52/131 beds=98 food=2732 wood=2100 eco=0% | raids=0 dip=0 | avg 2.95ms/tick
+[81.3%] Y8 day 45 tick 70200 | +863s ETA ~199s | pop=47/131 beds=98 food=2727 wood=2095 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+[81.7%] Y8 day 60 tick 70560 | +864s ETA ~194s | pop=46/131 beds=98 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[82.1%] Y8 day 75 tick 70920 | +865s ETA ~189s | pop=47/131 beds=98 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[82.5%] Y8 day 90 tick 71280 | +866s ETA ~184s | pop=51/131 beds=98 food=2713 wood=2100 eco=0% | raids=0 dip=0 | avg 2.38ms/tick
+[82.9%] Y8 day 105 tick 71640 | +867s ETA ~179s | pop=54/131 beds=98 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 2.56ms/tick
+[83.3%] Y8 day 120 tick 72000 | +869s ETA ~174s | pop=53/131 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 2.81ms/tick
+[83.8%] Y8 day 135 tick 72360 | +870s ETA ~169s | pop=52/131 beds=98 food=2710 wood=2095 eco=0% | raids=0 dip=0 | avg 2.99ms/tick
+[84.2%] Y8 day 150 tick 72720 | +871s ETA ~164s | pop=53/131 beds=98 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 2.96ms/tick
+[84.6%] Y8 day 165 tick 73080 | +873s ETA ~159s | pop=57/131 beds=98 food=2697 wood=2095 eco=0% | raids=0 dip=0 | avg 3.13ms/tick
+[85.0%] Y8 day 180 tick 73440 | +874s ETA ~154s | pop=58/131 beds=98 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 4.48ms/tick
+[85.4%] Y8 day 195 tick 73800 | +876s ETA ~150s | pop=57/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 4.27ms/tick
+[85.8%] Y8 day 210 tick 74160 | +878s ETA ~145s | pop=59/131 beds=98 food=2720 wood=2100 eco=0% | raids=0 dip=0 | avg 4.66ms/tick
+[86.3%] Y8 day 225 tick 74520 | +880s ETA ~140s | pop=56/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 4.25ms/tick
+[86.7%] Y8 day 240 tick 74880 | +882s ETA ~136s | pop=55/131 beds=98 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 4.48ms/tick
+  📋 Pre-winter Y8 day 250 | pop=54/131 beds=98 food=2724 (50.4/cap) wood=2100 buffer=190d need=990
+[87.1%] Y8 day 255 tick 75240 | +883s ETA ~131s | pop=49/131 beds=98 food=2726 wood=2095 eco=0% | raids=0 dip=0 | avg 4.27ms/tick
+  ❄ Winter Y8 day 270 ENTER | pop=47/131 beds=98 food=2746 wood=1988 need=10/d (900 total) buffer=198d eco=0%
+[87.5%] Y8 day 270 tick 75600 | +885s ETA ~126s | pop=47/131 beds=98 food=2746 wood=1988 eco=0% | raids=0 dip=0 | avg 3.74ms/tick
+[87.9%] Y8 day 285 tick 75960 | +886s ETA ~122s | pop=47/131 beds=98 food=2746 wood=1916 eco=0% | raids=0 dip=0 | avg 3.89ms/tick
+[88.3%] Y8 day 300 tick 76320 | +887s ETA ~117s | pop=50/130 beds=98 food=2745 wood=1926 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+[88.8%] Y8 day 315 tick 76680 | +889s ETA ~113s | pop=51/131 beds=98 food=2737 wood=1982 eco=0% | raids=0 dip=0 | avg 2.66ms/tick
+[89.2%] Y8 day 330 tick 77040 | +890s ETA ~108s | pop=55/131 beds=98 food=2740 wood=1989 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+[89.6%] Y8 day 345 tick 77400 | +891s ETA ~104s | pop=56/131 beds=98 food=2735 wood=1981 eco=0% | raids=0 dip=0 | avg 2.82ms/tick
+  → scheduled tick 77760: Year-9 resource grant
+[90.0%] Year 9 tick 77760 | +893s ETA ~99s | YEAR END | pop=58 food=2750 wood=2100 stone=900 gold=65882 eco=0% rep=92 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y8 EXIT PASS | minFood=2734 minWood=1906 minPop=45 playerDeaths=0 netLoss=0 heatingFail=0d
+[90.0%] Y9 day 0 tick 77760 | +893s ETA ~99s | pop=58/130 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.76ms/tick
+[90.4%] Y9 day 15 tick 78120 | +894s ETA ~95s | pop=57/143 beds=110 food=2716 wood=2095 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[90.8%] Y9 day 30 tick 78480 | +895s ETA ~90s | pop=59/143 beds=110 food=2722 wood=2100 eco=0% | raids=0 dip=1 | avg 2.77ms/tick
+[91.3%] Y9 day 45 tick 78840 | +896s ETA ~86s | pop=59/143 beds=110 food=2711 wood=2095 eco=0% | raids=0 dip=0 | avg 2.82ms/tick
+[91.7%] Y9 day 60 tick 79200 | +898s ETA ~82s | pop=54/143 beds=110 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.81ms/tick
+[92.1%] Y9 day 75 tick 79560 | +899s ETA ~77s | pop=55/143 beds=110 food=2715 wood=2095 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[92.5%] Y9 day 90 tick 79920 | +900s ETA ~73s | pop=58/143 beds=110 food=2705 wood=2100 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+[92.9%] Y9 day 105 tick 80280 | +901s ETA ~69s | pop=53/143 beds=110 food=2702 wood=2095 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[93.3%] Y9 day 120 tick 80640 | +903s ETA ~64s | pop=58/143 beds=110 food=2704 wood=2100 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[93.8%] Y9 day 135 tick 81000 | +904s ETA ~60s | pop=50/142 beds=110 food=2700 wood=2095 eco=0% | raids=0 dip=0 | avg 2.80ms/tick
+[94.2%] Y9 day 150 tick 81360 | +905s ETA ~56s | pop=53/143 beds=110 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 2.62ms/tick
+[94.6%] Y9 day 165 tick 81720 | +906s ETA ~52s | pop=51/143 beds=110 food=2709 wood=2095 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[95.0%] Y9 day 180 tick 82080 | +907s ETA ~48s | pop=54/143 beds=110 food=2730 wood=2100 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[95.4%] Y9 day 195 tick 82440 | +909s ETA ~44s | pop=51/143 beds=110 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[95.8%] Y9 day 210 tick 82800 | +910s ETA ~40s | pop=52/143 beds=110 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[96.3%] Y9 day 225 tick 83160 | +911s ETA ~35s | pop=51/143 beds=110 food=2722 wood=2095 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[96.7%] Y9 day 240 tick 83520 | +912s ETA ~31s | pop=50/143 beds=110 food=2726 wood=2100 eco=0% | raids=0 dip=0 | avg 2.51ms/tick
+  📋 Pre-winter Y9 day 250 | pop=52/143 beds=110 food=2722 (52.3/cap) wood=2100 buffer=190d need=990
+[97.1%] Y9 day 255 tick 83880 | +913s ETA ~27s | pop=54/143 beds=110 food=2714 wood=2095 eco=0% | raids=0 dip=0 | avg 2.84ms/tick
+  ❄ Winter Y9 day 270 ENTER | pop=58/142 beds=110 food=2740 wood=1982 need=12/d (1080 total) buffer=165d eco=0%
+[97.5%] Y9 day 270 tick 84240 | +914s ETA ~23s | pop=58/142 beds=110 food=2740 wood=1982 eco=0% | raids=0 dip=0 | avg 3.13ms/tick
+[97.9%] Y9 day 285 tick 84600 | +915s ETA ~19s | pop=59/143 beds=110 food=2735 wood=1977 eco=0% | raids=0 dip=0 | avg 3.16ms/tick
+[98.3%] Y9 day 300 tick 84960 | +917s ETA ~16s | pop=58/143 beds=110 food=2729 wood=1982 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+[98.8%] Y9 day 315 tick 85320 | +918s ETA ~12s | pop=55/143 beds=110 food=2735 wood=1978 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[99.2%] Y9 day 330 tick 85680 | +919s ETA ~8s | pop=58/143 beds=110 food=2739 wood=1982 eco=0% | raids=0 dip=0 | avg 2.76ms/tick
+[99.6%] Y9 day 345 tick 86040 | +920s ETA ~4s | pop=59/143 beds=110 food=2736 wood=1977 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[100.0%] Year 10 tick 86400 | +922s ETA ~0s | YEAR END | pop=60 food=2719 wood=2100 stone=900 gold=72500 eco=0% rep=100 | buildings=79 rivals=3 playerDeaths=0
+  ❄ Winter Y9 EXIT PASS | minFood=2726 minWood=1977 minPop=52 playerDeaths=0 netLoss=0 heatingFail=0d
+[100.0%] Y10 day 0 tick 86400 | +922s ETA ~0s | pop=60/143 beds=110 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 2.95ms/tick
+
+✓ Simulation complete in 921.6s
+
+✗ VERDICT: FAIL — 10-year town balance test (2 gate failures)
+
+=== Final report ===
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 86400 ticks (10 game years) | map 1600×1200
+Progress every 360 ticks (~15 game days)
+Build mode: free (needs-based auto_build every 36 ticks; coverage sweep every 192)
+
+[0.4%] Y0 day 15 tick 360 | +2s ETA ~421s | pop=6/20 beds=12 food=579 wood=12 eco=91% | raids=0 dip=0 | avg 2.45ms/tick
+[0.8%] Y0 day 30 tick 720 | +6s ETA ~693s | pop=11/34 beds=24 food=577 wood=400 eco=65% | raids=0 dip=0 | avg 2.20ms/tick
+[1.3%] Y0 day 45 tick 1080 | +7s ETA ~552s | pop=19/73 beds=60 food=822 wood=617 eco=33.375% | raids=0 dip=0 | avg 1.56ms/tick
+[1.7%] Y0 day 60 tick 1440 | +32s ETA ~1899s | pop=25/87 beds=72 food=1505 wood=1684 eco=9.625% | raids=0 dip=0 | avg 1.75ms/tick
+[2.1%] Y0 day 75 tick 1800 | +86s ETA ~4020s | pop=30/87 beds=72 food=2720 wood=2050 eco=0% | raids=0 dip=0 | avg 1.86ms/tick
+[2.5%] Y0 day 90 tick 2160 | +153s ETA ~5972s | pop=39/93 beds=78 food=2713 wood=2100 eco=0% | raids=0 dip=0 | avg 1.98ms/tick
+[2.9%] Y0 day 105 tick 2520 | +221s ETA ~7341s | pop=46/93 beds=78 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[3.3%] Y0 day 120 tick 2880 | +268s ETA ~7759s | pop=49/93 beds=78 food=2704 wood=2100 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[3.8%] Y0 day 135 tick 3240 | +300s ETA ~7689s | pop=51/93 beds=78 food=2709 wood=2095 eco=0% | raids=0 dip=0 | avg 3.14ms/tick
+[4.2%] Y0 day 150 tick 3600 | +323s ETA ~7437s | pop=47/93 beds=78 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 3.02ms/tick
+[4.6%] Y0 day 165 tick 3960 | +344s ETA ~7171s | pop=50/101 beds=86 food=2703 wood=2095 eco=0% | raids=0 dip=0 | avg 3.57ms/tick
+  → inject tick 4000: spawn_rival:FoxHollow[tense]
+  → inject tick 4200: spawn_rival:WillowHollow[competitive]
+[5.0%] Y0 day 180 tick 4320 | +367s ETA ~6971s | pop=53/112 beds=86 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 5.61ms/tick
+  → inject tick 4400: spawn_rival:CedarCreek[neutral]
+[5.4%] Y0 day 195 tick 4680 | +389s ETA ~6788s | pop=50/119 beds=86 food=2727 wood=2095 eco=0% | raids=0 dip=0 | avg 4.08ms/tick
+  → inject tick 5000: spawn_visitor:hunters
+[5.8%] Y0 day 210 tick 5040 | +409s ETA ~6599s | pop=53/119 beds=86 food=2723 wood=2100 eco=0% | raids=0 dip=0 | avg 2.88ms/tick
+  → inject tick 5200: spawn_visitor:pilgrims
+[6.3%] Y0 day 225 tick 5400 | +429s ETA ~6428s | pop=53/119 beds=86 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 2.93ms/tick
+  → inject tick 5500: spawn_visitor:performers
+[6.7%] Y0 day 240 tick 5760 | +449s ETA ~6282s | pop=54/119 beds=86 food=2726 wood=2100 eco=0% | raids=0 dip=0 | avg 3.15ms/tick
+  → inject tick 5800: spawn_visitor:scholars
+  → inject tick 6000: spawn_visitor:refugees
+  📋 Pre-winter Y0 day 250 | pop=58/119 beds=86 food=2683 (46.3/cap) wood=2100 buffer=175d need=1080
+[7.1%] Y0 day 255 tick 6120 | +469s ETA ~6149s | pop=59/119 beds=86 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 2.87ms/tick
+  ❄ Winter Y0 day 270 ENTER | pop=62/118 beds=86 food=2733 wood=1989 need=13/d (1170 total) buffer=153d eco=0%
+[7.5%] Y0 day 270 tick 6480 | +489s ETA ~6029s | pop=62/118 beds=86 food=2733 wood=1989 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[7.9%] Y0 day 285 tick 6840 | +524s ETA ~6093s | pop=62/119 beds=86 food=2746 wood=1984 eco=0% | raids=0 dip=0 | avg 3.39ms/tick
+[8.3%] Y0 day 300 tick 7200 | +544s ETA ~5980s | pop=62/119 beds=86 food=2746 wood=1989 eco=0% | raids=0 dip=0 | avg 2.89ms/tick
+[8.8%] Y0 day 315 tick 7560 | +563s ETA ~5873s | pop=64/119 beds=86 food=2737 wood=1984 eco=0% | raids=0 dip=0 | avg 2.77ms/tick
+[9.2%] Y0 day 330 tick 7920 | +584s ETA ~5784s | pop=63/119 beds=86 food=2741 wood=1989 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+  → inject tick 8000: diplomacy:tribute
+[9.6%] Y0 day 345 tick 8280 | +605s ETA ~5706s | pop=63/119 beds=86 food=2727 wood=1984 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+  → inject tick 8300: diplomacy:tribute
+  → inject tick 8600: diplomacy:tribute
+[10.0%] Year 1 tick 8640 | +627s ETA ~5643s | YEAR END | pop=57 food=2724 wood=2100 stone=900 gold=4260 eco=0% rep=96 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y0 EXIT PASS | minFood=2713 minWood=1983 minPop=56 playerDeaths=0 netLoss=5 heatingFail=0d
+[10.0%] Y1 day 0 tick 8640 | +627s ETA ~5643s | pop=57/118 beds=86 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.90ms/tick
+[10.4%] Y1 day 15 tick 9000 | +628s ETA ~5402s | pop=58/118 beds=86 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+  → scheduled tick 9240: Year-2 resource grant
+[10.8%] Y1 day 30 tick 9360 | +629s ETA ~5180s | pop=60/119 beds=86 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[11.3%] Y1 day 45 tick 9720 | +631s ETA ~4975s | pop=62/119 beds=86 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 2.93ms/tick
+  → inject tick 10000: diplomacy:border_dispute
+[11.7%] Y1 day 60 tick 10080 | +632s ETA ~4785s | pop=59/118 beds=86 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 2.92ms/tick
+  → inject tick 10300: diplomacy:border_dispute
+[12.1%] Y1 day 75 tick 10440 | +633s ETA ~4607s | pop=58/119 beds=86 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 2.77ms/tick
+  → inject tick 10600: diplomacy:border_dispute
+[12.5%] Y1 day 90 tick 10800 | +634s ETA ~4441s | pop=64/119 beds=86 food=2701 wood=2100 eco=0% | raids=0 dip=0 | avg 2.83ms/tick
+[12.9%] Y1 day 105 tick 11160 | +636s ETA ~4286s | pop=64/118 beds=86 food=2698 wood=2095 eco=0% | raids=0 dip=0 | avg 2.91ms/tick
+[13.3%] Y1 day 120 tick 11520 | +637s ETA ~4140s | pop=65/119 beds=86 food=2696 wood=2100 eco=0% | raids=0 dip=0 | avg 3.01ms/tick
+[13.8%] Y1 day 135 tick 11880 | +638s ETA ~4005s | pop=64/119 beds=86 food=2699 wood=2095 eco=0% | raids=0 dip=0 | avg 3.37ms/tick
+  → inject tick 12000: diplomacy:alliance
+[14.2%] Y1 day 150 tick 12240 | +640s ETA ~3877s | pop=62/117 beds=86 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 3.30ms/tick
+  → inject tick 12300: diplomacy:alliance
+  → inject tick 12600: diplomacy:alliance
+[14.6%] Y1 day 165 tick 12600 | +641s ETA ~3757s | pop=63/117 beds=86 food=2679 wood=2095 eco=0% | raids=0 dip=0 | avg 3.39ms/tick
+[15.0%] Y1 day 180 tick 12960 | +643s ETA ~3644s | pop=65/119 beds=86 food=2711 wood=2100 eco=0% | raids=0 dip=0 | avg 3.93ms/tick
+[15.4%] Y1 day 195 tick 13320 | +645s ETA ~3537s | pop=65/119 beds=86 food=2711 wood=2095 eco=0% | raids=0 dip=0 | avg 3.46ms/tick
+[15.8%] Y1 day 210 tick 13680 | +659s ETA ~3501s | pop=60/119 beds=86 food=2716 wood=2100 eco=0% | raids=0 dip=0 | avg 33.05ms/tick
+  → inject tick 14000: diplomacy:peace_treaty
+[16.3%] Y1 day 225 tick 14040 | +660s ETA ~3401s | pop=53/119 beds=86 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 3.27ms/tick
+  → inject tick 14300: diplomacy:peace_treaty
+[16.7%] Y1 day 240 tick 14400 | +661s ETA ~3305s | pop=55/119 beds=86 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 2.83ms/tick
+  → inject tick 14600: diplomacy:peace_treaty
+  📋 Pre-winter Y1 day 250 | pop=51/119 beds=86 food=2732 (53.6/cap) wood=2100 buffer=190d need=990
+[17.1%] Y1 day 255 tick 14760 | +662s ETA ~3213s | pop=52/119 beds=86 food=2722 wood=2095 eco=0% | raids=0 dip=0 | avg 2.41ms/tick
+  ❄ Winter Y1 day 270 ENTER | pop=51/119 beds=86 food=2749 wood=1992 need=11/d (990 total) buffer=181d eco=0%
+[17.5%] Y1 day 270 tick 15120 | +663s ETA ~3125s | pop=51/119 beds=86 food=2749 wood=1992 eco=0% | raids=0 dip=0 | avg 2.37ms/tick
+[17.9%] Y1 day 285 tick 15480 | +664s ETA ~3041s | pop=51/119 beds=86 food=2747 wood=1865 eco=0% | raids=0 dip=0 | avg 2.27ms/tick
+[18.3%] Y1 day 300 tick 15840 | +665s ETA ~2961s | pop=47/119 beds=86 food=2746 wood=1896 eco=0% | raids=0 dip=0 | avg 2.11ms/tick
+[18.8%] Y1 day 315 tick 16200 | +666s ETA ~2885s | pop=48/119 beds=86 food=2746 wood=1924 eco=0% | raids=0 dip=0 | avg 2.32ms/tick
+[19.2%] Y1 day 330 tick 16560 | +667s ETA ~2812s | pop=52/119 beds=86 food=2744 wood=1991 eco=0% | raids=0 dip=0 | avg 2.32ms/tick
+[19.6%] Y1 day 345 tick 16920 | +668s ETA ~2743s | pop=52/119 beds=86 food=2743 wood=1986 eco=0% | raids=0 dip=0 | avg 2.57ms/tick
+[20.0%] Year 2 tick 17280 | +669s ETA ~2676s | YEAR END | pop=53 food=2721 wood=2100 stone=900 gold=11471 eco=0% rep=100 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y1 EXIT PASS | minFood=2738 minWood=1861 minPop=45 playerDeaths=0 netLoss=0 heatingFail=0d
+[20.0%] Y2 day 0 tick 17280 | +669s ETA ~2676s | pop=53/119 beds=86 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 2.41ms/tick
+[20.4%] Y2 day 15 tick 17640 | +670s ETA ~2612s | pop=52/119 beds=86 food=2726 wood=2095 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+  → scheduled tick 17980: Year-3 resource grant
+  → inject tick 18000: spawn_visitor:hunters
+[20.8%] Y2 day 30 tick 18000 | +671s ETA ~2552s | pop=50/119 beds=86 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.68ms/tick
+[21.3%] Y2 day 45 tick 18360 | +673s ETA ~2493s | pop=47/119 beds=86 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.48ms/tick
+[21.7%] Y2 day 60 tick 18720 | +674s ETA ~2436s | pop=51/119 beds=86 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+  → inject tick 19000: spawn_visitor:nomads
+[22.1%] Y2 day 75 tick 19080 | +675s ETA ~2382s | pop=50/119 beds=86 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[22.5%] Y2 day 90 tick 19440 | +676s ETA ~2330s | pop=55/119 beds=86 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 2.62ms/tick
+[22.9%] Y2 day 105 tick 19800 | +677s ETA ~2279s | pop=55/119 beds=86 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 2.64ms/tick
+  → inject tick 20000: retense_rival:FoxHollow
+  → inject tick 20000: raid:incoming
+[23.3%] Y2 day 120 tick 20160 | +679s ETA ~2230s | pop=57/119 beds=86 food=2710 wood=2100 eco=0% | raids=0 dip=0 | avg 2.78ms/tick
+[23.8%] Y2 day 135 tick 20520 | +680s ETA ~2183s | pop=62/117 beds=86 food=2704 wood=2095 eco=0% | raids=0 dip=0 | avg 2.87ms/tick
+[24.2%] Y2 day 150 tick 20880 | +681s ETA ~2138s | pop=54/118 beds=86 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 2.87ms/tick
+[24.6%] Y2 day 165 tick 21240 | +682s ETA ~2093s | pop=56/119 beds=86 food=2708 wood=2095 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[25.0%] Y2 day 180 tick 21600 | +684s ETA ~2051s | pop=50/119 beds=86 food=2730 wood=2100 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+[25.4%] Y2 day 195 tick 21960 | +685s ETA ~2010s | pop=51/119 beds=86 food=2731 wood=2095 eco=0% | raids=0 dip=0 | avg 2.71ms/tick
+  → inject tick 22000: spawn_visitor:performers
+  → inject tick 22000: retense_rival:FoxHollow
+  → inject tick 22000: raid:incoming
+[25.8%] Y2 day 210 tick 22320 | +686s ETA ~1970s | pop=53/119 beds=86 food=2726 wood=2100 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[26.3%] Y2 day 225 tick 22680 | +687s ETA ~1931s | pop=48/119 beds=86 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[26.7%] Y2 day 240 tick 23040 | +688s ETA ~1893s | pop=43/119 beds=86 food=2730 wood=2100 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+  📋 Pre-winter Y2 day 250 | pop=44/119 beds=86 food=2725 (61.9/cap) wood=2100 buffer=233d need=810
+[27.1%] Y2 day 255 tick 23400 | +689s ETA ~1855s | pop=44/119 beds=86 food=2722 wood=2095 eco=0% | raids=0 dip=0 | avg 2.36ms/tick
+  ❄ Winter Y2 day 270 ENTER | pop=48/119 beds=86 food=2749 wood=1992 need=10/d (900 total) buffer=199d eco=0%
+[27.5%] Y2 day 270 tick 23760 | +690s ETA ~1819s | pop=48/119 beds=86 food=2749 wood=1992 eco=0% | raids=0 dip=0 | avg 2.38ms/tick
+  → inject tick 24000: spawn_visitor:pilgrims
+  → inject tick 24000: retense_rival:FoxHollow
+  → inject tick 24000: raid:incoming
+[27.9%] Y2 day 285 tick 24120 | +691s ETA ~1785s | pop=52/119 beds=86 food=2745 wood=1986 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[28.3%] Y2 day 300 tick 24480 | +692s ETA ~1752s | pop=56/119 beds=86 food=2742 wood=1991 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+[28.7%] Y2 day 315 tick 24840 | +694s ETA ~1719s | pop=56/119 beds=86 food=2743 wood=1985 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[29.2%] Y2 day 330 tick 25200 | +695s ETA ~1687s | pop=61/118 beds=86 food=2736 wood=1990 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[29.6%] Y2 day 345 tick 25560 | +696s ETA ~1656s | pop=59/117 beds=86 food=2738 wood=1985 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+[30.0%] Year 3 tick 25920 | +697s ETA ~1626s | YEAR END | pop=58 food=2718 wood=2100 stone=900 gold=19093 eco=0% rep=100 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y2 EXIT PASS | minFood=2723 minWood=1928 minPop=47 playerDeaths=0 netLoss=0 heatingFail=0d
+[30.0%] Y3 day 0 tick 25920 | +697s ETA ~1626s | pop=58/119 beds=86 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+  → inject tick 26000: spawn_visitor:refugees
+[30.4%] Y3 day 15 tick 26280 | +698s ETA ~1597s | pop=60/119 beds=86 food=2716 wood=2095 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[30.8%] Y3 day 30 tick 26640 | +699s ETA ~1569s | pop=57/119 beds=86 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.51ms/tick
+[31.3%] Y3 day 45 tick 27000 | +700s ETA ~1541s | pop=58/119 beds=86 food=2721 wood=2095 eco=0% | raids=0 dip=0 | avg 2.49ms/tick
+[31.7%] Y3 day 60 tick 27360 | +701s ETA ~1514s | pop=54/119 beds=86 food=2727 wood=2100 eco=0% | raids=0 dip=0 | avg 2.42ms/tick
+[32.1%] Y3 day 75 tick 27720 | +703s ETA ~1487s | pop=57/119 beds=86 food=2718 wood=2095 eco=0% | raids=0 dip=0 | avg 2.42ms/tick
+[32.5%] Y3 day 90 tick 28080 | +704s ETA ~1461s | pop=61/119 beds=86 food=2700 wood=2100 eco=0% | raids=0 dip=0 | avg 2.59ms/tick
+[32.9%] Y3 day 105 tick 28440 | +705s ETA ~1437s | pop=57/119 beds=86 food=2698 wood=2095 eco=0% | raids=0 dip=0 | avg 2.95ms/tick
+[33.3%] Y3 day 120 tick 28800 | +706s ETA ~1412s | pop=60/119 beds=86 food=2706 wood=2100 eco=0% | raids=0 dip=0 | avg 2.88ms/tick
+[33.8%] Y3 day 135 tick 29160 | +708s ETA ~1389s | pop=56/117 beds=86 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 2.99ms/tick
+[34.2%] Y3 day 150 tick 29520 | +709s ETA ~1365s | pop=50/119 beds=86 food=2711 wood=2100 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[34.6%] Y3 day 165 tick 29880 | +710s ETA ~1343s | pop=51/119 beds=86 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 2.43ms/tick
+[35.0%] Y3 day 180 tick 30240 | +711s ETA ~1320s | pop=50/119 beds=86 food=2727 wood=2100 eco=0% | raids=0 dip=0 | avg 2.43ms/tick
+[35.4%] Y3 day 195 tick 30600 | +712s ETA ~1299s | pop=48/119 beds=86 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 2.52ms/tick
+[35.8%] Y3 day 210 tick 30960 | +713s ETA ~1277s | pop=46/119 beds=86 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.28ms/tick
+[36.3%] Y3 day 225 tick 31320 | +714s ETA ~1256s | pop=42/119 beds=86 food=2729 wood=2095 eco=0% | raids=0 dip=0 | avg 2.16ms/tick
+[36.7%] Y3 day 240 tick 31680 | +715s ETA ~1235s | pop=43/119 beds=86 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.03ms/tick
+  📋 Pre-winter Y3 day 250 | pop=45/119 beds=86 food=2734 (60.8/cap) wood=2100 buffer=233d need=810
+[37.1%] Y3 day 255 tick 32040 | +716s ETA ~1214s | pop=43/119 beds=86 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.07ms/tick
+  ❄ Winter Y3 day 270 ENTER | pop=42/119 beds=86 food=2753 wood=1993 need=9/d (810 total) buffer=221d eco=0%
+[37.5%] Y3 day 270 tick 32400 | +716s ETA ~1194s | pop=42/119 beds=86 food=2753 wood=1993 eco=0% | raids=0 dip=0 | avg 2.04ms/tick
+[37.9%] Y3 day 285 tick 32760 | +717s ETA ~1174s | pop=41/119 beds=86 food=2748 wood=1798 eco=0% | raids=0 dip=0 | avg 2.07ms/tick
+[38.3%] Y3 day 300 tick 33120 | +718s ETA ~1156s | pop=43/119 beds=86 food=2752 wood=1676 eco=0% | raids=0 dip=0 | avg 2.29ms/tick
+[38.8%] Y3 day 315 tick 33480 | +719s ETA ~1137s | pop=44/119 beds=86 food=2749 wood=1540 eco=0% | raids=0 dip=0 | avg 2.26ms/tick
+[39.2%] Y3 day 330 tick 33840 | +720s ETA ~1119s | pop=48/118 beds=86 food=2749 wood=1409 eco=0% | raids=0 dip=0 | avg 2.34ms/tick
+[39.6%] Y3 day 345 tick 34200 | +722s ETA ~1101s | pop=53/119 beds=86 food=2747 wood=1497 eco=0% | raids=0 dip=0 | avg 2.53ms/tick
+[40.0%] Year 4 tick 34560 | +723s ETA ~1084s | YEAR END | pop=57 food=2723 wood=2100 stone=900 gold=25733 eco=0% rep=100 | buildings=75 rivals=3 playerDeaths=0
+  ❄ Winter Y3 EXIT PASS | minFood=2740 minWood=1381 minPop=39 playerDeaths=0 netLoss=0 heatingFail=0d
+[40.0%] Y4 day 0 tick 34560 | +723s ETA ~1084s | pop=57/119 beds=86 food=2723 wood=2100 eco=0% | raids=0 dip=0 | avg 2.70ms/tick
+  → scheduled tick 34860: Year-5 resource grant
+[40.4%] Y4 day 15 tick 34920 | +724s ETA ~1068s | pop=57/131 beds=98 food=2726 wood=2095 eco=0% | raids=0 dip=0 | avg 3.04ms/tick
+[40.8%] Y4 day 30 tick 35280 | +726s ETA ~1051s | pop=58/131 beds=98 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 2.96ms/tick
+[41.3%] Y4 day 45 tick 35640 | +727s ETA ~1035s | pop=59/129 beds=98 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.74ms/tick
+[41.7%] Y4 day 60 tick 36000 | +728s ETA ~1019s | pop=66/131 beds=98 food=2714 wood=2100 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[42.1%] Y4 day 75 tick 36360 | +730s ETA ~1004s | pop=61/129 beds=98 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 3.48ms/tick
+[42.5%] Y4 day 90 tick 36720 | +731s ETA ~989s | pop=57/129 beds=98 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 3.06ms/tick
+[42.9%] Y4 day 105 tick 37080 | +732s ETA ~974s | pop=56/131 beds=98 food=2707 wood=2095 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[43.3%] Y4 day 120 tick 37440 | +733s ETA ~959s | pop=55/131 beds=98 food=2710 wood=2100 eco=0% | raids=0 dip=0 | avg 2.53ms/tick
+[43.8%] Y4 day 135 tick 37800 | +734s ETA ~944s | pop=52/131 beds=98 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 2.47ms/tick
+[44.2%] Y4 day 150 tick 38160 | +736s ETA ~930s | pop=52/131 beds=98 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 2.51ms/tick
+[44.6%] Y4 day 165 tick 38520 | +737s ETA ~916s | pop=53/131 beds=98 food=2707 wood=2095 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+[45.0%] Y4 day 180 tick 38880 | +738s ETA ~902s | pop=55/131 beds=98 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.59ms/tick
+[45.4%] Y4 day 195 tick 39240 | +739s ETA ~888s | pop=55/131 beds=98 food=2715 wood=2095 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[45.8%] Y4 day 210 tick 39600 | +740s ETA ~875s | pop=59/131 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 2.64ms/tick
+[46.3%] Y4 day 225 tick 39960 | +741s ETA ~862s | pop=61/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[46.7%] Y4 day 240 tick 40320 | +742s ETA ~848s | pop=66/131 beds=98 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+  📋 Pre-winter Y4 day 250 | pop=66/131 beds=98 food=2717 (41.2/cap) wood=2100 buffer=150d need=1260
+[47.1%] Y4 day 255 tick 40680 | +743s ETA ~835s | pop=63/131 beds=98 food=2710 wood=2095 eco=0% | raids=0 dip=0 | avg 2.83ms/tick
+  ❄ Winter Y4 day 270 ENTER | pop=58/131 beds=98 food=2742 wood=1986 need=12/d (1080 total) buffer=165d eco=0%
+[47.5%] Y4 day 270 tick 41040 | +744s ETA ~823s | pop=58/131 beds=98 food=2742 wood=1986 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+[47.9%] Y4 day 285 tick 41400 | +745s ETA ~810s | pop=59/131 beds=98 food=2735 wood=1981 eco=0% | raids=0 dip=0 | avg 2.54ms/tick
+[48.3%] Y4 day 300 tick 41760 | +747s ETA ~798s | pop=58/131 beds=98 food=2739 wood=1986 eco=0% | raids=0 dip=0 | avg 2.48ms/tick
+[48.8%] Y4 day 315 tick 42120 | +748s ETA ~786s | pop=63/131 beds=98 food=2734 wood=1980 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[49.2%] Y4 day 330 tick 42480 | +749s ETA ~774s | pop=67/131 beds=98 food=2736 wood=1984 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[49.6%] Y4 day 345 tick 42840 | +751s ETA ~763s | pop=63/131 beds=98 food=2730 wood=1980 eco=0% | raids=0 dip=0 | avg 3.72ms/tick
+  → scheduled tick 43200: Year-5 resource grant
+[50.0%] Year 5 tick 43200 | +752s ETA ~752s | YEAR END | pop=62 food=2800 wood=2100 stone=900 gold=33628 eco=0% rep=92 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y4 EXIT PASS | minFood=2725 minWood=1979 minPop=55 playerDeaths=0 netLoss=0 heatingFail=0d
+[50.0%] Y5 day 0 tick 43200 | +752s ETA ~752s | pop=62/130 beds=98 food=2800 wood=2100 eco=0% | raids=0 dip=0 | avg 4.54ms/tick
+[50.4%] Y5 day 15 tick 43560 | +754s ETA ~742s | pop=57/131 beds=98 food=2721 wood=2095 eco=0% | raids=0 dip=0 | avg 4.51ms/tick
+[50.8%] Y5 day 30 tick 43920 | +756s ETA ~731s | pop=60/131 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 4.45ms/tick
+[51.2%] Y5 day 45 tick 44280 | +758s ETA ~721s | pop=62/131 beds=98 food=2718 wood=2095 eco=0% | raids=0 dip=0 | avg 4.93ms/tick
+[51.7%] Y5 day 60 tick 44640 | +760s ETA ~711s | pop=66/130 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 5.69ms/tick
+[52.1%] Y5 day 75 tick 45000 | +763s ETA ~702s | pop=62/131 beds=98 food=2717 wood=2095 eco=0% | raids=0 dip=0 | avg 5.50ms/tick
+[52.5%] Y5 day 90 tick 45360 | +765s ETA ~692s | pop=58/131 beds=98 food=2706 wood=2100 eco=0% | raids=0 dip=0 | avg 5.37ms/tick
+[52.9%] Y5 day 105 tick 45720 | +767s ETA ~682s | pop=58/131 beds=98 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 4.31ms/tick
+[53.3%] Y5 day 120 tick 46080 | +768s ETA ~672s | pop=56/131 beds=98 food=2704 wood=2100 eco=0% | raids=0 dip=0 | avg 4.51ms/tick
+[53.8%] Y5 day 135 tick 46440 | +771s ETA ~663s | pop=61/131 beds=98 food=2695 wood=2095 eco=0% | raids=0 dip=0 | avg 5.17ms/tick
+[54.2%] Y5 day 150 tick 46800 | +773s ETA ~654s | pop=67/131 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 7.36ms/tick
+[54.6%] Y5 day 165 tick 47160 | +776s ETA ~646s | pop=65/131 beds=98 food=2700 wood=2095 eco=0% | raids=0 dip=0 | avg 6.80ms/tick
+[55.0%] Y5 day 180 tick 47520 | +779s ETA ~637s | pop=68/131 beds=98 food=2714 wood=2100 eco=0% | raids=0 dip=0 | avg 6.55ms/tick
+[55.4%] Y5 day 195 tick 47880 | +781s ETA ~628s | pop=67/131 beds=98 food=2713 wood=2100 eco=0% | raids=0 dip=0 | avg 5.08ms/tick
+[55.8%] Y5 day 210 tick 48240 | +783s ETA ~619s | pop=67/130 beds=98 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 4.02ms/tick
+[56.3%] Y5 day 225 tick 48600 | +784s ETA ~610s | pop=61/131 beds=98 food=2709 wood=2095 eco=0% | raids=0 dip=0 | avg 3.65ms/tick
+[56.7%] Y5 day 240 tick 48960 | +785s ETA ~601s | pop=64/131 beds=98 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 3.48ms/tick
+  📋 Pre-winter Y5 day 250 | pop=64/131 beds=98 food=2720 (42.5/cap) wood=2100 buffer=161d need=1170
+[57.1%] Y5 day 255 tick 49320 | +787s ETA ~592s | pop=63/131 beds=98 food=2713 wood=2095 eco=0% | raids=0 dip=0 | avg 3.91ms/tick
+  ❄ Winter Y5 day 270 ENTER | pop=59/131 beds=98 food=2739 wood=1986 need=12/d (1080 total) buffer=165d eco=0%
+[57.5%] Y5 day 270 tick 49680 | +788s ETA ~582s | pop=59/131 beds=98 food=2739 wood=1986 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[57.9%] Y5 day 285 tick 50040 | +789s ETA ~573s | pop=62/131 beds=98 food=2737 wood=1980 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[58.3%] Y5 day 300 tick 50400 | +790s ETA ~564s | pop=59/131 beds=98 food=2735 wood=1986 eco=0% | raids=0 dip=0 | avg 2.54ms/tick
+[58.8%] Y5 day 315 tick 50760 | +791s ETA ~556s | pop=59/131 beds=98 food=2733 wood=1981 eco=0% | raids=0 dip=0 | avg 3.09ms/tick
+[59.2%] Y5 day 330 tick 51120 | +793s ETA ~547s | pop=55/131 beds=98 food=2746 wood=1987 eco=0% | raids=0 dip=0 | avg 3.36ms/tick
+[59.6%] Y5 day 345 tick 51480 | +794s ETA ~539s | pop=51/131 beds=98 food=2740 wood=1982 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+  → scheduled tick 51840: Year-6 resource grant
+[60.0%] Year 6 tick 51840 | +795s ETA ~530s | YEAR END | pop=54 food=2750 wood=2100 stone=900 gold=42150 eco=0% rep=100 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y5 EXIT PASS | minFood=2729 minWood=1980 minPop=49 playerDeaths=0 netLoss=5 heatingFail=0d
+[60.0%] Y6 day 0 tick 51840 | +795s ETA ~530s | pop=54/131 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+  → inject tick 52000: spawn_visitor:refugees
+  → inject tick 52000: retense_rival:FoxHollow
+  → inject tick 52000: raid:incoming
+[60.4%] Y6 day 15 tick 52200 | +797s ETA ~522s | pop=56/131 beds=98 food=2714 wood=2095 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+[60.8%] Y6 day 30 tick 52560 | +798s ETA ~514s | pop=57/130 beds=98 food=2718 wood=2100 eco=0% | raids=0 dip=0 | avg 2.80ms/tick
+[61.3%] Y6 day 45 tick 52920 | +799s ETA ~506s | pop=56/131 beds=98 food=2716 wood=2095 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[61.7%] Y6 day 60 tick 53280 | +800s ETA ~498s | pop=58/127 beds=98 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 3.08ms/tick
+[62.1%] Y6 day 75 tick 53640 | +802s ETA ~490s | pop=51/128 beds=98 food=2714 wood=2095 eco=0% | raids=0 dip=0 | avg 3.60ms/tick
+  → inject tick 54000: spawn_visitor:scholars
+  → inject tick 54000: retense_rival:FoxHollow
+  → inject tick 54000: raid:incoming
+[62.5%] Y6 day 90 tick 54000 | +804s ETA ~482s | pop=52/131 beds=98 food=2710 wood=2100 eco=0% | raids=0 dip=0 | avg 3.40ms/tick
+[62.9%] Y6 day 105 tick 54360 | +805s ETA ~474s | pop=51/131 beds=98 food=2710 wood=2095 eco=0% | raids=0 dip=0 | avg 3.43ms/tick
+[63.3%] Y6 day 120 tick 54720 | +807s ETA ~467s | pop=51/131 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 3.81ms/tick
+[63.7%] Y6 day 135 tick 55080 | +809s ETA ~460s | pop=54/131 beds=98 food=2708 wood=2095 eco=0% | raids=0 dip=0 | avg 4.44ms/tick
+[64.2%] Y6 day 150 tick 55440 | +810s ETA ~452s | pop=50/131 beds=98 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 3.55ms/tick
+[64.6%] Y6 day 165 tick 55800 | +811s ETA ~445s | pop=46/131 beds=98 food=2711 wood=2095 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+  → inject tick 56000: spawn_visitor:nomads
+  → inject tick 56000: retense_rival:FoxHollow
+  → inject tick 56000: raid:incoming
+[65.0%] Y6 day 180 tick 56160 | +813s ETA ~438s | pop=45/131 beds=98 food=2732 wood=2100 eco=0% | raids=0 dip=0 | avg 2.52ms/tick
+[65.4%] Y6 day 195 tick 56520 | +814s ETA ~430s | pop=41/131 beds=98 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.27ms/tick
+[65.8%] Y6 day 210 tick 56880 | +815s ETA ~423s | pop=40/131 beds=98 food=2731 wood=2100 eco=0% | raids=0 dip=0 | avg 2.37ms/tick
+[66.3%] Y6 day 225 tick 57240 | +816s ETA ~416s | pop=46/131 beds=98 food=2725 wood=2095 eco=0% | raids=0 dip=0 | avg 2.36ms/tick
+[66.7%] Y6 day 240 tick 57600 | +817s ETA ~408s | pop=47/131 beds=98 food=2727 wood=2100 eco=0% | raids=0 dip=0 | avg 2.68ms/tick
+  📋 Pre-winter Y6 day 250 | pop=47/131 beds=98 food=2730 (58.1/cap) wood=2100 buffer=210d need=900
+[67.1%] Y6 day 255 tick 57960 | +818s ETA ~401s | pop=43/131 beds=98 food=2724 wood=2095 eco=0% | raids=0 dip=0 | avg 2.54ms/tick
+  ❄ Winter Y6 day 270 ENTER | pop=47/131 beds=98 food=2752 wood=1988 need=10/d (900 total) buffer=198d eco=0%
+[67.5%] Y6 day 270 tick 58320 | +819s ETA ~394s | pop=47/131 beds=98 food=2752 wood=1988 eco=0% | raids=0 dip=0 | avg 2.45ms/tick
+[67.9%] Y6 day 285 tick 58680 | +820s ETA ~387s | pop=50/130 beds=98 food=2749 wood=1867 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+[68.3%] Y6 day 300 tick 59040 | +821s ETA ~381s | pop=54/131 beds=98 food=2744 wood=1987 eco=0% | raids=0 dip=0 | avg 2.93ms/tick
+[68.8%] Y6 day 315 tick 59400 | +823s ETA ~374s | pop=55/131 beds=98 food=2740 wood=1982 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+[69.2%] Y6 day 330 tick 59760 | +824s ETA ~367s | pop=46/131 beds=98 food=2750 wood=1989 eco=0% | raids=0 dip=0 | avg 2.71ms/tick
+[69.6%] Y6 day 345 tick 60120 | +825s ETA ~361s | pop=43/131 beds=98 food=2748 wood=1984 eco=0% | raids=0 dip=0 | avg 2.39ms/tick
+  → scheduled tick 60480: Year-7 resource grant
+[70.0%] Year 7 tick 60480 | +826s ETA ~354s | YEAR END | pop=43 food=2750 wood=2100 stone=900 gold=49706 eco=0% rep=100 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y6 EXIT PASS | minFood=2734 minWood=1863 minPop=41 playerDeaths=0 netLoss=4 heatingFail=0d
+[70.0%] Y7 day 0 tick 60480 | +826s ETA ~354s | pop=43/131 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.42ms/tick
+[70.4%] Y7 day 15 tick 60840 | +827s ETA ~348s | pop=44/131 beds=98 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.56ms/tick
+[70.8%] Y7 day 30 tick 61200 | +828s ETA ~341s | pop=49/131 beds=98 food=2733 wood=2100 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+[71.3%] Y7 day 45 tick 61560 | +830s ETA ~335s | pop=46/130 beds=98 food=2727 wood=2095 eco=0% | raids=0 dip=0 | avg 2.68ms/tick
+[71.7%] Y7 day 60 tick 61920 | +831s ETA ~328s | pop=53/131 beds=98 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.58ms/tick
+[72.1%] Y7 day 75 tick 62280 | +832s ETA ~322s | pop=56/131 beds=98 food=2718 wood=2095 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+[72.5%] Y7 day 90 tick 62640 | +833s ETA ~316s | pop=57/131 beds=98 food=2705 wood=2100 eco=0% | raids=0 dip=0 | avg 3.04ms/tick
+[72.9%] Y7 day 105 tick 63000 | +835s ETA ~310s | pop=52/129 beds=98 food=2707 wood=2095 eco=0% | raids=0 dip=0 | avg 2.84ms/tick
+[73.3%] Y7 day 120 tick 63360 | +836s ETA ~304s | pop=59/130 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 2.67ms/tick
+[73.8%] Y7 day 135 tick 63720 | +837s ETA ~298s | pop=59/131 beds=98 food=2705 wood=2095 eco=0% | raids=0 dip=0 | avg 2.76ms/tick
+[74.2%] Y7 day 150 tick 64080 | +839s ETA ~292s | pop=64/131 beds=98 food=2709 wood=2100 eco=0% | raids=0 dip=0 | avg 2.92ms/tick
+[74.6%] Y7 day 165 tick 64440 | +840s ETA ~286s | pop=62/131 beds=98 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 3.98ms/tick
+[75.0%] Y7 day 180 tick 64800 | +842s ETA ~281s | pop=66/131 beds=98 food=2716 wood=2100 eco=0% | raids=0 dip=0 | avg 4.13ms/tick
+[75.4%] Y7 day 195 tick 65160 | +844s ETA ~275s | pop=67/131 beds=98 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 4.53ms/tick
+[75.8%] Y7 day 210 tick 65520 | +846s ETA ~270s | pop=66/131 beds=98 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 4.91ms/tick
+[76.3%] Y7 day 225 tick 65880 | +848s ETA ~264s | pop=67/131 beds=98 food=2720 wood=2095 eco=0% | raids=0 dip=0 | avg 4.28ms/tick
+[76.7%] Y7 day 240 tick 66240 | +849s ETA ~258s | pop=63/131 beds=98 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 3.02ms/tick
+  📋 Pre-winter Y7 day 250 | pop=62/131 beds=98 food=2717 (43.8/cap) wood=2100 buffer=161d need=1170
+[77.1%] Y7 day 255 tick 66600 | +850s ETA ~253s | pop=62/131 beds=98 food=2712 wood=2095 eco=0% | raids=0 dip=0 | avg 3.02ms/tick
+  ❄ Winter Y7 day 270 ENTER | pop=64/131 beds=98 food=2733 wood=1985 need=13/d (1170 total) buffer=152d eco=0%
+[77.5%] Y7 day 270 tick 66960 | +851s ETA ~247s | pop=64/131 beds=98 food=2733 wood=1985 eco=0% | raids=0 dip=0 | avg 3.04ms/tick
+[77.9%] Y7 day 285 tick 67320 | +852s ETA ~242s | pop=61/131 beds=98 food=2736 wood=1980 eco=0% | raids=0 dip=0 | avg 2.86ms/tick
+[78.3%] Y7 day 300 tick 67680 | +854s ETA ~236s | pop=63/131 beds=98 food=2737 wood=1985 eco=0% | raids=0 dip=0 | avg 2.97ms/tick
+[78.8%] Y7 day 315 tick 68040 | +855s ETA ~231s | pop=58/131 beds=98 food=2739 wood=1981 eco=0% | raids=0 dip=0 | avg 2.91ms/tick
+[79.2%] Y7 day 330 tick 68400 | +856s ETA ~225s | pop=58/131 beds=98 food=2746 wood=1986 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[79.6%] Y7 day 345 tick 68760 | +857s ETA ~220s | pop=53/130 beds=98 food=2744 wood=1982 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+  → scheduled tick 69120: Year-8 resource grant
+[80.0%] Year 8 tick 69120 | +859s ETA ~215s | YEAR END | pop=49 food=2750 wood=2100 stone=900 gold=58008 eco=0% rep=100 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y7 EXIT PASS | minFood=2726 minWood=1980 minPop=48 playerDeaths=0 netLoss=15 heatingFail=0d
+[80.0%] Y8 day 0 tick 69120 | +859s ETA ~215s | pop=49/131 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[80.4%] Y8 day 15 tick 69480 | +860s ETA ~209s | pop=52/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[80.8%] Y8 day 30 tick 69840 | +861s ETA ~204s | pop=52/131 beds=98 food=2732 wood=2100 eco=0% | raids=0 dip=0 | avg 2.95ms/tick
+[81.3%] Y8 day 45 tick 70200 | +863s ETA ~199s | pop=47/131 beds=98 food=2727 wood=2095 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+[81.7%] Y8 day 60 tick 70560 | +864s ETA ~194s | pop=46/131 beds=98 food=2725 wood=2100 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[82.1%] Y8 day 75 tick 70920 | +865s ETA ~189s | pop=47/131 beds=98 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[82.5%] Y8 day 90 tick 71280 | +866s ETA ~184s | pop=51/131 beds=98 food=2713 wood=2100 eco=0% | raids=0 dip=0 | avg 2.38ms/tick
+[82.9%] Y8 day 105 tick 71640 | +867s ETA ~179s | pop=54/131 beds=98 food=2706 wood=2095 eco=0% | raids=0 dip=0 | avg 2.56ms/tick
+[83.3%] Y8 day 120 tick 72000 | +869s ETA ~174s | pop=53/131 beds=98 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 2.81ms/tick
+[83.8%] Y8 day 135 tick 72360 | +870s ETA ~169s | pop=52/131 beds=98 food=2710 wood=2095 eco=0% | raids=0 dip=0 | avg 2.99ms/tick
+[84.2%] Y8 day 150 tick 72720 | +871s ETA ~164s | pop=53/131 beds=98 food=2708 wood=2100 eco=0% | raids=0 dip=0 | avg 2.96ms/tick
+[84.6%] Y8 day 165 tick 73080 | +873s ETA ~159s | pop=57/131 beds=98 food=2697 wood=2095 eco=0% | raids=0 dip=0 | avg 3.13ms/tick
+[85.0%] Y8 day 180 tick 73440 | +874s ETA ~154s | pop=58/131 beds=98 food=2728 wood=2100 eco=0% | raids=0 dip=0 | avg 4.48ms/tick
+[85.4%] Y8 day 195 tick 73800 | +876s ETA ~150s | pop=57/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 4.27ms/tick
+[85.8%] Y8 day 210 tick 74160 | +878s ETA ~145s | pop=59/131 beds=98 food=2720 wood=2100 eco=0% | raids=0 dip=0 | avg 4.66ms/tick
+[86.3%] Y8 day 225 tick 74520 | +880s ETA ~140s | pop=56/131 beds=98 food=2719 wood=2095 eco=0% | raids=0 dip=0 | avg 4.25ms/tick
+[86.7%] Y8 day 240 tick 74880 | +882s ETA ~136s | pop=55/131 beds=98 food=2721 wood=2100 eco=0% | raids=0 dip=0 | avg 4.48ms/tick
+  📋 Pre-winter Y8 day 250 | pop=54/131 beds=98 food=2724 (50.4/cap) wood=2100 buffer=190d need=990
+[87.1%] Y8 day 255 tick 75240 | +883s ETA ~131s | pop=49/131 beds=98 food=2726 wood=2095 eco=0% | raids=0 dip=0 | avg 4.27ms/tick
+  ❄ Winter Y8 day 270 ENTER | pop=47/131 beds=98 food=2746 wood=1988 need=10/d (900 total) buffer=198d eco=0%
+[87.5%] Y8 day 270 tick 75600 | +885s ETA ~126s | pop=47/131 beds=98 food=2746 wood=1988 eco=0% | raids=0 dip=0 | avg 3.74ms/tick
+[87.9%] Y8 day 285 tick 75960 | +886s ETA ~122s | pop=47/131 beds=98 food=2746 wood=1916 eco=0% | raids=0 dip=0 | avg 3.89ms/tick
+[88.3%] Y8 day 300 tick 76320 | +887s ETA ~117s | pop=50/130 beds=98 food=2745 wood=1926 eco=0% | raids=0 dip=0 | avg 2.72ms/tick
+[88.8%] Y8 day 315 tick 76680 | +889s ETA ~113s | pop=51/131 beds=98 food=2737 wood=1982 eco=0% | raids=0 dip=0 | avg 2.66ms/tick
+[89.2%] Y8 day 330 tick 77040 | +890s ETA ~108s | pop=55/131 beds=98 food=2740 wood=1989 eco=0% | raids=0 dip=0 | avg 2.75ms/tick
+[89.6%] Y8 day 345 tick 77400 | +891s ETA ~104s | pop=56/131 beds=98 food=2735 wood=1981 eco=0% | raids=0 dip=0 | avg 2.82ms/tick
+  → scheduled tick 77760: Year-9 resource grant
+[90.0%] Year 9 tick 77760 | +893s ETA ~99s | YEAR END | pop=58 food=2750 wood=2100 stone=900 gold=65882 eco=0% rep=92 | buildings=77 rivals=3 playerDeaths=0
+  ❄ Winter Y8 EXIT PASS | minFood=2734 minWood=1906 minPop=45 playerDeaths=0 netLoss=0 heatingFail=0d
+[90.0%] Y9 day 0 tick 77760 | +893s ETA ~99s | pop=58/130 beds=98 food=2750 wood=2100 eco=0% | raids=0 dip=0 | avg 2.76ms/tick
+[90.4%] Y9 day 15 tick 78120 | +894s ETA ~95s | pop=57/143 beds=110 food=2716 wood=2095 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[90.8%] Y9 day 30 tick 78480 | +895s ETA ~90s | pop=59/143 beds=110 food=2722 wood=2100 eco=0% | raids=0 dip=1 | avg 2.77ms/tick
+[91.3%] Y9 day 45 tick 78840 | +896s ETA ~86s | pop=59/143 beds=110 food=2711 wood=2095 eco=0% | raids=0 dip=0 | avg 2.82ms/tick
+[91.7%] Y9 day 60 tick 79200 | +898s ETA ~82s | pop=54/143 beds=110 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.81ms/tick
+[92.1%] Y9 day 75 tick 79560 | +899s ETA ~77s | pop=55/143 beds=110 food=2715 wood=2095 eco=0% | raids=0 dip=0 | avg 2.55ms/tick
+[92.5%] Y9 day 90 tick 79920 | +900s ETA ~73s | pop=58/143 beds=110 food=2705 wood=2100 eco=0% | raids=0 dip=0 | avg 2.65ms/tick
+[92.9%] Y9 day 105 tick 80280 | +901s ETA ~69s | pop=53/143 beds=110 food=2702 wood=2095 eco=0% | raids=0 dip=0 | avg 2.63ms/tick
+[93.3%] Y9 day 120 tick 80640 | +903s ETA ~64s | pop=58/143 beds=110 food=2704 wood=2100 eco=0% | raids=0 dip=0 | avg 2.79ms/tick
+[93.8%] Y9 day 135 tick 81000 | +904s ETA ~60s | pop=50/142 beds=110 food=2700 wood=2095 eco=0% | raids=0 dip=0 | avg 2.80ms/tick
+[94.2%] Y9 day 150 tick 81360 | +905s ETA ~56s | pop=53/143 beds=110 food=2707 wood=2100 eco=0% | raids=0 dip=0 | avg 2.62ms/tick
+[94.6%] Y9 day 165 tick 81720 | +906s ETA ~52s | pop=51/143 beds=110 food=2709 wood=2095 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[95.0%] Y9 day 180 tick 82080 | +907s ETA ~48s | pop=54/143 beds=110 food=2730 wood=2100 eco=0% | raids=0 dip=0 | avg 2.60ms/tick
+[95.4%] Y9 day 195 tick 82440 | +909s ETA ~44s | pop=51/143 beds=110 food=2728 wood=2095 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[95.8%] Y9 day 210 tick 82800 | +910s ETA ~40s | pop=52/143 beds=110 food=2724 wood=2100 eco=0% | raids=0 dip=0 | avg 2.50ms/tick
+[96.3%] Y9 day 225 tick 83160 | +911s ETA ~35s | pop=51/143 beds=110 food=2722 wood=2095 eco=0% | raids=0 dip=0 | avg 2.73ms/tick
+[96.7%] Y9 day 240 tick 83520 | +912s ETA ~31s | pop=50/143 beds=110 food=2726 wood=2100 eco=0% | raids=0 dip=0 | avg 2.51ms/tick
+  📋 Pre-winter Y9 day 250 | pop=52/143 beds=110 food=2722 (52.3/cap) wood=2100 buffer=190d need=990
+[97.1%] Y9 day 255 tick 83880 | +913s ETA ~27s | pop=54/143 beds=110 food=2714 wood=2095 eco=0% | raids=0 dip=0 | avg 2.84ms/tick
+  ❄ Winter Y9 day 270 ENTER | pop=58/142 beds=110 food=2740 wood=1982 need=12/d (1080 total) buffer=165d eco=0%
+[97.5%] Y9 day 270 tick 84240 | +914s ETA ~23s | pop=58/142 beds=110 food=2740 wood=1982 eco=0% | raids=0 dip=0 | avg 3.13ms/tick
+[97.9%] Y9 day 285 tick 84600 | +915s ETA ~19s | pop=59/143 beds=110 food=2735 wood=1977 eco=0% | raids=0 dip=0 | avg 3.16ms/tick
+[98.3%] Y9 day 300 tick 84960 | +917s ETA ~16s | pop=58/143 beds=110 food=2729 wood=1982 eco=0% | raids=0 dip=0 | avg 2.69ms/tick
+[98.8%] Y9 day 315 tick 85320 | +918s ETA ~12s | pop=55/143 beds=110 food=2735 wood=1978 eco=0% | raids=0 dip=0 | avg 2.61ms/tick
+[99.2%] Y9 day 330 tick 85680 | +919s ETA ~8s | pop=58/143 beds=110 food=2739 wood=1982 eco=0% | raids=0 dip=0 | avg 2.76ms/tick
+[99.6%] Y9 day 345 tick 86040 | +920s ETA ~4s | pop=59/143 beds=110 food=2736 wood=1977 eco=0% | raids=0 dip=0 | avg 2.85ms/tick
+[100.0%] Year 10 tick 86400 | +922s ETA ~0s | YEAR END | pop=60 food=2719 wood=2100 stone=900 gold=72500 eco=0% rep=100 | buildings=79 rivals=3 playerDeaths=0
+  ❄ Winter Y9 EXIT PASS | minFood=2726 minWood=1977 minPop=52 playerDeaths=0 netLoss=0 heatingFail=0d
+[100.0%] Y10 day 0 tick 86400 | +922s ETA ~0s | pop=60/143 beds=110 food=2719 wood=2100 eco=0% | raids=0 dip=0 | avg 2.95ms/tick
+
+✓ Simulation complete in 921.6s
+=== Wilderfolk 10-year balance simulation ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Ticks: 86400 (10 game years) | Wall time: 921.6s
+Calendar: Year 10, Day 0 | Total days: 3600
+Map: 1600×1200 (large)
+Housing: 110 beds | maxPop=143
+
+--- Year-by-year snapshots ---
+Y1 tick=8640 | pop=57 | food=2724 wood=2100 stone=900 gold=4260 | eco=0% (≥80% streak=0y) | rep=96 | militia=1379 barricade=1236 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=75 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y2 tick=17280 | pop=53 | food=2721 wood=2100 stone=900 gold=11471 | eco=0% (≥80% streak=0y) | rep=100 | militia=1234 barricade=1113 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=75 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y3 tick=25920 | pop=58 | food=2718 wood=2100 stone=900 gold=19093 | eco=0% (≥80% streak=0y) | rep=100 | militia=1331 barricade=1195 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=75 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y4 tick=34560 | pop=57 | food=2723 wood=2100 stone=900 gold=25733 | eco=0% (≥80% streak=0y) | rep=100 | militia=1307 barricade=1175 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=75 raids=0 dip=0 | visitors=1 rivals=3 playerDeaths=0
+Y5 tick=43200 | pop=62 | food=2800 wood=2100 stone=900 gold=33628 | eco=0% (≥80% streak=0y) | rep=92 | militia=1452 barricade=1298 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=77 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y6 tick=51840 | pop=54 | food=2750 wood=2100 stone=900 gold=42150 | eco=0% (≥80% streak=0y) | rep=100 | militia=1258 barricade=1133 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=77 raids=0 dip=0 | visitors=1 rivals=3 playerDeaths=0
+Y7 tick=60480 | pop=43 | food=2750 wood=2100 stone=900 gold=49706 | eco=0% (≥80% streak=0y) | rep=100 | militia=1016 barricade=928 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=77 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y8 tick=69120 | pop=49 | food=2750 wood=2100 stone=900 gold=58008 | eco=0% (≥80% streak=0y) | rep=100 | militia=1186 barricade=1072 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=77 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y9 tick=77760 | pop=58 | food=2750 wood=2100 stone=900 gold=65882 | eco=0% (≥80% streak=0y) | rep=92 | militia=1379 barricade=1236 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=77 raids=0 dip=0 | visitors=0 rivals=3 playerDeaths=0
+Y10 tick=86400 | pop=60 | food=2719 wood=2100 stone=900 gold=72500 | eco=0% (≥80% streak=0y) | rep=100 | militia=1452 barricade=1298 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=79 raids=0 dip=0 | visitors=1 rivals=3 playerDeaths=0
+
+--- Winter log (10-year test judgment) ---
+Winter Y0 | PASS
+  pre-winter day 250: pop=58/119 beds=86 food=2683 (46.3/cap) wood=2100 buffer=175d need=1080 eco=0%
+  entry day 270: pop=62/118 beds=86 food=2733 wood=1989 need=13/day (1170 winter) buffer=153d eco=0%
+  during: minFood=2713 minWood=1983 minPop=56 playerDeaths=0 netPopLoss=5 heatingFailDays=0/90
+  exit day 0: pop=57 food=2724 wood=2100 eco=0%
+Winter Y1 | PASS
+  pre-winter day 250: pop=51/119 beds=86 food=2732 (53.6/cap) wood=2100 buffer=190d need=990 eco=0%
+  entry day 270: pop=51/119 beds=86 food=2749 wood=1992 need=11/day (990 winter) buffer=181d eco=0%
+  during: minFood=2738 minWood=1861 minPop=45 playerDeaths=0 netPopLoss=0 heatingFailDays=0/90
+  exit day 0: pop=53 food=2721 wood=2100 eco=0%
+Winter Y2 | PASS
+  pre-winter day 250: pop=44/119 beds=86 food=2725 (61.9/cap) wood=2100 buffer=233d need=810 eco=0%
+  entry day 270: pop=48/119 beds=86 food=2749 wood=1992 need=10/day (900 winter) buffer=199d eco=0%
+  during: minFood=2723 minWood=1928 minPop=47 playerDeaths=0 netPopLoss=0 heatingFailDays=0/90
+  exit day 0: pop=58 food=2718 wood=2100 eco=0%
+Winter Y3 | PASS
+  pre-winter day 250: pop=45/119 beds=86 food=2734 (60.8/cap) wood=2100 buffer=233d need=810 eco=0%
+  entry day 270: pop=42/119 beds=86 food=2753 wood=1993 need=9/day (810 winter) buffer=221d eco=0%
+  during: minFood=2740 minWood=1381 minPop=39 playerDeaths=0 netPopLoss=0 heatingFailDays=0/90
+  exit day 0: pop=57 food=2723 wood=2100 eco=0%
+Winter Y4 | PASS
+  pre-winter day 250: pop=66/131 beds=98 food=2717 (41.2/cap) wood=2100 buffer=150d need=1260 eco=0%
+  entry day 270: pop=58/131 beds=98 food=2742 wood=1986 need=12/day (1080 winter) buffer=165d eco=0%
+  during: minFood=2725 minWood=1979 minPop=55 playerDeaths=0 netPopLoss=0 heatingFailDays=0/90
+  exit day 0: pop=62 food=2800 wood=2100 eco=0%
+Winter Y5 | PASS
+  pre-winter day 250: pop=64/131 beds=98 food=2720 (42.5/cap) wood=2100 buffer=161d need=1170 eco=0%
+  entry day 270: pop=59/131 beds=98 food=2739 wood=1986 need=12/day (1080 winter) buffer=165d eco=0%
+  during: minFood=2729 minWood=1980 minPop=49 playerDeaths=0 netPopLoss=5 heatingFailDays=0/90
+  exit day 0: pop=54 food=2750 wood=2100 eco=0%
+Winter Y6 | PASS
+  pre-winter day 250: pop=47/131 beds=98 food=2730 (58.1/cap) wood=2100 buffer=210d need=900 eco=0%
+  entry day 270: pop=47/131 beds=98 food=2752 wood=1988 need=10/day (900 winter) buffer=198d eco=0%
+  during: minFood=2734 minWood=1863 minPop=41 playerDeaths=0 netPopLoss=4 heatingFailDays=0/90
+  exit day 0: pop=43 food=2750 wood=2100 eco=0%
+Winter Y7 | PASS
+  pre-winter day 250: pop=62/131 beds=98 food=2717 (43.8/cap) wood=2100 buffer=161d need=1170 eco=0%
+  entry day 270: pop=64/131 beds=98 food=2733 wood=1985 need=13/day (1170 winter) buffer=152d eco=0%
+  during: minFood=2726 minWood=1980 minPop=48 playerDeaths=0 netPopLoss=15 heatingFailDays=0/90
+  exit day 0: pop=49 food=2750 wood=2100 eco=0%
+Winter Y8 | PASS
+  pre-winter day 250: pop=54/131 beds=98 food=2724 (50.4/cap) wood=2100 buffer=190d need=990 eco=0%
+  entry day 270: pop=47/131 beds=98 food=2746 wood=1988 need=10/day (900 winter) buffer=198d eco=0%
+  during: minFood=2734 minWood=1906 minPop=45 playerDeaths=0 netPopLoss=0 heatingFailDays=0/90
+  exit day 0: pop=58 food=2750 wood=2100 eco=0%
+Winter Y9 | PASS
+  pre-winter day 250: pop=52/143 beds=110 food=2722 (52.3/cap) wood=2100 buffer=190d need=990 eco=0%
+  entry day 270: pop=58/142 beds=110 food=2740 wood=1982 need=12/day (1080 winter) buffer=165d eco=0%
+  during: minFood=2726 minWood=1977 minPop=52 playerDeaths=0 netPopLoss=0 heatingFailDays=0/90
+  exit day 0: pop=60 food=2719 wood=2100 eco=0%
+Winter summary: 10/10 winters passed
+
+--- End state — population ---
+Camp population: 60 (adults 60, children 0)
+Village leader id: 30631 | last election year: 10
+Player deaths (entity-tracked): 0 | births: 713
+Death events in log (all entities): 2403
+
+--- End state — village & frontier ---
+Completed buildings: 79
+Building types placed: house, farm, barn, lumberMill, silo, well, quarry, road, blacksmith, mine, greenhouse, workshop, store, market, school, wall, wallCorner, church, mill, wallGate, prison, watchtower, tamingPost, barracks, hospital, townHall, mansion
+Resources: food=2719 wood=2100 stone=900 gold=72500
+Reputation: 100 | Ecosystem: 0% | eco≥80% years: 0
+Wildlife: rabbits=0 deer=0 wolves=0 grass=501
+Militia: militia=1452 barricade=1298 (iron/iron) guards=0 | raw strength=1452 barricade=1298
+Forge: spears=true shields=true active=none
+Researched: agriculture_1, agriculture_2, agriculture_3, mining_1, mining_2, forestry_1, forestry_2, architecture_1, architecture_2, medicine_1, medicine_2, trade_1, trade_2, education_1, education_2, defense_1, defense_2, defense_3, defense_4, defense_5
+Rivals (3): FoxHollow[friendly pop=0]; WillowHollow[friendly pop=0]; CedarCreek[friendly pop=1]
+
+--- Event totals ---
+Combat events: 10 | Trade events: 125 | Research events: 25
+Diplomacy responses: 27 (coverage choices=12) | Raid responses: 7 (coverage=3)
+Marriages: 720 | Births: 713
+
+--- Option coverage ---
+buildings: 27/27 tested ✓
+diplomacy_tribute: 3/3 tested ✓
+diplomacy_border_dispute: 3/3 tested ✓
+diplomacy_alliance: 3/3 tested ✓
+diplomacy_peace_treaty: 3/3 tested ✓
+raid_response: 3/3 tested ✓
+rival_action: 5/5 tested ✓
+visitor_trade: 3/3 tested ✓
+refugee: 3/3 tested ✓
+visitor_talk: 7/7 tested ✓
+forge: 2/2 tested ✓
+research: 20/20 tested ✓
+
+--- Performance ---
+Tick cost: avg=3.13ms p50=2.70ms p95=5.36ms max=98.33ms
+Budget @ 60fps: 16.7ms/tick | @ 10×: 1.67ms/tick
+  tick 8640: 4.81ms | humans=57 alive=585
+  tick 17280: 6.38ms | humans=53 alive=583
+  tick 25920: 4.55ms | humans=58 alive=583
+  tick 34560: 4.70ms | humans=57 alive=587
+  tick 43200: 5.79ms | humans=62 alive=586
+  tick 51840: 3.71ms | humans=54 alive=583
+  tick 60480: 3.82ms | humans=43 alive=566
+  tick 69120: 4.40ms | humans=49 alive=572
+  tick 77760: 4.08ms | humans=58 alive=581
+  tick 86400: 5.29ms | humans=60 alive=589
+
+--- Balance gates — profile: town ---
+PASS — Reached year 10 (year=10)
+FAIL — Population 70–95 (pop=60)
+FAIL — Ecosystem 35–60% (eco=0%)
+PASS — Population alive (pop=60)
+PASS — Food stockpile > 0 (food=2719)
+PASS — All winters survived (10/10 winters passed)
+PASS — No winter starvation (min winter food across years: 2713)
+PASS — Diplomacy exercised (responses=27)
+PASS — Raids exercised (responses=7)
+PASS — Perf p95 < 16ms (p95=5.36ms)
+
+--- VERDICT ---
+FAIL — 10-year town balance test
+Failed 2/10 gates — see Balance gates above
+
+✗ VERDICT: FAIL — 10-year town balance test (2 gate failures)
+
+(Player action log: 252 entries — set SIM_VERBOSE=1 to print all)
+
+[simulate-10year] Log written to D:\Kimi_Agent_Update_Building_Background_Colors\app\scripts\logs\sim-10year-town-2026-07-04T21-12-15-937Z.txt

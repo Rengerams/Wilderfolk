@@ -1,0 +1,7 @@
+---
+pid: 13904
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors\app"
+command: "npx tsc -b"
+started_at: 2026-07-04T16:53:04.774Z
+running_for_ms: 15615000 
+---

@@ -1,0 +1,22 @@
+---
+pid: 10492
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "cd \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\" && npm run build 2>&1"
+started_at: 2026-07-04T18:43:24.606Z
+running_for_ms: 8995004  
+---
+
+> wilderfolk@0.4.1 build
+> tsc -b && vite build
+
+vite v7.3.5 building client environment for production...
+transforming...
+✓ 124 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   1.12 kB │ gzip:   0.54 kB
+dist/assets/index-CaVOa3VT.css  115.50 kB │ gzip:  20.14 kB
+dist/assets/react-C2StAl4u.js   192.35 kB │ gzip:  60.29 kB
+dist/assets/index-kbGf9sXR.js   209.61 kB │ gzip:  54.84 kB
+dist/assets/game-PayNAXEC.js    388.51 kB │ gzip: 130.60 kB
+✓ built in 5.29s

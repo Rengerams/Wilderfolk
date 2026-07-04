@@ -1,0 +1,57 @@
+---
+pid: 9556
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\"; $env:SIM_MAX_TICKS=\"25000\"; $env:SIM_PROFILE=\"town\"; node scripts/run-sim.mjs scripts/simulate-10year.ts 2>&1 | Select-Object -Last 50"
+started_at: 2026-07-04T20:39:45.048Z
+running_for_ms: 2009998  
+---
+tick 7999 [diplomacy_tribute] pay OK
+tick 8300 [inject] diplomacy:tribute OK
+tick 8299 [diplomacy_tribute] negotiate OK
+tick 8600 [inject] diplomacy:tribute OK
+tick 8599 [diplomacy_tribute] refuse OK
+tick 9240 [scheduled] Year-2 resource grant OK
+tick 10000 [inject] diplomacy:border_dispute OK
+tick 9999 [diplomacy_border_dispute] stand_firm OK
+tick 10300 [inject] diplomacy:border_dispute OK
+tick 10299 [diplomacy_border_dispute] militia OK
+tick 10600 [inject] diplomacy:border_dispute OK
+tick 10599 [diplomacy_border_dispute] concede OK
+tick 12000 [inject] diplomacy:alliance OK
+tick 11999 [diplomacy_alliance] decline OK
+tick 12300 [inject] diplomacy:alliance OK
+tick 12299 [diplomacy_alliance] counter OK
+tick 12600 [inject] diplomacy:alliance OK
+tick 12599 [diplomacy_alliance] accept OK
+tick 12971 [visitor_talk] performers OK
+tick 14000 [inject] diplomacy:peace_treaty OK
+tick 13999 [diplomacy_peace_treaty] sign OK
+tick 14040 [diplomacy_border_dispute] concede OK
+tick 14300 [inject] diplomacy:peace_treaty OK
+tick 14299 [diplomacy_peace_treaty] decline OK
+tick 14600 [inject] diplomacy:peace_treaty OK
+tick 14599 [diplomacy_peace_treaty] tribute OK
+tick 17980 [scheduled] Year-3 resource grant OK
+tick 18000 [inject] spawn_visitor:hunters OK
+tick 17999 [visitor_talk] hunters OK
+tick 17999 [visitor_trade] buy_food OK
+tick 18000 [visitor_trade] buy_food OK
+tick 18001 [visitor_trade] buy_food OK
+tick 18840 [diplomacy_alliance] accept OK
+tick 20000 [inject] retense_rival:StoneReach OK
+tick 20000 [inject] raid:incoming OK
+tick 19999 [raid_response] barricade OK — attacker=119
+tick 21336 [raid_response] payoff OK — attacker=0
+tick 21603 [visitor_talk] performers OK
+tick 22000 [inject] spawn_visitor:performers OK
+tick 22000 [inject] retense_rival:StoneReach OK
+tick 22000 [inject] raid:incoming OK
+tick 21999 [raid_response] defend OK — attacker=119
+tick 21999 [visitor_talk] performers OK
+tick 22680 [diplomacy_tribute] pay OK
+tick 24000 [inject] retense_rival:StoneReach OK
+tick 24000 [inject] raid:incoming OK
+tick 23999 [raid_response] defend OK — attacker=119
+tick 24024 [diplomacy_peace_treaty] sign OK
+
+[simulate-10year] Log written to D:\Kimi_Agent_Update_Building_Background_Colors\app\scripts\logs\sim-10year-town-2026-07-04T20-53-41-450Z.txt

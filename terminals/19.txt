@@ -1,0 +1,1272 @@
+---
+pid: 7944
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "cd \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\" && npx tsx scripts/simulate-30min.ts --minutes 1 2>&1"
+started_at: 2026-07-04T17:27:32.474Z
+running_for_ms: 13545004 
+---
+
+=== Wilderfolk 30-minute simulation ===
+Ticks: 72000 (~1200 min @ 1×) | Wall time: 131.5s
+Game calendar: Year 8, Day 120 (~3000 total days)
+
+--- Camp population ---
+Total in camp: 27
+  Adults: 26
+  Children (living): 1
+  Married couples: 5
+  Singles (adults): 4
+  Pregnant / expecting: 0
+  Living bastards: 4
+  Wildkin in valley: 0
+
+--- Life events (event log) ---
+Marriages: 296
+Births (all): 367
+  Human baby births: 365
+  Wildkin births: 2
+  Bastard births: 87
+Scandals: 149
+Death log entries: 830
+
+--- Village ---
+Completed buildings: 14 (6 houses)
+Resources: food=1223, wood=800, stone=1835, gold=14914
+Reputation: 10 | Ecosystem: 42%
+Wildlife: 0 rabbits, 0 deer, 0 wolves, 507 grass
+
+--- Performance ---
+Alive entities (end): 557
+Tick cost (all 72000 ticks): avg=1.81ms p50=1.30ms p95=4.83ms max=105.40ms
+Budget @ 60fps sim: 16.7ms/tick | @ 10× speed: 1.67ms/tick
+
+--- Perf samples (every 120 ticks) ---
+tick 120: 15.98ms | humans=3 alive=650 grass=501
+tick 240: 5.76ms | humans=4 alive=669 grass=503
+tick 360: 4.48ms | humans=7 alive=695 grass=513
+tick 480: 4.06ms | humans=8 alive=650 grass=500
+tick 600: 7.16ms | humans=11 alive=675 grass=513
+tick 720: 6.03ms | humans=12 alive=623 grass=502
+tick 840: 0.91ms | humans=14 alive=606 grass=502
+tick 960: 2.34ms | humans=16 alive=619 grass=513
+tick 1080: 10.70ms | humans=18 alive=635 grass=514
+tick 1200: 4.34ms | humans=20 alive=619 grass=511
+tick 1320: 3.53ms | humans=22 alive=622 grass=509
+tick 1440: 1.98ms | humans=27 alive=639 grass=509
+tick 1560: 1.99ms | humans=26 alive=624 grass=509
+tick 1680: 2.54ms | humans=28 alive=628 grass=509
+tick 1800: 2.78ms | humans=30 alive=642 grass=509
+tick 1920: 1.73ms | humans=30 alive=628 grass=509
+tick 2040: 1.86ms | humans=27 alive=628 grass=509
+tick 2160: 3.38ms | humans=28 alive=638 grass=507
+tick 2280: 11.45ms | humans=29 alive=627 grass=506
+tick 2400: 2.29ms | humans=27 alive=624 grass=506
+tick 2520: 5.83ms | humans=31 alive=640 grass=506
+tick 2640: 1.34ms | humans=30 alive=625 grass=506
+tick 2760: 1.40ms | humans=30 alive=627 grass=506
+tick 2880: 1.51ms | humans=32 alive=641 grass=506
+tick 3000: 4.81ms | humans=33 alive=628 grass=506
+tick 3120: 2.78ms | humans=34 alive=631 grass=506
+tick 3240: 1.95ms | humans=32 alive=641 grass=506
+tick 3360: 3.03ms | humans=33 alive=627 grass=506
+tick 3480: 1.50ms | humans=33 alive=630 grass=506
+tick 3600: 1.99ms | humans=31 alive=640 grass=506
+tick 3720: 1.06ms | humans=29 alive=624 grass=506
+tick 3840: 1.98ms | humans=27 alive=624 grass=506
+tick 3960: 1.76ms | humans=28 alive=636 grass=505
+tick 4080: 2.38ms | humans=29 alive=623 grass=505
+tick 4200: 1.56ms | humans=29 alive=625 grass=505
+tick 4320: 8.62ms | humans=29 alive=637 grass=505
+tick 4440: 1.53ms | humans=29 alive=623 grass=505
+tick 4560: 1.84ms | humans=29 alive=625 grass=505
+tick 4680: 2.09ms | humans=31 alive=639 grass=505
+tick 4800: 2.41ms | humans=33 alive=628 grass=505
+tick 4920: 2.82ms | humans=29 alive=625 grass=505
+tick 5040: 3.16ms | humans=28 alive=636 grass=505
+tick 5160: 1.05ms | humans=30 alive=624 grass=505
+tick 5280: 1.78ms | humans=28 alive=624 grass=505
+tick 5400: 4.05ms | humans=30 alive=638 grass=505
+tick 5520: 2.78ms | humans=31 alive=625 grass=505
+tick 5640: 4.40ms | humans=28 alive=624 grass=505
+tick 5760: 1.77ms | humans=27 alive=635 grass=505
+tick 5880: 2.21ms | humans=28 alive=622 grass=505
+tick 6000: 2.36ms | humans=28 alive=624 grass=505
+tick 6120: 2.86ms | humans=25 alive=633 grass=505
+tick 6240: 2.03ms | humans=25 alive=619 grass=505
+tick 6360: 2.29ms | humans=26 alive=622 grass=505
+tick 6480: 9.22ms | humans=25 alive=633 grass=505
+tick 6600: 3.88ms | humans=25 alive=620 grass=505
+tick 6720: 1.63ms | humans=24 alive=619 grass=504
+tick 6840: 1.84ms | humans=24 alive=631 grass=504
+tick 6960: 1.37ms | humans=25 alive=618 grass=504
+tick 7080: 2.73ms | humans=26 alive=621 grass=504
+tick 7200: 1.46ms | humans=26 alive=553 grass=504
+tick 7320: 2.64ms | humans=24 alive=537 grass=504
+tick 7440: 1.75ms | humans=25 alive=540 grass=504
+tick 7560: 1.77ms | humans=25 alive=552 grass=504
+tick 7680: 1.17ms | humans=22 alive=534 grass=503
+tick 7800: 0.91ms | humans=22 alive=537 grass=503
+tick 7920: 0.70ms | humans=21 alive=546 grass=502
+tick 8040: 1.06ms | humans=22 alive=533 grass=502
+tick 8160: 2.46ms | humans=20 alive=533 grass=502
+tick 8280: 2.00ms | humans=15 alive=540 grass=502
+tick 8400: 1.88ms | humans=14 alive=525 grass=500
+tick 8520: 1.59ms | humans=16 alive=528 grass=501
+tick 8640: 14.90ms | humans=15 alive=540 grass=501
+tick 8760: 0.74ms | humans=18 alive=528 grass=501
+tick 8880: 1.50ms | humans=18 alive=530 grass=501
+tick 9000: 1.40ms | humans=16 alive=541 grass=501
+tick 9120: 0.81ms | humans=18 alive=528 grass=501
+tick 9240: 1.02ms | humans=14 alive=527 grass=501
+tick 9360: 0.88ms | humans=12 alive=536 grass=501
+tick 9480: 1.14ms | humans=15 alive=547 grass=520
+tick 9600: 2.99ms | humans=15 alive=543 grass=517
+tick 9720: 0.75ms | humans=10 alive=550 grass=517
+tick 9840: 1.00ms | humans=10 alive=536 grass=517
+tick 9960: 0.68ms | humans=11 alive=540 grass=517
+tick 10080: 0.69ms | humans=11 alive=550 grass=516
+tick 10200: 1.67ms | humans=11 alive=541 grass=509
+tick 10320: 0.65ms | humans=10 alive=527 grass=505
+tick 10440: 0.75ms | humans=10 alive=538 grass=505
+tick 10560: 0.81ms | humans=10 alive=524 grass=505
+tick 10680: 1.40ms | humans=8 alive=526 grass=505
+tick 10800: 4.38ms | humans=9 alive=534 grass=502
+tick 10920: 1.93ms | humans=10 alive=540 grass=501
+tick 11040: 0.82ms | humans=8 alive=531 grass=499
+tick 11160: 1.71ms | humans=8 alive=536 grass=505
+tick 11280: 0.99ms | humans=9 alive=526 grass=500
+tick 11400: 0.75ms | humans=9 alive=520 grass=500
+tick 11520: 0.82ms | humans=9 alive=532 grass=500
+tick 11640: 1.53ms | humans=10 alive=519 grass=500
+tick 11760: 0.62ms | humans=11 alive=522 grass=500
+tick 11880: 0.57ms | humans=8 alive=531 grass=500
+tick 12000: 1.09ms | humans=10 alive=519 grass=500
+tick 12120: 0.57ms | humans=11 alive=522 grass=500
+tick 12240: 0.57ms | humans=12 alive=535 grass=500
+tick 12360: 1.57ms | humans=13 alive=523 grass=500
+tick 12480: 1.39ms | humans=13 alive=526 grass=500
+tick 12600: 0.72ms | humans=14 alive=537 grass=500
+tick 12720: 1.28ms | humans=14 alive=523 grass=500
+tick 12840: 0.60ms | humans=14 alive=525 grass=500
+tick 12960: 2.41ms | humans=13 alive=536 grass=500
+tick 13080: 0.83ms | humans=12 alive=521 grass=500
+tick 13200: 1.06ms | humans=14 alive=526 grass=500
+tick 13320: 0.89ms | humans=15 alive=538 grass=500
+tick 13440: 0.71ms | humans=16 alive=526 grass=500
+tick 13560: 1.08ms | humans=16 alive=527 grass=500
+tick 13680: 2.16ms | humans=14 alive=537 grass=500
+tick 13800: 0.65ms | humans=15 alive=524 grass=500
+tick 13920: 1.25ms | humans=15 alive=526 grass=500
+tick 14040: 0.81ms | humans=15 alive=538 grass=500
+tick 14160: 1.00ms | humans=15 alive=524 grass=500
+tick 14280: 1.20ms | humans=13 alive=524 grass=500
+tick 14400: 0.66ms | humans=14 alive=537 grass=500
+tick 14520: 0.85ms | humans=15 alive=524 grass=500
+tick 14640: 0.69ms | humans=17 alive=528 grass=500
+tick 14760: 1.37ms | humans=18 alive=541 grass=500
+tick 14880: 0.70ms | humans=20 alive=529 grass=500
+tick 15000: 0.88ms | humans=21 alive=532 grass=500
+tick 15120: 0.85ms | humans=23 alive=546 grass=500
+tick 15240: 1.57ms | humans=26 alive=535 grass=500
+tick 15360: 1.27ms | humans=25 alive=536 grass=500
+tick 15480: 0.69ms | humans=23 alive=546 grass=500
+tick 15600: 1.07ms | humans=24 alive=533 grass=500
+tick 15720: 4.23ms | humans=24 alive=534 grass=500
+tick 15840: 1.03ms | humans=24 alive=547 grass=500
+tick 15960: 0.96ms | humans=22 alive=531 grass=500
+tick 16080: 0.85ms | humans=20 alive=530 grass=500
+tick 16200: 0.69ms | humans=20 alive=543 grass=500
+tick 16320: 2.51ms | humans=21 alive=530 grass=500
+tick 16440: 0.74ms | humans=18 alive=529 grass=500
+tick 16560: 1.36ms | humans=18 alive=541 grass=500
+tick 16680: 0.80ms | humans=18 alive=527 grass=500
+tick 16800: 1.35ms | humans=19 alive=531 grass=500
+tick 16920: 2.39ms | humans=20 alive=543 grass=500
+tick 17040: 0.83ms | humans=19 alive=529 grass=500
+tick 17160: 1.24ms | humans=19 alive=530 grass=500
+tick 17280: 5.13ms | humans=17 alive=541 grass=500
+tick 17400: 0.82ms | humans=20 alive=525 grass=500
+tick 17520: 1.00ms | humans=21 alive=533 grass=500
+tick 17640: 1.22ms | humans=20 alive=544 grass=500
+tick 17760: 0.73ms | humans=21 alive=532 grass=500
+tick 17880: 1.34ms | humans=21 alive=532 grass=500
+tick 18000: 1.05ms | humans=21 alive=544 grass=500
+tick 18120: 0.81ms | humans=21 alive=530 grass=500
+tick 18240: 0.86ms | humans=22 alive=533 grass=500
+tick 18360: 0.87ms | humans=21 alive=544 grass=500
+tick 18480: 0.76ms | humans=20 alive=529 grass=500
+tick 18600: 3.21ms | humans=19 alive=530 grass=500
+tick 18720: 0.64ms | humans=18 alive=541 grass=500
+tick 18840: 2.49ms | humans=16 alive=524 grass=500
+tick 18960: 1.57ms | humans=13 alive=525 grass=500
+tick 19080:(node:13320) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ 0.57ms | humans=12 alive=535 grass=500
+tick 19200: 0.67ms | humans=10 alive=519 grass=500
+tick 19320: 0.65ms | humans=8 alive=519 grass=500
+tick 19440: 0.63ms | humans=7 alive=530 grass=500
+tick 19560: 1.21ms | humans=8 alive=532 grass=509
+tick 19680: 1.01ms | humans=8 alive=536 grass=502
+tick 19800: 1.49ms | humans=6 alive=558 grass=499
+tick 19920: 1.83ms | humans=7 alive=583 grass=511
+tick 20040: 2.28ms | humans=8 alive=582 grass=500
+tick 20160: 1.02ms | humans=6 alive=533 grass=504
+tick 20280: 0.76ms | humans=6 alive=519 grass=503
+tick 20400: 0.69ms | humans=8 alive=522 grass=503
+tick 20520: 0.62ms | humans=6 alive=531 grass=502
+tick 20640: 0.81ms | humans=7 alive=520 grass=501
+tick 20760: 1.92ms | humans=7 alive=522 grass=500
+tick 20880: 0.70ms | humans=7 alive=541 grass=511
+tick 21000: 0.83ms | humans=7 alive=526 grass=508
+tick 21120: 0.79ms | humans=8 alive=529 grass=507
+tick 21240: 0.79ms | humans=9 alive=534 grass=502
+tick 21360: 2.09ms | humans=10 alive=517 grass=500
+tick 21480: 0.66ms | humans=10 alive=534 grass=512
+tick 21600: 0.72ms | humans=8 alive=534 grass=503
+tick 21720: 0.94ms | humans=8 alive=532 grass=498
+tick 21840: 1.34ms | humans=9 alive=564 grass=506
+tick 21960: 1.07ms | humans=9 alive=552 grass=505
+tick 22080: 3.41ms | humans=10 alive=533 grass=500
+tick 22200: 0.74ms | humans=10 alive=522 grass=500
+tick 22320: 1.37ms | humans=11 alive=534 grass=500
+tick 22440: 0.75ms | humans=11 alive=520 grass=500
+tick 22560: 1.05ms | humans=14 alive=526 grass=500
+tick 22680: 0.70ms | humans=15 alive=538 grass=500
+tick 22800: 0.77ms | humans=14 alive=523 grass=500
+tick 22920: 0.73ms | humans=13 alive=525 grass=500
+tick 23040: 1.33ms | humans=11 alive=542 grass=508
+tick 23160: 0.66ms | humans=11 alive=527 grass=507
+tick 23280: 0.91ms | humans=12 alive=531 grass=507
+tick 23400: 0.69ms | humans=11 alive=541 grass=507
+tick 23520: 0.77ms | humans=12 alive=528 grass=507
+tick 23640: 0.70ms | humans=13 alive=531 grass=507
+tick 23760: 1.50ms | humans=13 alive=543 grass=507
+tick 23880: 0.66ms | humans=12 alive=527 grass=506
+tick 24000: 1.38ms | humans=13 alive=529 grass=506
+tick 24120: 0.61ms | humans=11 alive=540 grass=506
+tick 24240: 0.59ms | humans=15 alive=530 grass=506
+tick 24360: 0.74ms | humans=14 alive=531 grass=506
+tick 24480: 0.97ms | humans=15 alive=544 grass=506
+tick 24600: 0.80ms | humans=13 alive=528 grass=506
+tick 24720: 1.16ms | humans=12 alive=530 grass=503
+tick 24840: 1.15ms | humans=13 alive=536 grass=500
+tick 24960: 0.68ms | humans=13 alive=522 grass=500
+tick 25080: 0.87ms | humans=14 alive=527 grass=500
+tick 25200: 3.09ms | humans=13 alive=537 grass=501
+tick 25320: 0.81ms | humans=14 alive=531 grass=501
+tick 25440: 1.11ms | humans=16 alive=528 grass=501
+tick 25560: 0.81ms | humans=16 alive=540 grass=501
+tick 25680: 0.84ms | humans=15 alive=525 grass=501
+tick 25800: 1.19ms | humans=17 alive=529 grass=501
+tick 25920: 1.80ms | humans=16 alive=540 grass=501
+tick 26040: 1.34ms | humans=16 alive=525 grass=501
+tick 26160: 1.57ms | humans=15 alive=528 grass=501
+tick 26280: 1.00ms | humans=15 alive=540 grass=501
+tick 26400: 1.34ms | humans=17 alive=531 grass=500
+tick 26520: 1.02ms | humans=17 alive=528 grass=500
+tick 26640: 0.89ms | humans=18 alive=541 grass=500
+tick 26760: 0.80ms | humans=17 alive=526 grass=500
+tick 26880: 1.64ms | humans=17 alive=528 grass=500
+tick 27000: 1.46ms | humans=16 alive=539 grass=500
+tick 27120: 0.88ms | humans=17 alive=526 grass=500
+tick 27240: 1.26ms | humans=16 alive=528 grass=500
+tick 27360: 1.70ms | humans=17 alive=540 grass=500
+tick 27480: 1.55ms | humans=17 alive=526 grass=500
+tick 27600: 1.17ms | humans=16 alive=528 grass=500
+tick 27720: 0.80ms | humans=18 alive=541 grass=500
+tick 27840: 0.85ms | humans=18 alive=527 grass=500
+tick 27960: 1.42ms | humans=17 alive=528 grass=500
+tick 28080: 2.17ms | humans=20 alive=543 grass=500
+tick 28200: 0.91ms | humans=20 alive=529 grass=500
+tick 28320: 1.16ms | humans=20 alive=531 grass=500
+tick 28440: 1.07ms | humans=24 alive=547 grass=500
+tick 28560: 0.77ms | humans=24 alive=533 grass=500
+tick 28680: 2.05ms | humans=21 alive=532 grass=500
+tick 28800: 1.31ms | humans=22 alive=545 grass=500
+tick 28920: 1.27ms | humans=21 alive=530 grass=500
+tick 29040: 1.07ms | humans=19 alive=530 grass=500
+tick 29160: 0.95ms | humans=20 alive=543 grass=500
+tick 29280: 1.02ms | humans=20 alive=531 grass=500
+tick 29400: 1.11ms | humans=21 alive=531 grass=500
+tick 29520: 1.20ms | humans=23 alive=546 grass=500
+tick 29640: 1.53ms | humans=21 alive=532 grass=500
+tick 29760: 1.27ms | humans=23 alive=535 grass=500
+tick 29880: 1.18ms | humans=22 alive=545 grass=500
+tick 30000: 0.86ms | humans=16 alive=526 grass=500
+tick 30120: 1.21ms | humans=16 alive=527 grass=500
+tick 30240: 0.79ms | humans=14 alive=537 grass=500
+tick 30360: 0.72ms | humans=11 alive=521 grass=500
+tick 30480: 0.92ms | humans=11 alive=533 grass=508
+tick 30600: 1.04ms | humans=10 alive=537 grass=504
+tick 30720: 1.16ms | humans=10 alive=522 grass=503
+tick 30840: 4.79ms | humans=10 alive=524 grass=503
+tick 30960: 2.18ms | humans=7 alive=534 grass=503
+tick 31080: 0.82ms | humans=7 alive=519 grass=502
+tick 31200: 1.76ms | humans=7 alive=520 grass=501
+tick 31320: 0.85ms | humans=7 alive=532 grass=501
+tick 31440: 2.85ms | humans=7 alive=518 grass=501
+tick 31560: 0.56ms | humans=5 alive=515 grass=499
+tick 31680: 1.24ms | humans=5 alive=530 grass=502
+tick 31800: 0.73ms | humans=6 alive=515 grass=500
+tick 31920: 0.60ms | humans=7 alive=522 grass=504
+tick 32040: 0.47ms | humans=7 alive=530 grass=500
+tick 32160: 2.56ms | humans=8 alive=518 grass=500
+tick 32280: 0.96ms | humans=9 alive=524 grass=500
+tick 32400: 0.95ms | humans=7 alive=535 grass=505
+tick 32520: 0.78ms | humans=7 alive=520 grass=502
+tick 32640: 1.44ms | humans=10 alive=521 grass=500
+tick 32760: 0.66ms | humans=10 alive=532 grass=499
+tick 32880: 0.92ms | humans=10 alive=522 grass=502
+tick 33000: 0.76ms | humans=10 alive=524 grass=501
+tick 33120: 0.78ms | humans=10 alive=532 grass=499
+tick 33240: 0.70ms | humans=11 alive=521 grass=501
+tick 33360: 1.24ms | humans=12 alive=522 grass=500
+tick 33480: 0.95ms | humans=12 alive=534 grass=499
+tick 33600: 1.00ms | humans=14 alive=523 grass=500
+tick 33720: 0.71ms | humans=15 alive=527 grass=501
+tick 33840: 1.11ms | humans=15 alive=537 grass=499
+tick 33960: 1.21ms | humans=16 alive=524 grass=499
+tick 34080: 1.18ms | humans=19 alive=529 grass=499
+tick 34200: 0.72ms | humans=21 alive=545 grass=501
+tick 34320: 1.02ms | humans=24 alive=533 grass=500
+tick 34440: 0.90ms | humans=25 alive=537 grass=501
+tick 34560: 1.55ms | humans=27 alive=550 grass=500
+tick 34680: 2.11ms | humans=29 alive=538 grass=500
+tick 34800: 4.29ms | humans=31 alive=543 grass=500
+tick 34920: 1.72ms | humans=27 alive=573 grass=523
+tick 35040: 1.77ms | humans=27 alive=559 grass=523
+tick 35160: 1.88ms | humans=28 alive=561 grass=522
+tick 35280: 2.70ms | humans=31 alive=575 grass=521
+tick 35400: 4.14ms | humans=32 alive=561 grass=520
+tick 35520: 3.05ms | humans=31 alive=560 grass=518
+tick 35640: 2.65ms | humans=31 alive=571 grass=517
+tick 35760: 2.35ms | humans=30 alive=556 grass=517
+tick 35880: 2.94ms | humans=31 alive=559 grass=517
+tick 36000: 2.37ms | humans=31 alive=571 grass=517
+tick 36120: 2.56ms | humans=33 alive=558 grass=516
+tick 36240: 3.77ms | humans=35 alive=562 grass=516
+tick 36360: 2.50ms | humans=32 alive=571 grass=516
+tick 36480: 1.79ms | humans=33 alive=558 grass=516
+tick 36600: 1.46ms | humans=31 alive=557 grass=515
+tick 36720: 0.82ms | humans=29 alive=565 grass=513
+tick 36840: 1.25ms | humans=28 alive=549 grass=512
+tick 36960: 1.02ms | humans=30 alive=552 grass=511
+tick 37080: 1.25ms | humans=32 alive=563 grass=508
+tick 37200: 1.09ms | humans=28 alive=545 grass=508
+tick 37320: 1.61ms | humans=27 alive=542 grass=504
+tick 37440: 1.05ms | humans=26 alive=552 grass=503
+tick 37560: 3.42ms | humans=28 alive=540 grass=502
+tick 37680: 0.95ms | humans=28 alive=551 grass=512
+tick 37800: 3.72ms | humans=28 alive=560 grass=509
+tick 37920: 1.57ms | humans=27 alive=544 grass=508
+tick 38040: 2.94ms | humans=26 alive=543 grass=506
+tick 38160: 1.01ms | humans=24 alive=551 grass=504
+tick 38280: 1.63ms | humans=25 alive=536 grass=502
+tick 38400: 1.14ms | humans=24 alive=537 grass=502
+tick 38520: 1.30ms | humans=24 alive=548 grass=501
+tick 38640: 1.08ms | humans=23 alive=533 grass=501
+tick 38760: 1.32ms | humans=19 alive=530 grass=500
+tick 38880: 1.03ms | humans=18 alive=541 grass=500
+tick 39000: 0.72ms | humans=18 alive=527 grass=500
+tick 39120: 0.94ms | humans=17 alive=532 grass=503
+tick 39240: 0.71ms | humans=18 alive=540 grass=499
+tick 39360: 1.08ms | humans=18 alive=535 grass=507
+tick 39480: 0.84ms | humans=18 alive=536 grass=507
+tick 39600: 0.75ms | humans=20 alive=550 grass=507
+tick 39720: 0.69ms | humans=17 alive=533 grass=507
+tick 39840: 1.60ms | humans=18 alive=535 grass=506
+tick 39960: 0.90ms | humans=19 alive=546 grass=503
+tick 40080: 1.53ms | humans=22 alive=533 grass=502
+tick 40200: 1.20ms | humans=22 alive=535 grass=501
+tick 40320: 0.81ms | humans=21 alive=547 grass=503
+tick 40440: 1.01ms | humans=24 alive=533 grass=500
+tick 40560: 1.09ms | humans=24 alive=538 grass=503
+tick 40680: 1.08ms | humans=24 alive=547 grass=500
+tick 40800: 1.04ms | humans=20 alive=534 grass=505
+tick 40920: 1.40ms | humans=19 alive=534 grass=503
+tick 41040: 0.84ms | humans=18 alive=542 grass=501
+tick 41160: 1.19ms | humans=18 alive=526 grass=499
+tick 41280: 1.37ms | humans=18 alive=528 grass=499
+tick 41400: 0.81ms | humans=19 alive=544 grass=502
+tick 41520: 1.28ms | humans=18 alive=528 grass=501
+tick 41640: 1.23ms | humans=18 alive=530 grass=501
+tick 41760: 0.92ms | humans=18 alive=541 grass=500
+tick 41880: 1.74ms | humans=18 alive=527 grass=500
+tick 42000: 1.10ms | humans=20 alive=531 grass=500
+tick 42120: 1.13ms | humans=18 alive=540 grass=499
+tick 42240: 1.73ms | humans=18 alive=527 grass=500
+tick 42360: 0.87ms | humans=17 alive=531 grass=503
+tick 42480: 0.94ms | humans=15 alive=540 grass=502
+tick 42600: 0.88ms | humans=15 alive=524 grass=500
+tick 42720: 0.75ms | humans=16 alive=528 grass=501
+tick 42840: 0.75ms | humans=16 alive=539 grass=500
+tick 42960: 0.79ms | humans=15 alive=524 grass=500
+tick 43080: 1.16ms | humans=16 alive=527 grass=500
+tick 43200: 5.27ms | humans=18 alive=541 grass=500
+tick 43320: 0.75ms | humans=16 alive=549 grass=524
+tick 43440: 0.88ms | humans=16 alive=550 grass=523
+tick 43560: 1.43ms | humans=19 alive=562 grass=520
+tick 43680: 0.94ms | humans=17 alive=546 grass=520
+tick 43800: 3.00ms | humans=19 alive=548 grass=517
+tick 43920: 1.01ms | humans=19 alive=559 grass=517
+tick 44040: 1.25ms | humans=20 alive=543 grass=515
+tick 44160: 1.74ms | humans=21 alive=547 grass=515
+tick 44280: 0.87ms | humans=21 alive=558 grass=514
+tick 44400: 1.04ms | humans=23 alive=544 grass=512
+tick 44520: 1.03ms | humans=22 alive=545 grass=512
+tick 44640: 1.39ms | humans=23 alive=558 grass=512
+tick 44760: 0.76ms | humans=26 alive=548 grass=512
+tick 44880: 1.40ms | humans=28 alive=551 grass=512
+tick 45000: 0.85ms | humans=25 alive=560 grass=512
+tick 45120: 1.00ms | humans=24 alive=545 grass=512
+tick 45240: 0.76ms | humans=23 alive=546 grass=512
+tick 45360: 0.95ms | humans=24 alive=559 grass=512
+tick 45480: 0.94ms | humans=26 alive=546 grass=511
+tick 45600: 0.82ms | humans=24 alive=545 grass=510
+tick 45720: 2.39ms | humans=26 alive=559 grass=510
+tick 45840: 1.90ms | humans=27 alive=546 grass=510
+tick 45960: 1.21ms | humans=22 alive=542 grass=509
+tick 46080: 1.18ms | humans=23 alive=554 grass=508
+tick 46200: 1.38ms | humans=22 alive=539 grass=508
+tick 46320: 1.19ms | humans=21 alive=540 grass=508
+tick 46440: 1.63ms | humans=22 alive=553 grass=508
+tick 46560: 1.53ms | humans=21 alive=538 grass=507
+tick 46680: 2.03ms | humans=19 alive=537 grass=507
+tick 46800: 2.04ms | humans=20 alive=548 grass=505
+tick 46920: 2.89ms | humans=20 alive=536 grass=505
+tick 47040: 1.91ms | humans=22 alive=540 grass=505
+tick 47160: 1.35ms | humans=24 alive=550 grass=503
+tick 47280: 2.04ms | humans=21 alive=533 grass=502
+tick 47400: 1.94ms | humans=20 alive=532 grass=502
+tick 47520: 6.50ms | humans=21 alive=546 grass=502
+tick 47640: 1.89ms | humans=20 alive=530 grass=501
+tick 47760: 1.62ms | humans=21 alive=533 grass=501
+tick 47880: 2.04ms | humans=22 alive=546 grass=501
+tick 48000: 2.22ms | humans=22 alive=532 grass=501
+tick 48120: 1.47ms | humans=19 alive=532 grass=501
+tick 48240: 1.34ms | humans=18 alive=542 grass=501
+tick 48360: 0.76ms | humans=17 alive=527 grass=501
+tick 48480: 2.99ms | humans=14 alive=526 grass=501
+tick 48600: 1.53ms | humans=15 alive=538 grass=500
+tick 48720: 1.06ms | humans=17 alive=533 grass=506
+tick 48840: 1.26ms | humans=16 alive=533 grass=506
+tick 48960: 2.05ms | humans=18 alive=547 grass=506
+tick 49080: 2.33ms | humans=19 alive=534 grass=506
+tick 49200: 1.25ms | humans=20 alive=537 grass=506
+tick 49320: 0.97ms | humans=19 alive=547 grass=505
+tick 49440: 1.22ms | humans=19 alive=534 grass=505
+tick 49560: 0.87ms | humans=18 alive=533 grass=504
+tick 49680: 0.72ms | humans=18 alive=545 grass=504
+tick 49800: 0.76ms | humans=18 alive=529 grass=502
+tick 49920: 1.37ms | humans=19 alive=532 grass=502
+tick 50040: 0.96ms | humans=19 alive=544 grass=502
+tick 50160: 0.74ms | humans=20 alive=531 grass=502
+tick 50280: 1.58ms | humans=15 alive=527 grass=502
+tick 50400: 1.09ms | humans=15 alive=540 grass=502
+tick 50520: 0.64ms | humans=16 alive=527 grass=502
+tick 50640: 0.73ms | humans=16 alive=529 grass=501
+tick 50760: 0.96ms | humans=15 alive=540 grass=502
+tick 50880: 1.09ms | humans=17 alive=528 grass=502
+tick 51000: 0.67ms | humans=16 alive=528 grass=499
+tick 51120: 0.87ms | humans=15 alive=538 grass=500
+tick 51240: 1.71ms | humans=15 alive=523 grass=500
+tick 51360: 0.85ms | humans=14 alive=524 grass=499
+tick 51480: 0.53ms | humans=13 alive=536 grass=500
+tick 51600: 0.78ms | humans=13 alive=521 grass=500
+tick 51720: 0.73ms | humans=13 alive=525 grass=499
+tick 51840: 1.39ms | humans=14 alive=536 grass=499
+tick 51960: 0.70ms | humans=14 alive=542 grass=518
+tick 52080: 0.75ms | humans=15 alive=544 grass=517
+tick 52200: 1.27ms | humans=14 alive=553 grass=516
+tick 52320: 2.59ms | humans=13 alive=538 grass=515
+tick 52440: 0.94ms | humans=14 alive=540 grass=513
+tick 52560: 0.83ms | humans=16 alive=546 grass=507
+tick 52680: 0.69ms | humans=13 alive=534 grass=503
+tick 52800: 2.11ms | humans=13 alive=541 grass=512
+tick 52920: 0.78ms | humans=14 alive=546 grass=509
+tick 53040: 1.07ms | humans=16 alive=533 grass=504
+tick 53160: 0.91ms | humans=17 alive=532 grass=501
+tick 53280: 1.90ms | humans=16 alive=553 grass=514
+tick 53400: 0.76ms | humans=19 alive=539 grass=511
+tick 53520: 1.04ms | humans=17 alive=536 grass=506
+tick 53640: 0.95ms | humans=18 alive=545 grass=504
+tick 53760: 1.04ms | humans=19 alive=532 grass=503
+tick 53880: 1.30ms | humans=17 alive=551 grass=519
+tick 54000: 1.59ms | humans=23 alive=565 grass=519
+tick 54120: 1.22ms | humans=23 alive=549 grass=517
+tick 54240: 1.00ms | humans=21 alive=544 grass=511
+tick 54360: 0.95ms | humans=22 alive=555 grass=510
+tick 54480: 2.87ms | humans=21 alive=534 grass=504
+tick 54600: 1.00ms | humans=22 alive=533 grass=500
+tick 54720: 1.46ms | humans=20 alive=555 grass=512
+tick 54840: 1.18ms | humans=19 alive=539 grass=510
+tick 54960: 1.19ms | humans=17 alive=534 grass=506
+tick 55080: 0.91ms | humans=17 alive=545 grass=505
+tick 55200: 0.80ms | humans=17 alive=529 grass=503
+tick 55320: 1.10ms | humans=16 alive=527 grass=500
+tick 55440: 1.47ms | humans=16 alive=542 grass=503
+tick 55560: 2.09ms | humans=16 alive=530 grass=503
+tick 55680: 1.04ms | humans=17 alive=548 grass=511
+tick 55800: 1.53ms | humans=16 alive=557 grass=505
+tick 55920: 0.77ms | humans=17 alive=526 grass=500
+tick 56040: 0.74ms | humans=19 alive=543 grass=513
+tick 56160: 1.33ms | humans=19 alive=555 grass=513
+tick 56280: 1.09ms | humans=17 alive=539 grass=513
+tick 56400: 0.99ms | humans=19 alive=539 grass=509
+tick 56520: 0.66ms | humans=21 alive=552 grass=508
+tick 56640: 0.92ms | humans=22 alive=539 grass=508
+tick 56760: 0.95ms | humans=23 alive=540 grass=505
+tick 56880: 0.84ms | humans=23 alive=549 grass=503
+tick 57000: 1.87ms | humans=25 alive=534 grass=501
+tick 57120: 1.50ms | humans=25 alive=536 grass=500
+tick 57240: 1.38ms | humans=27 alive=552 grass=502
+tick 57360: 3.11ms | humans=29 alive=542 grass=504
+tick 57480: 2.90ms | humans=33 alive=545 grass=501
+tick 57600: 3.56ms | humans=34 alive=556 grass=499
+tick 57720: 4.08ms | humans=34 alive=544 grass=501
+tick 57840: 2.80ms | humans=35 alive=552 grass=506
+tick 57960: 4.82ms | humans=34 alive=559 grass=502
+tick 58080: 1.63ms | humans=31 alive=538 grass=498
+tick 58200: 2.36ms | humans=32 alive=547 grass=503
+tick 58320: 2.26ms | humans=35 alive=561 grass=503
+tick 58440: 1.74ms | humans=34 alive=544 grass=501
+tick 58560: 2.70ms | humans=36 alive=547 grass=500
+tick 58680: 2.58ms | humans=36 alive=558 grass=499
+tick 58800: 2.37ms | humans=35 alive=545 grass=501
+tick 58920: 3.08ms | humans=37 alive=549 grass=501
+tick 59040: 4.11ms | humans=35 alive=558 grass=500
+tick 59160: 3.19ms | humans=34 alive=542 grass=499
+tick 59280: 1.31ms | humans=31 alive=543 grass=501
+tick 59400: 1.59ms | humans=31 alive=554 grass=500
+tick 59520: 3.17ms | humans=30 alive=538 grass=499
+tick 59640: 1.92ms | humans=32 alive=544 grass=501
+tick 59760: 2.38ms | humans=30 alive=554 grass=501
+tick 59880: 2.00ms | humans=32 alive=540 grass=499
+tick 60000: 3.46ms | humans=33 alive=545 grass=501
+tick 60120: 4.00ms | humans=33 alive=556 grass=500
+tick 60240: 2.32ms | humans=35 alive=541 grass=497
+tick 60360: 5.14ms | humans=37 alive=548 grass=500
+tick 60480: 4.40ms | humans=37 alive=557 grass=497
+tick 60600: 6.49ms | humans=38 alive=557 grass=510
+tick 60720: 2.87ms | humans=40 alive=558 grass=507
+tick 60840: 4.30ms | humans=38 alive=564 grass=503
+tick 60960: 4.06ms | humans=40 alive=549 grass=500
+tick 61080: 5.51ms | humans=41 alive=552 grass=500
+tick 61200: 5.63ms | humans=42 alive=593 grass=528
+tick 61320: 8.65ms | humans=42 alive=577 grass=526
+tick 61440: 12.05ms | humans=41 alive=577 grass=525
+tick 61560: 7.97ms | humans=41 alive=587 grass=523
+tick 61680: 6.58ms | humans=40 alive=569 grass=520
+tick 61800: 9.19ms | humans=40 alive=571 grass=520
+tick 61920: 3.75ms | humans=37 alive=577 grass=517
+tick 62040: 5.15ms | humans=38 alive=559 grass=512
+tick 62160: 5.42ms | humans=39 alive=560 grass=509
+tick 62280: 9.33ms | humans=38 alive=566 grass=505
+tick 62400: 3.61ms | humans=36 alive=549 grass=504
+tick 62520: 2.41ms | humans=32 alive=546 grass=501
+tick 62640: 2.24ms | humans=33 alive=570 grass=514
+tick 62760: 2.84ms | humans=34 alive=553 grass=510
+tick 62880: 6.19ms | humans=31 alive=552 grass=507
+tick 63000: 1.91ms | humans=30 alive=556 grass=503
+tick 63120: 2.07ms | humans=31 alive=541 grass=501
+tick 63240: 1.27ms | humans=27 alive=547 grass=509
+tick 63360: 1.75ms | humans=29 alive=558 grass=506
+tick 63480: 1.17ms | humans=27 alive=539 grass=503
+tick 63600: 1.86ms | humans=26 alive=538 grass=501
+tick 63720: 0.86ms | humans=25 alive=555 grass=507
+tick 63840: 3.43ms | humans=21 alive=539 grass=506
+tick 63960: 1.06ms | humans=20 alive=534 grass=503
+tick 64080: 0.84ms | humans=21 alive=545 grass=501
+tick 64200: 0.81ms | humans=19 alive=536 grass=507
+tick 64320: 0.73ms | humans=18 alive=535 grass=506
+tick 64440: 1.19ms | humans=20 alive=547 grass=504
+tick 64560: 0.89ms | humans=21 alive=532 grass=502
+tick 64680: 1.28ms | humans=20 alive=543 grass=512
+tick 64800: 1.11ms | humans=19 alive=550 grass=508
+tick 64920: 1.87ms | humans=21 alive=536 grass=507
+tick 65040: 1.23ms | humans=22 alive=539 grass=505
+tick 65160: 1.80ms | humans=20 alive=546 grass=503
+tick 65280: 2.64ms | humans=22 alive=531 grass=500
+tick 65400: 2.60ms | humans=23 alive=540 grass=505
+tick 65520: 3.67ms | humans=24 alive=550 grass=502
+tick 65640: 0.87ms | humans=24 alive=535 grass=501
+tick 65760: 0.89ms | humans=27 alive=538 grass=500
+tick 65880: 2.04ms | humans=26 alive=549 grass=500
+tick 66000: 1.68ms | humans=30 alive=542 grass=503
+tick 66120: 1.16ms | humans=30 alive=543 grass=502
+tick 66240: 1.28ms | humans=30 alive=552 grass=499
+tick 66360: 1.31ms | humans=30 alive=546 grass=507
+tick 66480: 1.30ms | humans=31 alive=547 grass=505
+tick 66600: 1.19ms | humans=32 alive=559 grass=504
+tick 66720: 1.60ms | humans=32 alive=545 grass=504
+tick 66840: 2.28ms | humans=33 alive=547 grass=503
+tick 66960: 2.05ms | humans=31 alive=556 grass=502
+tick 67080: 1.17ms | humans=29 alive=539 grass=501
+tick 67200: 1.44ms | humans=29 alive=541 grass=501
+tick 67320: 1.14ms | humans=28 alive=551 grass=500
+tick 67440: 2.01ms | humans=33 alive=542 grass=500
+tick 67560: 1.85ms | humans=36 alive=547 grass=500
+tick 67680: 2.04ms | humans=35 alive=559 grass=501
+tick 67800: 1.40ms | humans=33 alive=541 grass=499
+tick 67920: 2.41ms | humans=34 alive=546 grass=501
+tick 68040: 2.87ms | humans=36 alive=559 grass=500
+tick 68160: 2.29ms | humans=36 alive=544 grass=499
+tick 68280: 3.55ms | humans=36 alive=546 grass=499
+tick 68400: 2.38ms | humans=36 alive=560 grass=501
+tick 68520: 4.35ms | humans=38 alive=547 grass=500
+tick 68640: 6.05ms | humans=41 alive=552 grass=500
+tick 68760: 3.10ms | humans=39 alive=562 grass=500
+tick 68880: 5.49ms | humans=40 alive=552 grass=501
+tick 69000: 5.09ms | humans=41 alive=551 grass=499
+tick 69120: 4.91ms | humans=40 alive=563 grass=500
+tick 69240: 5.44ms | humans=41 alive=550 grass=500
+tick 69360: 3.65ms | humans=41 alive=576 grass=524
+tick 69480: 3.32ms | humans=40 alive=587 grass=523
+tick 69600: 2.61ms | humans=35 alive=566 grass=522
+tick 69720: 2.10ms | humans=35 alive=568 grass=521
+tick 69840: 2.22ms | humans=29 alive=573 grass=521
+tick 69960: 1.39ms | humans=29 alive=559 grass=521
+tick 70080: 1.54ms | humans=29 alive=559 grass=519
+tick 70200: 1.96ms | humans=30 alive=570 grass=517
+tick 70320: 1.32ms | humans=32 alive=558 grass=517
+tick 70440: 3.95ms | humans=31 alive=558 grass=516
+tick 70560: 2.51ms | humans=33 alive=572 grass=516
+tick 70680: 1.82ms | humans=32 alive=556 grass=515
+tick 70800: 2.80ms | humans=34 alive=560 grass=515
+tick 70920: 1.82ms | humans=35 alive=573 grass=515
+tick 71040: 3.76ms | humans=34 alive=555 grass=512
+tick 71160: 3.28ms | humans=33 alive=557 grass=512
+tick 71280: 4.49ms | humans=36 alive=571 grass=512
+tick 71400: 4.32ms | humans=35 alive=554 grass=510
+tick 71520: 2.22ms | humans=30 alive=550 grass=509
+tick 71640: 2.55ms | humans=30 alive=562 grass=509
+tick 71760: 1.77ms | humans=29 alive=547 grass=509
+tick 71880: 0.95ms | humans=27 alive=546 grass=508
+tick 72000: 0.92ms | humans=27 alive=557 grass=507
+
+--- Milestones (every 5 game-days) ---
+tick 1: House A
+tick 24: Farm
+tick 48: House B
+tick 72: Lumber mill
+tick 96: Well
+tick 120: Recruit settler
+— day 5: camp=3, entities=650, grass=501, food=570, year=0
+tick 150: Quarry
+tick 180: Recruit settler
+tick 210: House C
+— day 10: camp=4, entities=669, grass=503, food=593, year=0
+tick 300: Recruit settler
+tick 360: Church
+— day 15: camp=7, entities=695, grass=513, food=564, year=0
+tick 420: Recruit settler
+tick 480: House D
+— day 20: camp=8, entities=650, grass=500, food=557, year=0
+tick 540: Silo
+tick 600: Recruit settler
+— day 25: camp=11, entities=675, grass=513, food=543, year=0
+tick 720: Barn
+— day 30: camp=12, entities=623, grass=502, food=559, year=0
+tick 780: Recruit settler
+— day 35: camp=14, entities=606, grass=502, food=548, year=0
+tick 900: House E
+— day 40: camp=16, entities=619, grass=513, food=569, year=0
+tick 1020: Recruit settler
+tick 1080: Workshop
+— day 45: camp=18, entities=635, grass=514, food=531, year=0
+tick 1200: Recruit settler
+— day 50: camp=20, entities=619, grass=511, food=529, year=0
+tick 1320: House F
+— day 55: camp=22, entities=622, grass=509, food=642, year=0
+tick 1440: Recruit settler
+— day 60: camp=27, entities=639, grass=509, food=794, year=0
+tick 1560: Recruit settler
+— day 65: camp=26, entities=624, grass=509, food=862, year=0
+tick 1680: Recruit settler
+— day 70: camp=28, entities=628, grass=509, food=965, year=0
+— day 75: camp=30, entities=642, grass=509, food=976, year=0
+— day 80: camp=30, entities=628, grass=509, food=979, year=0
+— day 85: camp=27, entities=628, grass=509, food=982, year=0
+— day 90: camp=28, entities=638, grass=507, food=984, year=0
+— day 95: camp=29, entities=627, grass=506, food=966, year=0
+— day 100: camp=27, entities=624, grass=506, food=941, year=0
+— day 105: camp=31, entities=640, grass=506, food=924, year=0
+— day 110: camp=30, entities=625, grass=506, food=925, year=0
+— day 115: camp=30, entities=627, grass=506, food=946, year=0
+— day 120: camp=32, entities=641, grass=506, food=942, year=0
+— day 125: camp=33, entities=628, grass=506, food=943, year=0
+— day 130: camp=34, entities=631, grass=506, food=911, year=0
+— day 135: camp=32, entities=641, grass=506, food=885, year=0
+— day 140: camp=33, entities=627, grass=506, food=863, year=0
+— day 145: camp=33, entities=630, grass=506, food=854, year=0
+— day 150: camp=31, entities=640, grass=506, food=840, year=0
+— day 155: camp=29, entities=624, grass=506, food=863, year=0
+— day 160: camp=27, entities=624, grass=506, food=883, year=0
+— day 165: camp=28, entities=636, grass=505, food=916, year=0
+— day 170: camp=29, entities=623, grass=505, food=928, year=0
+— day 175: camp=29, entities=625, grass=505, food=939, year=0
+— day 180: camp=29, entities=637, grass=505, food=951, year=0
+— day 185: camp=29, entities=623, grass=505, food=972, year=0
+— day 190: camp=29, entities=625, grass=505, food=988, year=0
+— day 195: camp=31, entities=639, grass=505, food=1010, year=0
+— day 200: camp=33, entities=628, grass=505, food=1005, year=0
+— day 205: camp=29, entities=625, grass=505, food=1023, year=0
+— day 210: camp=28, entities=636, grass=505, food=1040, year=0
+— day 215: camp=30, entities=624, grass=505, food=1079, year=0
+— day 220: camp=28, entities=624, grass=505, food=1115, year=0
+— day 225: camp=30, entities=638, grass=505, food=1146, year=0
+— day 230: camp=31, entities=625, grass=505, food=1166, year=0
+— day 235: camp=28, entities=624, grass=505, food=1189, year=0
+— day 240: camp=27, entities=635, grass=505, food=1205, year=0
+— day 245: camp=28, entities=622, grass=505, food=1231, year=0
+— day 250: camp=28, entities=624, grass=505, food=1243, year=0
+— day 255: camp=25, entities=633, grass=505, food=1300, year=0
+— day 260: camp=25, entities=619, grass=505, food=1352, year=0
+— day 265: camp=26, entities=622, grass=505, food=1418, year=0
+— day 270: camp=25, entities=633, grass=505, food=1475, year=0
+— day 275: camp=25, entities=620, grass=505, food=1555, year=0
+— day 280: camp=24, entities=619, grass=504, food=1560, year=0
+— day 285: camp=24, entities=631, grass=504, food=1560, year=0
+— day 290: camp=25, entities=618, grass=504, food=1560, year=0
+— day 295: camp=26, entities=621, grass=504, food=1563, year=0
+— day 300: camp=26, entities=553, grass=504, food=1565, year=0
+— day 305: camp=24, entities=537, grass=504, food=1562, year=0
+— day 310: camp=25, entities=540, grass=504, food=1560, year=0
+— day 315: camp=25, entities=552, grass=504, food=1560, year=0
+— day 320: camp=22, entities=534, grass=503, food=1561, year=0
+— day 325: camp=22, entities=537, grass=503, food=1563, year=0
+— day 330: camp=21, entities=546, grass=502, food=1565, year=0
+— day 335: camp=22, entities=533, grass=502, food=1560, year=0
+— day 340: camp=20, entities=533, grass=502, food=1563, year=0
+— day 345: camp=15, entities=540, grass=502, food=1567, year=0
+— day 350: camp=14, entities=525, grass=500, food=1564, year=0
+— day 355: camp=16, entities=528, grass=501, food=1568, year=0
+— day 360: camp=15, entities=540, grass=501, food=1553, year=1
+— day 365: camp=18, entities=528, grass=501, food=1552, year=1
+— day 370: camp=18, entities=530, grass=501, food=1554, year=1
+— day 375: camp=16, entities=541, grass=501, food=1555, year=1
+— day 380: camp=18, entities=528, grass=501, food=1552, year=1
+— day 385: camp=14, entities=527, grass=501, food=1558, year=1
+— day 390: camp=12, entities=536, grass=501, food=1561, year=1
+— day 395: camp=15, entities=547, grass=520, food=1555, year=1
+— day 400: camp=15, entities=543, grass=517, food=1559, year=1
+— day 405: camp=10, entities=550, grass=517, food=1560, year=1
+— day 410: camp=10, entities=536, grass=517, food=1563, year=1
+— day 415: camp=11, entities=540, grass=517, food=1562, year=1
+— day 420: camp=11, entities=550, grass=516, food=1559, year=1
+— day 425: camp=11, entities=541, grass=509, food=1559, year=1
+— day 430: camp=10, entities=527, grass=505, food=1561, year=1
+— day 435: camp=10, entities=538, grass=505, food=1561, year=1
+— day 440: camp=10, entities=524, grass=505, food=1561, year=1
+— day 445: camp=8, entities=526, grass=505, food=1559, year=1
+— day 450: camp=9, entities=534, grass=502, food=1552, year=1
+— day 455: camp=10, entities=540, grass=501, food=1552, year=1
+— day 460: camp=8, entities=531, grass=499, food=1554, year=1
+— day 465: camp=8, entities=536, grass=505, food=1551, year=1
+— day 470: camp=9, entities=526, grass=500, food=1545, year=1
+— day 475: camp=9, entities=520, grass=500, food=1555, year=1
+— day 480: camp=9, entities=532, grass=500, food=1555, year=1
+— day 485: camp=10, entities=519, grass=500, food=1550, year=1
+— day 490: camp=11, entities=522, grass=500, food=1547, year=1
+— day 495: camp=8, entities=531, grass=500, food=1554, year=1
+— day 500: camp=10, entities=519, grass=500, food=1554, year=1
+— day 505: camp=11, entities=522, grass=500, food=1548, year=1
+— day 510: camp=12, entities=535, grass=500, food=1545, year=1
+— day 515: camp=13, entities=523, grass=500, food=1553, year=1
+— day 520: camp=13, entities=526, grass=500, food=1551, year=1
+— day 525: camp=14, entities=537, grass=500, food=1545, year=1
+— day 530: camp=14, entities=523, grass=500, food=1550, year=1
+— day 535: camp=14, entities=525, grass=500, food=1551, year=1
+— day 540: camp=13, entities=536, grass=500, food=1561, year=1
+— day 545: camp=12, entities=521, grass=500, food=1557, year=1
+— day 550: camp=14, entities=526, grass=500, food=1559, year=1
+— day 555: camp=15, entities=538, grass=500, food=1560, year=1
+— day 560: camp=16, entities=526, grass=500, food=1558, year=1
+— day 565: camp=16, entities=527, grass=500, food=1554, year=1
+— day 570: camp=14, entities=537, grass=500, food=1558, year=1
+— day 575: camp=15, entities=524, grass=500, food=1559, year=1
+— day 580: camp=15, entities=526, grass=500, food=1555, year=1
+— day 585: camp=15, entities=538, grass=500, food=1554, year=1
+— day 590: camp=15, entities=524, grass=500, food=1557, year=1
+— day 595: camp=13, entities=524, grass=500, food=1557, year=1
+— day 600: camp=14, entities=537, grass=500, food=1553, year=1
+— day 605: camp=15, entities=524, grass=500, food=1552, year=1
+— day 610: camp=17, entities=528, grass=500, food=1554, year=1
+— day 615: camp=18, entities=541, grass=500, food=1549, year=1
+— day 620: camp=20, entities=529, grass=500, food=1533, year=1
+— day 625: camp=21, entities=532, grass=500, food=1524, year=1
+— day 630: camp=23, entities=546, grass=500, food=1514, year=1
+— day 635: camp=26, entities=535, grass=500, food=1549, year=1
+— day 640: camp=25, entities=536, grass=500, food=1557, year=1
+— day 645: camp=23, entities=546, grass=500, food=1556, year=1
+— day 650: camp=24, entities=533, grass=500, food=1557, year=1
+— day 655: camp=24, entities=534, grass=500, food=1558, year=1
+— day 660: camp=24, entities=547, grass=500, food=1557, year=1
+— day 665: camp=22, entities=531, grass=500, food=1559, year=1
+— day 670: camp=20, entities=530, grass=500, food=1563, year=1
+— day 675: camp=20, entities=543, grass=500, food=1561, year=1
+— day 680: camp=21, entities=530, grass=500, food=1560, year=1
+— day 685: camp=18, entities=529, grass=500, food=1563, year=1
+— day 690: camp=18, entities=541, grass=500, food=1563, year=1
+— day 695: camp=18, entities=527, grass=500, food=1568, year=1
+— day 700: camp=19, entities=531, grass=500, food=1560, year=1
+— day 705: camp=20, entities=543, grass=500, food=1561, year=1
+— day 710: camp=19, entities=529, grass=500, food=1564, year=1
+— day 715: camp=19, entities=530, grass=500, food=1567, year=1
+— day 720: camp=17, entities=541, grass=500, food=1552, year=2
+— day 725: camp=20, entities=525, grass=500, food=1547, year=2
+— day 730: camp=21, entities=533, grass=500, food=1553, year=2
+— day 735: camp=20, entities=544, grass=500, food=1555, year=2
+— day 740: camp=21, entities=532, grass=500, food=1547, year=2
+— day 745: camp=21, entities=532, grass=500, food=1550, year=2
+— day 750: camp=21, entities=544, grass=500, food=1552, year=2
+— day 755: camp=21, entities=530, grass=500, food=1553, year=2
+— day 760: camp=22, entities=533, grass=500, food=1545, year=2
+— day 765: camp=21, entities=544, grass=500, food=1548, year=2
+— day 770: camp=20, entities=529, grass=500, food=1548, year=2
+— day 775: camp=19, entities=530, grass=500, food=1554, year=2
+— day 780: camp=18, entities=541, grass=500, food=1547, year=2
+— day 785: camp=16, entities=524, grass=500, food=1552, year=2
+— day 790: camp=13, entities=525, grass=500, food=1559, year=2
+— day 795: camp=12, entities=535, grass=500, food=1563, year=2
+— day 800: camp=10, entities=519, grass=500, food=1561, year=2
+— day 805: camp=8, entities=519, grass=500, food=1561, year=2
+— day 810: camp=7, entities=530, grass=500, food=1557, year=2
+— day 815: camp=8, entities=532, grass=509, food=1555, year=2
+— day 820: camp=8, entities=536, grass=502, food=1554, year=2
+— day 825: camp=6, entities=558, grass=499, food=1555, year=2
+— day 830: camp=7, entities=583, grass=511, food=1556, year=2
+— day 835: camp=8, entities=582, grass=500, food=1554, year=2
+— day 840: camp=6, entities=533, grass=504, food=1554, year=2
+— day 845: camp=6, entities=519, grass=503, food=1555, year=2
+— day 850: camp=8, entities=522, grass=503, food=1552, year=2
+— day 855: camp=6, entities=531, grass=502, food=1557, year=2
+— day 860: camp=7, entities=520, grass=501, food=1556, year=2
+— day 865: camp=7, entities=522, grass=500, food=1555, year=2
+— day 870: camp=7, entities=541, grass=511, food=1555, year=2
+— day 875: camp=7, entities=526, grass=508, food=1553, year=2
+— day 880: camp=8, entities=529, grass=507, food=1555, year=2
+— day 885: camp=9, entities=534, grass=502, food=1550, year=2
+— day 890: camp=10, entities=517, grass=500, food=1555, year=2
+— day 895: camp=10, entities=534, grass=512, food=1551, year=2
+— day 900: camp=8, entities=534, grass=503, food=1556, year=2
+— day 905: camp=8, entities=532, grass=498, food=1564, year=2
+— day 910: camp=9, entities=564, grass=506, food=1562, year=2
+— day 915: camp=9, entities=552, grass=505, food=1560, year=2
+— day 920: camp=10, entities=533, grass=500, food=1564, year=2
+— day 925: camp=10, entities=522, grass=500, food=1560, year=2
+— day 930: camp=11, entities=534, grass=500, food=1560, year=2
+— day 935: camp=11, entities=520, grass=500, food=1560, year=2
+— day 940: camp=14, entities=526, grass=500, food=1560, year=2
+— day 945: camp=15, entities=538, grass=500, food=1555, year=2
+— day 950: camp=14, entities=523, grass=500, food=1556, year=2
+— day 955: camp=13, entities=525, grass=500, food=1555, year=2
+— day 960: camp=11, entities=542, grass=508, food=1562, year=2
+— day 965: camp=11, entities=527, grass=507, food=1558, year=2
+— day 970: camp=12, entities=531, grass=507, food=1563, year=2
+— day 975: camp=11, entities=541, grass=507, food=1564, year=2
+— day 980: camp=12, entities=528, grass=507, food=1564, year=2
+— day 985: camp=13, entities=531, grass=507, food=1557, year=2
+— day 990: camp=13, entities=543, grass=507, food=1569, year=2
+— day 995: camp=12, entities=527, grass=506, food=1572, year=2
+— day 1000: camp=13, entities=529, grass=506, food=1572, year=2
+— day 1005: camp=11, entities=540, grass=506, food=1572, year=2
+— day 1010: camp=15, entities=530, grass=506, food=1567, year=2
+— day 1015: camp=14, entities=531, grass=506, food=1571, year=2
+— day 1020: camp=15, entities=544, grass=506, food=1570, year=2
+— day 1025: camp=13, entities=528, grass=506, food=1566, year=2
+— day 1030: camp=12, entities=530, grass=503, food=1571, year=2
+— day 1035: camp=13, entities=536, grass=500, food=1570, year=2
+— day 1040: camp=13, entities=522, grass=500, food=1568, year=2
+— day 1045: camp=14, entities=527, grass=500, food=1570, year=2
+— day 1050: camp=13, entities=537, grass=501, food=1574, year=2
+— day 1055: camp=14, entities=531, grass=501, food=1568, year=2
+— day 1060: camp=16, entities=528, grass=501, food=1561, year=2
+— day 1065: camp=16, entities=540, grass=501, food=1566, year=2
+— day 1070: camp=15, entities=525, grass=501, food=1569, year=2
+— day 1075: camp=17, entities=529, grass=501, food=1567, year=2
+— day 1080: camp=16, entities=540, grass=501, food=1554, year=3
+— day 1085: camp=16, entities=525, grass=501, food=1555, year=3
+— day 1090: camp=15, entities=528, grass=501, food=1556, year=3
+— day 1095: camp=15, entities=540, grass=501, food=1556, year=3
+— day 1100: camp=17, entities=531, grass=500, food=1555, year=3
+— day 1105: camp=17, entities=528, grass=500, food=1549, year=3
+— day 1110: camp=18, entities=541, grass=500, food=1551, year=3
+— day 1115: camp=17, entities=526, grass=500, food=1554, year=3
+— day 1120: camp=17, entities=528, grass=500, food=1554, year=3
+— day 1125: camp=16, entities=539, grass=500, food=1554, year=3
+— day 1130: camp=17, entities=526, grass=500, food=1553, year=3
+— day 1135: camp=16, entities=528, grass=500, food=1555, year=3
+— day 1140: camp=17, entities=540, grass=500, food=1552, year=3
+— day 1145: camp=17, entities=526, grass=500, food=1556, year=3
+— day 1150: camp=16, entities=528, grass=500, food=1559, year=3
+— day 1155: camp=18, entities=541, grass=500, food=1555, year=3
+— day 1160: camp=18, entities=527, grass=500, food=1554, year=3
+— day 1165: camp=17, entities=528, grass=500, food=1550, year=3
+— day 1170: camp=20, entities=543, grass=500, food=1545, year=3
+— day 1175: camp=20, entities=529, grass=500, food=1543, year=3
+— day 1180: camp=20, entities=531, grass=500, food=1545, year=3
+— day 1185: camp=24, entities=547, grass=500, food=1536, year=3
+— day 1190: camp=24, entities=533, grass=500, food=1537, year=3
+— day 1195: camp=21, entities=532, grass=500, food=1541, year=3
+— day 1200: camp=22, entities=545, grass=500, food=1543, year=3
+— day 1205: camp=21, entities=530, grass=500, food=1546, year=3
+— day 1210: camp=19, entities=530, grass=500, food=1547, year=3
+— day 1215: camp=20, entities=543, grass=500, food=1541, year=3
+— day 1220: camp=20, entities=531, grass=500, food=1545, year=3
+— day 1225: camp=21, entities=531, grass=500, food=1545, year=3
+— day 1230: camp=23, entities=546, grass=500, food=1545, year=3
+— day 1235: camp=21, entities=532, grass=500, food=1542, year=3
+— day 1240: camp=23, entities=535, grass=500, food=1542, year=3
+— day 1245: camp=22, entities=545, grass=500, food=1532, year=3
+— day 1250: camp=16, entities=526, grass=500, food=1523, year=3
+— day 1255: camp=16, entities=527, grass=500, food=1493, year=3
+— day 1260: camp=14, entities=537, grass=500, food=1475, year=3
+— day 1265: camp=11, entities=521, grass=500, food=1518, year=3
+— day 1270: camp=11, entities=533, grass=508, food=1561, year=3
+— day 1275: camp=10, entities=537, grass=504, food=1560, year=3
+— day 1280: camp=10, entities=522, grass=503, food=1564, year=3
+— day 1285: camp=10, entities=524, grass=503, food=1559, year=3
+— day 1290: camp=7, entities=534, grass=503, food=1565, year=3
+— day 1295: camp=7, entities=519, grass=502, food=1566, year=3
+— day 1300: camp=7, entities=520, grass=501, food=1567, year=3
+— day 1305: camp=7, entities=532, grass=501, food=1562, year=3
+— day 1310: camp=7, entities=518, grass=501, food=1564, year=3
+— day 1315: camp=5, entities=515, grass=499, food=1567, year=3
+— day 1320: camp=5, entities=530, grass=502, food=1569, year=3
+— day 1325: camp=6, entities=515, grass=500, food=1565, year=3
+— day 1330: camp=7, entities=522, grass=504, food=1564, year=3
+— day 1335: camp=7, entities=530, grass=500, food=1566, year=3
+— day 1340: camp=8, entities=518, grass=500, food=1564, year=3
+— day 1345: camp=9, entities=524, grass=500, food=1560, year=3
+— day 1350: camp=7, entities=535, grass=505, food=1575, year=3
+— day 1355: camp=7, entities=520, grass=502, food=1577, year=3
+— day 1360: camp=10, entities=521, grass=500, food=1574, year=3
+— day 1365: camp=10, entities=532, grass=499, food=1572, year=3
+— day 1370: camp=10, entities=522, grass=502, food=1572, year=3
+— day 1375: camp=10, entities=524, grass=501, food=1574, year=3
+— day 1380: camp=10, entities=532, grass=499, food=1573, year=3
+— day 1385: camp=11, entities=521, grass=501, food=1573, year=3
+— day 1390: camp=12, entities=522, grass=500, food=1571, year=3
+— day 1395: camp=12, entities=534, grass=499, food=1575, year=3
+— day 1400: camp=14, entities=523, grass=500, food=1571, year=3
+— day 1405: camp=15, entities=527, grass=501, food=1567, year=3
+— day 1410: camp=15, entities=537, grass=499, food=1572, year=3
+— day 1415: camp=16, entities=524, grass=499, food=1565, year=3
+— day 1420: camp=19, entities=529, grass=499, food=1568, year=3
+— day 1425: camp=21, entities=545, grass=501, food=1561, year=3
+— day 1430: camp=24, entities=533, grass=500, food=1560, year=3
+— day 1435: camp=25, entities=537, grass=501, food=1558, year=3
+— day 1440: camp=27, entities=550, grass=500, food=1586, year=4
+— day 1445: camp=29, entities=538, grass=500, food=1546, year=4
+— day 1450: camp=31, entities=543, grass=500, food=1538, year=4
+— day 1455: camp=27, entities=573, grass=523, food=1547, year=4
+— day 1460: camp=27, entities=559, grass=523, food=1546, year=4
+— day 1465: camp=28, entities=561, grass=522, food=1540, year=4
+— day 1470: camp=31, entities=575, grass=521, food=1544, year=4
+— day 1475: camp=32, entities=561, grass=520, food=1542, year=4
+— day 1480: camp=31, entities=560, grass=518, food=1531, year=4
+— day 1485: camp=31, entities=571, grass=517, food=1528, year=4
+— day 1490: camp=30, entities=556, grass=517, food=1526, year=4
+— day 1495: camp=31, entities=559, grass=517, food=1537, year=4
+— day 1500: camp=31, entities=571, grass=517, food=1537, year=4
+— day 1505: camp=33, entities=558, grass=516, food=1540, year=4
+— day 1510: camp=35, entities=562, grass=516, food=1532, year=4
+— day 1515: camp=32, entities=571, grass=516, food=1539, year=4
+— day 1520: camp=33, entities=558, grass=516, food=1521, year=4
+— day 1525: camp=31, entities=557, grass=515, food=1525, year=4
+— day 1530: camp=29, entities=565, grass=513, food=1534, year=4
+— day 1535: camp=28, entities=549, grass=512, food=1521, year=4
+— day 1540: camp=30, entities=552, grass=511, food=1500, year=4
+— day 1545: camp=32, entities=563, grass=508, food=1487, year=4
+— day 1550: camp=28, entities=545, grass=508, food=1480, year=4
+— day 1555: camp=27, entities=542, grass=504, food=1482, year=4
+— day 1560: camp=26, entities=552, grass=503, food=1481, year=4
+— day 1565: camp=28, entities=540, grass=502, food=1419, year=4
+— day 1570: camp=28, entities=551, grass=512, food=1342, year=4
+— day 1575: camp=28, entities=560, grass=509, food=1298, year=4
+— day 1580: camp=27, entities=544, grass=508, food=1263, year=4
+— day 1585: camp=26, entities=543, grass=506, food=1248, year=4
+— day 1590: camp=24, entities=551, grass=504, food=1228, year=4
+— day 1595: camp=25, entities=536, grass=502, food=1211, year=4
+— day 1600: camp=24, entities=537, grass=502, food=1197, year=4
+— day 1605: camp=24, entities=548, grass=501, food=1319, year=4
+— day 1610: camp=23, entities=533, grass=501, food=1416, year=4
+— day 1615: camp=19, entities=530, grass=500, food=1520, year=4
+— day 1620: camp=18, entities=541, grass=500, food=1551, year=4
+— day 1625: camp=18, entities=527, grass=500, food=1548, year=4
+— day 1630: camp=17, entities=532, grass=503, food=1555, year=4
+— day 1635: camp=18, entities=540, grass=499, food=1555, year=4
+— day 1640: camp=18, entities=535, grass=507, food=1556, year=4
+— day 1645: camp=18, entities=536, grass=507, food=1556, year=4
+— day 1650: camp=20, entities=550, grass=507, food=1552, year=4
+— day 1655: camp=17, entities=533, grass=507, food=1557, year=4
+— day 1660: camp=18, entities=535, grass=506, food=1556, year=4
+— day 1665: camp=19, entities=546, grass=503, food=1549, year=4
+— day 1670: camp=22, entities=533, grass=502, food=1545, year=4
+— day 1675: camp=22, entities=535, grass=501, food=1547, year=4
+— day 1680: camp=21, entities=547, grass=503, food=1549, year=4
+— day 1685: camp=24, entities=533, grass=500, food=1538, year=4
+— day 1690: camp=24, entities=538, grass=503, food=1542, year=4
+— day 1695: camp=24, entities=547, grass=500, food=1546, year=4
+— day 1700: camp=20, entities=534, grass=505, food=1549, year=4
+— day 1705: camp=19, entities=534, grass=503, food=1548, year=4
+— day 1710: camp=18, entities=542, grass=501, food=1561, year=4
+— day 1715: camp=18, entities=526, grass=499, food=1566, year=4
+— day 1720: camp=18, entities=528, grass=499, food=1564, year=4
+— day 1725: camp=19, entities=544, grass=502, food=1561, year=4
+— day 1730: camp=18, entities=528, grass=501, food=1563, year=4
+— day 1735: camp=18, entities=530, grass=501, food=1567, year=4
+— day 1740: camp=18, entities=541, grass=500, food=1564, year=4
+— day 1745: camp=18, entities=527, grass=500, food=1564, year=4
+— day 1750: camp=20, entities=531, grass=500, food=1561, year=4
+— day 1755: camp=18, entities=540, grass=499, food=1565, year=4
+— day 1760: camp=18, entities=527, grass=500, food=1565, year=4
+— day 1765: camp=17, entities=531, grass=503, food=1564, year=4
+— day 1770: camp=15, entities=540, grass=502, food=1568, year=4
+— day 1775: camp=15, entities=524, grass=500, food=1565, year=4
+— day 1780: camp=16, entities=528, grass=501, food=1567, year=4
+— day 1785: camp=16, entities=539, grass=500, food=1563, year=4
+— day 1790: camp=15, entities=524, grass=500, food=1567, year=4
+— day 1795: camp=16, entities=527, grass=500, food=1566, year=4
+— day 1800: camp=18, entities=541, grass=500, food=1555, year=5
+— day 1805: camp=16, entities=549, grass=524, food=1551, year=5
+— day 1810: camp=16, entities=550, grass=523, food=1553, year=5
+— day 1815: camp=19, entities=562, grass=520, food=1549, year=5
+— day 1820: camp=17, entities=546, grass=520, food=1556, year=5
+— day 1825: camp=19, entities=548, grass=517, food=1556, year=5
+— day 1830: camp=19, entities=559, grass=517, food=1555, year=5
+— day 1835: camp=20, entities=543, grass=515, food=1554, year=5
+— day 1840: camp=21, entities=547, grass=515, food=1547, year=5
+— day 1845: camp=21, entities=558, grass=514, food=1535, year=5
+— day 1850: camp=23, entities=544, grass=512, food=1515, year=5
+— day 1855: camp=22, entities=545, grass=512, food=1505, year=5
+— day 1860: camp=23, entities=558, grass=512, food=1489, year=5
+— day 1865: camp=26, entities=548, grass=512, food=1465, year=5
+— day 1870: camp=28, entities=551, grass=512, food=1433, year=5
+— day 1875: camp=25, entities=560, grass=512, food=1407, year=5
+— day 1880: camp=24, entities=545, grass=512, food=1389, year=5
+— day 1885: camp=23, entities=546, grass=512, food=1372, year=5
+— day 1890: camp=24, entities=559, grass=512, food=1351, year=5
+— day 1895: camp=26, entities=546, grass=511, food=1294, year=5
+— day 1900: camp=24, entities=545, grass=510, food=1247, year=5
+— day 1905: camp=26, entities=559, grass=510, food=1232, year=5
+— day 1910: camp=27, entities=546, grass=510, food=1216, year=5
+— day 1915: camp=22, entities=542, grass=509, food=1219, year=5
+— day 1920: camp=23, entities=554, grass=508, food=1233, year=5
+— day 1925: camp=22, entities=539, grass=508, food=1262, year=5
+— day 1930: camp=21, entities=540, grass=508, food=1277, year=5
+— day 1935: camp=22, entities=553, grass=508, food=1295, year=5
+— day 1940: camp=21, entities=538, grass=507, food=1294, year=5
+— day 1945: camp=19, entities=537, grass=507, food=1309, year=5
+— day 1950: camp=20, entities=548, grass=505, food=1324, year=5
+— day 1955: camp=20, entities=536, grass=505, food=1474, year=5
+— day 1960: camp=22, entities=540, grass=505, food=1538, year=5
+— day 1965: camp=24, entities=550, grass=503, food=1542, year=5
+— day 1970: camp=21, entities=533, grass=502, food=1545, year=5
+— day 1975: camp=20, entities=532, grass=502, food=1549, year=5
+— day 1980: camp=21, entities=546, grass=502, food=1552, year=5
+— day 1985: camp=20, entities=530, grass=501, food=1576, year=5
+— day 1990: camp=21, entities=533, grass=501, food=1572, year=5
+— day 1995: camp=22, entities=546, grass=501, food=1566, year=5
+— day 2000: camp=22, entities=532, grass=501, food=1562, year=5
+— day 2005: camp=19, entities=532, grass=501, food=1551, year=5
+— day 2010: camp=18, entities=542, grass=501, food=1554, year=5
+— day 2015: camp=17, entities=527, grass=501, food=1555, year=5
+— day 2020: camp=14, entities=526, grass=501, food=1557, year=5
+— day 2025: camp=15, entities=538, grass=500, food=1555, year=5
+— day 2030: camp=17, entities=533, grass=506, food=1558, year=5
+— day 2035: camp=16, entities=533, grass=506, food=1558, year=5
+— day 2040: camp=18, entities=547, grass=506, food=1551, year=5
+— day 2045: camp=19, entities=534, grass=506, food=1552, year=5
+— day 2050: camp=20, entities=537, grass=506, food=1552, year=5
+— day 2055: camp=19, entities=547, grass=505, food=1555, year=5
+— day 2060: camp=19, entities=534, grass=505, food=1556, year=5
+— day 2065: camp=18, entities=533, grass=504, food=1556, year=5
+— day 2070: camp=18, entities=545, grass=504, food=1559, year=5
+— day 2075: camp=18, entities=529, grass=502, food=1560, year=5
+— day 2080: camp=19, entities=532, grass=502, food=1566, year=5
+— day 2085: camp=19, entities=544, grass=502, food=1563, year=5
+— day 2090: camp=20, entities=531, grass=502, food=1565, year=5
+— day 2095: camp=15, entities=527, grass=502, food=1567, year=5
+— day 2100: camp=15, entities=540, grass=502, food=1567, year=5
+— day 2105: camp=16, entities=527, grass=502, food=1564, year=5
+— day 2110: camp=16, entities=529, grass=501, food=1568, year=5
+— day 2115: camp=15, entities=540, grass=502, food=1566, year=5
+— day 2120: camp=17, entities=528, grass=502, food=1565, year=5
+— day 2125: camp=16, entities=528, grass=499, food=1564, year=5
+— day 2130: camp=15, entities=538, grass=500, food=1567, year=5
+— day 2135: camp=15, entities=523, grass=500, food=1564, year=5
+— day 2140: camp=14, entities=524, grass=499, food=1570, year=5
+— day 2145: camp=13, entities=536, grass=500, food=1567, year=5
+— day 2150: camp=13, entities=521, grass=500, food=1572, year=5
+— day 2155: camp=13, entities=525, grass=499, food=1569, year=5
+— day 2160: camp=14, entities=536, grass=499, food=1556, year=6
+— day 2165: camp=14, entities=542, grass=518, food=1558, year=6
+— day 2170: camp=15, entities=544, grass=517, food=1557, year=6
+— day 2175: camp=14, entities=553, grass=516, food=1558, year=6
+— day 2180: camp=13, entities=538, grass=515, food=1560, year=6
+— day 2185: camp=14, entities=540, grass=513, food=1557, year=6
+— day 2190: camp=16, entities=546, grass=507, food=1557, year=6
+— day 2195: camp=13, entities=534, grass=503, food=1560, year=6
+— day 2200: camp=13, entities=541, grass=512, food=1562, year=6
+— day 2205: camp=14, entities=546, grass=509, food=1560, year=6
+— day 2210: camp=16, entities=533, grass=504, food=1561, year=6
+— day 2215: camp=17, entities=532, grass=501, food=1559, year=6
+— day 2220: camp=16, entities=553, grass=514, food=1559, year=6
+— day 2225: camp=19, entities=539, grass=511, food=1558, year=6
+— day 2230: camp=17, entities=536, grass=506, food=1554, year=6
+— day 2235: camp=18, entities=545, grass=504, food=1559, year=6
+— day 2240: camp=19, entities=532, grass=503, food=1552, year=6
+— day 2245: camp=17, entities=551, grass=519, food=1554, year=6
+— day 2250: camp=23, entities=565, grass=519, food=1541, year=6
+— day 2255: camp=23, entities=549, grass=517, food=1544, year=6
+— day 2260: camp=21, entities=544, grass=511, food=1542, year=6
+— day 2265: camp=22, entities=555, grass=510, food=1537, year=6
+— day 2270: camp=21, entities=534, grass=504, food=1540, year=6
+— day 2275: camp=22, entities=533, grass=500, food=1538, year=6
+— day 2280: camp=20, entities=555, grass=512, food=1546, year=6
+— day 2285: camp=19, entities=539, grass=510, food=1545, year=6
+— day 2290: camp=17, entities=534, grass=506, food=1521, year=6
+— day 2295: camp=17, entities=545, grass=505, food=1519, year=6
+— day 2300: camp=17, entities=529, grass=503, food=1516, year=6
+— day 2305: camp=16, entities=527, grass=500, food=1522, year=6
+— day 2310: camp=16, entities=542, grass=503, food=1538, year=6
+— day 2315: camp=16, entities=530, grass=503, food=1549, year=6
+— day 2320: camp=17, entities=548, grass=511, food=1543, year=6
+— day 2325: camp=16, entities=557, grass=505, food=1547, year=6
+— day 2330: camp=17, entities=526, grass=500, food=1548, year=6
+— day 2335: camp=19, entities=543, grass=513, food=1533, year=6
+— day 2340: camp=19, entities=555, grass=513, food=1524, year=6
+— day 2345: camp=17, entities=539, grass=513, food=1554, year=6
+— day 2350: camp=19, entities=539, grass=509, food=1556, year=6
+— day 2355: camp=21, entities=552, grass=508, food=1546, year=6
+— day 2360: camp=22, entities=539, grass=508, food=1550, year=6
+— day 2365: camp=23, entities=540, grass=505, food=1508, year=6
+— day 2370: camp=23, entities=549, grass=503, food=1551, year=6
+— day 2375: camp=25, entities=534, grass=501, food=1544, year=6
+— day 2380: camp=25, entities=536, grass=500, food=1552, year=6
+— day 2385: camp=27, entities=552, grass=502, food=1548, year=6
+— day 2390: camp=29, entities=542, grass=504, food=1547, year=6
+— day 2395: camp=33, entities=545, grass=501, food=1537, year=6
+— day 2400: camp=34, entities=556, grass=499, food=1536, year=6
+— day 2405: camp=34, entities=544, grass=501, food=1540, year=6
+— day 2410: camp=35, entities=552, grass=506, food=1529, year=6
+— day 2415: camp=34, entities=559, grass=502, food=1537, year=6
+— day 2420: camp=31, entities=538, grass=498, food=1524, year=6
+— day 2425: camp=32, entities=547, grass=503, food=1511, year=6
+— day 2430: camp=35, entities=561, grass=503, food=1481, year=6
+— day 2435: camp=34, entities=544, grass=501, food=1496, year=6
+— day 2440: camp=36, entities=547, grass=500, food=1520, year=6
+— day 2445: camp=36, entities=558, grass=499, food=1534, year=6
+— day 2450: camp=35, entities=545, grass=501, food=1556, year=6
+— day 2455: camp=37, entities=549, grass=501, food=1541, year=6
+— day 2460: camp=35, entities=558, grass=500, food=1503, year=6
+— day 2465: camp=34, entities=542, grass=499, food=1506, year=6
+— day 2470: camp=31, entities=543, grass=501, food=1499, year=6
+— day 2475: camp=31, entities=554, grass=500, food=1508, year=6
+— day 2480: camp=30, entities=538, grass=499, food=1504, year=6
+— day 2485: camp=32, entities=544, grass=501, food=1512, year=6
+— day 2490: camp=30, entities=554, grass=501, food=1527, year=6
+— day 2495: camp=32, entities=540, grass=499, food=1548, year=6
+— day 2500: camp=33, entities=545, grass=501, food=1553, year=6
+— day 2505: camp=33, entities=556, grass=500, food=1549, year=6
+— day 2510: camp=35, entities=541, grass=497, food=1547, year=6
+— day 2515: camp=37, entities=548, grass=500, food=1538, year=6
+— day 2520: camp=37, entities=557, grass=497, food=1536, year=7
+— day 2525: camp=38, entities=557, grass=510, food=1524, year=7
+— day 2530: camp=40, entities=558, grass=507, food=1531, year=7
+— day 2535: camp=38, entities=564, grass=503, food=1456, year=7
+— day 2540: camp=40, entities=549, grass=500, food=1393, year=7
+— day 2545: camp=41, entities=552, grass=500, food=1327, year=7
+— day 2550: camp=42, entities=593, grass=528, food=1267, year=7
+— day 2555: camp=42, entities=577, grass=526, food=1251, year=7
+— day 2560: camp=41, entities=577, grass=525, food=1208, year=7
+— day 2565: camp=41, entities=587, grass=523, food=1180, year=7
+— day 2570: camp=40, entities=569, grass=520, food=1146, year=7
+— day 2575: camp=40, entities=571, grass=520, food=1119, year=7
+— day 2580: camp=37, entities=577, grass=517, food=1099, year=7
+— day 2585: camp=38, entities=559, grass=512, food=1048, year=7
+— day 2590: camp=39, entities=560, grass=509, food=986, year=7
+— day 2595: camp=38, entities=566, grass=505, food=935, year=7
+— day 2600: camp=36, entities=549, grass=504, food=893, year=7
+— day 2605: camp=32, entities=546, grass=501, food=898, year=7
+— day 2610: camp=33, entities=570, grass=514, food=898, year=7
+— day 2615: camp=34, entities=553, grass=510, food=877, year=7
+— day 2620: camp=31, entities=552, grass=507, food=841, year=7
+— day 2625: camp=30, entities=556, grass=503, food=828, year=7
+— day 2630: camp=31, entities=541, grass=501, food=821, year=7
+— day 2635: camp=27, entities=547, grass=509, food=826, year=7
+— day 2640: camp=29, entities=558, grass=506, food=827, year=7
+— day 2645: camp=27, entities=539, grass=503, food=843, year=7
+— day 2650: camp=26, entities=538, grass=501, food=855, year=7
+— day 2655: camp=25, entities=555, grass=507, food=883, year=7
+— day 2660: camp=21, entities=539, grass=506, food=909, year=7
+— day 2665: camp=20, entities=534, grass=503, food=949, year=7
+— day 2670: camp=21, entities=545, grass=501, food=988, year=7
+— day 2675: camp=19, entities=536, grass=507, food=1033, year=7
+— day 2680: camp=18, entities=535, grass=506, food=1087, year=7
+— day 2685: camp=20, entities=547, grass=504, food=1141, year=7
+— day 2690: camp=21, entities=532, grass=502, food=1189, year=7
+— day 2695: camp=20, entities=543, grass=512, food=1247, year=7
+— day 2700: camp=19, entities=550, grass=508, food=1309, year=7
+— day 2705: camp=21, entities=536, grass=507, food=1395, year=7
+— day 2710: camp=22, entities=539, grass=505, food=1459, year=7
+— day 2715: camp=20, entities=546, grass=503, food=1542, year=7
+— day 2720: camp=22, entities=531, grass=500, food=1554, year=7
+— day 2725: camp=23, entities=540, grass=505, food=1551, year=7
+— day 2730: camp=24, entities=550, grass=502, food=1550, year=7
+— day 2735: camp=24, entities=535, grass=501, food=1524, year=7
+— day 2740: camp=27, entities=538, grass=500, food=1485, year=7
+— day 2745: camp=26, entities=549, grass=500, food=1443, year=7
+— day 2750: camp=30, entities=542, grass=503, food=1412, year=7
+— day 2755: camp=30, entities=543, grass=502, food=1505, year=7
+— day 2760: camp=30, entities=552, grass=499, food=1545, year=7
+— day 2765: camp=30, entities=546, grass=507, food=1543, year=7
+— day 2770: camp=31, entities=547, grass=505, food=1538, year=7
+— day 2775: camp=32, entities=559, grass=504, food=1542, year=7
+— day 2780: camp=32, entities=545, grass=504, food=1515, year=7
+— day 2785: camp=33, entities=547, grass=503, food=1497, year=7
+— day 2790: camp=31, entities=556, grass=502, food=1481, year=7
+— day 2795: camp=29, entities=539, grass=501, food=1549, year=7
+— day 2800: camp=29, entities=541, grass=501, food=1552, year=7
+— day 2805: camp=28, entities=551, grass=500, food=1556, year=7
+— day 2810: camp=33, entities=542, grass=500, food=1554, year=7
+— day 2815: camp=36, entities=547, grass=500, food=1553, year=7
+— day 2820: camp=35, entities=559, grass=501, food=1549, year=7
+— day 2825: camp=33, entities=541, grass=499, food=1555, year=7
+— day 2830: camp=34, entities=546, grass=501, food=1555, year=7
+— day 2835: camp=36, entities=559, grass=500, food=1550, year=7
+— day 2840: camp=36, entities=544, grass=499, food=1509, year=7
+— day 2845: camp=36, entities=546, grass=499, food=1504, year=7
+— day 2850: camp=36, entities=560, grass=501, food=1475, year=7
+— day 2855: camp=38, entities=547, grass=500, food=1447, year=7
+— day 2860: camp=41, entities=552, grass=500, food=1392, year=7
+— day 2865: camp=39, entities=562, grass=500, food=1350, year=7
+— day 2870: camp=40, entities=552, grass=501, food=1326, year=7
+— day 2875: camp=41, entities=551, grass=499, food=1278, year=7
+— day 2880: camp=40, entities=563, grass=500, food=1240, year=8
+— day 2885: camp=41, entities=550, grass=500, food=1181, year=8
+— day 2890: camp=41, entities=576, grass=524, food=1124, year=8
+— day 2895: camp=40, entities=587, grass=523, food=1062, year=8
+— day 2900: camp=35, entities=566, grass=522, food=1015, year=8
+— day 2905: camp=35, entities=568, grass=521, food=1108, year=8
+— day 2910: camp=29, entities=573, grass=521, food=1192, year=8
+— day 2915: camp=29, entities=559, grass=521, food=1295, year=8
+— day 2920: camp=29, entities=559, grass=519, food=1383, year=8
+— day 2925: camp=30, entities=570, grass=517, food=1479, year=8
+— day 2930: camp=32, entities=558, grass=517, food=1531, year=8
+— day 2935: camp=31, entities=558, grass=516, food=1498, year=8
+— day 2940: camp=33, entities=572, grass=516, food=1470, year=8
+— day 2945: camp=32, entities=556, grass=515, food=1465, year=8
+— day 2950: camp=34, entities=560, grass=515, food=1428, year=8
+— day 2955: camp=35, entities=573, grass=515, food=1403, year=8
+— day 2960: camp=34, entities=555, grass=512, food=1364, year=8
+— day 2965: camp=33, entities=557, grass=512, food=1334, year=8
+— day 2970: camp=36, entities=571, grass=512, food=1286, year=8
+— day 2975: camp=35, entities=554, grass=510, food=1242, year=8
+— day 2980: camp=30, entities=550, grass=509, food=1207, year=8
+— day 2985: camp=30, entities=562, grass=509, food=1196, year=8
+— day 2990: camp=29, entities=547, grass=509, food=1190, year=8
+— day 2995: camp=27, entities=546, grass=508, food=1200, year=8
+— day 3000: camp=27, entities=557, grass=507, food=1223, year=8

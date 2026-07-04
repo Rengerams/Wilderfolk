@@ -1,0 +1,221 @@
+---
+pid: 6496
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "cd D:\\Kimi_Agent_Update_Building_Background_Colors\\app && npm run simulate:10year"
+started_at: 2026-07-04T19:22:05.700Z
+running_for_ms: 6670007  
+---
+
+> wilderfolk@0.4.1 simulate:10year
+> node scripts/run-sim.mjs scripts/simulate-10year.ts
+
+=== Wilderfolk 10-year balance simulation ===
+Ticks: 86400 (10 game years) | Wall time: 425.2s
+Calendar: Year 10, Day 0 | Total days: 3600
+Map: 1600×1200 (large)
+
+--- Year-by-year snapshots ---
+Y1 tick=8640 | pop=35 | food=2539 wood=1500 stone=1100 gold=6936 | eco=9% (≥80% streak=0y) | rep=100 | militia=823 barricade=764 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=30 raids=0 dip=0 | visitors=0 rivals=0 deaths=125
+Y2 tick=17280 | pop=35 | food=2542 wood=1700 stone=1300 gold=19738 | eco=2% (≥80% streak=0y) | rep=100 | militia=823 barricade=764 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=33 raids=0 dip=0 | visitors=1 rivals=0 deaths=286
+Y3 tick=25920 | pop=38 | food=2538 wood=1700 stone=1300 gold=33943 | eco=0% (≥80% streak=0y) | rep=100 | militia=920 barricade=846 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=36 raids=0 dip=0 | visitors=0 rivals=0 deaths=465
+Y4 tick=34560 | pop=44 | food=2534 wood=1700 stone=1300 gold=46657 | eco=0% (≥80% streak=0y) | rep=100 | militia=1065 barricade=969 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=37 raids=0 dip=0 | visitors=0 rivals=0 deaths=664
+Y5 tick=43200 | pop=53 | food=2566 wood=1700 stone=1300 gold=60282 | eco=0% (≥80% streak=0y) | rep=100 | militia=1234 barricade=1113 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=38 raids=0 dip=0 | visitors=0 rivals=0 deaths=881
+Y6 tick=51840 | pop=59 | food=2574 wood=1700 stone=1300 gold=74590 | eco=0% (≥80% streak=0y) | rep=100 | militia=1428 barricade=1278 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=39 raids=0 dip=0 | visitors=1 rivals=0 deaths=1137
+Y7 tick=60480 | pop=65 | food=2515 wood=1698 stone=1300 gold=87489 | eco=0% (≥80% streak=0y) | rep=67 | militia=1525 barricade=1360 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=39 raids=0 dip=0 | visitors=0 rivals=0 deaths=1360
+Y8 tick=69120 | pop=56 | food=2574 wood=1700 stone=1300 gold=99999 | eco=0% (≥80% streak=0y) | rep=97 | militia=1258 barricade=1133 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=39 raids=0 dip=0 | visitors=1 rivals=0 deaths=1607
+Y9 tick=77760 | pop=57 | food=2528 wood=1687 stone=1300 gold=99999 | eco=0% (≥80% streak=0y) | rep=100 | militia=1379 barricade=1236 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=39 raids=0 dip=0 | visitors=0 rivals=0 deaths=1845
+Y10 tick=86400 | pop=56 | food=2527 wood=1700 stone=1300 gold=99999 | eco=0% (≥80% streak=0y) | rep=100 | militia=1307 barricade=1175 (iron/iron) guards=0 | grazing=stable (undefined% pressure) | buildings=39 raids=0 dip=0 | visitors=1 rivals=0 deaths=2086
+
+--- Winter entry snapshots ---
+Winter Y0 day=270 | pop=34 | food=2558 wood=1463 stone=1100 gold=4855 | eco=9% | militia=823 barricade=764 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y1 day=270 | pop=33 | food=2556 wood=1659 stone=1300 gold=16296 | eco=2% | militia=774 barricade=722 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y2 day=270 | pop=40 | food=2540 wood=1656 stone=1300 gold=30403 | eco=0% | militia=895 barricade=825 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y3 day=270 | pop=46 | food=2541 wood=1652 stone=1300 gold=43605 | eco=0% | militia=1065 barricade=969 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y4 day=270 | pop=52 | food=2537 wood=1649 stone=1300 gold=57206 | eco=0% | militia=1234 barricade=1113 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y5 day=270 | pop=48 | food=2536 wood=1648 stone=1300 gold=70955 | eco=0% | militia=1089 barricade=990 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y6 day=270 | pop=57 | food=2536 wood=1646 stone=1300 gold=84001 | eco=0% | militia=1331 barricade=1195 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y7 day=270 | pop=53 | food=2541 wood=1647 stone=1300 gold=97435 | eco=0% | militia=1258 barricade=1133 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y8 day=270 | pop=56 | food=2536 wood=1647 stone=1300 gold=99999 | eco=0% | militia=1355 barricade=1216 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Winter Y9 day=270 | pop=53 | food=2534 wood=1647 stone=1300 gold=99999 | eco=0% | militia=1258 barricade=1133 (iron/iron) guards=0 | grazing=stable (undefined% pressure)
+Min food observed during winter days: 2517
+
+--- End state — population ---
+Camp population: 56 (adults 54, children 2)
+Village leader id: 30710 | last election year: 10
+Player deaths (event log): 2086
+
+--- End state — village & frontier ---
+Completed buildings: 39
+Building types placed: house, farm, lumberMill, barn, well, quarry, silo, workshop, store, blacksmith, church, road, tamingPost, mine, wall, greenhouse, wallCorner, wallGate, watchtower, market, barracks, school, hospital, prison, mansion, mill, townHall
+Resources: food=2527 wood=1700 stone=1300 gold=99999
+Reputation: 100 | Ecosystem: 0% | eco≥80% years: 0
+Wildlife: rabbits=0 deer=0 wolves=0 grass=502
+Militia: militia=1307 barricade=1175 (iron/iron) guards=0 | raw strength=1307 barricade=1175
+Forge: spears=true shields=true active=none
+Researched: agriculture_1, agriculture_2, agriculture_3, mining_1, mining_2, forestry_1, forestry_2, architecture_1, architecture_2, medicine_1, medicine_2, trade_1, trade_2, education_1, education_2, defense_1, defense_2, defense_3, defense_4, defense_5
+Rivals (0): none
+
+--- Event totals ---
+Combat events: 0 | Trade events: 21 | Research events: 24
+Diplomacy responses: 0 | Raid responses: 0
+Marriages: 851 | Births: 940
+
+--- Option coverage ---
+buildings: 27/27 tested ✓
+diplomacy_tribute: 0/3 tested — missing: pay, negotiate, refuse
+diplomacy_border_dispute: 0/3 tested — missing: concede, stand_firm, militia
+diplomacy_alliance: 0/3 tested — missing: accept, decline, counter
+diplomacy_peace_treaty: 0/3 tested — missing: sign, decline, tribute
+raid_response: 0/3 tested — missing: defend, barricade, payoff
+rival_action: 0/5 tested — missing: gift, trade_pact, show_strength, peace_treaty, counter_raid
+visitor_trade: 3/3 tested ✓
+refugee: 0/3 tested — missing: welcome, screen, turn_away
+visitor_talk: 4/7 tested — missing: hunters, performers, refugees
+forge: 2/2 tested ✓
+research: 20/20 tested ✓
+
+--- Performance ---
+Tick cost: avg=4.42ms p50=3.55ms p95=9.49ms max=292.29ms
+Budget @ 60fps: 16.7ms/tick | @ 10×: 1.67ms/tick
+  tick 8640: 2.57ms | humans=35 alive=558
+  tick 17280: 2.74ms | humans=35 alive=565
+  tick 25920: 2.40ms | humans=38 alive=565
+  tick 34560: 4.58ms | humans=44 alive=567
+  tick 43200: 5.21ms | humans=53 alive=576
+  tick 51840: 5.26ms | humans=59 alive=585
+  tick 60480: 8.77ms | humans=65 alive=588
+  tick 69120: 4.04ms | humans=56 alive=582
+  tick 77760: 6.28ms | humans=57 alive=582
+  tick 86400: 6.87ms | humans=56 alive=587
+
+--- Balance gates ---
+PASS — Reached year 10 (year=10)
+PASS — Population alive (pop=56)
+PASS — Food stockpile > 0 (food=2527)
+FAIL — Ecosystem > 30% (eco=0%)
+PASS — Perf p95 < 16ms (p95=9.49ms)
+
+Untested options (8 categories with gaps):
+  diplomacy_tribute: 0/3 tested — missing: pay, negotiate, refuse
+  diplomacy_border_dispute: 0/3 tested — missing: concede, stand_firm, militia
+  diplomacy_alliance: 0/3 tested — missing: accept, decline, counter
+  diplomacy_peace_treaty: 0/3 tested — missing: sign, decline, tribute
+  raid_response: 0/3 tested — missing: defend, barricade, payoff
+  rival_action: 0/5 tested — missing: gift, trade_pact, show_strength, peace_treaty, counter_raid
+  refugee: 0/3 tested — missing: welcome, screen, turn_away
+  visitor_talk: 4/7 tested — missing: hunters, performers, refugees
+
+--- Player action log ---
+tick 1 [scheduled] Build House A OK
+tick 0 [research] start:defense_2 OK
+tick 0 [visitor_talk] traders OK
+tick 0 [visitor_trade] buy_food OK
+tick 1 [visitor_trade] buy_wood OK
+tick 2 [visitor_trade] sell_food OK
+tick 24 [scheduled] Build Farm OK
+tick 48 [scheduled] Build Lumber Mill OK
+tick 47 [buildings] place:barn OK
+tick 72 [scheduled] Build Well OK
+tick 96 [scheduled] Build Quarry OK
+tick 95 [buildings] place:silo OK
+tick 100 [research] start:forestry_1 OK
+tick 120 [scheduled] Recruit settler OK
+tick 132 [scheduled] Recruit settler OK
+tick 143 [buildings] place:workshop OK
+tick 191 [buildings] place:store OK
+tick 200 [scheduled] Build House B OK
+tick 200 [research] start:defense_1 OK
+tick 239 [buildings] place:blacksmith OK
+tick 287 [buildings] place:church OK
+tick 300 [research] start:mining_1 OK
+tick 320 [scheduled] Build Silo OK
+tick 335 [buildings] place:road OK
+tick 383 [buildings] place:tamingPost OK
+tick 400 [research] start:agriculture_1 OK
+tick 431 [buildings] place:mine OK
+tick 440 [scheduled] Build Barn OK
+tick 479 [buildings] place:wall OK
+tick 500 [scheduled] Year-1 resource grant OK
+tick 500 [research] start:defense_3 OK
+tick 527 [buildings] place:greenhouse OK
+tick 575 [buildings] place:wallCorner OK
+tick 600 [research] start:trade_1 OK
+tick 623 [buildings] place:wallGate OK
+tick 671 [buildings] place:watchtower OK
+tick 700 [research] start:education_1 OK
+tick 719 [buildings] place:market OK
+tick 767 [buildings] place:barracks OK
+tick 800 [research] start:medicine_1 OK
+tick 815 [buildings] place:school OK
+tick 877 [research] start:architecture_1 OK
+tick 911 [buildings] place:hospital OK
+tick 954 [research] start:defense_4 OK
+tick 959 [buildings] place:prison OK
+tick 1007 [buildings] place:mansion OK
+tick 1031 [research] start:defense_5 OK
+tick 1031 [forge] queue:iron_spears OK
+tick 1108 [research] start:agriculture_2 OK
+tick 1159 [forge] queue:iron_shields OK
+tick 1185 [research] start:forestry_2 OK
+tick 1199 [buildings] place:mill OK
+tick 1262 [research] start:mining_2 OK
+tick 1339 [research] start:architecture_2 OK
+tick 1416 [research] start:trade_2 OK
+tick 1439 [buildings] place:townHall OK
+tick 1493 [research] start:agriculture_3 OK
+tick 1570 [research] start:medicine_2 OK
+tick 1656 [research] start:education_2 OK
+tick 8688 [scheduled] Build Workshop OK
+tick 8840 [scheduled] Build Store OK
+tick 9040 [scheduled] Build Church OK
+tick 9140 [scheduled] Recruit settler OK
+tick 9152 [scheduled] Recruit settler OK
+tick 9164 [scheduled] Recruit settler OK
+tick 9240 [scheduled] Year-2 resource grant OK
+tick 12963 [visitor_talk] scholars OK
+tick 17280 [visitor_talk] scholars OK
+tick 17380 [scheduled] Build House C OK
+tick 17580 [scheduled] Build Road OK
+tick 17780 [scheduled] Build Taming Post OK
+tick 17980 [scheduled] Year-3 resource grant OK
+tick 21602 [visitor_talk] pilgrims OK
+tick 26120 [scheduled] Build House D OK
+tick 26320 [scheduled] Recruit settler OK
+tick 26332 [scheduled] Recruit settler OK
+tick 30245 [visitor_talk] nomads OK
+tick 30245 [visitor_trade] buy_food OK
+tick 30246 [visitor_trade] buy_food OK
+tick 30247 [visitor_trade] buy_food OK
+tick 34660 [scheduled] Build House E OK
+tick 34860 [scheduled] Year-5 resource grant OK
+tick 35060 [scheduled] Recruit settler OK
+tick 35072 [scheduled] Recruit settler OK
+tick 38882 [visitor_talk] pilgrims OK
+tick 43400 [scheduled] Build House F OK
+tick 47521 [visitor_talk] pilgrims OK
+tick 51840 [scheduled] Year-7 resource grant OK
+tick 51840 [visitor_talk] scholars OK
+tick 52040 [scheduled] Recruit settler OK
+tick 52052 [scheduled] Recruit settler OK
+tick 56160 [visitor_talk] nomads OK
+tick 56160 [visitor_trade] buy_food OK
+tick 56161 [visitor_trade] buy_food OK
+tick 56162 [visitor_trade] buy_food OK
+tick 64803 [visitor_talk] traders OK
+tick 64803 [visitor_trade] buy_food OK
+tick 64804 [visitor_trade] buy_food OK
+tick 64805 [visitor_trade] buy_food OK
+tick 69120 [scheduled] Year-9 resource grant OK
+tick 69120 [visitor_talk] scholars OK
+tick 69420 [scheduled] Recruit settler OK
+tick 69432 [scheduled] Recruit settler OK
+tick 73448 [visitor_talk] nomads OK
+tick 73448 [visitor_trade] buy_food OK
+tick 73449 [visitor_trade] buy_food OK
+tick 73450 [visitor_trade] buy_food OK
+tick 82086 [visitor_talk] traders OK
+tick 82086 [visitor_trade] buy_food OK
+tick 82087 [visitor_trade] buy_food OK
+tick 82088 [visitor_trade] buy_food OK
+
+[simulate-10year] Log written to D:\Kimi_Agent_Update_Building_Background_Colors\app\scripts\logs\sim-10year-2026-07-04T19-29-12-514Z.txt

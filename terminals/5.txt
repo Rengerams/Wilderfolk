@@ -1,0 +1,13 @@
+---
+pid: 8272
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "cd \"D:\\Kimi_Agent_Update_Building_Background_Colors\\app\" && npx vite --port 5173 --host 127.0.0.1 2>&1"
+started_at: 2026-07-04T14:53:09.292Z
+running_for_ms: 22815000 
+---
+
+  VITE v7.3.5  ready in 841 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+16:53:26 [vite] vite.config.ts changed, restarting server...
+16:53:27 [vite] server restarted.

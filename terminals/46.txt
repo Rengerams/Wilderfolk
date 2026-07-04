@@ -1,0 +1,596 @@
+---
+pid: 8952
+cwd: "D:\Kimi_Agent_Update_Building_Background_Colors"
+command: "Set-Location D:\\Kimi_Agent_Update_Building_Background_Colors\\app; $env:PROGRESS_EVERY='8640'; npm run simulate:10year"
+started_at: 2026-07-04T19:51:05.677Z
+running_for_ms: 4929994  
+---
+
+> wilderfolk@0.4.1 simulate:10year
+> node scripts/run-sim.mjs scripts/simulate-10year.ts
+
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 86400 ticks (10 game years) | map 1600×1200
+Progress every 8640 ticks (~360 game days)
+
+  → inject tick 4000: spawn_rival:OakHaven[tense]
+  → inject tick 5000: spawn_visitor:hunters
+  → inject tick 5500: spawn_visitor:performers
+  → inject tick 6000: spawn_visitor:refugees
+  📋 Pre-winter Y0 day 250 | pop=56/53 beds=32 food=2513 (44.9/cap) wood=1500 buffer=125d need=1080
+  ❄ Winter Y0 day 270 ENTER | pop=51/51 beds=32 food=2526 wood=1456 need=11/d (990 total) buffer=132d eco=10.375%
+  → inject tick 8000: diplomacy:tribute
+  → inject tick 8300: diplomacy:tribute
+  → inject tick 8600: diplomacy:tribute
+[10.0%] Year 1 tick 8640 | +75s ETA ~676s | YEAR END | pop=52 food=2527 wood=1500 stone=1100 gold=7833 eco=7% rep=93 | buildings=30 rivals=1 deaths=158
+  ❄ Winter Y0 EXIT PASS | minFood=2506 minWood=1450 netLoss=0 heatingFail=0d
+[10.0%] Y1 day 360 tick 8640 | +75s ETA ~676s | pop=52/52 beds=32 food=2527 wood=1500 eco=7% | raids=0 dip=0 | avg 5.01ms/tick
+  → scheduled tick 8688: Build Workshop
+  → scheduled tick 8840: Build Store
+  → scheduled tick 9040: Build Church
+  → scheduled tick 9140: Recruit settler
+  → scheduled tick 9152: Recruit settler
+  → scheduled tick 9164: Recruit settler
+  → scheduled tick 9240: Year-2 resource grant
+  → inject tick 10000: diplomacy:border_dispute
+  → inject tick 10300: diplomacy:border_dispute
+  → inject tick 10600: diplomacy:border_dispute
+  → inject tick 12000: diplomacy:alliance
+  → inject tick 12300: diplomacy:alliance
+  → inject tick 12600: diplomacy:alliance
+  → inject tick 14000: diplomacy:peace_treaty
+  → inject tick 14300: diplomacy:peace_treaty
+  → inject tick 14600: diplomacy:peace_treaty
+  📋 Pre-winter Y1 day 250 | pop=56/61 beds=44 food=2526 (45.1/cap) wood=1700 buffer=141d need=1080
+  ❄ Winter Y1 day 270 ENTER | pop=58/62 beds=44 food=2539 wood=1646 need=12/d (1080 total) buffer=137d eco=0%
+[20.0%] Year 2 tick 17280 | +117s ETA ~467s | YEAR END | pop=63 food=2526 wood=1661 stone=1300 gold=22140 eco=0% rep=100 | buildings=35 rivals=1 deaths=398
+  ❄ Winter Y1 EXIT PASS | minFood=2524 minWood=1602 netLoss=0 heatingFail=0d
+[20.0%] Y2 day 720 tick 17280 | +117s ETA ~467s | pop=63/65 beds=44 food=2526 wood=1661 eco=0% | raids=0 dip=0 | avg 4.53ms/tick
+  → scheduled tick 17380: Build House C
+  → scheduled tick 17580: Build Road
+  → scheduled tick 17780: Build Taming Post
+  → scheduled tick 17980: Year-3 resource grant
+  → inject tick 18000: spawn_visitor:hunters
+  → inject tick 22000: spawn_visitor:performers
+  📋 Pre-winter Y2 day 250 | pop=75/82 beds=62 food=1730 (23.1/cap) wood=1700 buffer=113d need=1350
+  ❄ Winter Y2 day 270 ENTER | pop=75/78 beds=62 food=1560 wood=1637 need=15/d (1350 total) buffer=109d eco=0%
+[30.0%] Year 3 tick 25920 | +231s ETA ~538s | YEAR END | pop=68 food=2194 wood=756 stone=1300 gold=36217 eco=0% rep=18 | buildings=40 rivals=1 deaths=720
+  ❄ Winter Y2 EXIT PASS | minFood=1560 minWood=696 netLoss=7 heatingFail=0d
+[30.0%] Y3 day 1080 tick 25920 | +231s ETA ~538s | pop=68/74 beds=62 food=2194 wood=756 eco=0% | raids=0 dip=0 | avg 12.80ms/tick
+  → inject tick 26000: spawn_visitor:refugees
+  → scheduled tick 26120: Build House D
+  → scheduled tick 26320: Recruit settler
+  → scheduled tick 26332: Recruit settler
+  📋 Pre-winter Y3 day 250 | pop=89/93 beds=80 food=1742 (19.6/cap) wood=1700 buffer=94d need=1620
+  ❄ Winter Y3 day 270 ENTER | pop=87/95 beds=80 food=1822 wood=1628 need=18/d (1620 total) buffer=90d eco=0%
+[40.0%] Year 4 tick 34560 | +424s ETA ~635s | YEAR END | pop=89 food=1516 wood=209 stone=1300 gold=49771 eco=0% rep=10 | buildings=43 rivals=2 deaths=1064
+  ❄ Winter Y3 EXIT PASS | minFood=1546 minWood=144 netLoss=0 heatingFail=0d
+[40.0%] Y4 day 1440 tick 34560 | +424s ETA ~635s | pop=89/92 beds=80 food=1516 wood=209 eco=0% | raids=0 dip=0 | avg 21.90ms/tick
+  → scheduled tick 34660: Build House E
+  → scheduled tick 34860: Year-5 resource grant
+  → scheduled tick 35060: Recruit settler
+  → scheduled tick 35072: Recruit settler
+  📋 Pre-winter Y4 day 250 | pop=54/115 beds=98 food=2506 (46.4/cap) wood=1700 buffer=154d need=990
+  ❄ Winter Y4 day 270 ENTER | pop=62/117 beds=98 food=2522 wood=1625 need=13/d (1170 total) buffer=125d eco=0%
+  → scheduled tick 43200: Year-5 resource grant
+[50.0%] Year 5 tick 43200 | +493s ETA ~493s | YEAR END | pop=66 food=2600 wood=1700 stone=1300 gold=65393 eco=0% rep=8 | buildings=46 rivals=2 deaths=1390
+  ❄ Winter Y4 EXIT PASS | minFood=2504 minWood=308 netLoss=0 heatingFail=0d
+[50.0%] Y5 day 1800 tick 43200 | +493s ETA ~493s | pop=66/115 beds=98 food=2600 wood=1700 eco=0% | raids=0 dip=0 | avg 7.53ms/tick
+  → scheduled tick 43350: Build House F
+  → scheduled tick 43430: Build House G
+  → scheduled tick 43600: Recruit settler
+  → scheduled tick 43612: Recruit settler
+  📋 Pre-winter Y5 day 250 | pop=97/129 beds=110 food=1360 (14.0/cap) wood=1700 buffer=85d need=1800
+  ❄ Winter Y5 day 270 ENTER | pop=105/130 beds=110 food=1657 wood=1613 need=21/d (1890 total) buffer=76d eco=0%
+  → scheduled tick 51840: Year-6 resource grant
+[60.0%] Year 6 tick 51840 | +648s ETA ~432s | YEAR END | pop=109 food=1002 wood=1467 stone=1300 gold=81051 eco=0% rep=0 | buildings=50 rivals=2 deaths=1766
+  ❄ Winter Y5 EXIT FAIL | minFood=8 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter
+[60.0%] Y6 day 2160 tick 51840 | +648s ETA ~432s | pop=109/139 beds=122 food=1002 wood=1467 eco=0% | raids=0 dip=0 | avg 17.37ms/tick
+  → scheduled tick 51990: Build House H
+  → scheduled tick 52070: Build House I
+  → scheduled tick 52240: Recruit settler
+  → scheduled tick 52252: Recruit settler
+  📋 Pre-winter Y6 day 250 | pop=84/153 beds=134 food=1517 (18.1/cap) wood=1700 buffer=100d need=1530
+  ❄ Winter Y6 day 270 ENTER | pop=84/153 beds=134 food=1412 wood=1609 need=17/d (1530 total) buffer=94d eco=0%
+  → scheduled tick 60480: Year-7 resource grant
+[70.0%] Year 7 tick 60480 | +753s ETA ~323s | YEAR END | pop=98 food=1790 wood=1582 stone=1300 gold=95118 eco=0% rep=54 | buildings=52 rivals=2 deaths=2140
+  ❄ Winter Y6 EXIT FAIL | minFood=765 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter
+[70.0%] Y7 day 2520 tick 60480 | +753s ETA ~323s | pop=98/156 beds=134 food=1790 wood=1582 eco=0% | raids=0 dip=0 | avg 11.39ms/tick
+  → scheduled tick 60630: Build House J
+  → scheduled tick 60710: Build House K
+  → scheduled tick 60880: Recruit settler
+  → scheduled tick 60892: Recruit settler
+  📋 Pre-winter Y7 day 250 | pop=97/163 beds=146 food=0 (0.0/cap) wood=1700 buffer=85d need=1800
+  ❄ Winter Y7 day 270 ENTER | pop=100/163 beds=146 food=0 wood=1602 need=20/d (1800 total) buffer=80d eco=0%
+  → scheduled tick 69120: Year-8 resource grant
+[80.0%] Year 8 tick 69120 | +903s ETA ~226s | YEAR END | pop=103 food=2331 wood=1700 stone=1300 gold=99999 eco=0% rep=0 | buildings=54 rivals=2 deaths=2582
+  ❄ Winter Y7 EXIT FAIL | minFood=0 minWood=0 netLoss=0 heatingFail=0d — starvation (min food=0); wood stockpile depleted during winter; thin food buffer (0.0 food/cap at day 250)
+[80.0%] Y8 day 2880 tick 69120 | +903s ETA ~226s | pop=103/163 beds=146 food=2331 wood=1700 eco=0% | raids=0 dip=0 | avg 16.79ms/tick
+  → scheduled tick 69270: Build House L
+  → scheduled tick 69350: Build House M
+  → scheduled tick 69520: Recruit settler
+  → scheduled tick 69532: Recruit settler
+  📋 Pre-winter Y8 day 250 | pop=79/175 beds=158 food=38 (0.5/cap) wood=1700 buffer=106d need=1440
+  ❄ Winter Y8 day 270 ENTER | pop=81/175 beds=158 food=67 wood=1601 need=17/d (1530 total) buffer=94d eco=0%
+  → scheduled tick 77760: Year-9 resource grant
+[90.0%] Year 9 tick 77760 | +1046s ETA ~116s | YEAR END | pop=114 food=1514 wood=1686 stone=1300 gold=99999 eco=0% rep=0 | buildings=56 rivals=2 deaths=3011
+  ❄ Winter Y8 EXIT FAIL | minFood=10 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter; thin food buffer (0.5 food/cap at day 250)
+[90.0%] Y9 day 3240 tick 77760 | +1046s ETA ~116s | pop=114/175 beds=158 food=1514 wood=1686 eco=0% | raids=0 dip=0 | avg 15.85ms/tick
+  → scheduled tick 77910: Build House N
+  → scheduled tick 77990: Build House O
+  → scheduled tick 78160: Recruit settler
+  → scheduled tick 78172: Recruit settler
+  📋 Pre-winter Y9 day 250 | pop=75/187 beds=170 food=1844 (24.6/cap) wood=1700 buffer=113d need=1350
+  ❄ Winter Y9 day 270 ENTER | pop=81/187 beds=170 food=1623 wood=1598 need=17/d (1530 total) buffer=94d eco=0%
+[100.0%] Year 10 tick 86400 | +1169s ETA ~0s | YEAR END | pop=87 food=2376 wood=41 stone=1300 gold=99999 eco=0% rep=0 | buildings=58 rivals=2 deaths=3431
+  ❄ Winter Y9 EXIT FAIL | minFood=1377 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter
+[100.0%] Y10 day 3600 tick 86400 | +1169s ETA ~0s | pop=87/187 beds=170 food=2376 wood=41 eco=0% | raids=0 dip=0 | avg 12.89ms/tick
+
+✓ Simulation complete in 1168.4s
+
+✗ VERDICT: FAIL — 10-year town balance test (6 gate failures)
+
+=== Final report ===
+=== Wilderfolk 10-year balance simulation (live) ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Target: 86400 ticks (10 game years) | map 1600×1200
+Progress every 8640 ticks (~360 game days)
+
+  → inject tick 4000: spawn_rival:OakHaven[tense]
+  → inject tick 5000: spawn_visitor:hunters
+  → inject tick 5500: spawn_visitor:performers
+  → inject tick 6000: spawn_visitor:refugees
+  📋 Pre-winter Y0 day 250 | pop=56/53 beds=32 food=2513 (44.9/cap) wood=1500 buffer=125d need=1080
+  ❄ Winter Y0 day 270 ENTER | pop=51/51 beds=32 food=2526 wood=1456 need=11/d (990 total) buffer=132d eco=10.375%
+  → inject tick 8000: diplomacy:tribute
+  → inject tick 8300: diplomacy:tribute
+  → inject tick 8600: diplomacy:tribute
+[10.0%] Year 1 tick 8640 | +75s ETA ~676s | YEAR END | pop=52 food=2527 wood=1500 stone=1100 gold=7833 eco=7% rep=93 | buildings=30 rivals=1 deaths=158
+  ❄ Winter Y0 EXIT PASS | minFood=2506 minWood=1450 netLoss=0 heatingFail=0d
+[10.0%] Y1 day 360 tick 8640 | +75s ETA ~676s | pop=52/52 beds=32 food=2527 wood=1500 eco=7% | raids=0 dip=0 | avg 5.01ms/tick
+  → scheduled tick 8688: Build Workshop
+  → scheduled tick 8840: Build Store
+  → scheduled tick 9040: Build Church
+  → scheduled tick 9140: Recruit settler
+  → scheduled tick 9152: Recruit settler
+  → scheduled tick 9164: Recruit settler
+  → scheduled tick 9240: Year-2 resource grant
+  → inject tick 10000: diplomacy:border_dispute
+  → inject tick 10300: diplomacy:border_dispute
+  → inject tick 10600: diplomacy:border_dispute
+  → inject tick 12000: diplomacy:alliance
+  → inject tick 12300: diplomacy:alliance
+  → inject tick 12600: diplomacy:alliance
+  → inject tick 14000: diplomacy:peace_treaty
+  → inject tick 14300: diplomacy:peace_treaty
+  → inject tick 14600: diplomacy:peace_treaty
+  📋 Pre-winter Y1 day 250 | pop=56/61 beds=44 food=2526 (45.1/cap) wood=1700 buffer=141d need=1080
+  ❄ Winter Y1 day 270 ENTER | pop=58/62 beds=44 food=2539 wood=1646 need=12/d (1080 total) buffer=137d eco=0%
+[20.0%] Year 2 tick 17280 | +117s ETA ~467s | YEAR END | pop=63 food=2526 wood=1661 stone=1300 gold=22140 eco=0% rep=100 | buildings=35 rivals=1 deaths=398
+  ❄ Winter Y1 EXIT PASS | minFood=2524 minWood=1602 netLoss=0 heatingFail=0d
+[20.0%] Y2 day 720 tick 17280 | +117s ETA ~467s | pop=63/65 beds=44 food=2526 wood=1661 eco=0% | raids=0 dip=0 | avg 4.53ms/tick
+  → scheduled tick 17380: Build House C
+  → scheduled tick 17580: Build Road
+  → scheduled tick 17780: Build Taming Post
+  → scheduled tick 17980: Year-3 resource grant
+  → inject tick 18000: spawn_visitor:hunters
+  → inject tick 22000: spawn_visitor:performers
+  📋 Pre-winter Y2 day 250 | pop=75/82 beds=62 food=1730 (23.1/cap) wood=1700 buffer=113d need=1350
+  ❄ Winter Y2 day 270 ENTER | pop=75/78 beds=62 food=1560 wood=1637 need=15/d (1350 total) buffer=109d eco=0%
+[30.0%] Year 3 tick 25920 | +231s ETA ~538s | YEAR END | pop=68 food=2194 wood=756 stone=1300 gold=36217 eco=0% rep=18 | buildings=40 rivals=1 deaths=720
+  ❄ Winter Y2 EXIT PASS | minFood=1560 minWood=696 netLoss=7 heatingFail=0d
+[30.0%] Y3 day 1080 tick 25920 | +231s ETA ~538s | pop=68/74 beds=62 food=2194 wood=756 eco=0% | raids=0 dip=0 | avg 12.80ms/tick
+  → inject tick 26000: spawn_visitor:refugees
+  → scheduled tick 26120: Build House D
+  → scheduled tick 26320: Recruit settler
+  → scheduled tick 26332: Recruit settler
+  📋 Pre-winter Y3 day 250 | pop=89/93 beds=80 food=1742 (19.6/cap) wood=1700 buffer=94d need=1620
+  ❄ Winter Y3 day 270 ENTER | pop=87/95 beds=80 food=1822 wood=1628 need=18/d (1620 total) buffer=90d eco=0%
+[40.0%] Year 4 tick 34560 | +424s ETA ~635s | YEAR END | pop=89 food=1516 wood=209 stone=1300 gold=49771 eco=0% rep=10 | buildings=43 rivals=2 deaths=1064
+  ❄ Winter Y3 EXIT PASS | minFood=1546 minWood=144 netLoss=0 heatingFail=0d
+[40.0%] Y4 day 1440 tick 34560 | +424s ETA ~635s | pop=89/92 beds=80 food=1516 wood=209 eco=0% | raids=0 dip=0 | avg 21.90ms/tick
+  → scheduled tick 34660: Build House E
+  → scheduled tick 34860: Year-5 resource grant
+  → scheduled tick 35060: Recruit settler
+  → scheduled tick 35072: Recruit settler
+  📋 Pre-winter Y4 day 250 | pop=54/115 beds=98 food=2506 (46.4/cap) wood=1700 buffer=154d need=990
+  ❄ Winter Y4 day 270 ENTER | pop=62/117 beds=98 food=2522 wood=1625 need=13/d (1170 total) buffer=125d eco=0%
+  → scheduled tick 43200: Year-5 resource grant
+[50.0%] Year 5 tick 43200 | +493s ETA ~493s | YEAR END | pop=66 food=2600 wood=1700 stone=1300 gold=65393 eco=0% rep=8 | buildings=46 rivals=2 deaths=1390
+  ❄ Winter Y4 EXIT PASS | minFood=2504 minWood=308 netLoss=0 heatingFail=0d
+[50.0%] Y5 day 1800 tick 43200 | +493s ETA ~493s | pop=66/115 beds=98 food=2600 wood=1700 eco=0% | raids=0 dip=0 | avg 7.53ms/tick
+  → scheduled tick 43350: Build House F
+  → scheduled tick 43430: Build House G
+  → scheduled tick 43600: Recruit settler
+  → scheduled tick 43612: Recruit settler
+  📋 Pre-winter Y5 day 250 | pop=97/129 beds=110 food=1360 (14.0/cap) wood=1700 buffer=85d need=1800
+  ❄ Winter Y5 day 270 ENTER | pop=105/130 beds=110 food=1657 wood=1613 need=21/d (1890 total) buffer=76d eco=0%
+  → scheduled tick 51840: Year-6 resource grant
+[60.0%] Year 6 tick 51840 | +648s ETA ~432s | YEAR END | pop=109 food=1002 wood=1467 stone=1300 gold=81051 eco=0% rep=0 | buildings=50 rivals=2 deaths=1766
+  ❄ Winter Y5 EXIT FAIL | minFood=8 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter
+[60.0%] Y6 day 2160 tick 51840 | +648s ETA ~432s | pop=109/139 beds=122 food=1002 wood=1467 eco=0% | raids=0 dip=0 | avg 17.37ms/tick
+  → scheduled tick 51990: Build House H
+  → scheduled tick 52070: Build House I
+  → scheduled tick 52240: Recruit settler
+  → scheduled tick 52252: Recruit settler
+  📋 Pre-winter Y6 day 250 | pop=84/153 beds=134 food=1517 (18.1/cap) wood=1700 buffer=100d need=1530
+  ❄ Winter Y6 day 270 ENTER | pop=84/153 beds=134 food=1412 wood=1609 need=17/d (1530 total) buffer=94d eco=0%
+  → scheduled tick 60480: Year-7 resource grant
+[70.0%] Year 7 tick 60480 | +753s ETA ~323s | YEAR END | pop=98 food=1790 wood=1582 stone=1300 gold=95118 eco=0% rep=54 | buildings=52 rivals=2 deaths=2140
+  ❄ Winter Y6 EXIT FAIL | minFood=765 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter
+[70.0%] Y7 day 2520 tick 60480 | +753s ETA ~323s | pop=98/156 beds=134 food=1790 wood=1582 eco=0% | raids=0 dip=0 | avg 11.39ms/tick
+  → scheduled tick 60630: Build House J
+  → scheduled tick 60710: Build House K
+  → scheduled tick 60880: Recruit settler
+  → scheduled tick 60892: Recruit settler
+  📋 Pre-winter Y7 day 250 | pop=97/163 beds=146 food=0 (0.0/cap) wood=1700 buffer=85d need=1800
+  ❄ Winter Y7 day 270 ENTER | pop=100/163 beds=146 food=0 wood=1602 need=20/d (1800 total) buffer=80d eco=0%
+  → scheduled tick 69120: Year-8 resource grant
+[80.0%] Year 8 tick 69120 | +903s ETA ~226s | YEAR END | pop=103 food=2331 wood=1700 stone=1300 gold=99999 eco=0% rep=0 | buildings=54 rivals=2 deaths=2582
+  ❄ Winter Y7 EXIT FAIL | minFood=0 minWood=0 netLoss=0 heatingFail=0d — starvation (min food=0); wood stockpile depleted during winter; thin food buffer (0.0 food/cap at day 250)
+[80.0%] Y8 day 2880 tick 69120 | +903s ETA ~226s | pop=103/163 beds=146 food=2331 wood=1700 eco=0% | raids=0 dip=0 | avg 16.79ms/tick
+  → scheduled tick 69270: Build House L
+  → scheduled tick 69350: Build House M
+  → scheduled tick 69520: Recruit settler
+  → scheduled tick 69532: Recruit settler
+  📋 Pre-winter Y8 day 250 | pop=79/175 beds=158 food=38 (0.5/cap) wood=1700 buffer=106d need=1440
+  ❄ Winter Y8 day 270 ENTER | pop=81/175 beds=158 food=67 wood=1601 need=17/d (1530 total) buffer=94d eco=0%
+  → scheduled tick 77760: Year-9 resource grant
+[90.0%] Year 9 tick 77760 | +1046s ETA ~116s | YEAR END | pop=114 food=1514 wood=1686 stone=1300 gold=99999 eco=0% rep=0 | buildings=56 rivals=2 deaths=3011
+  ❄ Winter Y8 EXIT FAIL | minFood=10 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter; thin food buffer (0.5 food/cap at day 250)
+[90.0%] Y9 day 3240 tick 77760 | +1046s ETA ~116s | pop=114/175 beds=158 food=1514 wood=1686 eco=0% | raids=0 dip=0 | avg 15.85ms/tick
+  → scheduled tick 77910: Build House N
+  → scheduled tick 77990: Build House O
+  → scheduled tick 78160: Recruit settler
+  → scheduled tick 78172: Recruit settler
+  📋 Pre-winter Y9 day 250 | pop=75/187 beds=170 food=1844 (24.6/cap) wood=1700 buffer=113d need=1350
+  ❄ Winter Y9 day 270 ENTER | pop=81/187 beds=170 food=1623 wood=1598 need=17/d (1530 total) buffer=94d eco=0%
+[100.0%] Year 10 tick 86400 | +1169s ETA ~0s | YEAR END | pop=87 food=2376 wood=41 stone=1300 gold=99999 eco=0% rep=0 | buildings=58 rivals=2 deaths=3431
+  ❄ Winter Y9 EXIT FAIL | minFood=1377 minWood=0 netLoss=0 heatingFail=0d — wood stockpile depleted during winter
+[100.0%] Y10 day 3600 tick 86400 | +1169s ETA ~0s | pop=87/187 beds=170 food=2376 wood=41 eco=0% | raids=0 dip=0 | avg 12.89ms/tick
+
+✓ Simulation complete in 1168.4s
+=== Wilderfolk 10-year balance simulation ===
+Profile: town — Town (default balance pass)
+Targets @ Y10: pop 70–95, eco 35–60%
+Ticks: 86400 (10 game years) | Wall time: 1168.4s
+Calendar: Year 10, Day 0 | Total days: 3600
+Map: 1600×1200 (large)
+Housing: 170 beds | maxPop=187
+
+--- Year-by-year snapshots ---
+Y1 tick=8640 | pop=52 | food=2527 wood=1500 stone=1100 gold=7833 | eco=7% (≥80% streak=0y) | rep=93 | militia=1210 barricade=1093 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=30 raids=0 dip=0 | visitors=0 rivals=1 deaths=158
+Y2 tick=17280 | pop=63 | food=2526 wood=1661 stone=1300 gold=22140 | eco=0% (≥80% streak=0y) | rep=100 | militia=1525 barricade=1360 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=35 raids=0 dip=0 | visitors=1 rivals=1 deaths=398
+Y3 tick=25920 | pop=68 | food=2194 wood=756 stone=1300 gold=36217 | eco=0% (≥80% streak=0y) | rep=18 | militia=1573 barricade=1401 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=40 raids=0 dip=0 | visitors=0 rivals=1 deaths=720
+Y4 tick=34560 | pop=89 | food=1516 wood=209 stone=1300 gold=49771 | eco=0% (≥80% streak=0y) | rep=10 | militia=2057 barricade=1812 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=43 raids=0 dip=0 | visitors=0 rivals=2 deaths=1064
+Y5 tick=43200 | pop=66 | food=2600 wood=1700 stone=1300 gold=65393 | eco=0% (≥80% streak=0y) | rep=8 | militia=1549 barricade=1381 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=46 raids=0 dip=0 | visitors=0 rivals=2 deaths=1390
+Y6 tick=51840 | pop=109 | food=1002 wood=1467 stone=1300 gold=81051 | eco=0% (≥80% streak=0y) | rep=0 | militia=2565 barricade=2244 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=50 raids=0 dip=0 | visitors=0 rivals=2 deaths=1766
+Y7 tick=60480 | pop=98 | food=1790 wood=1582 stone=1300 gold=95118 | eco=0% (≥80% streak=0y) | rep=54 | militia=2275 barricade=1998 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=52 raids=0 dip=0 | visitors=0 rivals=2 deaths=2140
+Y8 tick=69120 | pop=103 | food=2331 wood=1700 stone=1300 gold=99999 | eco=0% (≥80% streak=0y) | rep=0 | militia=2323 barricade=2039 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=54 raids=0 dip=0 | visitors=1 rivals=2 deaths=2582
+Y9 tick=77760 | pop=114 | food=1514 wood=1686 stone=1300 gold=99999 | eco=0% (≥80% streak=0y) | rep=0 | militia=2662 barricade=2327 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=56 raids=0 dip=0 | visitors=0 rivals=2 deaths=3011
+Y10 tick=86400 | pop=87 | food=2376 wood=41 stone=1300 gold=99999 | eco=0% (≥80% streak=0y) | rep=0 | militia=1960 barricade=1730 (iron/iron) guards=0 | grazing=stable (0% pressure) | buildings=58 raids=0 dip=0 | visitors=0 rivals=2 deaths=3431
+
+--- Winter log (10-year test judgment) ---
+Winter Y0 | PASS
+  pre-winter day 250: pop=56/53 beds=32 food=2513 (44.9/cap) wood=1500 buffer=125d need=1080 eco=16.5%
+  entry day 270: pop=51/51 beds=32 food=2526 wood=1456 need=11/day (990 winter) buffer=132d eco=10.375%
+  during: minFood=2506 minWood=1450 netPopLoss=0 deathEvents=51 heatingFailDays=0/90
+  exit day 0: pop=52 food=2527 wood=1500 eco=7%
+Winter Y1 | PASS
+  pre-winter day 250: pop=56/61 beds=44 food=2526 (45.1/cap) wood=1700 buffer=141d need=1080 eco=0%
+  entry day 270: pop=58/62 beds=44 food=2539 wood=1646 need=12/day (1080 winter) buffer=137d eco=0%
+  during: minFood=2524 minWood=1602 netPopLoss=0 deathEvents=68 heatingFailDays=0/90
+  exit day 0: pop=63 food=2526 wood=1661 eco=0%
+Winter Y2 | PASS
+  pre-winter day 250: pop=75/82 beds=62 food=1730 (23.1/cap) wood=1700 buffer=113d need=1350 eco=0%
+  entry day 270: pop=75/78 beds=62 food=1560 wood=1637 need=15/day (1350 winter) buffer=109d eco=0%
+  during: minFood=1560 minWood=696 netPopLoss=7 deathEvents=86 heatingFailDays=0/90
+  exit day 0: pop=68 food=2194 wood=756 eco=0%
+Winter Y3 | PASS
+  pre-winter day 250: pop=89/93 beds=80 food=1742 (19.6/cap) wood=1700 buffer=94d need=1620 eco=0%
+  entry day 270: pop=87/95 beds=80 food=1822 wood=1628 need=18/day (1620 winter) buffer=90d eco=0%
+  during: minFood=1546 minWood=144 netPopLoss=0 deathEvents=84 heatingFailDays=0/90
+  exit day 0: pop=89 food=1516 wood=209 eco=0%
+Winter Y4 | PASS
+  pre-winter day 250: pop=54/115 beds=98 food=2506 (46.4/cap) wood=1700 buffer=154d need=990 eco=0%
+  entry day 270: pop=62/117 beds=98 food=2522 wood=1625 need=13/day (1170 winter) buffer=125d eco=0%
+  during: minFood=2504 minWood=308 netPopLoss=0 deathEvents=70 heatingFailDays=0/90
+  exit day 0: pop=66 food=2600 wood=1700 eco=0%
+Winter Y5 | FAIL — wood stockpile depleted during winter
+  pre-winter day 250: pop=97/129 beds=110 food=1360 (14.0/cap) wood=1700 buffer=85d need=1800 eco=0%
+  entry day 270: pop=105/130 beds=110 food=1657 wood=1613 need=21/day (1890 winter) buffer=76d eco=0%
+  during: minFood=8 minWood=0 netPopLoss=0 deathEvents=100 heatingFailDays=0/90
+  exit day 0: pop=109 food=1002 wood=1467 eco=0%
+Winter Y6 | FAIL — wood stockpile depleted during winter
+  pre-winter day 250: pop=84/153 beds=134 food=1517 (18.1/cap) wood=1700 buffer=100d need=1530 eco=0%
+  entry day 270: pop=84/153 beds=134 food=1412 wood=1609 need=17/day (1530 winter) buffer=94d eco=0%
+  during: minFood=765 minWood=0 netPopLoss=0 deathEvents=100 heatingFailDays=0/90
+  exit day 0: pop=98 food=1790 wood=1582 eco=0%
+Winter Y7 | FAIL — starvation (min food=0); wood stockpile depleted during winter; thin food buffer (0.0 food/cap at day 250)
+  pre-winter day 250: pop=97/163 beds=146 food=0 (0.0/cap) wood=1700 buffer=85d need=1800 eco=0%
+  entry day 270: pop=100/163 beds=146 food=0 wood=1602 need=20/day (1800 winter) buffer=80d eco=0%
+  during: minFood=0 minWood=0 netPopLoss=0 deathEvents=99 heatingFailDays=0/90
+  exit day 0: pop=103 food=2331 wood=1700 eco=0%
+Winter Y8 | FAIL — wood stockpile depleted during winter; thin food buffer (0.5 food/cap at day 250)
+  pre-winter day 250: pop=79/175 beds=158 food=38 (0.5/cap) wood=1700 buffer=106d need=1440 eco=0%
+  entry day 270: pop=81/175 beds=158 food=67 wood=1601 need=17/day (1530 winter) buffer=94d eco=0%
+  during: minFood=10 minWood=0 netPopLoss=0 deathEvents=82 heatingFailDays=0/90
+  exit day 0: pop=114 food=1514 wood=1686 eco=0%
+Winter Y9 | FAIL — wood stockpile depleted during winter
+  pre-winter day 250: pop=75/187 beds=170 food=1844 (24.6/cap) wood=1700 buffer=113d need=1350 eco=0%
+  entry day 270: pop=81/187 beds=170 food=1623 wood=1598 need=17/day (1530 winter) buffer=94d eco=0%
+  during: minFood=1377 minWood=0 netPopLoss=0 deathEvents=96 heatingFailDays=0/90
+  exit day 0: pop=87 food=2376 wood=41 eco=0%
+Winter summary: 5/10 winters passed
+
+--- End state  population ---
+Camp population: 87 (adults 81, children 6)
+Village leader id: 31621 | last election year: 10
+Player deaths (event log): 3431
+
+--- End state — village & frontier ---
+Completed buildings: 58
+Building types placed: house, farm, lumberMill, barn, well, quarry, silo, workshop, store, blacksmith, church, road, tamingPost, mine, wall, greenhouse, wallCorner, wallGate, watchtower, market, barracks, school, hospital, prison, mansion
+Resources: food=2376 wood=41 stone=1300 gold=99999
+Reputation: 0 | Ecosystem: 0% | eco≥80% years: 0
+Wildlife: rabbits=1 deer=0 wolves=0 grass=500
+Militia: militia=1960 barricade=1730 (iron/iron) guards=0 | raw strength=1960 barricade=1730
+Forge: spears=true shields=true active=none
+Researched: agriculture_1, agriculture_2, agriculture_3, mining_1, mining_2, forestry_1, forestry_2, architecture_1, architecture_2, medicine_1, medicine_2, trade_1, trade_2, education_1, education_2, defense_1, defense_2, defense_3, defense_4, defense_5
+Rivals (2): OakHaven[friendly pop=0]; MistHollow[friendly pop=0]
+
+--- Event totals ---
+Combat events: 1 | Trade events: 94 | Research events: 22
+Diplomacy responses: 0 | Raid responses: 0
+Marriages: 1464 | Births: 2056
+
+--- Option coverage ---
+buildings: 27/27 tested ✓
+diplomacy_tribute: 3/3 tested ✓
+diplomacy_border_dispute: 3/3 tested ✓
+diplomacy_alliance: 3/3 tested ✓
+diplomacy_peace_treaty: 3/3 tested ✓
+raid_response: 0/3 tested — missing: defend, barricade, payoff
+rival_action: 5/5 tested ✓
+visitor_trade: 3/3 tested ✓
+refugee: 3/3 tested ✓
+visitor_talk: 7/7 tested ✓
+forge: 2/2 tested ✓
+research: 20/20 tested ✓
+
+--- Performance ---
+Tick cost: avg=12.60ms p50=9.45ms p95=33.21ms max=153.97ms
+Budget @ 60fps: 16.7ms/tick | @ 10×: 1.67ms/tick
+  tick 8640: 7.33ms | humans=52 alive=576
+  tick 17280: 8.11ms | humans=63 alive=589
+  tick 25920: 8.84ms | humans=68 alive=595
+  tick 34560: 36.31ms | humans=89 alive=618
+  tick 43200: 6.51ms | humans=66 alive=589
+  tick 51840: 16.09ms | humans=109 alive=632
+  tick 60480: 18.47ms | humans=98 alive=621
+  tick 69120: 17.91ms | humans=103 alive=629
+  tick 77760: 24.69ms | humans=114 alive=637
+  tick 86400: 18.10ms | humans=87 alive=612
+
+--- Balance gates — profile: town ---
+PASS — Reached year 10 (year=10)
+PASS — Population 70–95 (pop=87)
+FAIL — Ecosystem 35–60% (eco=0%)
+PASS — Population alive (pop=87)
+PASS — Food stockpile > 0 (food=2376)
+FAIL — All winters survived (5/10 winters passed)
+FAIL — No winter starvation (min winter food across years: 0)
+FAIL — Diplomacy exercised (responses=0)
+FAIL — Raids exercised (responses=0)
+FAIL — Perf p95 < 16ms (p95=33.21ms)
+
+--- VERDICT ---
+FAIL — 10-year town balance test
+Failed 6/10 gates — see Balance gates above
+
+✗ VERDICT: FAIL — 10-year town balance test (6 gate failures)
+
+Untested options (1 categories with gaps):
+  raid_response: 0/3 tested — missing: defend, barricade, payoff
+
+--- Player action log ---
+tick 1 [scheduled] Build House A OK
+tick 0 [research] start:defense_2 OK
+tick 0 [visitor_talk] traders OK
+tick 0 [visitor_trade] buy_food OK
+tick 1 [visitor_trade] buy_wood OK
+tick 2 [visitor_trade] sell_food OK
+tick 24 [scheduled] Build Farm OK
+tick 48 [scheduled] Build Lumber Mill OK
+tick 47 [buildings] place:barn OK
+tick 72 [scheduled] Build Well OK
+tick 96 [scheduled] Build Quarry OK
+tick 95 [buildings] place:silo OK
+tick 100 [research] start:forestry_1 OK
+tick 120 [scheduled] Recruit settler OK
+tick 132 [scheduled] Recruit settler OK
+tick 143 [buildings] place:workshop OK
+tick 191 [buildings] place:store OK
+tick 200 [scheduled] Build House B OK
+tick 200 [research] start:defense_1 OK
+tick 239 [auto_growth] place:house OK — beds 6→6 pop=5
+tick 239 [buildings] place:blacksmith OK
+tick 287 [buildings] place:church OK
+tick 300 [research] start:mining_1 OK
+tick 320 [scheduled] Build Silo OK
+tick 335 [buildings] place:road OK
+tick 383 [buildings] place:tamingPost OK
+tick 400 [research] start:agriculture_1 OK
+tick 431 [buildings] place:mine OK
+tick 440 [scheduled] Build Barn OK
+tick 479 [buildings] place:wall OK
+tick 500 [scheduled] Year-1 resource grant OK
+tick 500 [research] start:defense_3 OK
+tick 527 [buildings] place:greenhouse OK
+tick 575 [buildings] place:wallCorner OK
+tick 600 [research] start:trade_1 OK
+tick 623 [buildings] place:wallGate OK
+tick 671 [buildings] place:watchtower OK
+tick 700 [research] start:education_1 OK
+tick 719 [buildings] place:market OK
+tick 767 [buildings] place:barracks OK
+tick 800 [research] start:medicine_1 OK
+tick 815 [buildings] place:school OK
+tick 877 [research] start:architecture_1 OK
+tick 911 [buildings] place:hospital OK
+tick 954 [research] start:defense_4 OK
+tick 959 [auto_growth] place:house OK — beds 18→18 pop=16
+tick 959 [buildings] place:prison OK
+tick 1007 [buildings] place:mansion OK
+tick 1031 [research] start:defense_5 OK
+tick 1031 [forge] queue:iron_spears OK
+tick 1108 [research] start:agriculture_2 OK
+tick 1159 [forge] queue:iron_shields OK
+tick 1185 [research] start:forestry_2 OK
+tick 1199 [buildings] place:mill OK
+tick 1262 [research] start:mining_2 OK
+tick 1339 [research] start:architecture_2 OK
+tick 1416 [research] start:trade_2 OK
+tick 1439 [buildings] place:townHall OK
+tick 1495 [research] start:medicine_2 OK
+tick 1591 [research] start:agriculture_3 OK
+tick 1735 [research] start:education_2 OK
+tick 4000 [inject] spawn_rival:OakHaven[tense] OK
+tick 4031 [rival_action] gift:OakHaven OK
+tick 4031 [rival_action] counter_raid:OakHaven OK
+tick 4103 [rival_action] trade_pact:OakHaven SKIP
+tick 4175 [rival_action] show_strength:OakHaven OK
+tick 4247 [rival_action] peace_treaty:OakHaven OK
+tick 4944 [diplomacy_alliance] accept OK
+tick 5000 [inject] spawn_visitor:hunters OK
+tick 4999 [visitor_talk] hunters OK
+tick 4999 [visitor_trade] buy_food OK
+tick 5000 [visitor_trade] buy_food OK
+tick 5001 [visitor_trade] buy_food OK
+tick 5500 [inject] spawn_visitor:performers OK
+tick 5499 [visitor_talk] performers OK
+tick 6000 [inject] spawn_visitor:refugees OK
+tick 6000 [visitor_talk] refugees OK
+tick 6173 [refugee] welcome OK
+tick 8000 [inject] diplomacy:tribute OK
+tick 7999 [diplomacy_tribute] pay OK
+tick 8300 [inject] diplomacy:tribute OK
+tick 8299 [diplomacy_tribute] negotiate OK
+tick 8600 [inject] diplomacy:tribute OK
+tick 8599 [diplomacy_tribute] refuse OK
+tick 8688 [scheduled] Build Workshop OK
+tick 8759 [auto_growth] place:house OK — beds 32→32 pop=49
+tick 8840 [scheduled] Build Store OK
+tick 8879 [auto_growth] place:house OK — beds 38→38 pop=46
+tick 9040 [scheduled] Build Church OK
+tick 9140 [scheduled] Recruit settler OK
+tick 9152 [scheduled] Recruit settler OK
+tick 9164 [scheduled] Recruit settler OK
+tick 9240 [scheduled] Year-2 resource grant OK
+tick 10000 [inject] diplomacy:border_dispute OK
+tick 9999 [diplomacy_border_dispute] concede OK
+tick 10300 [inject] diplomacy:border_dispute OK
+tick 10299 [diplomacy_border_dispute] stand_firm OK
+tick 10600 [inject] diplomacy:border_dispute OK
+tick 10599 [diplomacy_border_dispute] militia OK
+tick 12000 [inject] diplomacy:alliance OK
+tick 11999 [diplomacy_alliance] decline OK
+tick 12300 [inject] diplomacy:alliance OK
+tick 12299 [diplomacy_alliance] counter OK
+tick 12600 [inject] diplomacy:alliance OK
+tick 12599 [diplomacy_alliance] accept OK
+tick 12968 [visitor_talk] pilgrims OK
+tick 14000 [inject] diplomacy:peace_treaty OK
+tick 13999 [diplomacy_peace_treaty] sign OK
+tick 14300 [inject] diplomacy:peace_treaty OK
+tick 14299 [diplomacy_peace_treaty] decline OK
+tick 14600 [inject] diplomacy:peace_treaty OK
+tick 14599 [diplomacy_peace_treaty] tribute OK
+tick 17280 [visitor_talk] scholars OK
+tick 17380 [scheduled] Build House C OK
+tick 17399 [auto_growth] place:house OK — beds 50→50 pop=59
+tick 17519 [auto_growth] place:house OK — beds 56→56 pop=58
+tick 17580 [scheduled] Build Road OK
+tick 17780 [scheduled] Build Taming Post OK
+tick 17980 [scheduled] Year-3 resource grant OK
+tick 18000 [inject] spawn_visitor:hunters OK
+tick 17999 [visitor_talk] hunters OK
+tick 17999 [visitor_trade] buy_food OK
+tick 18000 [visitor_trade] buy_food OK
+tick 18001 [visitor_trade] buy_food OK
+tick 21601 [visitor_talk] nomads OK
+tick 21601 [visitor_trade] buy_food OK
+tick 21602 [visitor_trade] buy_food OK
+tick 21603 [visitor_trade] buy_food OK
+tick 22000 [inject] spawn_visitor:performers OK
+tick 21999 [visitor_talk] performers OK
+tick 26000 [inject] spawn_visitor:refugees OK
+tick 25999 [refugee] screen OK
+tick 26000 [visitor_talk] refugees OK
+tick 26039 [auto_growth] place:house OK — beds 62→62 pop=69
+tick 26120 [scheduled] Build House D OK
+tick 26320 [scheduled] Recruit settler OK
+tick 26332 [scheduled] Recruit settler OK
+tick 26519 [auto_growth] place:house OK — beds 74→74 pop=73
+tick 30240 [visitor_talk] nomads OK
+tick 30240 [visitor_trade] buy_food OK
+tick 30241 [visitor_trade] buy_food OK
+tick 30242 [visitor_trade] buy_food OK
+tick 34660 [scheduled] Build House E OK
+tick 34679 [auto_growth] place:house OK — beds 86→86 pop=88
+tick 34860 [scheduled] Year-5 resource grant OK
+tick 35060 [scheduled] Recruit settler OK
+tick 35072 [scheduled] Recruit settler OK
+tick 35280 [diplomacy_alliance] accept OK
+tick 36359 [auto_growth] place:house OK — beds 92→92 pop=92
+tick 38881 [visitor_talk] traders OK
+tick 38881 [visitor_trade] buy_food OK
+tick 38882 [visitor_trade] buy_food OK
+tick 38883 [visitor_trade] buy_food OK
+tick 43200 [scheduled] Year-5 resource grant OK
+tick 43350 [scheduled] Build House F OK
+tick 43430 [scheduled] Build House G OK
+tick 43600 [scheduled] Recruit settler OK
+tick 43612 [scheduled] Recruit settler OK
+tick 47520 [visitor_talk] performers OK
+tick 50039 [auto_growth] place:house OK — beds 110→110 pop=111
+tick 50519 [auto_growth] place:house OK — beds 116→116 pop=114
+tick 51840 [scheduled] Year-6 resource grant OK
+tick 51990 [scheduled] Build House H OK
+tick 52070 [scheduled] Build House I OK
+tick 52240 [scheduled] Recruit settler OK
+tick 52252 [scheduled] Recruit settler OK
+tick 52416 [diplomacy_alliance] accept OK
+tick 56160 [visitor_talk] performers OK
+tick 59736 [diplomacy_alliance] accept OK
+tick 60240 [diplomacy_alliance] accept OK
+tick 60480 [scheduled] Year-7 resource grant OK
+tick 60630 [scheduled] Build House J OK
+tick 60710 [scheduled] Build House K OK
+tick 60880 [scheduled] Recruit settler OK
+tick 60892 [scheduled] Recruit settler OK
+tick 61440 [diplomacy_alliance] accept OK
+tick 64801 [visitor_talk] traders OK
+tick 64801 [visitor_trade] buy_food OK
+tick 64802 [visitor_trade] buy_food OK
+tick 64803 [visitor_trade] buy_food OK
+tick 69120 [scheduled] Year-8 resource grant OK
+tick 69120 [refugee] turn_away OK
+tick 69270 [scheduled] Build House L OK
+tick 69350 [scheduled] Build House M OK
+tick 69520 [scheduled] Recruit settler OK
+tick 69532 [scheduled] Recruit settler OK
+tick 70464 [diplomacy_alliance] accept OK
+tick 73446 [visitor_talk] scholars OK
+tick 77760 [scheduled] Year-9 resource grant OK
+tick 77910 [scheduled] Build House N OK
+tick 77990 [scheduled] Build House O OK
+tick 78160 [scheduled] Recruit settler OK
+tick 78172 [scheduled] Recruit settler OK
+tick 80856 [diplomacy_alliance] accept OK
+tick 82087 [visitor_talk] pilgrims OK
+
+[simulate-10year] Log written to D:\Kimi_Agent_Update_Building_Background_Colors\app\scripts\logs\sim-10year-town-2026-07-04T20-10-35-661Z.txt
