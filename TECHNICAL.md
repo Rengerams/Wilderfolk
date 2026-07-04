@@ -543,7 +543,7 @@ CC0 assets do not require attribution.
 
 ## License / contribution
 
-Game source code: **[MIT License](LICENSE)** — Copyright (c) 2026 Autosolid.
+Game source code: **[MIT License](LICENSE)** — Copyright (c) 2026 Renffr.
 
 Bundled audio assets use separate CC-BY / CC0 terms → [Audio credits](#audio-credits).
 
