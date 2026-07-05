@@ -15,7 +15,7 @@ Living document for where the game is and where it's going.
 | **[CHANGELOG.md](CHANGELOG.md)** | Detailed change log by version |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
 
-*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). **v0.5.0** in progress: election ceremony shipped in code (playtest Year 10/20 open). Docs: [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` · in-game **More → Roadmap** → *v0.5.0 — Shipped in code*.*
+*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). **v0.5.0** in progress: half-done registry split — **FINISH** small polish in v0.5.0, **DEFER** content tracks post-0.5.0. Election ceremony shipped in code (playtest Year 10/20 open). Docs: [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` · [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) · in-game **More → Roadmap**.*
 
 ---
 
@@ -25,9 +25,9 @@ Every **🟡 Partial** item must stay on this list until we pick one:
 
 | Decision | Meaning |
 |----------|---------|
-| **FINISH** | Complete for **v0.4.2** — assigned a phase & next action |
+| **FINISH** | Complete for **v0.5.0** (or current release) — assigned P0/P1 & next action |
 | **CUT** | Remove UI/code; stop advertising it |
-| **DEFER** | Explicit later version + hidden or "coming soon" only |
+| **DEFER** | Explicit **post-0.5.0** content expansion — not a small polish gap |
 
 **Do not ship new 🟡 without adding a row to the registry below.**
 
@@ -35,21 +35,32 @@ Every **🟡 Partial** item must stay on this list until we pick one:
 
 ## 🟡 Half-done registry (do not forget)
 
+**v0.5.0 rule:** If a system already works in play and the gap is **small polish** (UI, march line, one quest chain, benchmark), **FINISH in v0.5.0**. If the gap is a **new content track** (tactical battles, disease loop, deep government), **DEFER post-0.5.0** — even when the base system is half-built.
+
+Detailed checklist → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** half-done table.
+
+### Finish in v0.5.0
+
 | Feature | What works today | What's missing | Decision | Target |
 |---------|------------------|----------------|----------|--------|
-| **Rival diplomacy** | Map camp panel, event cards, gift/pact/militia; raids + preview; **peace treaties**; Village/Frontier raid UI; distance-scaled deadline; raid march lines | Real-time map battles; full war/embassy tree | **DEFER** tactical combat | post-0.5.0 |
-| **Weapons / Blacksmith** | Research buffs; **forge queue** (`villageForge`); armament checklist; alerts + Go → Blacksmith; walls/towers/barracks; combat log panel | Militia-on-march map icons | **FINISH** balance pass | v0.4.2 |
-| **Visitor tribes** | 7 kinds, first-week caravan, camp trade, refugee negotiate, **talk to leader** (per-kind rewards) | Deeper per-kind quest chains | **DEFER** depth | post-0.5.0 |
-| **Village leadership** | Merit elections; **v0.5.0:** ceremony, incumbent record, always-in-race (shipped in code) | Deeper government decisions beyond ceremonial head | **DEFER** deep gov | post-0.5.0 |
-| **Roads** | 1.5× walk + 15% adjacency; `road_bonus` rep; **R** rotation for roads/walls/gates | Pathing still snap-based (no road-following AI) | **CUT** pathing; rotation **FINISH** ✅ | v0.4.2 |
-| **Reputation / honor** | ⭐ header badge (click → Trade) + Village tab explainer; roads rep | Reputation arc UI beyond tooltip | **FINISH** arc or defer | v0.4.2 |
-| **Worker commute** | Snap at 7am/7pm if far | No real pathing along roads | **CUT** snap is enough **or FINISH** roads pathing | v0.4.2 |
-| **Taming** | Post + food cost + follow + hunt assist | No wardogs, no UI on map for tamed pack | **DEFER** wardogs | post-0.5.0 |
-| **Hospital** | Rep + energy tweak | No disease/heal loop | **DEFER** | post-0.5.0 |
-| **Performers / festival hook** | Performers boost courtship | Festival system shallow | **DEFER** | post-0.5.0 |
-| **Rival "show militia"** | Parade eases tension; **raids** use abstract militia strength + war-band march; walls/towers/barracks bonuses; guard patrols | No tactical map battle | **DEFER** tactical combat | post-0.5.0 |
+| **Perf at ~1250 entities** | v0.4.2 throttles, maps, compaction; smooth @ 200+ humans | Spatial grid, renderer `byType`, city benchmark @ 300 + neighbors | **FINISH** | **v0.5.0** (P0) |
+| **UI at 300 pop** | Partial `React.memo` on 4 panels | Tab split, settler count denorm | **FINISH** | **v0.5.0** (P0) |
+| **Frontier combat visuals** | *(v0.4.2 shipped — see below)* | **Outgoing** counter-raid march line + militia sprites to rival camp | **FINISH** | **v0.5.0** (P1) |
+| **Reputation / honor** | *(v0.4.2 shipped — ⭐ + explainer)* | Milestone arc UI beyond tooltip | **FINISH** | **v0.5.0** (P1) |
+| **Visitor tribes** | *(v0.4.1 shipped — 7 kinds, leader talk)* | **One** multi-step quest chain (Scholars or Nomads) | **FINISH** | **v0.5.0** (P1) |
+| **Election ceremony** | Buildup, gossip, reveal, revelry, incumbent record, always-in-race (shipped in code) | Live playtest at Year 10/20 | **FINISH** playtest | **v0.5.0** (P1) |
 
-When a row hits **FINISH**, delete it from this table and move a one-liner to *Shipped in v0.4.2*.
+### Defer post-0.5.0 (content expansion)
+
+| Feature | What works today | What's missing | Decision | Target |
+|---------|------------------|----------------|----------|--------|
+| **Rival diplomacy depth** | *(v0.4.1–0.4.2 shipped — peace, raids, preview, march lines, show militia)* | Real-time tactical map battles; full war/embassy tree | **DEFER** | post-0.5.0 |
+| **Village leadership depth** | Merit elections (v0.4.1) + ceremony (v0.5 in code) | Leader perks, government decisions beyond ceremonial head | **DEFER** | post-0.5.0 |
+| **Taming** | Post + food cost + follow + hunt assist | Wardogs, tamed-pack map UI | **DEFER** | post-0.5.0 |
+| **Hospital** | Rep + energy tweak | Disease/heal loop | **DEFER** | post-0.5.0 |
+| **Performers / festivals** | Performers boost courtship | Deep festival/culture system | **DEFER** | post-0.5.0 |
+
+When a row hits **FINISH**, delete it from this table and move a one-liner to the matching shipped section: **v0.4.1 / v0.4.2** for work done before the v0.5.0 tag, **Shipped in v0.5.0** for work landing in the v0.5.0 release.
 
 ---
 
@@ -219,6 +230,19 @@ Status: ✅ Shipped · 🟡 Partial · ❌ Not started / deferred
 ### Hygiene (July 4, 2026)
 - Sanity check pass; lint **0 errors**; inspector expand via selection handlers
 
+### Half-done registry closures *(finished before v0.5.0 — removed from 🟡 table)*
+
+These were tracked as partial in older roadmaps; base scope shipped in **v0.4.1 / v0.4.2**. Only the **v0.5.0** gaps remain in the half-done registry above.
+
+| Feature | Shipped in | What closed |
+|---------|------------|-------------|
+| **Roads** | v0.4.1 + v0.4.2 | 1.5× walk, 15% adjacency, `road_bonus` rep, Infra hint; **R** rotation for roads/walls/gates. Road-following AI **CUT** — snap commute is enough |
+| **Worker commute** | v0.4 | 7am/7pm snap when far from workplace |
+| **Weapons / Blacksmith** | v0.4.2 | Forge queue, armament checklist, forge alerts, walls/towers/barracks, guard patrols, combat log. *Outgoing* militia march sprites → v0.5.0 P1 |
+| **Rival diplomacy (core)** | v0.4.1 + v0.4.2 | Camp panel, event cards, peace treaties, raids + preview, incoming march lines, show-militia parade. Tactical map battles → post-0.5.0 |
+| **Visitor tribes (core)** | v0.4.1 | 7 kinds, first-week caravan, camp trade, refugee negotiate, talk to leader. Multi-step quest chains → v0.5.0 P1 (one chain) + post-0.5.0 depth |
+| **Reputation (base UI)** | v0.4.1 + v0.4.2 | Village tab explainer, header ⭐ → Trade, roads rep tick. Milestone arc UI → v0.5.0 P1 |
+
 ### Bug-fix pass (July 4, 2026) — ~40 fixes ✅
 
 Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/check-work` PASS. Full categorized table → [CHANGELOG.md](CHANGELOG.md) → **Bug fixes — comprehensive pass**.
@@ -253,6 +277,16 @@ Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/
 
 **Tagged `v0.4.2`.** Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).
 
+## Shipped in v0.5.0 *(in code — pre-tag)*
+
+*`GAME_VERSION` still `0.4.2` until v0.5.0 exit criteria; see [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` · in-game **More → Roadmap** → *v0.5.0 — Shipped in code*.*
+
+- **Election ceremony** — gather, gossip, tension, reveal, 3-day Election Revelry (`tickElectionBuildup`, `tickElectionGossip`)
+- **Incumbent always in race** — `getElectionRaceCandidates()`
+- **Incumbent record score** — economy, scandals, village health; +8 positive cap (`getIncumbentRecordAssessment()`)
+- **Leadership UI sync** — `VillageLeadershipPanel.tsx`, focus hints, contextual tutorial
+- **Live playtest Year 10/20** — ⏳ only open election item (v0.5.0 P1)
+
 ---
 
 ## v0.4.2 scope — feature target (code largely in repo)
@@ -268,7 +302,7 @@ Everything below was the **v0.4.2** build target. Most rows are implemented loca
 | Explain weapons (research + Blacksmith, not crafting) | ✅ Done | Shipped v0.4 |
 | **Deeper tribe interaction** — trade UI, refugee negotiate, rival map ping, visitor leader talk | ✅ Done | Per-kind quest depth deferred |
 | **Peace treaties** — player sign + diplomacy events; raids blocked at peace | ✅ Done | Full war/embassy tree deferred |
-| **Village leadership** — merit elections, ceremony, incumbent record | ✅ Done | Deep government decisions deferred |
+| **Village leadership** — merit elections, founding leader, vacancy delay | ✅ Done v0.4.1 | Ceremony + record score → [v0.5.0 in code](#shipped-in-v050-in-code--pre-tag); deep gov deferred |
 | **Trade Empire + Harmony victories** — active in Goals tab | ✅ Done | |
 | **Frontier raids MVP** — defend, barricade, pay off, counter-raid | ✅ Done | Raid polish + walls/guards + combat log — see [TECHNICAL.md](TECHNICAL.md#frontier-combat--polish--gaps) |
 | **Guaranteed first-week visitor** | ✅ Done | Days 4–7 after first house |
@@ -409,7 +443,7 @@ Path B — extend existing PNG humans.
 
 ## Phase 3 — v0.5.0 *(in progress — end July 2026)*
 
-Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** — sim scale, UI split, quality gates, and architecture (Worker + canvas layers).
+Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** — sim scale, UI split, quality gates, architecture (Worker + canvas layers), and **finishing half-done polish** (counter-raid march, reputation arc, one visitor chain, election playtest).
 
 | Track | P0 focus |
 |-------|----------|
@@ -417,6 +451,7 @@ Full plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** — sim scale, UI split, 
 | **Sim Phase 2 + UI** | Incremental maps, `buildingActions` cleanup, grass buckets, App tab split, pooling |
 | **Architecture** | Web Worker `gameTick`, OffscreenCanvas terrain/entity layers |
 | **Quality** | Big bug checkup, logic invariant checks, **`simulate:20year` ship gatekeeper**, sim battery |
+| **Half-done polish (P1)** | Counter-raid march visuals, reputation arc UI, one visitor quest chain, election Year 10/20 playtest |
 
 Open work checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (code audit 2026-07-05: **1 P0 done, 4 partial, 16 open** — finish partial items first).
 

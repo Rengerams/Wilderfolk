@@ -5,7 +5,7 @@
 Living plan for the **consolidated scale & architecture** release.  
 **Parent index** → [ROADMAP.md](ROADMAP.md) · Technical → [TECHNICAL.md](TECHNICAL.md) · Changelog → [CHANGELOG.md](CHANGELOG.md)
 
-*Updated: 2026-07-05 — v0.4.2 shipped; election ceremony **shipped in code**; **v0.5.0** tag **end July 2026**.*
+*Updated: 2026-07-05 — v0.4.2 shipped; half-done registry = **FINISH polish in v0.5.0** (not blanket defer); election ceremony **shipped in code**; **v0.5.0** tag **end July 2026**.*
 
 ---
 
@@ -176,12 +176,16 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 
 ## 🟡 Half-done registry (v0.5.0)
 
+**Rule:** Small polish gaps on working systems → **FINISH here**. New content tracks (tactical battles, disease loop, deep government) → parent [ROADMAP.md](ROADMAP.md) *Defer post-0.5.0* table.
+
 | Feature | What works today | What's missing | Target |
 |---------|------------------|----------------|--------|
-| **Perf at ~1250 entities** | v0.4.2 throttles + maps + compaction ✅ — **200+ player humans plays well today** | Dual-layer spatial grid (grass + mobile), renderer `byType`, benchmark @ **300 player + neighbors** | **FINISH** v0.5.0 P0 |
-| **UI at 300 pop** | Partial memo | Tab split + denorm counts | **FINISH** v0.5.0 P0 |
-| **Frontier counter-raid visuals** | `flashMilitia` + float text | March line to rival camp | **FINISH** v0.5.0 P1 |
-| **Reputation arc** | ⭐ + Village explainer | Milestone beats UI | **FINISH** v0.5.0 P1 |
+| **Perf at ~1250 entities** | v0.4.2 throttles + maps + compaction ✅ — **200+ player humans plays well today** | Dual-layer spatial grid (grass + mobile), renderer `byType`, benchmark @ **300 player + neighbors** | **v0.5.0** (P0) |
+| **UI at 300 pop** | Partial memo | Tab split + denorm counts | **v0.5.0** (P0) |
+| **Frontier counter-raid visuals** | *(v0.4.2 shipped)* incoming lines, forge, walls/guards, combat log | **Outgoing** march line + militia sprites to rival camp | **v0.5.0** (P1) |
+| **Reputation arc** | *(v0.4.2 shipped)* ⭐ + Village explainer | Milestone beats UI | **v0.5.0** (P1) |
+| **Visitor quest depth** | *(v0.4.1 shipped)* 7 kinds, leader talk, camp trade | **One** multi-step chain (Scholars or Nomads) | **v0.5.0** (P1) |
+| **Election ceremony** | Buildup → revelry; incumbent record; always-in-race ✅ in code | Live playtest Year 10/20 | **v0.5.0** (P1) ⏳ |
 
 ---
 
