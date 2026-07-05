@@ -1,431 +1,157 @@
 # Wilderfolk Roadmap
 
-**Early Alpha v0.4.2 shipped (July 5, 2026) → [v0.5.0](ROADMAP_0.5.0.md) (end July 2026)**
+*Last updated: **July 5, 2026** · playing **v0.4.2** · next tag **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026)*
 
-Living document for where the game is and where it's going.
+Shipped work only — newest release first. Open dev checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) *(not player-facing)*. Detail → [CHANGELOG.md](CHANGELOG.md).
 
-## Documentation map (single source of truth)
-
-| File | Purpose |
-|------|---------|
-| **[app/README.md](app/README.md)** | **Players** — how to play *(only markdown in `app/`)* |
-| **[TECHNICAL.md](TECHNICAL.md)** | **Developers** — architecture, dev log, playtests, audio credits |
-| **[ROADMAP.md](ROADMAP.md)** | **This file** — master plan, shipped-by-version index |
-| **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — developer checklist *(not player-facing)* |
-| **[CHANGELOG.md](CHANGELOG.md)** | Detailed change log by version |
-| **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
-
-*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). Public roadmap = **shipped per version only**; open work lives in [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (dev). In-game **More → Roadmap** mirrors shipped sections.*
+| Doc | Purpose |
+|-----|---------|
+| [app/README.md](app/README.md) | How to play |
+| [CHANGELOG.md](CHANGELOG.md) | Full change log by version |
+| [TECHNICAL.md](TECHNICAL.md) | Architecture, playtests, dev log |
+| [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) | v0.5.0 developer checklist |
+| `app/src/game/roadmapContent.ts` | In-game **More → Roadmap** |
 
 ---
 
 ## North star
 
-Ship a cozy frontier eco-sim where settlers live on a schedule, the food chain matters, the valley feels alive with **other people and tribes** — and players always know **what to do next**.
-
-**Winning moment for a new player:** *"I built a house, assigned workers, met a neighbor tribe, armed my village, and everyone came home at night."*
+Cozy frontier eco-sim — settlers on a schedule, food chain matters, valley alive with tribes, player always knows **what to do next**.
 
 ---
 
-## Version roadmaps
+## Versions (newest first)
 
-Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**.
-
-| Version | Theme | Target | Plan |
-|---------|-------|--------|------|
-| **0.4.2** | Craft, walls/guards, juice, UI/UX | **Shipped** 2026-07-05 | [CHANGELOG.md](CHANGELOG.md) `[0.4.2]` |
-| **0.5.0** | Scale + architecture (sim, UI, Worker, canvas) | **End Jul 2026** | **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** |
-| **1.0 / Steam** | Installer or store release | TBD | post-0.5.0 |
-
-**Release chain:** 0.4.2 ship → **[v0.5.0 consolidated perf + architecture](ROADMAP_0.5.0.md)** (end July 2026) → installer / Steam.
+| Version | Date | Theme | Status |
+|---------|------|-------|--------|
+| **0.5.0** | End Jul 2026 | Scale + architecture | In progress — [dev plan](ROADMAP_0.5.0.md) |
+| **0.4.2** | 2026-07-05 | Craft, walls/guards, juice, UI/UX | **Shipped** |
+| **0.4.1** | Jul 2026 | Tribes, raids, victories, leadership | **Shipped** |
+| **0.4** | Jun 2026 | Clarity, chronicle, housing, tutorial | **Shipped** |
 
 ---
 
-## Current state (early alpha v0.4.2 shipped)
+## v0.5.0 — shipped in code *(pre-tag)*
 
-PNG walk-sheet settlers · food chain · tribe diplomacy + raids · Blacksmith forge · walls/guards · 6-tab UI · election ceremony on main · 10-year balance PASS · 10-user beta ([playtest doc](TECHNICAL.md#playtest-report)).
+*`GAME_VERSION` still `0.4.2` until v0.5.0 exit criteria · [CHANGELOG `[Unreleased]`](CHANGELOG.md)*
 
-**Next tag:** [v0.5.0](ROADMAP_0.5.0.md) (end July 2026) — scale + architecture. Developer checklist only; not listed in player roadmap.
+**Election & leadership** (`villageLeadership.ts`)
+- Election ceremony — gather, gossip, tension, reveal, 3-day Election Revelry
+- Year-before buildup — notify + settler gossip (`tickElectionBuildup`, `tickElectionGossip`)
+- Incumbent always in race — `getElectionRaceCandidates()`
+- Incumbent record score — economy, scandals, village health; +8 positive cap
+- Leadership panel, focus hints, contextual tutorial synced
 
----
-
-## Feature roadmap (Top 10) — shipped
-
-*What is in the game today. Per-version detail → shipped sections below.*
-
-| # | Track | Shipped |
-|---|-------|---------|
-| 1 | **Defense & combat** | Stone/wood/iron gear; forge queue; frontier raids; walls/towers/barracks; guards; combat preview + log; incoming raid march lines |
-| 2 | **Health & medicine** | Hospital + Doctor; rep/energy buffs; Medicine research; plague events |
-| 3 | **Farming** | Farm, greenhouse, silo, mill, barn — daily production + research/events |
-| 4 | **Production & crafting** | Workshop recipes; Blacksmith iron spears & shields |
-| 5 | **Skills** | Per-job skills 0–100; School juvenile aging; merit election weight |
-| 6 | **Diplomacy & tribes** | Visitors, rivals, peace, raids, leader talk, refugee negotiate |
-| 7 | **Map** | Small/Medium/Large; five terrain presets |
-| 8 | **Wildlife ecology** | Food chain; grazing pressure; taming; Moon Howlers |
-| 9 | **Culture & events** | Church; festivals; Renffr; disasters; election ceremony |
-| 10 | **Victory & endgame** | Four victory paths; challenges; chronicle export; Roadmap tab |
+**v0.5.0 theme (on tag):** spatial grid, UI split @ 300 pop, Web Worker, canvas layers, sim gates — see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
 ---
 
-## Shipped in v0.4 (cumulative)
+## v0.4.2 — shipped *(2026-07-05)*
 
-### Core & balance
-- PNG walk-sheet settlers (`humanSprites.ts`, 8 variant atlases)
-- Quick Start tutorial — build a house before first night
-- Terrain-aware placement (blocks water, mountains, snow)
-- Balance: starting food 530, lighter early wolves, spoilage 0.03
-- Slower pregnancy (5 days) / reproduction cooldown (8 days)
-- Workshop recipe picker, staffing matters (Church/School/Blacksmith)
-- Challenge AND logic, calendar timers, food at meals only (8am & 6pm)
-- `npm run simulate:30min` headless sim + `run-sim.mjs` wrapper
+[CHANGELOG `[0.4.2]`](CHANGELOG.md) · tag `v0.4.2`
 
-### UI / clarity (recent playtest pass)
-- **Sidebar reorganized (v0.4.2)** — 8 tabs → 6 (Village, Frontier, Nature, Progress, Log, More); Research/Trade/Goals under Progress; Guide/Roadmap under More
-- **Alert strip** — RimWorld-style priority alerts under header (click to jump: raids, diplomacy, food, trade ready)
-- **Map build hotbar** — Banished-style bottom strip (House, Farm, Lumber, Quarry, Well, Road); collapsed left rail deduped (catalog only via `B`)
-- **Focus hints** — actionable **Go →** buttons; tab hotkeys `V/F/N/P/L/M`; Frontier tab badge for pending events
-- **Inspector** — collapsible, auto-expands on map click; ☰ game menu for save/audio/reset
-- **Goals:** Eco-Utopia + Great City active (v0.4); Trade Empire + Harmony added v0.4.1
-- **Village Chronicle:** Log tab — scroll, filters, copy, **Download .txt**, export on 💾 Save (optional)
-- **What to do next** focus panel (Village tab)
-- **Village armament** checklist (Defense research + Blacksmith for iron)
-- **Frontier neighbors** diplomacy: food gift, trade pact, show militia
-- Town Hall: research sync fix, Community tab prominence, unlock notifications
-- House **Expand** upgrade (+2 slots), families stay together (6 base / 10 max)
-- Worker commute snap at 7am/7pm (far jobs no longer walk forever)
-- Demolish always visible; married-to label; guide updates
-
-### Systems
-- Visitors, rival settlements, festivals, Moon Howlers
-- Hunting & combat juice; Defense research (stone/wood/iron tiers)
-- Iron weapons require **completed Blacksmith** (passive village-wide gear)
-- Inspector: outfit label, village armament, hunt status
-
----
-
-## Shipped in v0.4.1 ✅
-
-### Gameplay
-- **Guaranteed first-week visitor** — pilgrims or performers on days 4–7 once a house exists (`groupEvents.ts`, `firstWeekVisitorSpawned`)
-- **`road_bonus` wired** — Urban Planning research; completed roads grant reputation + `+rep (roads)` float text (`gameEngine.ts`)
-- **Roads in sim** — 1.5× walk speed on roads (`lifeSimulation.ts`); adjacency bonuses in placement; Infra hint in build catalog + Guide (v0.4.2)
-- **Prison + Guard job** — adultery arrests, prisoner sentences, prison panel UI (`gameTypes.ts`, `lifeSimulation.ts`, `App.tsx`)
-- **Eco Master tracking** — `ecoHealthYearsAbove80` yearly counter (`gameEngine.ts`)
-
-### UI / clarity
-- **Challenge progress bars** — all challenges; Eco Master shows `years eco ≥80%` (`challengeProgress.ts`, `App.tsx`)
-- **Active challenge highlight** — 🎯 badge + amber border on first incomplete challenge
-- **Reputation explainer** — Village tab “How reputation grows” block (`App.tsx`); header ⭐ → Trade added in v0.4.2
-- **Population & families panel** — scrollable family units (`PopulationPanel.tsx`)
-- **Focus panel** — “What to do next” hints (`FocusPanel.tsx`, `focusHints.ts`)
-- **Armament checklist** — Village tab steps for stone/wood/iron gear (`combat.ts`)
-- **Chronicle export** — `.txt`, `.json`, `.csv` (`eventLogExport.ts`, `EventLogPanel.tsx`)
-- **Combat status on settlers** — hunt/shield/guard icons on map via `getHumanStatusCombatIcon` (`combat.ts`, `renderer.ts`); Log → Combat panel in v0.4.2
-- **Building foundation pads** — category-colored pads under buildings (`gameTypes.ts` `padShape`/`backgroundColor`, `renderer.ts`)
-
-### Tech / polish
-- **Intro audio bootstrap** — early `ensureIntroAudio()` + HTML autoplay fallback (`audio/bootstrap.ts`, `main.tsx`)
-- **Intro screen layout** — overlap fixes (z-index, hidden-until-reveal sections)
-- **Dev server** — Vite port `5173` (Windows blocks port 3000)
-- **Tribe interaction v2** — rival diplomacy event cards (`pendingDiplomacyEvents`), map camp inspector, camp click + camera ping (`hitTestCamp`, `highlightedCampKey`)
-- **Visitor trade UI** — buy food/wood, sell food at visitor camps (`tradeWithVisitors`)
-- **Refugee negotiate** — welcome / screen / turn away; no auto-join (`negotiateRefugees`)
-- **Nature tab grazing warning** — deer vs grass pressure card (`ecosystemPressure.ts`, `getGrazingPressureReport`)
-- **In-game roadmap tab** — read-only v0.4.1 slice (`RoadmapPanel.tsx`, `roadmapContent.ts`)
-- **Frontier raids MVP** — incoming raids, defend/barricade/pay off, counter-raid, war-band march (`frontierCombat.ts`)
-- **Combat preview panel** — militia vs rival forecasts, distance, provisions cost (`CombatPreviewPanel.tsx`, `getCombatPreview()`)
-- **Raid balance pass** — home-turf +25% on outgoing raids; distance-scaled provisions (22–50🍖); gated counter-raid forecast; split defense/raid ratio hints
-- **Peace treaties** — `signPeaceTreaty()`, `peace_treaty` diplomacy events, `peaceTreatyDays` blocks raids (`groupEvents.ts`, rival inspector)
-- **Visitor leader talk** — per-kind rewards via `talkToVisitorLeader()` in visitor camp panel
-- **Trade Empire + Harmony victories** — active in Goals tab; 5th route Silkmarket (`victory.ts`, `economy.ts`)
-- **Village leadership** — merit elections every 10 years, founding leader, vacancy delay (`villageLeadership.ts`, `VillageLeadershipPanel.tsx`)
-
-## Shipped in v0.4.2 ✅
-
-*`GAME_VERSION = 0.4.2` · tagged `v0.4.2` · see [CHANGELOG.md](CHANGELOG.md) `[0.4.2]`.*
-
-### UI / UX
+**UI / UX**
 - 6-tab sidebar (Village, Frontier, Nature, Progress, Log, More) + sub-tabs
-- `AlertBar` priority strip, `BuildHotbar`, `GameMenu`, collapsible inspector
-- Tab hotkeys `V/F/N/P/L/M`, focus **Go →** actions, Frontier/Progress badges
-- Quick Start + `?` shortcuts overlay; header ⭐ → Trade
+- Alert strip, map build hotbar, collapsible inspector, ☰ game menu
+- Tab hotkeys `V/F/N/P/L/M`, focus **Go →**, Frontier/Progress badges
+- Header ⭐ → Trade; Quick Start + `?` shortcuts overlay
 
-### Combat / craft
-- **Blacksmith forge queue** — `villageForge`, iron spears/shields after research + staffed smith
-- **Frontier raid polish** — 2–6 day deadline by distance, slower distant march, UI deadline copy
-- **Defense buildings** — Wall/Corner/Gate (+8 barricade/segment, cap +72), Watchtower (+15), Barracks (manual Guards, +12 militia each)
-- **Guard patrols** — staffed Barracks guards orbit village core during work hours
-- **Combat log panel** — Log → Combat sub-tab with stats + .txt/.json/.csv export
-- **Raid map overlay** — dashed march lines rival camp → village when raids pending
-- Forge + raid alerts in `priorityAlerts.ts`; Armament **Open Blacksmith →**
+**Combat / craft**
+- Blacksmith forge queue — iron spears & shields (`villageForge`)
+- Walls, watchtowers, barracks; guard patrols; combat log panel + export
+- Frontier raid polish — 2–6 day deadline by distance, slower distant march
+- Incoming raid march lines on map; forge + raid alerts
 
-### Performance
-- Off-screen throttles (human 8, wildlife 8, grass 4 ticks)
-- Per-tick `entityById` / `buildingById`; wildlife iterates `byType`
-- `world.wildlifeCounts`; React memo on heavy panels; `simulate:30min` perf metrics
-- `combatTech.ts` — circular import fix for headless sim
+**Performance**
+- Off-screen throttles; per-tick `entityById` / `buildingById`; `wildlifeCounts`
+- React memo on heavy panels; `simulate:30min` perf metrics
 
-### Polish & juice
-- **Road / wall / gate rotation** — **R** while placing (`buildingRotation.ts`)
-- **Night glow** — window/chimney embers on homes; door glow on staffed Church/Blacksmith/Hospital (`juiceEffects.ts`, `renderer.ts`)
-- **Build complete** — confetti, `✨ Built!` float, sprite pop, screen shake
-- **Camera nudge** — `nudgeCameraToward()` pans 28% toward map selection
-- **Intro screen** — ~20s timeline, skip after logo (`IntroScreen.tsx`, `App.css` intro-*)
+**Polish**
+- Road / wall / gate rotation (**R** while placing)
+- Night glow, build confetti, camera nudge, intro screen (~20s, skip after logo)
 
-### Hygiene (July 4, 2026)
-- Sanity check pass; lint **0 errors**; inspector expand via selection handlers
+**Quality**
+- 10-year balance PASS (town, 9/9 gates, 2026-07-04)
+- 10 external playtests — [report](TECHNICAL.md#playtest-report)
+- ~40 bug fixes (July 4 comprehensive pass) — [CHANGELOG](CHANGELOG.md)
 
-### Bug-fix pass (July 4, 2026) — ~40 fixes ✅
-
-Four code-review rounds; verified build, lint (0 errors), 5-min + 30-min sim, `/check-work` PASS. Full categorized table → [CHANGELOG.md](CHANGELOG.md) → **Bug fixes — comprehensive pass**.
-
-**Critical:** map setup GameLoop sync; faction human ages; welcomed refugees killed on camp departure; eco streak 24×/year.
-
-**High:** diplomacy event loss; peace vs active raids; rival pop sync; workshop/trade at storage cap; challenges (`eco_master`, `great_city`); save year + migrations; raid tick timing; refugee food at pop cap.
-
-**Medium:** placement footprint; raid/diplomacy/trade/forge UI feedback; prison ghost workers; moon howler hunt leak; stats (yearly pop, births, disasters); age display; victory rival buildings.
+**Also in 0.4.2 ship**
+- Worker commute snap (7am/7pm); roads benefit copy in Guide
+- Reputation — Village explainer + header ⭐
+- Rival diplomacy — peace, raids, preview, show-militia parade
+- Visitor tribes — 7 kinds, caravan, refugee negotiate, leader talk
+- Spear / militia balance (`militiaBalance.ts`)
 
 ---
 
-### Code audit — implemented but **not** v0.4.1 goals (do not mark open)
+## v0.4.1 — shipped
 
-| Feature | Files | Roadmap note |
-|---------|-------|----------------|
-| Workshop recipe picker | `App.tsx`, `gameEngine.ts` | Real crafting exists for Workshop only, not Blacksmith weapons |
-| Rival diplomacy v1 (Village tab only) | `groupEvents.ts`, `App.tsx` | Superseded by v2 map inspector — keep Village tab as shortcut |
-| Event log unlimited storage | `eventLog.ts` | Shipped v0.4; UI still shows latest 500 |
+**Tribes & frontier**
+- Tribe diplomacy v2 — map camp panel, event cards, respond choices
+- Frontier raids — defend, barricade, pay off, counter-raid
+- Combat preview — distance, provisions, defend & raid forecasts
+- Peace treaties; visitor leader talk; refugee negotiate
+- Guaranteed first-week visitor (days 4–7)
 
----
+**Victory & leadership**
+- Trade Empire + Harmony victories (4 active paths)
+- Village leadership — merit elections every 10 years, founding leader, vacancy delay
 
-## v0.4.2 — ship checklist ✅ (closed 2026-07-05)
+**UI & clarity**
+- Population & families panel; challenge progress bars + 🎯 highlight
+- Nature tab grazing pressure warning; chronicle export (.txt / .json / .csv)
+- Focus panel; reputation explainer; combat status icons on map
+- In-game Roadmap tab (`RoadmapPanel.tsx`, `roadmapContent.ts`)
 
-| # | Ship blocker | Status |
-|---|--------------|--------|
-| 1 | 10-year balance pass | **Done** — town PASS 2026-07-04, 9/9 gates |
-| 2 | Spear / militia balance review | **Done** (`militiaBalance.ts`) |
-| 3 | External playtests (5–10 sessions) | **Done** — [playtest report](TECHNICAL.md#playtest-report) |
-| 4 | Bump to `0.4.2` + save migration | **Done** |
-| 5 | CHANGELOG, README, `roadmapContent.ts` on release | **Done** |
-
-**Tagged `v0.4.2`.** Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).
-
-## Shipped in v0.5.0 *(in code — pre-tag)*
-
-*`GAME_VERSION` still `0.4.2` until v0.5.0 tag. See [CHANGELOG.md](CHANGELOG.md) `[Unreleased]`.*
-
-- **Election ceremony** — gather, gossip, tension, reveal, 3-day Election Revelry (`tickElectionBuildup`, `tickElectionGossip`)
-- **Incumbent always in race** — `getElectionRaceCandidates()`
-- **Incumbent record score** — economy, scandals, village health; +8 positive cap (`getIncumbentRecordAssessment()`)
-- **Leadership UI sync** — `VillageLeadershipPanel.tsx`, focus hints, contextual tutorial
+**World**
+- Roads 1.5× walk speed; `road_bonus` → reputation
+- Prison + Guard job; building foundation pads
+- Visitor camp trade; Eco Master yearly tracking
 
 ---
 
-## v0.4.2 scope — feature target (code largely in repo)
+## v0.4 — shipped
 
-Everything below was the **v0.4.2** build target. Most rows are implemented locally; release blockers are in the table above.
+**Core**
+- PNG walk-sheet settlers; Quick Start tutorial; terrain-aware placement
+- Food at meals (8am & 6pm); seasons, weather, pollution, research
+- Workshop recipes; Defense research tiers; visitors, rivals, festivals, Moon Howlers
+- Eco-Utopia + Great City victories; Village chronicle + export on save
 
-### P0 — Purpose & tribes *(v0.4.1 — complete)*
+**UI pass**
+- Sidebar → 6 tabs; alert strip; map hotbar; focus hints; armament checklist
+- House expand (+2 slots); worker commute snap; demolish always visible
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Surface goals in first hour (focus panel) | ✅ Done | Shipped v0.4 |
-| Chronicle readable outside game (.txt) | ✅ Done | Shipped v0.4 |
-| Explain weapons (research + Blacksmith, not crafting) | ✅ Done | Shipped v0.4 |
-| **Deeper tribe interaction** — trade UI, refugee negotiate, rival map ping, visitor leader talk | ✅ Done | Shipped v0.4.1 |
-| **Peace treaties** — player sign + diplomacy events; raids blocked at peace | ✅ Done | Shipped v0.4.1 |
-| **Village leadership** — merit elections, founding leader, vacancy delay | ✅ Done | Shipped v0.4.1; ceremony → [v0.5.0 in code](#shipped-in-v050-in-code--pre-tag) |
-| **Trade Empire + Harmony victories** — active in Goals tab | ✅ Done | |
-| **Frontier raids MVP** — defend, barricade, pay off, counter-raid | ✅ Done | Raid polish + walls/guards + combat log — see [TECHNICAL.md](TECHNICAL.md#frontier-combat--polish--gaps) |
-| **Guaranteed first-week visitor** | ✅ Done | Days 4–7 after first house |
-| **Rival events player can respond to** (tribute, border dispute, alliance) | ✅ Done | `pendingDiplomacyEvents` + banner/inspector choices |
-| Click rival camp → diplomacy panel (not buried in Village tab) | ✅ Done | Camp marker + rival building inspector |
-
-### P1 — Combat & weapons *(v0.4.2)*
-
-| Item | Status | Notes |
-|------|--------|-------|
-| Defense research passive buffs | ✅ Done | Shipped v0.4 |
-| **Actual crafting queue** at Blacksmith (iron spears & shields) | ✅ v0.4.2 | `villageForge`, `BlacksmithForgePanel`, save migration |
-| Guards / patrol / Walls / Watchtowers / Barracks | ✅ v0.4.2 | `defenseStructures.ts`, guard patrol in `lifeSimulation.ts` |
-| Weapon icon on map + combat log entries | ✅ v0.4.2 | Hunt/shield/guard icons; raid march lines; combat log |
-| PvP / raid combat with rival tribes | ✅ v0.4.2 | Abstract raids + preview + walls/towers/barracks bonuses |
-| Frontier raid polish (Village tab button, deadline vs distance) | ✅ v0.4.2 | `expiresAtTick`, `formatRaidDeadline`, slower distant march |
-
-### P1 — Village life & scale *(v0.4.2)*
-
-| Item | Status | Notes |
-|------|--------|-------|
-| Family housing split bug | ✅ Fixed | Shipped v0.4 |
-| **Population / family overview panel** | ✅ Done | `PopulationPanel` in Village tab |
-| **Honor / reputation explainer** | ✅ v0.4.2 | Village tab + header ⭐ click → Trade |
-| Township (Town Hall + Urban Planning) | ✅ Unlocked | Shipped v0.4.1 |
-
-### P2 — World, juice & quality *(v0.4.2)*
-
-| Item | Status | Notes |
-|------|--------|-------|
-| Vertical roads / road rotation | ✅ v0.4.2 | **R** key — Road, Wall, Wall Gate (`buildingRotation.ts`) |
-| Wire `road_bonus` research → reputation | ✅ Done | Rep tick + `+rep (roads)` float text |
-| Roads: UI explains 1.5× walk + 15% adjacency | ✅ v0.4.2 | Infra category hint in build catalog + Guide |
-| More visitor kinds polished | ✅ v0.4.2 | 7 visitor kinds |
-| Chimney glow, build-complete particles | ✅ v0.4.2 | `juiceEffects.ts` — night glow + confetti on build complete |
-| Intro screen refine (~20s, skip after logo) | ✅ v0.4.2 | `IntroScreen.tsx` timeline + `App.css` intro-* classes |
-
-| Smooth camera nudge on select | ✅ v0.4.2 | `nudgeCameraToward()` — 28% lerp on map click |
-| Nature tab warning when deer pressure > grass recovery | ✅ Done | `ecosystemPressure.ts` caution/critical card |
-| **Eco Master challenge** UI progress bar | ✅ Done | `challengeProgress.ts` |
-| **Active challenge** highlight in UI | ✅ Done | 🎯 on first incomplete |
-| 5–10 external playtests with notes | ✅ v0.4.2 | [playtest report](TECHNICAL.md#playtest-report) |
-| 10 full in-game year balance pass | ✅ v0.4.2 | Town PASS 2026-07-04, 9/9 gates |
-| Perf check: 500+ entities, large map | ✅ v0.4.2 | Throttles + entity maps (~1.8 ms/tick avg) |
-| **In-game roadmap tab** (read-only slice of this doc) | ✅ Done | `RoadmapPanel.tsx`, `roadmapContent.ts` |
-
-## Phase 0 — Playtest alpha ✅ *mostly complete*
-
-**Goal:** Friends can run the game and understand it without you in the room.
-
-- [x] Core sim: grass → prey → predators → village
-- [x] Seasons, weather, pollution, research
-- [x] Day/night cycle (24 ticks = 1 day)
-- [x] Residence vs workplace (home at night, work by day)
-- [x] Visitor caravans + rival camps
-- [x] Moon Howlers, festivals, disasters
-- [x] Quick Start tutorial + Guide tab
-- [x] README (player) + TECHNICAL.md
-- [x] Save migration 2.0/2.1/2.2 → 0.4 (in `loadGame`)
-- [x] Chronicle log + file export
-- [x] Focus hints + armament checklist
-- [x] 5–10 external playtests with notes → **v0.4.2** ([playtest report](TECHNICAL.md#playtest-report))
-- [x] Save migration story fully documented in TECHNICAL.md
-
-**Exit:** Testers play 2+ hours unaided and can name their current goal.
+*Full v0.4 list → [CHANGELOG.md](CHANGELOG.md) `[0.4]` archive.*
 
 ---
 
-## Phase 1 — v0.4.1: feel alive ✅ *shipped*
+## Feature tracks (what ships today)
 
-**Goal:** The map feels populated. Players interact with neighbors, not just watch them.
-
-### 1A — Sprite pipeline ✅ *complete*
-
-Path B — extend existing PNG humans.
-
-### 1B — Juice → **v0.4.2** *(mostly complete)*
-
-- [x] Chimney / window glow when settlers are home at night
-- [x] Particles for birth and marriage
-- [x] Particles for build complete (confetti + sprite pop + screen shake)
-- [x] Hunt/combat feedback (chase lines, floating text, combat burst, hunt SFX)
-
-- [x] Smooth camera nudge on select
-- [x] Intro screen refine (~20s timeline, skip after logo)
-
-### 1C — First-hour hook & purpose → **v0.4.1** ✅
-
-- [x] Tutorial beat: **build a house before first night**
-- [x] **What to do next** panel + Goals link
-- [x] Guaranteed friendly visitor in first in-game week
-- [x] Nature tab warning when deer pressure > grass recovery
-**Exit:** New player names one active goal within 15 minutes.
+| # | Track | In the game |
+|---|-------|-------------|
+| 1 | Defense & combat | Stone/wood/iron gear; forge; raids; walls/towers/barracks; guards; combat log |
+| 2 | Health & medicine | Hospital + Doctor; rep/energy buffs; Medicine research; plague events |
+| 3 | Farming | Farm, greenhouse, silo, mill, barn — daily production |
+| 4 | Production & crafting | Workshop recipes; Blacksmith iron spears & shields |
+| 5 | Skills | Per-job XP 0–100; School juvenile aging |
+| 6 | Diplomacy & tribes | Visitors, rivals, peace, raids, leader talk |
+| 7 | Map | Small / Medium / Large; five terrain presets |
+| 8 | Wildlife | Food chain; grazing pressure; taming; Moon Howlers |
+| 9 | Culture & events | Church; festivals; Renffr; disasters; election ceremony |
+| 10 | Victory & endgame | Four paths; challenges; chronicle; Roadmap tab |
 
 ---
 
-## Phase 2 — v0.4.2: craft, combat polish & juice ✅ *shipped*
+## Timeline (newest first)
 
-**Goal:** Clear combat/craft fantasy and production polish after v0.4.1 neighbor/diplomacy ship.
-
-### Must ship in v0.4.2
-
-1. ~~**Blacksmith crafting**~~ ✅ — forge queue for iron spears & shields
-2. ~~**Road rotation**~~ ✅ — **R** key for roads, walls, gates
-3. ~~**Reputation / honor** explainer~~ ✅ — header ⭐ + Village tab
-4. ~~**Frontier raid polish**~~ ✅ — deadline vs distance, Village/Frontier respond UI
-5. ~~**Walls / guards / combat log**~~ ✅ — defense buildings, guard patrols, Log → Combat panel, raid march lines
-6. ~~**Juice pass**~~ ✅ — night glow, build confetti, camera nudge; intro screen refine
-7. ~~10-year balance pass~~ **Done** (2026-07-04) · external playtests (5–10 sessions)
-8. ~~Bump `GAME_VERSION` to `0.4.2` + save migration on ship~~ ✅
-9. Scale + architecture → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** (end July 2026) — not a v0.4.2 ship blocker
-
-### Balance & stability → **v0.4.2**
-
-- [x] 10 full in-game year playtest pass (town PASS 2026-07-04)
-- [x] Winter food curve (validated in 10-year PASS — 10/10 winters)
-- [x] Save version `0.4` / `0.4.1` with migration from legacy `2.x` and `0.4` saves
-- [x] Perf check: 500+ entities — throttles + entity maps shipped
-- [x] Bump save/game version to `0.4.2` on ship
-
-**Exit:** Founding couple → town that trades or fights with neighbors — player chose which.
+| When | Release |
+|------|---------|
+| End Jul 2026 | **v0.5.0** — scale + architecture |
+| 2026-07-05 | **v0.4.2** — craft, walls/guards, juice, balance |
+| Jul 2026 | **v0.4.1** — tribes, diplomacy, raids, victories |
+| Jun 2026 | **v0.4** — clarity, tutorial, chronicle |
 
 ---
 
-## Phase 3 — v0.5.0 *(in progress — end July 2026)*
-
-**Theme:** scale + architecture — sim perf, UI split, Web Worker, canvas layers.  
-**Shipped so far:** election ceremony (see [Shipped in v0.5.0](#shipped-in-v050-in-code--pre-tag)).  
-**Developer checklist:** [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) *(not player-facing)*.
-
----
-
-## Timeline
-
-| When | Focus | Status |
-|------|--------|--------|
-| Jun 2026 | Walk sprites + tutorial + v0.4 clarity pass | **✅ done** |
-| Jul 2026 (early) | **v0.4.1** — tribes, diplomacy, raids, victories, leadership | **✅ done** |
-| **2026-07-05** | **v0.4.2** — craft, walls/guards, juice, balance | **✅ shipped** |
-| **End July 2026** | **v0.5.0** — scale + architecture | [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) · **in progress** |
-
----
-
-## Metrics *(v0.4.2 exit)*
-
-| Metric | Target |
-|--------|--------|
-| Avg session | 45+ minutes |
-| Tester can name current goal | 80%+ after 20 min |
-| "How do I make weapons?" | Rare after armament + forge UI |
-| "Feels like playing alone" | < 30% of playtesters |
-| Crashes per 10h | 0 |
-
----
-
-## Next actions (v0.4.2, ordered)
-
-1. [x] **Blacksmith crafting UX** — forge queue (`forge.ts`, `BlacksmithForgePanel`)
-2. [x] **Frontier raid polish** — distance-scaled deadline, Village/Frontier UI (`frontierCombat.ts`)
-3. [x] **Walls / Watchtowers / Barracks** + guard patrols
-4. [x] **Dedicated combat log panel** — Log → Combat sub-tab
-5. [x] **External playtests** — 10 sessions ([playtest report](TECHNICAL.md#playtest-report))
-6. [x] **10-year balance pass** — town PASS 2026-07-04 (`simulate:10year`, 86400 ticks)
-7. [x] **Road rotation** — **R** key (`buildingRotation.ts`)
-8. [x] **Juice pass** — chimney glow, build-complete particles, camera nudge
-9. [x] **Intro screen refine** — ~20s timeline, skip after logo
-10. [x] **Header reputation tooltip** — ⭐ click → Trade
-11. [x] **Bump version** to `0.4.2` in `version.ts` + save migration on ship
-12. [ ] **v0.5.0** → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) (end July 2026) — **next**
-
-## Next actions (v0.5.0)
-
-*Full checklist → [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).*
-
-| Version | Doc | Start when |
-|---------|-----|------------|
-| **0.5.0** | [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) | v0.4.2 tagged and shipped ✅ |
-
----
-
-## Version targets
-
-| Milestone | Version | Signal | Status |
-|-----------|---------|--------|--------|
-| Clarity + chronicle + housing | 0.4 | Playtest feedback addressed | **✅ Shipped** |
-| Tribes + diplomacy + raids + victories + leadership | 0.4.1 | Tribe diplomacy v2, raids, peace, 4 victories, leadership, roadmap tab | **✅ Shipped** |
-| Craft + walls/guards + juice + balance | 0.4.2 | 10-year PASS, beta playtests, version bump | **✅ Shipped** 2026-07-05 |
-| Scale + architecture (grid, UI split, Worker, canvas) | 0.5.0 | Large-map / city-scale stability | **In progress** — [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md) end July 2026 |
-
----
-
-<p align="center">
-  <em><strong>v0.4.2 shipped</strong> → <a href="ROADMAP_0.5.0.md">v0.5.0</a> (end July 2026).</em>
-</p>
+<p align="center"><em><strong>v0.4.2 shipped</strong> → <a href="ROADMAP_0.5.0.md">v0.5.0</a> (end July 2026)</em></p>
