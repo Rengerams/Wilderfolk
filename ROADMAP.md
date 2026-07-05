@@ -15,7 +15,7 @@ Living document for where the game is and where it's going.
 | **[CHANGELOG.md](CHANGELOG.md)** | Detailed change log by version |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
 
-*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). **v0.5.0** in progress: election ceremony shipped in code; see [CHANGELOG.md](CHANGELOG.md) `[Unreleased]`.*
+*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). **v0.5.0** in progress: election ceremony shipped in code (playtest Year 10/20 open). Docs: [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` · in-game **More → Roadmap** → *v0.5.0 — Shipped in code*.*
 
 ---
 

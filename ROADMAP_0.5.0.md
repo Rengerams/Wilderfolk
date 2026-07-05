@@ -5,7 +5,7 @@
 Living plan for the **consolidated scale & architecture** release.  
 **Parent index** → [ROADMAP.md](ROADMAP.md) · Technical → [TECHNICAL.md](TECHNICAL.md) · Changelog → [CHANGELOG.md](CHANGELOG.md)
 
-*Updated: 2026-07-05 — v0.4.2 shipped; **v0.5.0** target **end July 2026**.*
+*Updated: 2026-07-05 — v0.4.2 shipped; election ceremony **shipped in code**; **v0.5.0** tag **end July 2026**.*
 
 ---
 

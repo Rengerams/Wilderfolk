@@ -21,7 +21,7 @@ export const ROADMAP_NORTH_STAR =
   'A cozy frontier eco-sim where settlers live on a schedule, the food chain matters, the valley feels alive with other people and tribes — and you always know what to do next.';
 
 export const ROADMAP_WINNING_MOMENT =
-  'I hit 150 people on a large map, opened every sidebar tab at 10×, and the valley still felt alive — no stutter.';
+  'I hit 300 people on a large map, opened every sidebar tab at 10×, and the valley still felt alive — no stutter.';
 
 export const ROADMAP_SECTIONS: RoadmapSection[] = [
   {
@@ -65,7 +65,24 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
       { label: 'Peace treaties — sign with rivals; diplomacy events; raids blocked', status: 'done' },
       { label: 'Visitor leader talk — per-kind rewards at visitor camps', status: 'done' },
       { label: 'Trade Empire + Harmony victories (4 active paths)', status: 'done' },
-      { label: 'Village leadership — merit elections every 10 years', status: 'done' },
+      {
+        label: 'Village leadership — merit elections every 10 years (base)',
+        status: 'done',
+        note: 'Ceremony, record score, always-in-race → v0.5 shipped-in-code',
+      },
+    ],
+  },
+  {
+    id: 'v050-shipped-code',
+    title: 'v0.5.0 — Shipped in code (pre-tag)',
+    subtitle: 'On main before GAME_VERSION 0.5.0 — mirrors CHANGELOG [Unreleased] Added',
+    items: [
+      { label: 'Election ceremony — gather, gossip, tension, reveal, 3-day Election Revelry', status: 'done' },
+      { label: 'Election buildup — year-before notify + settler gossip', status: 'done' },
+      { label: 'Incumbent always in race (getElectionRaceCandidates)', status: 'done' },
+      { label: 'Incumbent record score — economy, scandals, village health (+8 positive cap)', status: 'done' },
+      { label: 'Leadership panel, focus hints, contextual tutorial synced', status: 'done' },
+      { label: 'Live playtest at Year 10/20', status: 'partial', note: 'Only open election item' },
     ],
   },
   {
@@ -196,9 +213,9 @@ export const ROADMAP_SECTIONS: RoadmapSection[] = [
         note: 'spatialGrid.ts + lifeSimulation.ts — after partial items',
       },
       {
-        label: 'Dead-entity compaction — drop alive: false each tick',
+        label: 'Dead-entity compaction — alive-only state.entities each tick',
         status: 'done',
-        note: 'state.entities = allAlive each tick',
+        note: 'state.entities = allAlive each tick — audit 2026-07-05',
       },
       {
         label: 'Renderer cache reuse — consume sim byType buckets',

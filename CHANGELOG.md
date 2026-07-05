@@ -220,6 +220,8 @@ Four code-review rounds (~40 fixes). Verified: `npm run build`, `npm run lint` (
 
 ## [0.4.1] - Village leadership & merit elections (2026-07-04)
 
+*Historical — leadership rules superseded in **[Unreleased]** (founding male until Year 10, ceremony, 2-year vacancy, record score).*
+
 ### Added
 - **Village head elections** (`villageLeadership.ts`) — merit score from job skills (×2), experience, Town Hall service (+15), married (+5); ties break on age, then entity id.
 - **Founding election** at game start; **decennial elections** every 10 years (years 10, 20, …); **succession** on leader death or imprisonment.
@@ -228,7 +230,7 @@ Four code-review rounds (~40 fixes). Verified: `npm run build`, `npm run lint` (
 - **Map & UI** — 👑 on leader in header, map icon, Population panel, and entity inspector; focus hints mention leadership.
 
 ### Technical
-- `tickDecennialElection` / `trySuccessionElection` in `gameEngine.ts`; `validateVillageLeaderOnLoad` on load.
+- `tickDecennialElection` in `gameEngine.ts`; `validateVillageLeaderOnLoad` on load. *(Ceremony / vacancy flow → `villageLeadership.ts` in [Unreleased].)*
 
 ## [0.4.1] - Peace treaties, visitor leader talk & four victory paths (2026-07-04)
 

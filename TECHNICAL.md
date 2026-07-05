@@ -377,7 +377,7 @@ Uncapped event log in saves (UI still shows latest 500); `.json` / `.csv` export
 
 ### July 4, 2026 — v0.4.1 shipped
 
-Tribes diplomacy v2, frontier raids MVP, Trade Empire + Harmony victory paths, merit elections, in-game Roadmap tab.
+Tribes diplomacy v2, frontier raids MVP, Trade Empire + Harmony victory paths, merit elections (ceremony + record score shipped in code pre-0.5.0 tag), in-game Roadmap tab.
 
 ### July 2026 — v0.4.2 feature work (shipped July 5)
 
