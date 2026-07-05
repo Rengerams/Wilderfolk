@@ -15,7 +15,7 @@ Living document for where the game is and where it's going.
 | **[CHANGELOG.md](CHANGELOG.md)** | Detailed change log by version |
 | **`app/src/game/roadmapContent.ts`** | In-game More → Roadmap tab |
 
-*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). Next: **[v0.5.0](ROADMAP_0.5.0.md)** (end July 2026).*
+*Last updated: July 5, 2026 — **v0.4.2 shipped** (`GAME_VERSION = 0.4.2`). **v0.5.0** in progress: election ceremony shipped in code; see [CHANGELOG.md](CHANGELOG.md) `[Unreleased]`.*
 
 ---
 
@@ -40,7 +40,7 @@ Every **🟡 Partial** item must stay on this list until we pick one:
 | **Rival diplomacy** | Map camp panel, event cards, gift/pact/militia; raids + preview; **peace treaties**; Village/Frontier raid UI; distance-scaled deadline; raid march lines | Real-time map battles; full war/embassy tree | **DEFER** tactical combat | post-0.5.0 |
 | **Weapons / Blacksmith** | Research buffs; **forge queue** (`villageForge`); armament checklist; alerts + Go → Blacksmith; walls/towers/barracks; combat log panel | Militia-on-march map icons | **FINISH** balance pass | v0.4.2 |
 | **Visitor tribes** | 7 kinds, first-week caravan, camp trade, refugee negotiate, **talk to leader** (per-kind rewards) | Deeper per-kind quest chains | **DEFER** depth | post-0.5.0 |
-| **Village leadership** | Founding + decennial merit elections; election ceremony; incumbent record score; 👑 UI | Deeper government decisions beyond ceremonial head | **DEFER** deep gov | post-0.5.0 |
+| **Village leadership** | Merit elections; **v0.5.0:** ceremony, incumbent record, always-in-race (shipped in code) | Deeper government decisions beyond ceremonial head | **DEFER** deep gov | post-0.5.0 |
 | **Roads** | 1.5× walk + 15% adjacency; `road_bonus` rep; **R** rotation for roads/walls/gates | Pathing still snap-based (no road-following AI) | **CUT** pathing; rotation **FINISH** ✅ | v0.4.2 |
 | **Reputation / honor** | ⭐ header badge (click → Trade) + Village tab explainer; roads rep | Reputation arc UI beyond tooltip | **FINISH** arc or defer | v0.4.2 |
 | **Worker commute** | Snap at 7am/7pm if far | No real pathing along roads | **CUT** snap is enough **or FINISH** roads pathing | v0.4.2 |
@@ -84,6 +84,7 @@ Detailed release plan → **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)**.
 | Tribe diplomacy v2 + raids (2–6d deadline, preview, peace, march lines) | [v0.5.0](ROADMAP_0.5.0.md) spatial grid + benchmark gate |
 | **Walls / towers / barracks** + guards + combat log | Counter-raid march polish (v0.5.0 P1) |
 | **6-tab UI**, alert strip, hotbar, focus Go → | [v0.5.0](ROADMAP_0.5.0.md) App tab split at city scale |
+| **Election ceremony** (buildup, record score, always-in-race) | Live playtest Year 10/20 |
 | **10-year balance PASS** + **10-user beta** ([playtest doc](TECHNICAL.md#playtest-report)) | Mid-game goals past year 4–5 |
 | Sim perf (~1.8 ms/tick avg @ ~550 entities; 10-year p95 5.46ms) | 100+ entity benchmark gate ([v0.5.0](ROADMAP_0.5.0.md)) |
 

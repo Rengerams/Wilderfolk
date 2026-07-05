@@ -61,7 +61,7 @@ All open scale, quality, and architecture work ships in one release → [ROADMAP
 | **Scale** | Spatial grid, large-map perf, Web Worker sim, canvas layers |
 | **UI** | App tab split so city-size villages stay snappy |
 | **Quality** | Big bug audit, logic checks, **`npm run simulate:20year` ship gatekeeper** |
-| **Polish** | Counter-raid march visuals, reputation arc, visitor quests |
+| **Polish** | Election ceremony ✅ in code (playtest Year 10/20); counter-raid march visuals, reputation arc, visitor quests |
 | **After v0.5** | Installer or **Steam** — download and play, no terminal |
 
 **Not on the near-term list:** tactical map battles, multiplayer, fog of war, hospital disease loop — [ROADMAP.md](ROADMAP.md).

@@ -35,7 +35,7 @@ All open perf, UI, and architecture work ships in one release. Full plan → [RO
 | **UI at city size** | Sidebar tabs stay fast; App split for Village / Nature / Progress |
 | **Architecture** | Web Worker simulation + canvas layers for 10× speed |
 | **Quality** | Big bug checkup, logic invariant checks, full headless sim battery before ship |
-| **Polish** | Counter-raid march visuals, reputation arc, visitor quests, footstep SFX |
+| **Polish** | Election ceremony ✅ in code (playtest Year 10/20); counter-raid march visuals, reputation arc, visitor quests, footstep SFX |
 | **Steam / installer** | After v0.5.0 — download and play, no terminal |
 
 Check **More → Roadmap** in-game for the live slice, or the full plan at [ROADMAP.md](../ROADMAP.md).
@@ -430,9 +430,11 @@ Be a good neighbor — or at least a careful one.
 
 ### Village leadership 👑
 
-Your settlers elect a **village head** by merit — job skills, experience, Town Hall service, and community standing. A **founding election** runs at the start; **every 10 years** the village votes again; if the leader dies or is jailed, a **succession** election picks a replacement.
+The **first male pioneer** leads at founding until **Year 10**. After that, settlers elect a **village head** by merit — job skills, experience, Town Hall service, and community standing. **Every 10 years** the village holds an election ceremony (gather, gossip, reveal, then a 3-day *Election Revelry* festival).
 
-See the **Village** tab leadership panel for the current 👑 head, years until the next election, and ranked candidates. The leader appears on the map and in the population panel.
+The **sitting head always runs** when still eligible. They get a **modest record bonus or penalty** from the village economy, scandals, and overall health — but a high-merit challenger can still win. If the head dies or is jailed, a **merit election is scheduled two years later** (no instant replacement).
+
+See the **Village** tab leadership panel for the current 👑 head, record breakdown, years until the next election, and ranked candidates. The leader appears on the map and in the population panel.
 
 ---
 

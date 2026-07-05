@@ -127,9 +127,8 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 | 2 | **Large-map playtests** | 5–10 sessions at 10× after benchmark gate green |
 | 3 | **Reputation arc UI** | Milestones beyond ⭐ tooltip |
 | 4 | **Footstep / work SFX by surface** | Juice deferred since v0.4.2 |
-| 5 | **Election day ceremony** | ✅ Done — extend **`villageLeadership.ts`**: buildup, ceremony, incumbent record score, always-in-race; playtest Year 10/20 |
-| 6 | **One visitor quest chain** | Scholars or Nomads multi-step |
-| 7 | **`npm run benchmark:gate`** | CI-friendly wrapper |
+| 5 | **One visitor quest chain** | Scholars or Nomads multi-step |
+| 6 | **`npm run benchmark:gate`** | CI-friendly wrapper |
 
 #### Election day ceremony (P1 — v0.5.0) ✅ Shipped in code
 
@@ -183,7 +182,6 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 | **UI at 300 pop** | Partial memo | Tab split + denorm counts | **FINISH** v0.5.0 P0 |
 | **Frontier counter-raid visuals** | `flashMilitia` + float text | March line to rival camp | **FINISH** v0.5.0 P1 |
 | **Reputation arc** | ⭐ + Village explainer | Milestone beats UI | **FINISH** v0.5.0 P1 |
-| **Election day ceremony** | Full arc ✅ — buildup, ceremony, incumbent record, always-in-race | Live playtest Year 10/20 | **DONE** (playtest ⏳) |
 
 ---
 

@@ -4,40 +4,24 @@
 
 **Targeting v0.5.0** (end July 2026) — see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
-### Planned (v0.5.0 P0)
-- Spatial grid, dead-entity compaction, renderer cache reuse, settler count denorm, benchmark gate
-- Incremental `entityById`, `buildingActions` scan cleanup, grass buckets, App tab split, pooling
-- Web Worker `gameTick`, OffscreenCanvas terrain/entity layers
-- **Big bug checkup** — full-code audit after perf refactors (frontier, save, raids, forge, eco, UI)
-- **Logical invariant checks** — entity lifecycle, maps consistency, migration `0.4.2`→`0.5.0`, peace vs raids
-- **20-year simulation gatekeeper** — `npm run simulate:20year` (town profile) must PASS before v0.5 tag
-- **Simulation battery** — `simulate`, `simulate:30min` (all profiles), `simulate:20year`, `simulate:10year` (regression), `balance:militia`; exit codes on fail
-- `GAME_VERSION` **0.5.0** + save migration
-
-### Added (v0.5.0 P1 — election system)
+### Added
 - **Election day ceremony** (`villageLeadership.ts`) — founding **first male** leads until Year 10; merit elections every 10 years; leader death → election **2 years later** (no instant succession); ceremony phases gather → gossip → tension → reveal + 3-day *Election Revelry* festival
 - **Election buildup** — year-before notification (`tickElectionBuildup`); ongoing settler gossip during buildup, election year, and ceremony (`tickElectionGossip`)
 - **Incumbent always runs** — `getElectionRaceCandidates()` keeps sitting head in race lineup, gossip, and Leadership standings even when merit rank drops below top 4
 - **Incumbent record score** — modest election bonus/penalty for sitting head only: economy (+4/−5), clean record (+3) vs scandals (−5 each), village health (+3/−6); **+8 positive cap** so high-merit challengers can still win; penalties uncapped
 - **Leadership UI** — `VillageLeadershipPanel` shows record breakdown; standings show record modifier; tutorial + focus hints updated
 
-### Planned (v0.5.0 P1)
-- Election playtest at Year 10/20 in live save
-- Counter-raid militia march visuals, large-map playtests, reputation arc UI
-- Footstep SFX, one visitor quest chain, `npm run benchmark:gate`
+### Planned
+- **P0** — spatial grid, dead-entity compaction, renderer cache reuse, settler count denorm, benchmark gate; incremental `entityById`, `buildingActions` scan cleanup, grass buckets, App tab split, pooling; Web Worker `gameTick`, OffscreenCanvas terrain/entity layers; big bug checkup; logical invariant checks; `npm run simulate:20year` gatekeeper; simulation battery; `GAME_VERSION` **0.5.0** + save migration
+- **P1** — election playtest at Year 10/20; counter-raid militia march visuals; large-map playtests; reputation arc UI; footstep SFX; one visitor quest chain; `npm run benchmark:gate`
 
 ## [0.4.2] - 2026-07-05
 
 **Early Alpha v0.4.2** — 6-tab UI, Blacksmith forge, walls/towers/barracks, frontier raid prep UX, 10-year balance pass, 10-user beta playtest. `GAME_VERSION` and save format bumped; `0.4.1` saves migrate on load.
 
-### Ship checklist (closed)
-- [x] 10-year balance pass — town PASS 2026-07-04 (`npm run simulate:10year`, 9/9 gates)
-- [x] Spear / militia balance review (`militiaBalance.ts`, `balance:militia`)
-- [x] External playtests — 10 sessions ([TECHNICAL.md](TECHNICAL.md#playtest-report))
-- [x] `GAME_VERSION` **0.4.2** + `COMPATIBLE_SAVE_VERSIONS` migration
-- [x] Docs + in-game Roadmap sync
+### Added
 
-### Beta playtest follow-up (July 5, 2026)
+#### Beta playtest follow-up (July 5, 2026)
 - **Raid prep copy** — raids test preparation, not a battle screen (`RAID_PREPARATION_HINT`, Frontier readiness card, README)
 - **Eco breakdown** — Nature tab “Why this score” (`ecoBreakdown.ts`)
 - **Population growth report** — Village tab cap/food/rep messaging (`populationGrowth.ts`)
@@ -49,7 +33,6 @@
 
 Inspired by **RimWorld** (priority alerts, contextual inspector), **Banished** (bottom build hotbar), and **Frostpunk** (resource urgency). Goal: lower cognitive load, faster routing to urgent issues, map stays visible while building.
 
-#### Added
 - **`AlertBar`** — clickable priority strip under header (raids, diplomacy, low food, shelter warning, trade ready, active challenge); capped at 4 alerts (`priorityAlerts.ts`, `AlertBar.tsx`).
 - **`BuildHotbar`** — Banished-style bottom map strip: House, Farm, Lumber Mill, Quarry, Well, Road with hotkey badges (`BuildHotbar.tsx`).
 - **`GameMenu`** — ☰ header menu for save, load, auto-save, audio, reset (`GameMenu.tsx`).
@@ -218,14 +201,21 @@ Four code-review rounds (~40 fixes). Verified: `npm run build`, `npm run lint` (
 ##### Intentional (not changed)
 - **School juvenile `age++`** at staffed school — accelerates childhood; not the off-screen duplicate bug.
 
+### Ship checklist (closed)
+- [x] 10-year balance pass — town PASS 2026-07-04 (`npm run simulate:10year`, 9/9 gates)
+- [x] Spear / militia balance review (`militiaBalance.ts`, `balance:militia`)
+- [x] External playtests — 10 sessions ([TECHNICAL.md](TECHNICAL.md#playtest-report))
+- [x] `GAME_VERSION` **0.4.2** + `COMPATIBLE_SAVE_VERSIONS` migration
+- [x] Docs + in-game Roadmap sync
+
 ## [0.4.1] - 2026-07-04
 
 **Early Alpha v0.4.1** — tribes, raids, diplomacy, four victory paths, village leadership. `GAME_VERSION` and save format bumped; `0.4` saves migrate on load.
 
-### Highlights
+### Added
 - Tribe diplomacy v2, frontier raids + combat preview, peace treaties, visitor leader talk
 - Trade Empire + Harmony victories active; Silkmarket trade route
-- Village head merit elections (founding, decennial, succession)
+- Village head merit elections (founding election at start, decennial, succession on death) — *superseded in [Unreleased] by founding male + Year 10 ceremony + 2-year vacancy*
 - In-game Roadmap tab, Nature grazing warning, Prison + Guard, chronicle export
 
 ## [0.4.1] - Village leadership & merit elections (2026-07-04)
