@@ -2,8 +2,8 @@
 
 **Target:** **End of July 2026** · **Prerequisite:** [v0.4.2](ROADMAP.md) shipped (`GAME_VERSION = 0.4.2`)
 
-Living plan for the **consolidated scale & architecture** release.  
-**Parent index** → [ROADMAP.md](ROADMAP.md) · Technical → [TECHNICAL.md](TECHNICAL.md) · Changelog → [CHANGELOG.md](CHANGELOG.md)
+**Developer-only** checklist for the **consolidated scale & architecture** release — not shown in-game.  
+**Player-facing shipped list** → [ROADMAP.md](ROADMAP.md) · Technical → [TECHNICAL.md](TECHNICAL.md) · Changelog → [CHANGELOG.md](CHANGELOG.md)
 
 *Updated: 2026-07-05 — v0.4.2 shipped; half-done registry = **FINISH polish in v0.5.0** (not blanket defer); election ceremony **shipped in code**; **v0.5.0** tag **end July 2026**.*
 
@@ -121,14 +121,17 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 
 ## P1 — Should ship
 
-| # | Item | Notes |
-|---|------|-------|
-| 1 | **Counter-raid militia march** | Line + sprites to rival camp; abstract resolve stays |
-| 2 | **Large-map playtests** | 5–10 sessions at 10× after benchmark gate green |
-| 3 | **Reputation arc UI** | Milestones beyond ⭐ tooltip |
-| 4 | **Footstep / work SFX by surface** | Juice deferred since v0.4.2 |
-| 5 | **One visitor quest chain** | Scholars or Nomads multi-step |
-| 6 | **`npm run benchmark:gate`** | CI-friendly wrapper |
+*From [ROADMAP.md](ROADMAP.md) Top 10 audit — finishable gaps only; full content tracks stay post-0.5.0.*
+
+| # | Item | Top 10 track | Notes |
+|---|------|--------------|-------|
+| 1 | **Counter-raid militia march** | #1 Defense | Line + sprites to rival camp; abstract resolve stays |
+| 2 | **One visitor quest chain** | #6 Diplomacy | Scholars or Nomads multi-step |
+| 3 | **Election Year 10/20 playtest** | #9 Culture | Ceremony shipped in code — verify live |
+| 4 | **Reputation arc UI** | Village UX | Milestones beyond ⭐ tooltip |
+| 5 | **Large-map playtests** | Infrastructure | 5–10 sessions at 10× after benchmark gate green |
+| 6 | **Footstep / work SFX by surface** | Juice | Deferred since v0.4.2 |
+| 7 | **`npm run benchmark:gate`** | Infrastructure | CI-friendly wrapper |
 
 #### Election day ceremony (P1 — v0.5.0) ✅ Shipped in code
 
@@ -161,22 +164,9 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 
 ---
 
-## Defer — post-0.5.0
-
-| Item | Reason |
-|------|--------|
-| Real-time tactical map battles | Abstract raids stay |
-| Installer / Steam release | Separate distribution milestone |
-| Full tribal wars, sieges, embassies, player caravans | Content track |
-| Fog of war / map expansion scouts | Content track |
-| Hospital disease loop, wardogs | Content track |
-| Multiplayer | post-1.0 |
-
----
-
 ## 🟡 Half-done registry (v0.5.0)
 
-**Rule:** Small polish gaps on working systems → **FINISH here**. New content tracks (tactical battles, disease loop, deep government) → parent [ROADMAP.md](ROADMAP.md) *Defer post-0.5.0* table.
+**Dev-only** — not shown in-game or in public [ROADMAP.md](ROADMAP.md).
 
 | Feature | What works today | What's missing | Target |
 |---------|------------------|----------------|--------|
