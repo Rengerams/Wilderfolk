@@ -1,27 +1,5 @@
 import { GAME_PHASE, GAME_VERSION } from './version';
-import {
-  ROADMAP_NORTH_STAR,
-  ROADMAP_SECTIONS,
-  ROADMAP_TARGET_VERSION,
-  ROADMAP_WINNING_MOMENT,
-  type RoadmapItem,
-} from './roadmapContent';
-
-function RoadmapItemRow({ item }: { item: RoadmapItem }) {
-  return (
-    <div className="rounded-lg bg-stone-900/40 px-2 py-1.5">
-      <div className="flex items-start gap-1.5">
-        <span className="mt-0.5 shrink-0 text-[10px]" title="Shipped">✅</span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] leading-snug text-stone-300">{item.label}</p>
-          {item.note && (
-            <p className="mt-0.5 text-[9px] leading-relaxed text-stone-500">{item.note}</p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { ROADMAP_NORTH_STAR, ROADMAP_TARGET_VERSION, ROADMAP_VERSIONS } from './roadmapContent';
 
 export default function RoadmapPanel() {
   return (
@@ -32,22 +10,26 @@ export default function RoadmapPanel() {
           {GAME_PHASE} · playing v{GAME_VERSION} · next tag v{ROADMAP_TARGET_VERSION}
         </p>
         <p className="mt-2 leading-relaxed text-stone-400">{ROADMAP_NORTH_STAR}</p>
-        <p className="mt-2 rounded-lg bg-stone-900/50 px-2 py-1.5 text-[9px] italic text-amber-200/90">
-          Winning moment: “{ROADMAP_WINNING_MOMENT}”
-        </p>
       </div>
 
-      {ROADMAP_SECTIONS.map((section) => (
-        <div key={section.id} className="rounded-xl bg-stone-700/50 p-3">
-          <h4 className="mb-0.5 text-xs font-bold text-stone-200">{section.title}</h4>
-          {section.subtitle && (
-            <p className="mb-2 text-[9px] text-stone-500">{section.subtitle}</p>
-          )}
-          <div className="space-y-1">
-            {section.items.map((item) => (
-              <RoadmapItemRow key={item.label} item={item} />
-            ))}
-          </div>
+      {ROADMAP_VERSIONS.map((v) => (
+        <div key={v.version} className="rounded-xl bg-stone-700/50 p-3">
+          <h4 className="text-xs font-bold text-stone-200">
+            v{v.version} — {v.theme}
+          </h4>
+          <p className="mb-2 text-[9px] text-stone-500">Shipped: {v.shipDate}</p>
+          <table className="w-full border-collapse text-[10px]">
+            <tbody>
+              {v.features.map((feature) => (
+                <tr key={feature} className="border-t border-stone-600/40 first:border-t-0">
+                  <td className="w-6 py-1 pr-1 align-top text-center text-emerald-400" title="Done">
+                    🟢
+                  </td>
+                  <td className="py-1 leading-snug text-stone-300">{feature}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ))}
     </div>
