@@ -1,15 +1,18 @@
 import { TerrainType, type TerrainTile, type WorldMap, type MapPreset, MapSize, MAP_SIZE_DIMENSIONS } from './gameTypes';
 
-// Simple seeded random number generator
+// ─── Seeded PRNG ─────────────────────────────────────────────────────────────
+// Park-Miller LCG. Seed 0 is fatal (0 * 16807 % N = 0), so we coerce it.
 function seededRandom(seed: number) {
-  let s = seed;
-  return function() {
+  let s = seed === 0 ? 1 : Math.abs(Math.floor(seed)) % 2147483647;
+  return function () {
     s = (s * 16807) % 2147483647;
     return (s - 1) / 2147483646;
   };
 }
 
-// Simple noise function - multiple octaves of sine waves
+// ─── Noise ───────────────────────────────────────────────────────────────────
+// Simple octave noise using sine/cosine. Not Perlin, but fast and good enough
+// for macro terrain. Returns 0..1.
 function noise(x: number, y: number, seed: number): number {
   let value = 0;
   let amplitude = 1;
@@ -27,20 +30,18 @@ function noise(x: number, y: number, seed: number): number {
     amplitude *= 0.5;
     frequency *= 2;
   }
-
   return value / maxValue;
 }
 
-// Moisture noise - different seed for independent variation
 function moistureNoise(x: number, y: number, seed: number): number {
   return noise(x, y, seed + 1000);
 }
 
-// Temperature noise
 function tempNoise(x: number, y: number, seed: number): number {
   return noise(x, y, seed + 2000);
 }
 
+// ─── Presets ─────────────────────────────────────────────────────────────────
 interface PresetModifiers {
   elevationBias: number;
   elevationScale: number;
@@ -52,41 +53,59 @@ interface PresetModifiers {
 }
 
 const PRESET_MODIFIERS: Record<MapPreset, PresetModifiers> = {
-  verdant: { elevationBias: -0.02, elevationScale: 0.95, moistureBias: 0.18, moistureScale: 1.25, temperatureBias: 0.02, waterLevel: 0.18, forestThreshold: 0.35, },
-  mountainous: { elevationBias: 0.22, elevationScale: 1.35, moistureBias: -0.05, moistureScale: 0.85, temperatureBias: -0.12, waterLevel: 0.20, forestThreshold: 0.48, },
-  coastal: { elevationBias: -0.12, elevationScale: 0.85, moistureBias: 0.22, moistureScale: 1.2, temperatureBias: 0.08, waterLevel: 0.32, forestThreshold: 0.42, },
-  arid: { elevationBias: 0.02, elevationScale: 1.05, moistureBias: -0.38, moistureScale: 0.55, temperatureBias: 0.22, waterLevel: 0.12, forestThreshold: 0.70, },
-  harsh: { elevationBias: 0.18, elevationScale: 1.25, moistureBias: -0.22, moistureScale: 0.70, temperatureBias: -0.22, waterLevel: 0.16, forestThreshold: 0.55, },
+  verdant:     { elevationBias: -0.02, elevationScale: 0.95, moistureBias:  0.18, moistureScale: 1.25, temperatureBias:  0.02, waterLevel: 0.18, forestThreshold: 0.35 },
+  mountainous: { elevationBias:  0.22, elevationScale: 1.35, moistureBias: -0.05, moistureScale: 0.85, temperatureBias: -0.12, waterLevel: 0.20, forestThreshold: 0.48 },
+  coastal:     { elevationBias: -0.12, elevationScale: 0.85, moistureBias:  0.22, moistureScale: 1.20, temperatureBias:  0.08, waterLevel: 0.32, forestThreshold: 0.42 },
+  arid:        { elevationBias:  0.02, elevationScale: 1.05, moistureBias: -0.38, moistureScale: 0.55, temperatureBias:  0.22, waterLevel: 0.12, forestThreshold: 0.70 },
+  harsh:       { elevationBias:  0.18, elevationScale: 1.25, moistureBias: -0.22, moistureScale: 0.70, temperatureBias: -0.22, waterLevel: 0.16, forestThreshold: 0.55 },
 };
 
-function getTerrainType(elevation: number, moisture: number, temperature: number, nearRiver: boolean, nearMountain: boolean, preset: MapPreset): TerrainType {
+// ─── Terrain assignment ──────────────────────────────────────────────────────
+function getTerrainType(
+  elevation: number,
+  moisture: number,
+  temperature: number,
+  nearRiver: boolean,
+  nearMountain: boolean,
+  preset: MapPreset,
+): TerrainType {
   const pm = PRESET_MODIFIERS[preset];
   const waterLevel = pm.waterLevel;
 
+  // River overrides everything else
   if (nearRiver) {
     if (elevation < waterLevel * 0.75) return TerrainType.River;
     if (elevation < waterLevel + 0.05) return TerrainType.RiverBank;
   }
 
+  // Water & beach
   if (elevation < waterLevel * 0.6) return TerrainType.DeepWater;
   if (elevation < waterLevel) return TerrainType.ShallowWater;
   if (elevation < waterLevel + 0.08) return TerrainType.Beach;
 
-  if (nearMountain && elevation > 0.7) return TerrainType.Rocky;
-
+  // High peaks FIRST — before Rocky foothills, so snow-capped peaks aren't
+  // downgraded to Rocky just because they sit near another mountain.
   if (elevation > 0.85) {
     if (temperature < 0.3) return TerrainType.Snow;
     return TerrainType.Mountains;
   }
+
+  // Rocky foothills near existing mountains
+  if (nearMountain && elevation > 0.7) return TerrainType.Rocky;
+
   if (elevation > 0.6) return TerrainType.Hills;
 
+  // Forest tiers
   if (moisture > pm.forestThreshold + 0.15) return TerrainType.DarkForest;
   if (moisture > pm.forestThreshold) return TerrainType.Forest;
-  if (temperature > 0.7 && moisture < 0.25) return TerrainType.Grassland; // inland savanna / dry grassland
+
+  // Dry grassland / savanna
+  if (temperature > 0.7 && moisture < 0.25) return TerrainType.Grassland;
 
   return TerrainType.Grassland;
 }
 
+// ─── Buildability ────────────────────────────────────────────────────────────
 const UNBUILDABLE_TERRAIN = new Set<TerrainType>([
   TerrainType.DeepWater,
   TerrainType.ShallowWater,
@@ -106,6 +125,8 @@ export function isFootprintBuildable(
   worldX: number,
   worldY: number,
 ): boolean {
+  if (!tiles?.length || tileW <= 0 || tileH <= 0) return false;
+
   const left = worldX - footprintW / 2;
   const right = worldX + footprintW / 2;
   const top = worldY - footprintH / 2;
@@ -125,7 +146,7 @@ export function isFootprintBuildable(
   return true;
 }
 
-/** Carve dry buildable land for the founding camp (coastal maps need this). */
+/** Carve dry buildable land for the founding camp. */
 export function ensureCampClearing(
   tiles: TerrainTile[][],
   tileW: number,
@@ -135,13 +156,19 @@ export function ensureCampClearing(
   radiusTiles: number,
   preset: MapPreset,
 ): void {
+  if (!tiles?.length || tileW <= 0 || tileH <= 0) return;
+
   const cx = Math.floor(worldX / 10);
   const cy = Math.floor(worldY / 10);
+
   for (let ty = 0; ty < tileH; ty++) {
     for (let tx = 0; tx < tileW; tx++) {
       const dist = Math.hypot(tx - cx, ty - cy);
       if (dist > radiusTiles) continue;
-      const tile = tiles[ty][tx];
+
+      const tile = tiles[ty]?.[tx];
+      if (!tile) continue;
+
       const inner = dist < radiusTiles * 0.55;
       tile.type = inner
         ? TerrainType.Grassland
@@ -168,8 +195,11 @@ export function findCampSite(
   if (isFootprintBuildable(tiles, tileW, tileH, footprintW, footprintH, preferredX, preferredY)) {
     return { x: preferredX, y: preferredY };
   }
+
   const step = 10;
   const margin = 40;
+
+  // Spiral search outward
   for (let ring = 1; ring <= 40; ring++) {
     for (let dy = -ring; dy <= ring; dy++) {
       for (let dx = -ring; dx <= ring; dx++) {
@@ -183,7 +213,8 @@ export function findCampSite(
       }
     }
   }
-  // Full-map fallback — never return an unbuildable preferred site.
+
+  // Full-map fallback scan
   const scanStep = 20;
   for (let y = margin; y <= mapPixelH - margin; y += scanStep) {
     for (let x = margin; x <= mapPixelW - margin; x += scanStep) {
@@ -192,9 +223,22 @@ export function findCampSite(
       }
     }
   }
+
+  // Absolute last resort — scan every 10px
+  for (let y = margin; y <= mapPixelH - margin; y += 10) {
+    for (let x = margin; x <= mapPixelW - margin; x += 10) {
+      if (isFootprintBuildable(tiles, tileW, tileH, footprintW, footprintH, x, y)) {
+        return { x, y };
+      }
+    }
+  }
+
+  // If the world is literally 100% unbuildable, return preferred but warn
+  console.warn('[terrainGen] findCampSite: no buildable site found, returning preferred');
   return { x: preferredX, y: preferredY };
 }
 
+// ─── World generation ────────────────────────────────────────────────────────
 export interface GenerateWorldMapOptions {
   size?: MapSize;
   preset?: MapPreset;
@@ -231,9 +275,8 @@ export function generateWorldMap(
     width = widthOrSize;
     height = typeof heightOrPreset === 'number' ? heightOrPreset : 900;
     preset = typeof heightOrPreset === 'string' ? heightOrPreset : presetArg;
-    seed = typeof heightOrPreset === 'number'
-      ? (seedOrUndefined ?? Math.floor(Math.random() * 100000))
-      : (seedOrUndefined ?? Math.floor(Math.random() * 100000));
+    seed = seedOrUndefined ?? Math.floor(Math.random() * 100000);
+
     if (sizeArg) {
       size = sizeArg;
     } else {
@@ -245,13 +288,13 @@ export function generateWorldMap(
   }
 
   const rng = seededRandom(seed);
-  const tileW = Math.ceil(width / 10); // 10px tiles
+  const tileW = Math.ceil(width / 10);
   const tileH = Math.ceil(height / 10);
 
   const tiles: TerrainTile[][] = [];
   const pm = PRESET_MODIFIERS[preset];
 
-  // First pass - elevation and moisture
+  // ── First pass: elevation & moisture ──
   for (let ty = 0; ty < tileH; ty++) {
     tiles[ty] = [];
     for (let tx = 0; tx < tileW; tx++) {
@@ -262,15 +305,15 @@ export function generateWorldMap(
       const moisture = Math.min(1, Math.max(0, (moistureNoise(worldX, worldY, seed) + pm.moistureBias) * pm.moistureScale));
 
       tiles[ty][tx] = {
-        type: TerrainType.Grassland, // placeholder
+        type: TerrainType.Grassland,
         elevation: elevation * 100,
         moisture: moisture * 100,
         variation: rng(),
       };
     }
   }
-  
-  // Find mountain peaks for river sources
+
+  // ── Find mountain peaks for river sources ──
   const peaks: { x: number; y: number; elev: number }[] = [];
   for (let ty = 2; ty < tileH - 2; ty++) {
     for (let tx = 2; tx < tileW - 2; tx++) {
@@ -290,33 +333,31 @@ export function generateWorldMap(
       }
     }
   }
-  
-  // Sort by elevation, take top peaks
+
   peaks.sort((a, b) => b.elev - a.elev);
   const topPeaks = peaks.slice(0, Math.min(5 + Math.floor(rng() * 4), peaks.length));
-  
-  // Generate rivers from peaks
+
+  // ── Generate rivers from peaks ──
   const rivers: { x: number; y: number }[][] = [];
   const riverSet = new Set<string>();
-  
+
   for (const peak of topPeaks) {
     const river: { x: number; y: number }[] = [];
     let cx = peak.x;
     let cy = peak.y;
     const visited = new Set<string>();
-    
+
     for (let step = 0; step < 200; step++) {
       const key = `${cx},${cy}`;
       if (visited.has(key)) break;
       visited.add(key);
       river.push({ x: cx * 10, y: cy * 10 });
       riverSet.add(key);
-      
-      // Find lowest neighbor
+
       let lowestElev = tiles[cy][cx].elevation;
       let lowestX = cx;
       let lowestY = cy;
-      
+
       const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[1,-1],[-1,1],[1,1]];
       for (const [dx, dy] of dirs) {
         const nx = cx + dx;
@@ -329,21 +370,21 @@ export function generateWorldMap(
           }
         }
       }
-      
+
       if (lowestX === cx && lowestY === cy) break;
       cx = lowestX;
       cy = lowestY;
-      
+
       // Stop at water
       if (tiles[cy][cx].elevation < 20) break;
     }
-    
+
     if (river.length > 10) {
       rivers.push(river);
     }
   }
-  
-  // Second pass - assign terrain types
+
+  // ── Second pass: assign terrain types ──
   for (let ty = 0; ty < tileH; ty++) {
     for (let tx = 0; tx < tileW; tx++) {
       const tile = tiles[ty][tx];
@@ -351,22 +392,26 @@ export function generateWorldMap(
       const moistNorm = tile.moisture / 100;
       const tempNorm = Math.min(1, Math.max(0, tempNoise(tx * 10, ty * 10, seed) + pm.temperatureBias));
 
-      // Check if near river
+      // Near river (5×5 neighbourhood)
       let nearRiver = false;
-      let nearMountain = false;
       for (let dy = -2; dy <= 2 && !nearRiver; dy++) {
         for (let dx = -2; dx <= 2; dx++) {
           if (riverSet.has(`${tx + dx},${ty + dy}`)) {
             nearRiver = true;
+            break;
           }
         }
       }
 
-      // Check if near mountain
+      // Near mountain (7×7 neighbourhood)
+      let nearMountain = false;
       for (let dy = -3; dy <= 3 && !nearMountain; dy++) {
         for (let dx = -3; dx <= 3; dx++) {
           const nt = tiles[ty + dy]?.[tx + dx];
-          if (nt && nt.elevation > 85) nearMountain = true;
+          if (nt && nt.elevation > 85) {
+            nearMountain = true;
+            break;
+          }
         }
       }
 
@@ -374,14 +419,17 @@ export function generateWorldMap(
     }
   }
 
-  const mapPixelW = MAP_SIZE_DIMENSIONS[size].width;
-  const mapPixelH = MAP_SIZE_DIMENSIONS[size].height;
-  const campX = mapPixelW / 2;
-  const campY = mapPixelH / 2;
+  // ── Camp clearing ──
+  // FIX: use the actual width/height, not MAP_SIZE_DIMENSIONS[size].
+  // Legacy calls with custom pixel dimensions were placing the camp
+  // at the centre of the default MapSize instead of the real map.
+  const campX = width / 2;
+  const campY = height / 2;
   const houseFootprint = { w: 46, h: 40 };
+
   if (
-    preset === 'coastal'
-    || !isFootprintBuildable(tiles, tileW, tileH, houseFootprint.w, houseFootprint.h, campX, campY)
+    preset === 'coastal' ||
+    !isFootprintBuildable(tiles, tileW, tileH, houseFootprint.w, houseFootprint.h, campX, campY)
   ) {
     ensureCampClearing(tiles, tileW, tileH, campX, campY, preset === 'coastal' ? 18 : 12, preset);
   }

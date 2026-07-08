@@ -4,7 +4,7 @@ import { finalizeMoonHowlerDeath } from './moonHowler';
 
 /** 24 ticks = one in-game day. At 1× speed (~1 tick/s) a day lasts ~24 real seconds. */
 export const TICKS_PER_DAY = 24;
-export const DAYS_PER_YEAR = 360;
+export const DAYS_PER_YEAR = 365;
 /** Full moon hits every ~2 in-game weeks */
 export const DAYS_PER_MOON_CYCLE = 14;
 
@@ -39,7 +39,7 @@ export const HUMAN_MOVE_OUT_MIN_AGE = 18;
 /** Female fertility window. Fertility is 1.0 until peak end, then linearly declines to 0. */
 export const HUMAN_FERTILITY_START = 16;
 export const HUMAN_FERTILITY_PEAK_END = 35;
-export const HUMAN_FERTILITY_END = 50;
+export const HUMAN_FERTILITY_END = 40;
 
 export function getFemaleFertility(age: number): number {
   if (age < HUMAN_FERTILITY_START || age >= HUMAN_FERTILITY_END) return 0;
@@ -52,7 +52,7 @@ export const JUVENILE_DAYS_PER_AGE_YEAR = 30;
 export const ADULT_DAYS_PER_AGE_YEAR = DAYS_PER_YEAR;
 
 /** Old-age death thresholds in life-years (1 game year ≈ 1 life-year for adults). */
-export const HUMAN_VENERABLE_AGE = 70;
+export const HUMAN_VENERABLE_AGE = 60;
 export const HUMAN_MAX_LIFESPAN_YEARS = 90;
 /** Upper bound for courtship / affairs — matches life-year lifespan cap. */
 export const HUMAN_ADULT_MAX_AGE = HUMAN_MAX_LIFESPAN_YEARS;

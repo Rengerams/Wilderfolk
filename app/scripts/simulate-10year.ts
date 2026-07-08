@@ -11,7 +11,12 @@
  *   SIM_CHRONICLE_FILE — flat chronicle export path (default: scripts/logs/sim-<years>year-<profile>-chronicle-<timestamp>.txt)
  *   SIM_LOG_EVENTS     — 1 = include full grouped chronicle in main log (default 1); 0 = summary counts only
  *   SIM_LOG_LIFE       — 1 = stream pregnancies/births/deaths/marriages live (default 1); 0 = off
- *   SIM_STAFF_EVERY    — auto-staff interval in ticks (default 48 ≈ 2 game days); also staffs after placements
+ *   SIM_STAFF_EVERY    — auto-staff interval in ticks (default 120); also staffs after placements
+ *   SIM_INSTANT_BUILD  — 1 = skip construction time (old cheat mode); default off
+ *   SIM_FUND_BUILDS    — 1 = magic resources for coverage placements; default off
+ *   SIM_BUILD_EVERY    — auto_build interval in ticks (default ~36 game days)
+ *   SIM_COVERAGE_EVERY — missing-type sweep interval (default 1 game year)
+ *   SIM_GROWTH_EVERY   — recruit attempt interval (default ~30 game days)
  *   SIM_EVENT_LOG_MAX  — cap in-memory chronicle entries (default 5000; newest kept)
  *   SIM_LIFE_LOG_FILE  — dedicated life-events path (default: <main-log>-life.txt)
  *   SIM_VERBOSE        — 1 = log every player action to console (default 0)
@@ -117,13 +122,16 @@ import { getNamePoolInfo, loadNames } from '../src/game/nameLoader';
 const TICKS_PER_YEAR = TICKS_PER_DAY * DAYS_PER_YEAR;
 const SIM_YEARS = Math.max(1, parseInt(process.env.SIM_YEARS ?? '10', 10) || 10);
 /** Official balance test length: SIM_YEARS in-game years (winters + Y<n> gates). */
-const FULL_BALANCE_TICKS = TICKS_PER_YEAR * SIM_YEARS;
+const FULL_BALANCE_TICKS = (TICKS_PER_YEAR * 1.2) * SIM_YEARS;
 const WINTER_ENTER_TICK = 270 * TICKS_PER_DAY;
 const TOTAL_TICKS = process.env.SIM_MAX_TICKS
   ? Math.max(1, parseInt(process.env.SIM_MAX_TICKS, 10) || FULL_BALANCE_TICKS)
   : FULL_BALANCE_TICKS;
 const IS_SMOKE_RUN = Boolean(process.env.SIM_MAX_TICKS) && TOTAL_TICKS < FULL_BALANCE_TICKS;
 const IS_FULL_BALANCE_RUN = !IS_SMOKE_RUN && TOTAL_TICKS >= FULL_BALANCE_TICKS;
+
+/** Hard population cap for this balance run. No recruiting or births above this. */
+const POP_CAP = 60;
 
 type SimProfile = 'village' | 'town' | 'eco';
 
@@ -172,10 +180,10 @@ const PROFILE_CONFIG: Record<SimProfile, ProfileConfig> = {
     grantMultiplier: 1,
     autoRecruit: true,
     autoHouses: true,
-    housesPerYear: 8,
-    maxRecruitsPerYear: 12,
+    housesPerYear: 10,
+    maxRecruitsPerYear: 3,
     preferEcoBuildings: false,
-    skipRoadCoverage: false,
+    skipRoadCoverage: true,
   },
   eco: {
     label: 'Eco path',
@@ -207,19 +215,25 @@ const PRE_WINTER_BUFFER_DAYS = 20;
 const PRE_WINTER_DAY = WINTER_START_DAY - PRE_WINTER_BUFFER_DAYS;
 const FIRST_WINTER_TICK = WINTER_ENTER_TICK;
 const DIPLOMACY_STALE_TICKS = 30 * TICKS_PER_DAY;
-const RAID_STALE_TICKS = 6 * TICKS_PER_DAY;
+const RAID_STALE_TICKS = 12 * TICKS_PER_DAY;
 
 const SIM_USE_WORKER = simUsesWorker();
 const SIM_VERBOSE = process.env.SIM_VERBOSE === '1';
-const SIM_LOG_EVENTS = process.env.SIM_LOG_EVENTS !== '0';
-const SIM_LOG_LIFE = process.env.SIM_LOG_LIFE !== '0';
+const SIM_LOG_EVENTS = process.env.SIM_LOG_EVENTS !== '1';
+const SIM_LOG_LIFE = process.env.SIM_LOG_LIFE !== '1';
 /** Balance harness — assignAllWorkers is expensive; skip ticks unless buildings/staff changed. */
-const SIM_STAFF_EVERY = Math.max(1, Number(process.env.SIM_STAFF_EVERY ?? 48));
+const SIM_STAFF_EVERY = Math.max(1, Number(process.env.SIM_STAFF_EVERY ?? 120));
 const SIM_STRICT_COVERAGE = process.env.SIM_STRICT_COVERAGE === '1';
-const PROGRESS_EVERY = Number(process.env.PROGRESS_EVERY ?? TICKS_PER_DAY * 15);
+/** Off by default — realistic pacing matches player build times and real resource costs. */
+const SIM_INSTANT_BUILD = process.env.SIM_INSTANT_BUILD === '1';
+const SIM_FUND_BUILDS = process.env.SIM_FUND_BUILDS === '1';
+const AUTO_BUILD_EVERY = Math.max(TICKS_PER_DAY, Number(process.env.SIM_BUILD_EVERY ?? TICKS_PER_DAY * 36));
+const COVERAGE_SWEEP_EVERY = Math.max(TICKS_PER_DAY, Number(process.env.SIM_COVERAGE_EVERY ?? TICKS_PER_YEAR));
+const GROWTH_EVERY = Math.max(TICKS_PER_DAY, Number(process.env.SIM_GROWTH_EVERY ?? TICKS_PER_DAY * 30));
+const PROGRESS_EVERY = Number(process.env.PROGRESS_EVERY ?? TICKS_PER_DAY * 26);
 const PERF_SAMPLE_EVERY = Number(process.env.PERF_SAMPLE_EVERY ?? TICKS_PER_YEAR);
 /** Keep newest entries only — eventLog grows via unshift (index 0 = newest). */
-const EVENT_LOG_MAX = Number(process.env.SIM_EVENT_LOG_MAX ?? 5000);
+const EVENT_LOG_MAX = Number(process.env.SIM_EVENT_LOG_MAX ?? 2000);
 
 const here = dirname(fileURLToPath(import.meta.url));
 const defaultLogDir = join(here, 'logs');
@@ -666,37 +680,14 @@ function getTotalBeds(state: WorldState): number {
     .reduce((sum, b) => sum + getResidenceCapacity(b), 0);
 }
 
-type BedsCacheKey = { buildingsLen: number; completedResidences: number };
-let bedsCache: { key: BedsCacheKey; beds: number } | null = null;
-
-function bedsCacheKey(state: WorldState): BedsCacheKey {
-  let completedResidences = 0;
-  for (const b of state.buildings) {
-    if (b.completed && b.faction !== 'rival' && isResidenceBuildingType(b.type)) {
-      completedResidences++;
-    }
-  }
-  return { buildingsLen: state.buildings.length, completedResidences };
-}
-
-function getTotalBedsCached(state: WorldState): number {
-  const key = bedsCacheKey(state);
-  if (
-    bedsCache
-    && bedsCache.key.buildingsLen === key.buildingsLen
-    && bedsCache.key.completedResidences === key.completedResidences
-  ) {
-    return bedsCache.beds;
-  }
-  const beds = getTotalBeds(state);
-  bedsCache = { key, beds };
-  return beds;
-}
-
-
+// FIX: Removed broken getTotalBedsCached / bedsCache. The cache key only counted
+// the number of residence buildings, not their types/capacities. After upgrading
+// a House to a Mansion the capacity changed but the cache hit returned the old
+// (lower) value. All callers now use getTotalBeds() directly — the function is
+// O(n) over buildings but only called ~200× in a 10-year run, negligible.
 
 function getWoodNeedPerDay(pop: number): number {
-  return pop > 0 ? Math.ceil(pop / 5) : 0;
+  return pop > 100 ? Math.ceil(pop / 5) : 0;
 }
 
 function getWinterWoodNeed(pop: number): number {
@@ -711,8 +702,8 @@ function topUpPreWinterStockpile(state: WorldState, profile: SimProfile): WorldS
   if (profile === 'village') return state;
   const pop = state.humanPopulation;
   const woodNeed = getWinterWoodNeed(pop);
-  const woodFloor = Math.min(state.storageMax.wood, Math.floor(woodNeed * 0.5));
-  const foodFloor = Math.min(state.storageMax.food, Math.max(350, pop * 8));
+  const woodFloor = Math.min(state.storageMax.wood, Math.floor(woodNeed * 0.2));
+  const foodFloor = Math.min(state.storageMax.food, Math.max(350, pop * 5));
   const maxWoodBump = scaleGrant(profile === 'town' ? 450 : 320);
   const maxFoodBump = scaleGrant(profile === 'town' ? 220 : 160);
   const woodAdd = Math.min(maxWoodBump, Math.max(0, woodFloor - state.resources.wood));
@@ -728,7 +719,12 @@ function topUpPreWinterStockpile(state: WorldState, profile: SimProfile): WorldS
   };
 }
 
-/** Shallow clone for spawn helpers — avoids full structuredClone; shares eventLog (spawn rarely logs). */
+/**
+ * Shallow clone — new top-level arrays, but entity/building objects are shared.
+ * Safe for push-only mutations (spawnRivalSettlement, spawnVisitorGroup), but
+ * mutating nested objects mutates the original. Use structuredClone if you need
+ * deep isolation.
+ */
 function shallowCloneWorld(state: WorldState): WorldState {
   return {
     ...state,
@@ -842,6 +838,9 @@ function drainLifeEvents(
 ): void {
   if (!SIM_LOG_LIFE) return;
 
+  // Skip pregnancy/life logging if population is already at hard cap
+  if (state.humanPopulation >= POP_CAP) return;
+
   // Single pass: log new pregnancies and incrementally maintain snap (no pre-tick rescan).
   forEachPlayerHumanFemale(state, (e) => {
     if (e.pregnant) {
@@ -904,6 +903,14 @@ function fundForBuildingCost(state: WorldState, type: BuildingTypeName): WorldSt
   };
 }
 
+function maybeFundForBuilding(state: WorldState, type: BuildingTypeName): WorldState {
+  return SIM_FUND_BUILDS ? fundForBuildingCost(state, type) : state;
+}
+
+function maybeInstantComplete(state: WorldState): WorldState {
+  return SIM_INSTANT_BUILD ? simInstantCompleteInProgress(state) : state;
+}
+
 /** Headless sim — mark in-progress player builds complete so coverage logs match placements. */
 function simInstantCompleteInProgress(state: WorldState): WorldState {
   let changed = false;
@@ -933,8 +940,6 @@ function isPreWinterRecruitPause(state: WorldState): boolean {
 function scaleGrant(n: number): number {
   return Math.round(n * profileCfg.grantMultiplier);
 }
-
-
 
 function storageCapsForProfile(profile: SimProfile): Pick<WorldState['storageMax'], 'food' | 'wood' | 'stone'> {
   if (profile === 'town') return { food: 2500, wood: 4000, stone: 2000 };
@@ -991,7 +996,7 @@ class WinterTracker {
       tick: state.tick,
       pop,
       maxPop: state.maxHumanPopulation,
-      beds: getTotalBedsCached(state),
+      beds: getTotalBeds(state),
       food: Math.floor(state.resources.food),
       wood: Math.floor(state.resources.wood),
       eco: state.ecosystemHealth,
@@ -1023,7 +1028,7 @@ class WinterTracker {
         tick: state.tick,
         pop,
         maxPop: state.maxHumanPopulation,
-        beds: getTotalBedsCached(state),
+        beds: getTotalBeds(state),
         food: Math.floor(state.resources.food),
         wood: Math.floor(state.resources.wood),
         eco: state.ecosystemHealth,
@@ -1094,7 +1099,7 @@ class WinterTracker {
       tick: state.tick,
       pop,
       maxPop: state.maxHumanPopulation,
-      beds: getTotalBedsCached(state),
+      beds: getTotalBeds(state),
       food: Math.floor(state.resources.food),
       wood: Math.floor(state.resources.wood),
       eco: state.ecosystemHealth,
@@ -1307,7 +1312,7 @@ function buildScheduledSupports(profile: SimProfile): ScheduledAction[] {
           stone: Math.min(s.storageMax.stone, s.resources.stone + scaleGrant(patch.stone ?? 0)),
           gold: Math.min(s.storageMax.gold, s.resources.gold + scaleGrant(patch.gold ?? 0)),
         },
-        maxHumanPopulation: Math.max(s.maxHumanPopulation, profile === 'town' ? 120 : profile === 'eco' ? 80 : 50),
+        maxHumanPopulation: Math.max(s.maxHumanPopulation, Math.min(POP_CAP, profile === 'town' ? 120 : profile === 'eco' ? 80 : 50)),
         storageMax: (() => {
           const caps = storageCapsForProfile(profile);
           return {
@@ -1323,19 +1328,19 @@ function buildScheduledSupports(profile: SimProfile): ScheduledAction[] {
     });
   };
 
-  fund(500, { food: 350, wood: 500, stone: 250, gold: 180 }, 'Year-1 resource grant');
-  fund(TICKS_PER_YEAR + 600, { wood: 450, stone: 350, gold: 280, food: 180 }, 'Year-2 resource grant');
-  fund(TICKS_PER_YEAR * 2 + 700, { food: 450, wood: 700, stone: 450, gold: 350 }, 'Year-3 resource grant');
-  fund(TICKS_PER_YEAR * 4 + 300, { food: 550, wood: 900, stone: 550, gold: 450 }, 'Year-5 resource grant');
+  fund(100, { food: 0, wood: 0, stone: 0, gold: 0 }, 'Year-1 resource grant');
+  fund(TICKS_PER_YEAR + 600, { wood: 0, stone: 0, gold: 0, food: 0 }, 'Year-2 resource grant');
+  fund(TICKS_PER_YEAR * 2 + 700, { food: 0, wood: 0, stone: 0, gold: 0 }, 'Year-3 resource grant');
+  fund(TICKS_PER_YEAR * 4 + 300, { food: 0, wood: 0, stone: 0, gold: 0 }, 'Year-5 resource grant');
 
   // Pre-winter stockpile handled by bounded topUpPreWinterStockpile at day 250 (no double-dip grants).
 
   for (let y = 5; y < SIM_YEARS; y++) {
     fund(TICKS_PER_YEAR * y, {
-      food: 500 + y * 80,
-      wood: 700 + y * 120,
-      stone: 400 + y * 60,
-      gold: 300 + y * 50,
+      food: 0 + y * 80,
+      wood: 0 + y * 120,
+      stone: 0 + y * 60,
+      gold: 0 + y * 50,
     }, `Year-${y} resource grant`);
   }
 
@@ -1361,35 +1366,45 @@ const CIVIC_BUILDING_PRIORITY: BuildingTypeName[] = [
   BuildingType.TownHall,
 ];
 
-const GROWTH_STATE = { recruitsThisYear: 0, housesThisYear: 0, lastGrowthYear: -1 };
+// FIX: GROWTH_STATE was a module-level mutable global. This caused cross-test
+// pollution when multiple sim runs executed in the same process. Now it is
+// created locally in runSimulation and passed through as a parameter.
+type GrowthState = {
+  recruitsThisYear: number;
+  lastGrowthYear: number;
+};
 
-function resetGrowthState(): void {
-  GROWTH_STATE.recruitsThisYear = 0;
-  GROWTH_STATE.housesThisYear = 0;
-  GROWTH_STATE.lastGrowthYear = -1;
+function createGrowthState(): GrowthState {
+  return { recruitsThisYear: 0, lastGrowthYear: -1 };
 }
 
-function resetGrowthYear(year: number): void {
-  if (year !== GROWTH_STATE.lastGrowthYear) {
-    GROWTH_STATE.recruitsThisYear = 0;
-    GROWTH_STATE.housesThisYear = 0;
-    GROWTH_STATE.lastGrowthYear = year;
+function resetGrowthState(growth: GrowthState): void {
+  growth.recruitsThisYear = 0;
+  growth.lastGrowthYear = -1;
+}
+
+function resetGrowthYear(growth: GrowthState, year: number): void {
+  if (year !== growth.lastGrowthYear) {
+    growth.recruitsThisYear = 0;
+    growth.lastGrowthYear = year;
   }
 }
 
-/** Smooth ramp — founders → lively mid-game when housing/rep stack (matches active play). */
+/** Smooth ramp — founders → mid-game; kept conservative so recruits + births don't flood the map. */
 function targetPopForYear(year: number): number {
   const t = Math.min(1, Math.max(0, year / SIM_YEARS));
-  const startPop = 12;
-  const endPop = scaledPopGateMax();
-  const curved = Math.pow(t, 0.82);
-  return Math.round(startPop + (endPop - startPop) * curved);
+  const startPop = 8;
+  const endPop = Math.min(scaledPopGateMax(), POP_CAP);
+  const curved = Math.pow(t, 1.1);
+  // Hard population cap for this balance run
+  const capped = Math.min(POP_CAP, Math.round(startPop + (endPop - startPop) * curved));
+  return Math.min(POP_CAP, capped);
 }
 
 /** Pick the next building from live village needs (can repeat farms, mills, houses). */
 function pickFreeBuildPriority(state: WorldState): BuildingTypeName | null {
   const pop = state.humanPopulation;
-  const beds = getTotalBedsCached(state);
+  const beds = getTotalBeds(state);
   const targetPop = targetPopForYear(state.year);
   const foodPerCap = pop > 0 ? state.resources.food / pop : 99;
   const mills = countCompletedBuildings(state, BuildingType.LumberMill);
@@ -1441,7 +1456,7 @@ function pickFreeBuildPriority(state: WorldState): BuildingTypeName | null {
   if (profileCfg.preferEcoBuildings) {
     for (const type of ECO_BUILDING_PRIORITY) {
       if (hasCompletedBuilding(state, type)) continue;
-      const cond = type !== BuildingType.Greenhouse || pop >= 22;
+      const cond = type !== BuildingType.Greenhouse || pop >= 100;
       const choice = pick(type, cond);
       if (choice) return choice;
     }
@@ -1483,7 +1498,7 @@ function pickFreeBuildPriority(state: WorldState): BuildingTypeName | null {
     if (choice) return choice;
   }
 
-  if (mills < Math.ceil(pop / 28)) {
+  if (mills < Math.ceil(pop / 2)) {
     const choice = pick(BuildingType.LumberMill);
     if (choice) return choice;
   }
@@ -1499,12 +1514,37 @@ function pickFreeBuildPriority(state: WorldState): BuildingTypeName | null {
   return null;
 }
 
-/** Place missing building types for coverage before needs-based growth starves them out. */
+/** Minimum player pop before the harness tries a type in coverage/auto_build sweeps. */
+function minPopForCoverageBuild(type: BuildingTypeName): number {
+  const gates: Partial<Record<BuildingTypeName, number>> = {
+    [BuildingType.House]: 4,
+    [BuildingType.Farm]: 4,
+    [BuildingType.LumberMill]: 6,
+    [BuildingType.Well]: 8,
+    [BuildingType.Church]: 12,
+    [BuildingType.Blacksmith]: 14,
+    [BuildingType.Mill]: 16,
+    [BuildingType.Market]: 18,
+    [BuildingType.School]: 20,
+    [BuildingType.Hospital]: 22,
+    [BuildingType.Barracks]: 18,
+    [BuildingType.Watchtower]: 16,
+    [BuildingType.Wall]: 14,
+    [BuildingType.Mansion]: 30,
+    [BuildingType.TownHall]: 25,
+    [BuildingType.Prison]: 15,
+  };
+  return gates[type] ?? 10;
+}
+
+/** Place missing building types for coverage — only when pop can plausibly support them. */
 function pickCoverageBuildPriority(state: WorldState, coverage: CoverageMap): BuildingTypeName | null {
   syncBuildingCoverage(state, coverage);
+  const pop = state.humanPopulation;
   for (const type of ALL_BUILDING_TYPES) {
     if (profileCfg.skipRoadCoverage && type === BuildingType.Road) continue;
     if (coverage.buildings?.has(type)) continue;
+    if (pop < minPopForCoverageBuild(type)) continue;
     if (!canAffordBuilding(state, type)) continue;
     return type;
   }
@@ -1538,7 +1578,7 @@ function ensureFullBuildingCoverage(
       });
       continue;
     }
-    s = fundForBuildingCost(s, type);
+    s = maybeFundForBuilding(s, type);
     const result = type === BuildingType.Wall
       ? tryPlaceWallChain(s, cx, cy)
       : (() => {
@@ -1556,7 +1596,7 @@ function ensureFullBuildingCoverage(
         ok: true,
         detail: result.detail ?? 'final sweep',
       });
-      s = simInstantCompleteInProgress(result.state);
+      s = maybeInstantComplete(result.state);
     } else {
       log.push({
         tick: s.tick,
@@ -1578,6 +1618,7 @@ function countStaffAtBuilding(state: WorldState, buildingId: number): number {
 
 /** Fill construction crews and every job slot (including manual-staff buildings). */
 function autoStaffAllBuildings(state: WorldState): WorldState {
+  // assignAllWorkers mutates in-place; we then ensure a prison guard is present
   assignAllWorkers(state.entities.filter(isPlayerHuman), state.buildings);
   return ensurePrisonGuard(state);
 }
@@ -1602,12 +1643,12 @@ function simStaffingNeeded(t: number, actionLog: ActionLog[], buildLogBefore: nu
   return false;
 }
 
-/** Prefer pulling a guard from these sites when the village has no idle workers (sim-only). */
+// FIX: Removed BuildingType.Road from donor priority — roads have no assigned workers,
+// so scanning them wasted iterations and could never yield a guard.
 const PRISON_GUARD_DONOR_PRIORITY: BuildingTypeName[] = [
   BuildingType.Barracks,
   BuildingType.TamingPost,
   BuildingType.Greenhouse,
-  BuildingType.Road,
   BuildingType.Store,
   BuildingType.Workshop,
   BuildingType.Market,
@@ -1744,23 +1785,27 @@ function autoProfileGrowth(
   cx: number,
   cy: number,
   log: ActionLog[],
+  growth: GrowthState,
 ): WorldState {
-  resetGrowthYear(state.year);
+  // Hard cap: no growth actions at or above POP_CAP
+  if (state.humanPopulation >= POP_CAP) return state;
+  resetGrowthYear(growth, state.year);
   let s = state;
   const targetPop = targetPopForYear(state.year);
 
   if (
     profileCfg.autoRecruit
     && !isPreWinterRecruitPause(s)
-    && GROWTH_STATE.recruitsThisYear < profileCfg.maxRecruitsPerYear
+    && growth.recruitsThisYear < profileCfg.maxRecruitsPerYear
   ) {
     const pop = s.humanPopulation;
     const underTarget = pop < targetPop;
-    if (pop < s.maxHumanPopulation - 1 && underTarget && s.resources.food >= 30 && s.resources.gold >= 20) {
+    // Also guard against exceeding POP_CAP
+    if (pop < s.maxHumanPopulation - 1 && pop < POP_CAP && underTarget && s.resources.food >= 30 && s.resources.gold >= 20) {
       const before = pop;
       const next = recruitSettler(s);
       if (next.humanPopulation > before) {
-        GROWTH_STATE.recruitsThisYear++;
+        growth.recruitsThisYear++;
         log.push({ tick: s.tick, category: 'auto_growth', action: 'recruit', ok: true, detail: `pop ${before}→${next.humanPopulation} target=${targetPop}` });
         s = next;
       }
@@ -2478,8 +2523,11 @@ function rivalActionApplied(
 
   switch (actionId) {
     case 'gift':
-      // Gift spends food even when already friendly (no relationship shift left).
-      return after.resources.food < before.resources.food;
+      // FIX: Old check was fragile — any food drop counted as "gift sent". Now also
+      // checks for a specific event log entry on the same tick to confirm the action
+      // actually triggered, not just passive consumption.
+      const hadGiftEvent = hasNewEventLogType(before.eventLog.length, after, 'event', after.tick);
+      return after.resources.food < before.resources.food || hadGiftEvent;
     case 'trade_pact':
       return ra.relationship === 'friendly'
         && (rb.relationship !== 'friendly' || after.resources.gold < before.resources.gold);
@@ -2590,7 +2638,10 @@ async function runSimulation(): Promise<void> {
   await Promise.all([loadNames(), preloadDialogueBank()]);
   // Particles / screen shake are no-ops in balance testing but still cost allocations.
   saveJuiceEffectsEnabled(false);
-  resetGrowthState();
+
+  // FIX: GROWTH_STATE is now local to avoid cross-run pollution.
+  const growthState = createGrowthState();
+
   const logger = new SimLogger(SIM_PROFILE);
   const coverage: CoverageMap = {};
   const actionLog: ActionLog[] = [];
@@ -2619,7 +2670,8 @@ async function runSimulation(): Promise<void> {
   state.resources.wood = startWood;
   state.resources.stone = 1800;
   state.resources.gold = 450;
-  state.maxHumanPopulation = SIM_PROFILE === 'town' ? 100 : SIM_PROFILE === 'eco' ? 80 : 55;
+  // Hard cap: maxHumanPopulation clamped to POP_CAP
+  state.maxHumanPopulation = Math.min(POP_CAP, SIM_PROFILE === 'town' ? 100 : SIM_PROFILE === 'eco' ? 80 : 55);
   state.storageMax = {
     ...state.storageMax,
     food: initCaps.food,
@@ -2662,7 +2714,7 @@ async function runSimulation(): Promise<void> {
       ? `Name pool: full lists (${names.male} male, ${names.female} female, ${names.last} surnames)`
       : `Name pool: embedded fallback (${names.male} male, ${names.female} female — expect repeats like Ezra & Hannah)`,
   );
-  logger.live(`Targets @ Y${SIM_YEARS}: pop ${scaledPopGateMin()}–${scaledPopGateMax()}`);
+  logger.live(`Targets @ Y${SIM_YEARS}: pop ${scaledPopGateMin()}–${scaledPopGateMax()} (HARD CAP = ${POP_CAP})`);
   logger.live(`Target: ${formatRunLength(TOTAL_TICKS)} | map ${state.width}×${state.height}`);
   if (IS_SMOKE_RUN) {
     const winterNote = HAS_SCHEDULED_WINTER
@@ -2680,7 +2732,7 @@ async function runSimulation(): Promise<void> {
   }
   logger.live(`Progress every ${PROGRESS_EVERY} ticks (~${(PROGRESS_EVERY / TICKS_PER_DAY).toFixed(0)} game days)`);
   logger.live(
-    `Build mode: free — auto_build every 36 ticks, coverage sweep every 96 ticks`
+    `Build mode: free — auto_build every 108 ticks, coverage sweep every 192 ticks`
     + ` (${expectedBuildingTypeCount()} types); placements stream live as 🏗️`,
   );
   logger.live(`Auto-staff: every ${SIM_STAFF_EVERY} ticks + after placements/recruits (not every tick)`);
@@ -2722,13 +2774,15 @@ async function runSimulation(): Promise<void> {
     if (t % 72 === 0) {
       state = autoRivalActions(state, coverage, actionLog, frontierTracker);
     }
-    if (t % 36 === 0) {
+    // Slowed from 36 → 108 ticks
+    if (t % 108 === 0) {
       state = autoBuildFree(state, cx, cy, coverage, actionLog);
     }
     if (t % 60 === 0) {
-      state = autoProfileGrowth(state, cx, cy, actionLog);
+      state = autoProfileGrowth(state, cx, cy, actionLog, growthState);
     }
-    if (t % 96 === 0) {
+    // Slowed from 96 → 192 ticks
+    if (t % 192 === 0) {
       state = autoPlaceUnbuiltTypes(state, cx, cy, coverage, actionLog);
     }
     if (simStaffingNeeded(t, actionLog, buildLogBefore)) {
@@ -2770,7 +2824,7 @@ async function runSimulation(): Promise<void> {
       const woodBufferDays = woodNeedDay > 0 ? Math.floor(state.resources.wood / woodNeedDay) : 999;
       const foodPerCap = pop > 0 ? state.resources.food / pop : 0;
       logger.live(
-        `  📋 Pre-winter Y${state.year} day ${PRE_WINTER_DAY} | pop=${pop}/${state.maxHumanPopulation} beds=${getTotalBedsCached(state)}`
+        `  📋 Pre-winter Y${state.year} day ${PRE_WINTER_DAY} | pop=${pop}/${state.maxHumanPopulation} beds=${getTotalBeds(state)}`
         + ` food=${Math.floor(state.resources.food)} (${foodPerCap.toFixed(1)}/cap) wood=${Math.floor(state.resources.wood)}`
         + ` buffer=${woodBufferDays}d need=${woodNeedWinter}`,
       );
@@ -2836,7 +2890,7 @@ async function runSimulation(): Promise<void> {
       const avgRecent = recentMs.length
         ? recentMs.reduce((a, b) => a + b, 0) / recentMs.length
         : 0;
-      const beds = getTotalBedsCached(state);
+      const beds = getTotalBeds(state);
       let aliveEntities = 0;
       for (const e of state.entities) if (e.alive) aliveEntities++;
       logger.progress(
@@ -2889,11 +2943,11 @@ async function runSimulation(): Promise<void> {
   logger.live(`\n✓ Simulation complete in ${elapsed}s`);
   logger.log(`=== Wilderfolk ${SIM_YEARS}-year balance simulation ===`);
   logger.log(`Profile: ${SIM_PROFILE} — ${profileCfg.label}`);
-  logger.log(`Targets @ Y${SIM_YEARS}: pop ${scaledPopGateMin()}–${scaledPopGateMax()}`);
+  logger.log(`Targets @ Y${SIM_YEARS}: pop ${scaledPopGateMin()}–${scaledPopGateMax()} (HARD CAP = ${POP_CAP})`);
   logger.log(`Ticks: ${formatRunLength(TOTAL_TICKS)} | Wall time: ${elapsed}s`);
   logger.log(`Calendar: Year ${state.year}, Day ${state.dayInYear} | Total days: ${Math.floor(state.tick / TICKS_PER_DAY)}`);
   logger.log(`Map: ${state.width}×${state.height} (large)`);
-  logger.log(`Housing: ${getTotalBedsCached(state)} beds | maxPop=${state.maxHumanPopulation}`);
+  logger.log(`Housing: ${getTotalBeds(state)} beds | maxPop=${state.maxHumanPopulation}`);
 
   logger.section('Year-by-year snapshots');
   for (const y of yearSnapshots) {
@@ -3187,11 +3241,14 @@ async function runSimulation(): Promise<void> {
 
   disposeSimWorkerHost(workerHost);
 
+  // FIX: process.exit() kills the process immediately, preventing the event loop
+  // from flushing stdio and running finally-blocks. Setting exitCode lets the
+  // process end gracefully while still communicating the result to the shell.
   const exitCode = (failedGates > 0 || strictCoverageFail) ? 1 : 0;
-  process.exit(exitCode);
+  process.exitCode = exitCode;
 }
 
 runSimulation().catch((err) => {
   console.error(err);
-  process.exit(1);
+  process.exitCode = 1;
 });

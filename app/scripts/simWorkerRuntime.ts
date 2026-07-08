@@ -25,7 +25,7 @@ export function simUsesWorker(): boolean {
 
 /** Headless balance sims skip render SoA and use compact syncSimPrep (default on). */
 export function simHeadless(): boolean {
-  return process.env.SIM_HEADLESS !== '0';
+  return process.env.SIM_HEADLESS !== '1';
 }
 
 export async function initSimWorkerHost(state: WorldState): Promise<{

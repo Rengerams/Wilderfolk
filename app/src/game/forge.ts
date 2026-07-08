@@ -8,6 +8,7 @@ import { addNotification } from './gameEngine';
 import { pushTransientParticle } from './juiceEffects';
 
 function addForgeFloat(state: WorldState, x: number, y: number, text: string, color: string) {
+  if (!state.floatingTexts) state.floatingTexts = [];
   state.floatingTexts.push({
     id: state.nextFloatingTextId++,
     x,
@@ -114,15 +115,16 @@ export function createInitialForgeState(): VillageForgeState {
 }
 
 export function normalizeForgeState(
-  forge: VillageForgeState | (VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean }),
+  forge: VillageForgeState | (VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean }) | null | undefined,
 ): VillageForgeState {
+  if (!forge) return createInitialForgeState();
   const legacy = forge as VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean };
-  const completed = { ...forge.completed };
+  const completed = { ...(forge.completed ?? {}) };
   if (legacy.spearsReady) completed.iron_spears = true;
   if (legacy.shieldsReady) completed.iron_shields = true;
   return {
-    activeOrder: forge.activeOrder,
-    progress: forge.progress,
+    activeOrder: forge.activeOrder ?? null,
+    progress: forge.progress ?? 0,
     completed,
   };
 }
@@ -132,7 +134,7 @@ export function getForgeOrder(orderId?: ForgeOrderId | null): ForgeOrder | undef
 }
 
 export function isForgeOrderComplete(
-  forge: VillageForgeState | (VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean }),
+  forge: VillageForgeState | (VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean }) | null | undefined,
   orderId: ForgeOrderId,
 ): boolean {
   const normalized = normalizeForgeState(forge);
@@ -140,13 +142,14 @@ export function isForgeOrderComplete(
 }
 
 export function hasAnyForgeUpgrade(
-  forge: VillageForgeState | (VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean }),
+  forge: VillageForgeState | (VillageForgeState & { spearsReady?: boolean; shieldsReady?: boolean }) | null | undefined,
 ): boolean {
   const normalized = normalizeForgeState(forge);
   return FORGE_ORDERS.some((order) => normalized.completed[order.id]);
 }
 
 export function getForgeQuarryMultiplier(state: WorldState): number {
+  if (!state?.villageForge) return 1;
   return isForgeOrderComplete(state.villageForge, 'iron_pickaxes')
     ? FORGE_BONUSES.quarryYieldMult
     : 1;
@@ -154,22 +157,23 @@ export function getForgeQuarryMultiplier(state: WorldState): number {
 
 export function findCompletedBlacksmith(
   state: WorldState,
-  buildings: Building[] = state.buildings,
+  buildings: Building[] = state?.buildings ?? [],
 ): Building | undefined {
   return buildings.find((b) => b.completed && b.type === BuildingType.Blacksmith);
 }
 
 export function isBlacksmithStaffed(
   state: WorldState,
-  buildings: Building[] = state.buildings,
+  buildings: Building[] = state?.buildings ?? [],
 ): boolean {
   return buildings.some(
-    (b) => b.completed && b.type === BuildingType.Blacksmith && b.occupants.length > 0,
+    (b) => b.completed && b.type === BuildingType.Blacksmith && (b.occupants?.length ?? 0) > 0,
   );
 }
 
 /** Iron tech researched but not yet forged — and no order currently running. */
 export function getOutstandingForgeOrder(state: WorldState): ForgeOrderId | null {
+  if (!state?.villageForge || !state.unlockedTechs) return null;
   const forge = normalizeForgeState(state.villageForge);
   if (forge.activeOrder) return null;
   for (const orderId of FORGE_PRIORITY) {
@@ -190,25 +194,26 @@ export function formatForgeInputs(inputs: Partial<Resources>): string {
   return parts.join(' · ') || '—';
 }
 
-function canAffordForgeInputs(resources: Resources, inputs: Partial<Resources>): boolean {
-  return (inputs.wood ?? 0) <= resources.wood
-    && (inputs.stone ?? 0) <= resources.stone
-    && (inputs.gold ?? 0) <= resources.gold;
+function canAffordForgeInputs(resources: Resources | null | undefined, inputs: Partial<Resources>): boolean {
+  if (!resources) return false;
+  return (inputs.wood ?? 0) <= (resources.wood ?? 0)
+    && (inputs.stone ?? 0) <= (resources.stone ?? 0)
+    && (inputs.gold ?? 0) <= (resources.gold ?? 0);
 }
 
 function consumeForgeInputs(state: WorldState, inputs: Partial<Resources>): void {
-  if (!canAffordForgeInputs(state.resources, inputs)) return;
-  state.resources.wood -= inputs.wood ?? 0;
-  state.resources.stone -= inputs.stone ?? 0;
-  state.resources.gold -= inputs.gold ?? 0;
+  if (!state.resources || !canAffordForgeInputs(state.resources, inputs)) return;
+  state.resources.wood = (state.resources.wood ?? 0) - (inputs.wood ?? 0);
+  state.resources.stone = (state.resources.stone ?? 0) - (inputs.stone ?? 0);
+  state.resources.gold = (state.resources.gold ?? 0) - (inputs.gold ?? 0);
 }
 
 export function getForgeBlockReason(state: WorldState, orderId: ForgeOrderId): string | null {
   const order = getForgeOrder(orderId);
   if (!order) return 'Unknown order';
-  const forge = normalizeForgeState(state.villageForge);
-  if (!state.unlockedTechs.includes(order.techId)) {
-    const techName = state.researchNodes.find((n) => n.id === order.techId)?.name ?? order.label;
+  const forge = normalizeForgeState(state?.villageForge);
+  if (!state?.unlockedTechs?.includes(order.techId)) {
+    const techName = state?.researchNodes?.find((n) => n.id === order.techId)?.name ?? order.label;
     return `Research ${techName} first (Research tab)`;
   }
   if (!hasCompletedBlacksmith(state)) return 'Complete a Blacksmith first';
@@ -226,11 +231,11 @@ export function getForgeBlockReason(state: WorldState, orderId: ForgeOrderId): s
       }
     }
   }
-  const staffed = state.buildings.some(
-    (b) => b.completed && b.type === BuildingType.Blacksmith && b.occupants.length > 0,
+  const staffed = state?.buildings?.some(
+    (b) => b.completed && b.type === BuildingType.Blacksmith && (b.occupants?.length ?? 0) > 0,
   );
   if (!staffed) return 'Staff the Blacksmith to forge';
-  if (!canAffordForgeInputs(state.resources, order.inputs)) {
+  if (!canAffordForgeInputs(state?.resources, order.inputs)) {
     return `Need ${formatForgeInputs(order.inputs)}`;
   }
   return null;
@@ -244,15 +249,17 @@ export function queueForgeOrder(
   const block = getForgeBlockReason(originalState, orderId);
   if (block) {
     const blocked = structuredClone(originalState) as WorldState;
+    if (!blocked.floatingTexts) blocked.floatingTexts = [];
     addNotification(blocked, 'Forge blocked', block, 'warning');
     return blocked;
   }
-  const building = originalState.buildings.find((b) => b.id === buildingId);
+  const building = originalState.buildings?.find((b) => b.id === buildingId);
   if (!building || building.type !== BuildingType.Blacksmith || !building.completed) {
     return originalState;
   }
   const order = getForgeOrder(orderId)!;
   const state = structuredClone(originalState) as WorldState;
+  if (!state.resources) state.resources = { food: 0, wood: 0, stone: 0, gold: 0 };
   state.resources = { ...state.resources };
   state.villageForge = normalizeForgeState(state.villageForge);
   if (state.villageForge.activeOrder === orderId) return originalState;
@@ -265,10 +272,11 @@ export function queueForgeOrder(
 
 /** Migrate saves that had iron gear via research-only rules or legacy forge booleans. */
 export function migrateVillageForgeOnLoad(state: WorldState): void {
+  if (!state) return;
   if (!state.villageForge) {
     const hasSmith = hasCompletedBlacksmith(state);
-    const hadSpears = state.unlockedTechs.includes(COMBAT_TECH.ironSpears) && hasSmith;
-    const hadShields = state.unlockedTechs.includes(COMBAT_TECH.ironShields) && hasSmith;
+    const hadSpears = state.unlockedTechs?.includes(COMBAT_TECH.ironSpears) && hasSmith;
+    const hadShields = state.unlockedTechs?.includes(COMBAT_TECH.ironShields) && hasSmith;
     state.villageForge = {
       activeOrder: null,
       progress: 0,
@@ -283,6 +291,7 @@ export function migrateVillageForgeOnLoad(state: WorldState): void {
 }
 
 export function tickVillageForge(state: WorldState, buildings: Building[]): void {
+  if (!state?.villageForge) return;
   state.villageForge = normalizeForgeState(state.villageForge);
   const forge = state.villageForge;
   if (!forge.activeOrder) return;
@@ -293,8 +302,8 @@ export function tickVillageForge(state: WorldState, buildings: Building[]): void
     return;
   }
 
-  const smith = buildings.find(
-    (b) => b.completed && b.type === BuildingType.Blacksmith && b.occupants.length > 0,
+  const smith = buildings?.find(
+    (b) => b.completed && b.type === BuildingType.Blacksmith && (b.occupants?.length ?? 0) > 0,
   );
   if (!smith) return;
 
@@ -305,7 +314,7 @@ export function tickVillageForge(state: WorldState, buildings: Building[]): void
   if (forge.progress < 100) {
     addForgeFloat(
       state,
-      smith.x + smith.width / 2,
+      smith.x + (smith.width ?? 0) / 2,
       smith.y - 14,
       `🔨 ${order.label} ${Math.round(forge.progress)}%`,
       '#fb923c',
@@ -325,14 +334,14 @@ export function tickVillageForge(state: WorldState, buildings: Building[]): void
   );
   addForgeFloat(
     state,
-    smith.x + smith.width / 2,
+    smith.x + (smith.width ?? 0) / 2,
     smith.y - 18,
     `${order.emoji} ${order.label} forged!`,
     '#4ade80',
   );
   pushTransientParticle(state, {
-    x: smith.x + Math.random() * smith.width,
-    y: smith.y + Math.random() * smith.height,
+    x: smith.x + Math.random() * (smith.width ?? 0),
+    y: smith.y + Math.random() * (smith.height ?? 0),
     vx: (Math.random() - 0.5) * 0.6,
     vy: -1 - Math.random(),
     life: 30,

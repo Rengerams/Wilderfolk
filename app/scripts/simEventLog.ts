@@ -45,12 +45,12 @@ export function formatEventSummaryLines(events: readonly GameEventLog[]): string
   return lines;
 }
 
-/** Oldest-first, grouped by event type (weddings, births, deaths, …). */
+/** Oldest-first, grouped by event type (weddings, births, deaths, ...). */
 function isWarDeath(message: string): boolean {
-  return message.includes('fell defending the village');
+  return message.includes('fell defending');
 }
 
-function classifyCombatOutcome(message: string): string {
+function classifyCombatOutcome(message: string, warnOnUnknown = true): string {
   const m = message.toLowerCase();
   if (m.includes('overran the militia')) return 'defeat';
   if (m.includes('stalemate')) return 'stalemate';
@@ -60,16 +60,20 @@ function classifyCombatOutcome(message: string): string {
   if (m.includes('held poorly')) return 'barricade_loss';
   if (m.includes('paid ') && m.includes('food')) return 'payoff';
   if (m.includes('no response in time')) return 'expired';
-  if (m.includes('fell defending against')) return 'casualties';
+  if (m.includes('fell defending')) return 'casualties';
   if (m.includes('launched a raid')) return 'incoming';
   if (m.includes('raid on ') && m.includes('succeeded')) return 'outgoing_win';
   if (m.includes('raid on ') && m.includes('failed')) return 'outgoing_fail';
   if (m.includes('meager spoils')) return 'outgoing_meager';
+  if (warnOnUnknown) {
+    console.warn(`[classifyCombatOutcome] Unrecognized message: "${message.substring(0, 80)}..."`);
+  }
   return 'other';
 }
 
 type RaidActionRow = {
   tick: number;
+  category: 'raid_response' | 'other';
   action: string;
   ok: boolean;
   detail?: string;
@@ -78,11 +82,13 @@ type RaidActionRow = {
 /** Always-on combat summary for balance sim logs (independent of SIM_LOG_EVENTS). */
 export function formatCombatReportLines(
   events: readonly GameEventLog[],
-  actionLog: readonly RaidActionRow[],
+  actionLog?: readonly RaidActionRow[],
 ): string[] {
-  const combat = [...events].reverse().filter((e) => e.type === 'combat');
-  const warDeaths = [...events].reverse().filter((e) => e.type === 'death' && isWarDeath(e.message));
-  const raidResponses = actionLog.filter((a) => a.category === 'raid_response');
+  const safeActionLog = actionLog ?? [];
+  // Oldest-first (consistent with other formatters)
+  const combat = events.filter((e) => e.type === 'combat');
+  const warDeaths = events.filter((e) => e.type === 'death' && isWarDeath(e.message));
+  const raidResponses = safeActionLog.filter((a) => a.category === 'raid_response');
   const outcomeCounts: Record<string, number> = {};
 
   for (const e of combat) {
@@ -102,7 +108,7 @@ export function formatCombatReportLines(
 
   if (raidResponses.length > 0) {
     lines.push('');
-    lines.push(`── RAID RESPONSES (${raidResponses.length}) ──`);
+    lines.push(`-- RAID RESPONSES (${raidResponses.length}) --`);
     for (const row of raidResponses) {
       const status = row.ok ? 'ok' : 'FAIL';
       lines.push(`tick ${row.tick} | ${row.action} [${status}] | ${row.detail ?? ''}`);
@@ -111,7 +117,7 @@ export function formatCombatReportLines(
 
   if (combat.length > 0) {
     lines.push('');
-    lines.push(`── COMBAT CHRONICLE (${combat.length}) ──`);
+    lines.push(`-- COMBAT CHRONICLE (${combat.length}) --`);
     for (const e of combat) {
       const who = e.entityName ? ` (${e.entityName})` : '';
       lines.push(`Y${e.year} D${e.day} tick ${e.tick} | ${e.message}${who}`);
@@ -120,15 +126,15 @@ export function formatCombatReportLines(
 
   if (warDeaths.length > 0) {
     lines.push('');
-    lines.push(`── WAR DEATHS (${warDeaths.length}) ──`);
+    lines.push(`-- WAR DEATHS (${warDeaths.length}) --`);
     for (const e of warDeaths) {
       const who = e.entityName ? ` (${e.entityName})` : '';
       lines.push(`Y${e.year} D${e.day} tick ${e.tick} | ${e.message}${who}`);
     }
   }
 
-  if (combat.length === 0 && raidResponses.length === 0) {
-    lines.push('(no combat or raid responses recorded — check rival tension and raid injections)');
+  if (combat.length === 0 && warDeaths.length === 0 && raidResponses.length === 0) {
+    lines.push('(no combat, war deaths, or raid responses recorded -- check rival tension and raid injections)');
   }
 
   return lines;
@@ -142,7 +148,7 @@ export function formatGroupedChronicleLines(events: readonly GameEventLog[]): st
     const ofType = chronological.filter((e) => e.type === type);
     if (ofType.length === 0) continue;
     lines.push('');
-    lines.push(`── ${type.toUpperCase()} (${ofType.length}) ${'─'.repeat(Math.max(0, 40 - type.length))}`);
+    lines.push(`-- ${type.toUpperCase()} (${ofType.length}) ${'-'.repeat(40)}`);
     for (const e of ofType) {
       const who = e.entityName ? ` (${e.entityName})` : '';
       lines.push(`Y${e.year} D${e.day} tick ${e.tick} | ${e.message}${who}`);
@@ -152,7 +158,7 @@ export function formatGroupedChronicleLines(events: readonly GameEventLog[]): st
   return lines;
 }
 
-/** Flat oldest-first list — matches in-game chronicle export order reversed. */
+/** Flat oldest-first list -- matches in-game chronicle export order reversed. */
 export function formatFlatChronicleLines(events: readonly GameEventLog[]): string[] {
   return [...events].reverse().map(
     (e) => `Y${e.year} D${e.day} tick ${e.tick} [${e.type}] ${e.message}`,
@@ -160,8 +166,12 @@ export function formatFlatChronicleLines(events: readonly GameEventLog[]): strin
 }
 
 export function buildChronicleMeta(state: WorldState): ChronicleExportMeta {
+  const villageName = state.villageName;
+  if (!villageName) {
+    console.warn('[buildChronicleMeta] state.villageName is missing; falling back to "Balanceville"');
+  }
   return {
-    villageName: state.villageName ?? 'Balanceville',
+    villageName: villageName ?? 'Balanceville',
     year: state.year,
     day: state.dayInYear,
     tick: state.tick,
@@ -175,14 +185,20 @@ export function writeChronicleFile(
   meta: ChronicleExportMeta,
   logPath: string,
 ): string {
-  const text = formatChronicleText([...events], meta);
-  mkdirSync(dirname(logPath), { recursive: true });
-  writeFileSync(logPath, text, 'utf8');
-  return logPath;
+  try {
+    const text = formatChronicleText([...events], meta);
+    mkdirSync(dirname(logPath), { recursive: true });
+    writeFileSync(logPath, text, 'utf8');
+    return logPath;
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`Failed to write chronicle to ${logPath}: ${msg}`);
+  }
 }
 
 export function chroniclePathFromSimLog(simLogPath: string): string {
-  return simLogPath.replace(/\.txt$/i, '-chronicle.txt');
+  // Append '-chronicle' before any extension, or at the end if none
+  return simLogPath.replace(/(\.[^.]+)?$/, '-chronicle$1');
 }
 
 export function defaultChroniclePath(

@@ -26,8 +26,16 @@ export const MILITIA_BALANCE = {
   /** Iron replaces wooden — per-adult additive, not stacked. */
   woodenShieldPerAdult: 4,
   ironShieldPerAdult: 9,
-  /** Trained barracks guards — bonus on top of their adult base (they are in adult count). */
+  /** 
+   * Trained barracks guards — bonus ON TOP of their adult base.
+   * Guards ARE counted in adultCount, so they receive base (10) + this bonus.
+   */
   guardBonusPerGuard: 14,
+  /** 
+   * Barricade factor: militia strength is multiplied by this when entrenched.
+   * 0.85 represents a deliberate trade-off — barricades reduce mobility 
+   * but add a flat bonus + structure defenses.
+   */
   barricadeMilitiaFactor: 0.85,
   barricadeFlatBonus: 25,
 } as const;
@@ -77,7 +85,7 @@ export function getMilitiaArmamentLabel(state: WorldState): string | null {
   const shield = getMilitiaShieldTier(state);
   if (spear === 'none' && shield === 'none') return null;
   const spearLabel = spear === 'iron' ? 'Iron spears' : spear === 'stone' ? 'Stone spears' : null;
-  const shieldLabel = shield === 'iron' ? 'iron shields' : shield === 'wooden' ? 'wooden shields' : null;
+  const shieldLabel = shield === 'iron' ? 'Iron shields' : shield === 'wooden' ? 'Wooden shields' : null;
   if (spearLabel && shieldLabel) return `${spearLabel} + ${shieldLabel}`;
   return spearLabel ?? shieldLabel;
 }
@@ -91,6 +99,22 @@ export function computeMilitiaBreakdown(
   entities: Entity[],
   options?: { includeStructures?: boolean },
 ): MilitiaBreakdown {
+  // Guard against invalid input
+  if (!state || !entities) {
+    return {
+      adultCount: 0,
+      guardCount: 0,
+      spearTier: 'none',
+      shieldTier: 'none',
+      spearMultiplier: 1,
+      shieldPerAdult: 0,
+      militiaStrength: 0,
+      barricadeStrength: 0,
+      structureBonus: 0,
+      lines: ['Invalid state or entities provided'],
+    };
+  }
+
   const adultCount = countAdultSettlers(entities);
   const guardCount = getBarracksGuardCount(state, state.buildings);
   const spearTier = getMilitiaSpearTier(state);
@@ -99,61 +123,84 @@ export function computeMilitiaBreakdown(
   const shieldPerAdult = getMilitiaShieldPerAdult(shieldTier);
   const lines: string[] = [];
 
-  let militiaStrength = 0;
+  // Early exit: no adults means no militia and no barricade
   if (adultCount === 0) {
     lines.push('No adult settlers to muster');
-  } else {
-    const base = adultCount * MILITIA_BALANCE.basePerAdult;
-    lines.push(`${adultCount} adults × ${MILITIA_BALANCE.basePerAdult} = ${base}`);
-    let working = base;
-
-    if (spearTier === 'iron') {
-      working = Math.round(working * MILITIA_BALANCE.ironSpearMult);
-      lines.push(`× ${MILITIA_BALANCE.ironSpearMult} iron spears (replaces stone) → ${working}`);
-    } else if (spearTier === 'stone') {
-      working = Math.round(working * MILITIA_BALANCE.stoneSpearMult);
-      lines.push(`× ${MILITIA_BALANCE.stoneSpearMult} stone spears → ${working}`);
-    }
-
-    if (shieldTier === 'iron') {
-      const add = adultCount * MILITIA_BALANCE.ironShieldPerAdult;
-      working += add;
-      lines.push(`+ ${add} iron shields (replaces wooden)`);
-    } else if (shieldTier === 'wooden') {
-      const add = adultCount * MILITIA_BALANCE.woodenShieldPerAdult;
-      working += add;
-      lines.push(`+ ${add} wooden shields`);
-    }
-
-    if (guardCount > 0) {
-      const guardBonus = getBarracksGuardBonus(state, state.buildings);
-      working += guardBonus;
-      const perGuard = Math.round(guardBonus / guardCount);
-      lines.push(`+ ${guardBonus} barracks guards (${guardCount} staffed × ${perGuard})`);
-    }
-
-    militiaStrength = Math.round(working);
+    return {
+      adultCount: 0,
+      guardCount,
+      spearTier,
+      shieldTier,
+      spearMultiplier,
+      shieldPerAdult,
+      militiaStrength: 0,
+      barricadeStrength: 0,
+      structureBonus: 0,
+      lines,
+    };
   }
 
-  const structureBonus = getWallSegmentBonus(state.buildings, state) + getWatchtowerBonus(state.buildings);
-  const barricadeStrength = Math.round(
-    militiaStrength * MILITIA_BALANCE.barricadeMilitiaFactor
-    + MILITIA_BALANCE.barricadeFlatBonus
-    + (options?.includeStructures !== false ? structureBonus : 0),
-  );
+  // Calculate raw total first; round ONLY at the end to avoid cumulative rounding drift
+  const base = adultCount * MILITIA_BALANCE.basePerAdult;
+  lines.push(`${adultCount} adults × ${MILITIA_BALANCE.basePerAdult} = ${base}`);
 
-  if (options?.includeStructures !== false && structureBonus > 0) {
+  let rawTotal = base * spearMultiplier;
+
+  if (spearTier === 'iron') {
+    lines.push(`× ${MILITIA_BALANCE.ironSpearMult} iron spears (replaces stone) → ${Math.round(rawTotal)}`);
+  } else if (spearTier === 'stone') {
+    lines.push(`× ${MILITIA_BALANCE.stoneSpearMult} stone spears → ${Math.round(rawTotal)}`);
+  } else {
+    lines.push('No spears equipped');
+  }
+
+  if (shieldTier === 'iron') {
+    const add = adultCount * MILITIA_BALANCE.ironShieldPerAdult;
+    rawTotal += add;
+    lines.push(`+ ${add} iron shields (replaces wooden)`);
+  } else if (shieldTier === 'wooden') {
+    const add = adultCount * MILITIA_BALANCE.woodenShieldPerAdult;
+    rawTotal += add;
+    lines.push(`+ ${add} wooden shields`);
+  } else {
+    lines.push('No shields equipped');
+  }
+
+  if (guardCount > 0) {
+    const guardBonus = getBarracksGuardBonus(state, state.buildings);
+    rawTotal += guardBonus;
+    const perGuard = guardBonus / guardCount;
+    // Show 1 decimal to avoid misleading integer rounding (e.g. 14.0, 14.5)
+    lines.push(`+ ${guardBonus} barracks guards (${guardCount} staffed × ${perGuard.toFixed(1)})`);
+  }
+
+  const militiaStrength = Math.round(rawTotal);
+
+  // Structure bonus — only calculate if requested
+  const includeStructures = options?.includeStructures !== false;
+  const wallBonus = includeStructures ? getWallSegmentBonus(state.buildings, state) : 0;
+  const towerBonus = includeStructures ? getWatchtowerBonus(state.buildings) : 0;
+  const structureBonus = wallBonus + towerBonus;
+
+  // Barricade requires at least some militia to man it
+  const barricadeStrength = militiaStrength > 0
+    ? Math.round(
+        militiaStrength * MILITIA_BALANCE.barricadeMilitiaFactor
+        + MILITIA_BALANCE.barricadeFlatBonus
+        + structureBonus,
+      )
+    : 0;
+
+  if (includeStructures && structureBonus > 0) {
     const walls = countCompletedDefenseBuildings(state.buildings, [
       BuildingType.Wall,
       BuildingType.WallCorner,
       BuildingType.WallGate,
     ]);
-    const wallBonus = getWallSegmentBonus(state.buildings, state);
     if (walls > 0) {
       lines.push(`Barricade only: +${wallBonus} wall segments (${walls} built, max +72)`);
     }
     const towers = countCompletedDefenseBuildings(state.buildings, BuildingType.Watchtower);
-    const towerBonus = getWatchtowerBonus(state.buildings);
     if (towers > 0) {
       lines.push(`Barricade only: +${towerBonus} watchtowers (${towers})`);
     }
@@ -173,10 +220,12 @@ export function computeMilitiaBreakdown(
   };
 }
 
+/** @deprecated Access breakdown.militiaStrength directly instead. */
 export function getMilitiaStrengthFromBreakdown(breakdown: MilitiaBreakdown): number {
   return breakdown.militiaStrength;
 }
 
+/** @deprecated Access breakdown.barricadeStrength directly instead. */
 export function getBarricadeStrengthFromBreakdown(breakdown: MilitiaBreakdown): number {
   return breakdown.barricadeStrength;
 }

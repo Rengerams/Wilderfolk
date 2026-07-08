@@ -25,18 +25,25 @@ export interface SpatialQueryReport {
   gridMode: 'grid' | 'naive';
 }
 
-const CATEGORIES: SpatialQueryCategory[] = [
-  'graze',
-  'flee',
-  'hunt',
-  'wolf_pack',
-  'mate',
-  'social',
-  'human_hunt',
-  'tamed_hunt',
-  'road_near',
-  'road_avoid',
-];
+/** Human-readable labels for each category. Acts as the single source of truth for categories. */
+const CATEGORY_LABELS: Record<SpatialQueryCategory, string> = {
+  graze: 'Graze',
+  flee: 'Flee',
+  hunt: 'Hunt',
+  wolf_pack: 'Wolf pack',
+  mate: 'Mate',
+  social: 'Social',
+  human_hunt: 'Human hunt/flee',
+  tamed_hunt: 'Tamed hunt',
+  road_near: 'Road near',
+  road_avoid: 'Road avoid',
+};
+
+/** Compile-time check: if a category is added to the union but not to labels, TypeScript will error here. */
+const _typeCheck: Record<SpatialQueryCategory, string> = CATEGORY_LABELS;
+void _typeCheck; // suppress unused-var warning
+
+const CATEGORIES: SpatialQueryCategory[] = Object.keys(CATEGORY_LABELS) as SpatialQueryCategory[];
 
 function envFlagEnabled(val: string | undefined): boolean {
   if (val == null || val === '') return false;
@@ -59,9 +66,15 @@ function emptyBucket(): SpatialQueryBucket {
 }
 
 function emptyRecord(): Record<SpatialQueryCategory, SpatialQueryBucket> {
-  const out = {} as Record<SpatialQueryCategory, SpatialQueryBucket>;
+  const out: Partial<Record<SpatialQueryCategory, SpatialQueryBucket>> = {};
   for (const cat of CATEGORIES) out[cat] = emptyBucket();
-  return out;
+  return out as Record<SpatialQueryCategory, SpatialQueryBucket>;
+}
+
+function cloneRecord(record: Record<SpatialQueryCategory, SpatialQueryBucket>): Record<SpatialQueryCategory, SpatialQueryBucket> {
+  const out: Partial<Record<SpatialQueryCategory, SpatialQueryBucket>> = {};
+  for (const cat of CATEGORIES) out[cat] = { ...record[cat] };
+  return out as Record<SpatialQueryCategory, SpatialQueryBucket>;
 }
 
 let enabled = isMetricsEnvEnabled();
@@ -85,6 +98,7 @@ export function isSpatialQueryMetricsEnabled(): boolean {
 
 export function setSpatialQueryMetricsEnabled(value: boolean): void {
   enabled = value;
+  if (!value) activeTag = null;
 }
 
 export function setSpatialQueryGridMode(mode: 'grid' | 'naive'): void {
@@ -99,6 +113,7 @@ export function resetSpatialQuerySession(): void {
   tickBuckets = emptyRecord();
   sessionBuckets = emptyRecord();
   measuredTicks = 0;
+  activeTag = null;
 }
 
 export function resetSpatialQueryTickMetrics(): void {
@@ -107,16 +122,28 @@ export function resetSpatialQueryTickMetrics(): void {
 
 export function flushSpatialQueryTickToSession(): void {
   if (!enabled) return;
+
+  let hadActivity = false;
   for (const cat of CATEGORIES) {
-    sessionBuckets[cat].queries += tickBuckets[cat].queries;
-    sessionBuckets[cat].candidates += tickBuckets[cat].candidates;
-    sessionBuckets[cat].cells += tickBuckets[cat].cells;
+    const tick = tickBuckets[cat];
+    if (tick.queries > 0 || tick.candidates > 0 || tick.cells > 0) {
+      hadActivity = true;
+    }
+    sessionBuckets[cat].queries += tick.queries;
+    sessionBuckets[cat].candidates += tick.candidates;
+    sessionBuckets[cat].cells += tick.cells;
   }
-  measuredTicks++;
+
+  if (hadActivity) {
+    measuredTicks++;
+  }
 }
 
 export function withSpatialQuery<T>(category: SpatialQueryCategory, fn: () => T): T {
-  if (!enabled) return fn();
+  if (!enabled) {
+    activeTag = null;
+    return fn();
+  }
   const prev = activeTag;
   activeTag = category;
   bump(category, 'queries', 1);
@@ -139,6 +166,11 @@ export function recordSpatialCells(category: SpatialQueryCategory | null, count:
   bump(cat, 'cells', count);
 }
 
+/** Returns a snapshot of the current (unflushed) tick metrics. */
+export function getCurrentTickMetrics(): Record<SpatialQueryCategory, SpatialQueryBucket> {
+  return cloneRecord(tickBuckets);
+}
+
 export function getSpatialQueryReport(): SpatialQueryReport {
   const perTick = emptyRecord();
   if (measuredTicks > 0) {
@@ -151,7 +183,7 @@ export function getSpatialQueryReport(): SpatialQueryReport {
   return {
     ticks: measuredTicks,
     perTick,
-    session: { ...sessionBuckets },
+    session: cloneRecord(sessionBuckets),
     gridMode,
   };
 }
@@ -166,30 +198,20 @@ export function formatSpatialQueryReport(report: SpatialQueryReport): string {
   const mode = report.gridMode === 'grid' ? 'grid (default)' : 'naive (USE_SPATIAL_GRID=0)';
   lines.push(`Spatial query metrics — ${report.ticks} ticks, mode=${mode}`);
   const showCells = report.gridMode === 'grid';
-  const rows: Array<[SpatialQueryCategory, string]> = [
-    ['graze', 'Graze'],
-    ['flee', 'Flee'],
-    ['hunt', 'Hunt'],
-    ['wolf_pack', 'Wolf pack'],
-    ['mate', 'Mate'],
-    ['social', 'Social'],
-    ['human_hunt', 'Human hunt/flee'],
-    ['tamed_hunt', 'Tamed hunt'],
-    ['road_near', 'Road near'],
-    ['road_avoid', 'Road avoid'],
-  ];
-  for (const [cat, label] of rows) {
+
+  for (const cat of CATEGORIES) {
     const bucket = report.perTick[cat];
-    if (bucket.queries <= 0 && bucket.candidates <= 0) continue;
-    lines.push(`  ${fmtBucket(label, bucket, showCells)}`);
+    if (bucket.queries <= 0 && bucket.candidates <= 0 && bucket.cells <= 0) continue;
+    lines.push(`  ${fmtBucket(CATEGORY_LABELS[cat], bucket, showCells)}`);
   }
+
   const graze = report.perTick.graze.candidates;
   const flee = report.perTick.flee.candidates;
   const hunt = report.perTick.hunt.candidates;
   const social = report.perTick.social.candidates;
-  if (graze > 0 || flee > 0) {
+  if (graze > 0 || flee > 0 || hunt > 0 || social > 0) {
     lines.push(
-      `  Hot-path totals: graze=${graze.toFixed(0)} flee=${flee.toFixed(0)} hunt=${hunt.toFixed(0)} social=${social.toFixed(0)} candidate checks/tick`,
+      `  Hot-path averages: graze=${graze.toFixed(0)} flee=${flee.toFixed(0)} hunt=${hunt.toFixed(0)} social=${social.toFixed(0)} candidate checks/tick`,
     );
   }
   return lines.join('\n');
