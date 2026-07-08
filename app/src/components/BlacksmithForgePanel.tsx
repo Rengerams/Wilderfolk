@@ -1,11 +1,11 @@
 import {
   FORGE_ORDERS,
-  formatForgeInputs,
   getForgeBlockReason,
   getForgeOrder,
   isForgeOrderComplete,
   type ForgeOrderId,
 } from '../game/forge';
+import ResourceCost from './ResourceCost';
 import type { WorldState } from '../game/gameTypes';
 
 interface Props {
@@ -72,7 +72,13 @@ export default function BlacksmithForgePanel({ state, buildingId, onQueueForge }
                 {ready ? '✓ ' : ''}{order.emoji} {order.label}
               </span>
               <span className="block text-[7px] opacity-80">{order.description}</span>
-              <span className="block text-[7px] opacity-80">{formatForgeInputs(order.inputs)}</span>
+              <ResourceCost
+                cost={{ wood: order.inputs.wood, stone: order.inputs.stone, gold: order.inputs.gold }}
+                className="mt-0.5"
+                iconClassName="h-2 w-2"
+                amountClassName="font-mono text-[7px] font-semibold leading-none"
+                emptyLabel="—"
+              />
               {!ready && !active && block && (
                 <span className="block text-[7px] text-amber-500/90">{block}</span>
               )}

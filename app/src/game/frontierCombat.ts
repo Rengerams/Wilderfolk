@@ -13,10 +13,14 @@ import {
   getMilitiaSpearTier,
 } from './militiaBalance';
 
+import type { ResourceCostAmount } from './resourceCost';
+import { BARRICADE_RAID_COST, formatResourceCostNeed, canAffordResourceCost } from './resourceCost';
+
 export interface RaidChoice {
   id: string;
   label: string;
   hint: string;
+  cost?: ResourceCostAmount;
 }
 
 export interface RaidLootBundle {
@@ -826,13 +830,15 @@ function raidChoices(lootFood: number, rivalName: string): RaidChoice[] {
     },
     {
       id: 'barricade',
-      label: 'Barricade the village (20🪵 + 10🪨)',
+      label: 'Barricade the village',
       hint: 'No spears needed — holding the wall still costs lives; weaker than open battle.',
+      cost: BARRICADE_RAID_COST,
     },
     {
       id: 'payoff',
-      label: `Pay them off (${lootFood}🍖)`,
+      label: 'Pay them off',
       hint: `${rivalName} takes food and leaves without a fight.`,
+      cost: { food: lootFood },
     },
   ];
 }
@@ -959,12 +965,12 @@ export function respondToRaidEvent(
   }
 
   if (choiceId === 'barricade') {
-    if (state.resources.wood < 20 || state.resources.stone < 10) {
-      pushFloat(state, camp.x, camp.y - 20, 'Need 20🪵 + 10🪨', '#f97316');
+    if (!canAffordResourceCost(state.resources, BARRICADE_RAID_COST)) {
+      pushFloat(state, camp.x, camp.y - 20, formatResourceCostNeed(BARRICADE_RAID_COST), '#f97316');
       return state;
     }
-    state.resources.wood -= 20;
-    state.resources.stone -= 10;
+    state.resources.wood -= BARRICADE_RAID_COST.wood ?? 0;
+    state.resources.stone -= BARRICADE_RAID_COST.stone ?? 0;
     const effectiveDef = getBarricadeStrength(state, allAlive);
     const outcome = resolveDefenseRatio(effectiveDef, event.attackerStrength);
     const raidLoot = raidEventLoot(event);

@@ -1,4 +1,5 @@
 import type { Building, Resources, WorldState } from './gameTypes';
+import { formatResourceCost } from './resourceCost';
 import { BuildingType } from './gameTypes';
 import { isProductionTick, PRODUCTION_INTERVAL } from './dayCycle';
 import { COMBAT_TECH } from './combatTech';
@@ -187,11 +188,11 @@ export function getOutstandingForgeOrder(state: WorldState): ForgeOrderId | null
 }
 
 export function formatForgeInputs(inputs: Partial<Resources>): string {
-  const parts: string[] = [];
-  if (inputs.wood) parts.push(`${inputs.wood}🪵`);
-  if (inputs.stone) parts.push(`${inputs.stone}🪨`);
-  if (inputs.gold) parts.push(`${inputs.gold}💰`);
-  return parts.join(' · ') || '—';
+  return formatResourceCost({
+    wood: inputs.wood,
+    stone: inputs.stone,
+    gold: inputs.gold,
+  }) || '—';
 }
 
 function canAffordForgeInputs(resources: Resources | null | undefined, inputs: Partial<Resources>): boolean {

@@ -112,6 +112,8 @@ import {
   saveFirstNightWarningDismissed,
 } from './game/preferences';
 import CollapsibleSection from './components/CollapsibleSection';
+import { LabelWithResourceCost } from './components/ResourceCost';
+import { BARRICADE_RAID_COST, canAffordResourceCost, formatResourceCostNeed } from './game/resourceCost';
 
 
 import AlertBar from './components/AlertBar';
@@ -1700,14 +1702,14 @@ export default function App() {
                         {evt.choices.map((choice) => {
                           const payoffBlocked = choice.id === 'payoff' && world.resources.food < evt.lootFood;
                           const barricadeBlocked = choice.id === 'barricade'
-                            && (world.resources.wood < 20 || world.resources.stone < 10);
+                            && !canAffordResourceCost(world.resources, BARRICADE_RAID_COST);
                           const defendBlocked = choice.id === 'defend'
                             && (!hasIronSpears(world) && !hasStoneSpears(world) || raidPreview.militiaStrength <= 0);
                           const blocked = payoffBlocked || barricadeBlocked || defendBlocked;
                           const blockReason = payoffBlocked
-                            ? `Need ${evt.lootFood}🍖`
+                            ? formatResourceCostNeed({ food: evt.lootFood })
                             : barricadeBlocked
-                              ? 'Need 20🪵 + 10🪨'
+                              ? formatResourceCostNeed(BARRICADE_RAID_COST)
                               : defendBlocked
                                 ? (!hasIronSpears(world) && !hasStoneSpears(world)
                                     ? 'Stone or iron spears required'
@@ -1726,7 +1728,7 @@ export default function App() {
                             className="rounded-lg bg-stone-900/80 px-2 py-1.5 text-left text-[10px] font-semibold text-stone-100 hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
                             title={blockReason ?? choice.hint}
                           >
-                            {choice.label}
+                            <LabelWithResourceCost label={choice.label} cost={choice.cost} />
                           </button>
                           );
                         })}

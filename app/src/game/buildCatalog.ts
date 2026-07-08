@@ -1,4 +1,5 @@
 import { BuildingType } from './gameTypes';
+import { formatResourceCost } from './resourceCost';
 
 export interface BuildingCategoryDef {
   id: string;
@@ -112,9 +113,5 @@ export function categoryBorderDashForType(type: BuildingType): number[] {
 }
 
 export function formatBuildingCost(wood: number, stone: number, gold: number): string {
-  const parts: string[] = [];
-  if (wood > 0) parts.push(`${wood}w`);
-  if (stone > 0) parts.push(`${stone}s`);
-  if (gold > 0) parts.push(`${gold}g`);
-  return parts.join(' · ') || 'Free';
+  return formatResourceCost({ wood, stone, gold });
 }

@@ -4,8 +4,8 @@ import type { WorldState } from '../game/gameTypes';
 import {
   BUILDING_CATEGORIES,
   categoryForBuildingType,
-  formatBuildingCost,
 } from '../game/buildCatalog';
+import ResourceCost from './ResourceCost';
 import { isRotatableBuildingType } from '../game/buildingRotation';
 
 interface Props {
@@ -106,7 +106,6 @@ export default function BuildCatalogPanel({
                 ? world.researchNodes.find((n) => n.id === config.unlockRequirement)
                 : undefined;
               const hotkey = hotkeys[type];
-              const cost = formatBuildingCost(config.cost.wood, config.cost.stone, config.cost.gold);
 
               return (
                 <button
@@ -142,7 +141,12 @@ export default function BuildCatalogPanel({
                       )}
                       {locked && <span className="text-[10px]" title="Locked">🔒</span>}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-stone-500">{cost}</span>
+                    <ResourceCost
+                      cost={{ wood: config.cost.wood, stone: config.cost.stone, gold: config.cost.gold }}
+                      className="mt-0.5"
+                      iconClassName="h-2.5 w-2.5"
+                      amountClassName="font-mono text-[10px] font-semibold leading-none"
+                    />
                     {locked && lockTech && (
                       <span className="mt-0.5 block text-[10px] font-medium text-amber-500/90">
                         Needs {lockTech.name}

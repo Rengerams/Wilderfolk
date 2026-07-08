@@ -6,6 +6,7 @@
 
 <p align="center">
   <strong>Where Beasts and Kin Unite</strong><br>
+  <em>Don't kill the wolves!</em><br>
   <em>Early Alpha · v0.4.2 shipped · v0.5.0 in progress (July 8, 2026)</em>
 </p>
 
@@ -24,7 +25,7 @@
 | **Defense** | Walls, towers, barracks, guard patrols; **Log → Combat** raid history |
 | **Raids** | Preparation-focused — combat preview + Frontier readiness card; **no battle screen** |
 | **Craft** | Blacksmith forge queue for iron spears & shields (research + staffed smith) |
-| **Social** | Settlers chat in **3-line dialogue trees** (work, home, courtship, fear, festivals); election gossip + marriage `Yes!` scripted moments |
+| **Social** | **80+ interaction paths** — **95** three-line dialogue trees across **19** chat contexts; visitor leader talks, diplomacy, elections, festivals |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
 | **Fixes** | ~40 (July 4) + **252** tracker items (July 7–8, Batch O) |
 
@@ -134,14 +135,12 @@ Track progress in **Progress → Goals**. Mid-game **challenges** nudge you towa
 
 ### Life in the village
 
+**80+ social interactions** — dialogue trees, visitor talks, diplomacy, elections, festivals — in **[Village social life](#village-social-life)** below.
+
 | System | What to watch for |
 |--------|-------------------|
-| **Dialogue trees** | Three-line banter at work, home, courtship, wolf panic, festivals, elections |
-| **Families** | Courtship 💕 → marriage 💍 → children 🤰 → surnames; orphans adopted |
-| **Elections** 👑 | Merit vote every 10 years from Year 10; **Election Revelry** after the ceremony |
 | **Moon Howlers** 🌝 | Full-moon hunts every ~2 weeks; shields block, Church may break the curse at dawn |
 | **Taming** | **Taming Post** near wildlife — Harmony victory needs **untamed** wolves |
-| **Town Hall festivals** | Staff officials, then **🎉 Host town festival** from the Town Hall inspector |
 | **Forge queue** | Queue **Iron Spears** or **Iron Shields** at a staffed **Blacksmith** (~6 in-game days per order) |
 
 ### Map spectacle (toggle in ☰ menu)
@@ -445,6 +444,184 @@ During the day off-duty, they'll hunt, socialize, wander, and chat. At night the
 
 ---
 
+## Village social life
+
+Wilderfolk is as much about **people** as ecology. The valley has **more than 80 different social interaction possibilities** — settler banter alone draws from **95 unique three-line dialogue scripts**, and that's before visitor camps, rival diplomacy, elections, festivals, scandals, and recruitment.
+
+Families form, gossip spreads, elections matter, and the **Log → Chronicle** becomes the story of your valley.
+
+### 80+ interactions — what's in the mix
+
+| Layer | Count | Examples |
+|-------|-------|----------|
+| **Dialogue trees** | **95** scripts | Paired 3-line banter — work gripes, home life, courtship, fear, festivals, elections, affairs |
+| **Chat contexts** | **19** triggers | Work, home, courtship, hunt, fear, festival, election, winter, pregnant, child, school, affair, visitor, rival, guard, food, sleep, renffr, social |
+| **Dialogue categories** | **6** pools | Work · needs · social · existential · chaos · environment (season, weather, and low food shift picks) |
+| **Visitor camps** | **7** kinds | Traders · pilgrims · scholars · hunters · nomads · refugees · performers — each with a **once-per-visit leader talk** |
+| **Refugee negotiate** | **3** choices | Welcome all · screen applicants · turn away |
+| **Visitor trade** | **3** actions | Buy food · buy wood · sell food |
+| **Rival diplomacy cards** | **4** event types | Tribute · border dispute · alliance · peace treaty — **3 response options** each |
+| **Rival camp actions** | **6+** | Food gift · trade pact · peace treaty · show militia · raid · counter-raid |
+| **Election ceremony** | **4** phases | Gathering · gossip · tension · reveal (+ ranked candidate chatter) |
+| **Festivals** | **5+** sources | Random village parties · Visitor Revelry · Election Revelry · Town Hall hosted · performer toasts |
+| **Life events** | many | Courtship chase, marriage `Yes!`, pregnancy chat, bastard gossip, divorce, scandal, prison, recruit settler, Moon Howler panic |
+
+You don't pick these from a menu — they **fire from what settlers are doing**, who's on the map, and what you chose at camps and election time. Zoom in and read the bubbles.
+
+### Settler chat & dialogue trees
+
+Settlers don't stand around silently — they **talk on the map** in short **three-line dialogue trees** (paired banter when two people stand close). The game rotates through **95 different scripts** so repeat play stays fresh.
+
+| Context | When it fires |
+|---------|----------------|
+| **Work** | At assigned farms, mills, forges, guard posts |
+| **Home** | Evening and night around their house |
+| **Courtship** | Singles chasing each other — high chance when close |
+| **Fear** | Wolf chases, Moon Howler panic |
+| **Festival** | During any active village party |
+| **Election** | Merit vote ceremonies |
+| **Winter** | Cold-season grumbling |
+| **Pregnant / child / school** | Family milestones and school days |
+| **Affair** | Secret romance drama (chaos category) |
+| **Visitor / rival** | Frontier camps on the map |
+| **Guard / hunt / food / sleep** | Barracks patrol, hunting trips, hunger, bedtime |
+| **Renffr** | Rare omen nights — existential whispers |
+
+**95 dialogue trees** × **19 contexts** × **6 categories** = hundreds of in-game combinations. Season, weather, low food, and active festivals nudge which script plays next.
+
+**Watch for:** speech bubbles above settlers, paired exchanges when they meet, and scripted peaks — the marriage **`Yes!`** moment when a couple ties the knot.
+
+### Courtship & marriage
+
+| Stage | What happens |
+|-------|----------------|
+| **Single** | Off-duty adults seek a nearby single of the opposite gender |
+| **Courting** | 💕 hearts, chase lines, courtship chat — both need **100% progress** |
+| **Married** | 💍 shared home, **surnames** sync, `Married!` float text, chronicle entry |
+
+**Courtship speed boosts:**
+
+| Boost | Effect |
+|-------|--------|
+| **Staffed Church** | Faster progress (priest on duty) |
+| **Active festival** | ×2 courtship rate |
+| **Visitor performers** | ×1.35 while troupe is camped |
+| **Living together** | ×1.5 when courting singles share a home |
+
+Build a **Church** (Community) and staff it to speed matches. **Performers** visiting your map can spark revelry that helps love along.
+
+### Affairs, scandals & the Prison
+
+Married life isn't always quiet.
+
+- Married settlers can pursue **secret affairs** off-screen and near workplaces
+- **Caught cheating** → village gossip, **reputation loss**, possible **divorce** (spouse may leave and restore a maiden name)
+- **Bastard births** can trigger gossip about who the real father is
+- Repeat or serious scandal can send someone to the **Prison** (Community building, Architecture research)
+- A staffed **Town Hall** softens scandal reputation damage — functioning civic leadership matters
+
+Check **Log → Chronicle** (filter scandals and marriages) when the village gets dramatic.
+
+### Families, children & schools
+
+| Topic | Rule of thumb |
+|-------|----------------|
+| **Pregnancy** | Married couples (and some affairs) can expect children — 🤰 on the map |
+| **Birth** | Mother keeps the child; chronicle logs the name and family |
+| **Children** | Juveniles live with **mother**, then **father** if she's gone |
+| **Bastards** | May go to **grandma** if the mother is unavailable |
+| **Orphans** | Adopted by a random married couple, or any house with a free bed |
+| **School** | Staff a **School** — children gain education ticks that help them grow up |
+| **Adults 18+** | Still at home? Use **Move to own home** in their inspector when a house is empty |
+
+Population can exceed beds or immigration cap briefly after a baby boom — build more **Houses** to catch up.
+
+### Reputation, immigration & recruitment
+
+**Reputation ⭐** (header — click to open Trade) is the village's social standing.
+
+| Reputation helps… | How to raise it |
+|-------------------|-----------------|
+| **Trade routes** | Unlock partners in **Progress → Trade** (15–95 ⭐ depending on route) |
+| **Immigration** | New families arrive when housing, food, and rep are healthy |
+| **Visitor welcome** | Pilgrims bless you; performers lift spirits; refugee choices matter |
+
+| Number | Meaning |
+|--------|---------|
+| **15/100** (example) | Settlers / **immigration cap** — housing raises the cap |
+| **Natural arrivals** | Pause when food is low, beds are full, or cap is hit |
+| **📯 Recruit settler** | **Village** tab — costs **30 food + 20 gold** when under cap |
+
+**Town Hall** (Urban Planning research): staff **officials** for taxes, **+trade** on active routes, **+immigration** rolls, election site, scandal buffer, and **hosted festivals**.
+
+### Village leadership & elections 👑
+
+| Phase | Detail |
+|-------|--------|
+| **Founding** | First male pioneer leads until **Year 10** |
+| **Merit elections** | Every **10 years** from Year 10 — highest merit score wins |
+| **Ceremony** | Settlers **gather → gossip → tension → reveal** on the map (watch the bubbles) |
+| **Election Revelry** | **3-day festival** after the vote |
+| **Vacancy** | Leader dies or jailed? Next merit election in **2 years** — no instant replacement |
+
+**Merit score** (Village → leadership panel):
+
+| Factor | Points |
+|--------|--------|
+| **Job skills** | Sum of all skills × **2** (Farmer, Hunter, Guard, Official, …) |
+| **Age / experience** | Older adults edge slightly |
+| **Town Hall service** | **+15** if serving as official |
+| **Married** | **+5** community standing |
+| **Incumbent record** | Sitting head only: economy, scandals, village health (modest bonus or penalty — challengers can still win on merit) |
+
+**Raid veterans** climb standings via **Guard XP**. Wins while 👑 head also nudge **record assessment** through reputation — see **[Frontier raids & militia](#frontier-raids--militia)**.
+
+### Festivals & social boosts
+
+**Festivals** (🎉 in the header) are village mood multipliers:
+
+| Source | Examples |
+|--------|----------|
+| **Random** | Harvest Festival, Moonlight Feast, Founders Day, Spring Revel, Trade Fair |
+| **Visitors** | **Visitor Revelry** from performers (once per troupe visit) |
+| **Elections** | **Election Revelry** after a merit vote |
+| **You** | **Town Hall → Host town festival** (25 food + 20 gold, 14 days, cooldown between parties) |
+
+During festivals: **×1.5 production**, faster **courtship**, better **immigration** rolls, and more social chat.
+
+### Frontier visitors (social choices)
+
+**Seven visitor kinds** camp on the map (cyan markers). Each has a **unique leader talk** (once per visit) plus camp-specific actions:
+
+| Visitor | Leader talk | Other social actions |
+|---------|-------------|----------------------|
+| **Traders** | Caravan master — bonus gold + trade gossip (+rep) | Buy food · buy wood · sell food |
+| **Pilgrims** | Elder blessing (+8 rep) | Passive daily reputation while camped |
+| **Scholars** | Head scholar — +25 research (or gold if idle) | — |
+| **Hunters** | Hunt captain — shared grounds (+5 rep, less poaching) | — |
+| **Nomads** | Clan head — gift wood + stories (+2 rep) | — |
+| **Performers** | Troupe toast — mini **Visitor Revelry** festival (+6 rep) | Courtship boost while troupe is near |
+| **Refugees** | Spokesman opens negotiate | **Welcome all** (40 food, up to 2) · **screen** (20 food, maybe 1) · **turn away** |
+
+**Rival diplomacy** (indigo camps) adds another **12+ response buttons** across tribute demands, border disputes, alliance offers, and peace treaties — plus gifts, trade pacts, militia parades, and raid/counter-raid choices from the Frontier tab.
+
+### Skills, jobs & community buildings
+
+Every adult has **job skills** that rise with work (and raids for Guards). Skills feed **election merit** and building output.
+
+| Building | Social role |
+|----------|-------------|
+| **Church** | Courtship speed; **Moon Howler** dawn exorcism (~18% per staffed church after full-moon hunt) |
+| **School** | Educates children on the day shift |
+| **Hospital** | Health and reputation over time when staffed |
+| **Town Hall** | Civic hub — taxes, trade, immigration, elections, festivals |
+| **Prison** | Holds scandal sentences |
+| **Taming Post** | Social with wildlife — tame wolves, foxes, deer, rabbits (Harmony path needs **wild** wolves) |
+
+Click any settler on the map — the **Inspector** shows family, job, skills, outfit, armament, and their place in the food chain.
+
+---
+
 ## Buildings at a Glance
 
 Open the **Build** panel on the left (press **B** to collapse for more map space). Categories: Housing, Food, Resources, Industry, Community, Defense.
@@ -537,11 +714,7 @@ Be a good neighbor — or at least a careful one.
 
 ### Village leadership 👑
 
-The **first male pioneer** leads at founding until **Year 10**. After that, settlers elect a **village head** by merit — job skills, experience, Town Hall service, and community standing. **Every 10 years** the village holds an election ceremony (gather, gossip, reveal, then a 3-day *Election Revelry* festival).
-
-The **sitting head always runs** when still eligible. They get a **modest record bonus or penalty** from the village economy, scandals, and overall health — but a high-merit challenger can still win. **Raid victories** help the incumbent indirectly: Guard XP raises personal merit, and the leader’s reputation bonus on wins improves record assessment. If the head dies or is jailed, a **merit election is scheduled two years later** (no instant replacement).
-
-See the **Village** tab leadership panel for the current 👑 head, record breakdown, years until the next election, and ranked candidates. The leader appears on the map and in the population panel.
+Merit elections, ceremony phases, scandal record, and Guard XP on the ballot — see **[Village social life → Village leadership & elections](#village-leadership--elections-)**. The **Village** tab shows the current 👑 head, record breakdown, and ranked candidates.
 
 ---
 
@@ -669,5 +842,6 @@ For now: name your settlement, respect the wolves, and try not to pave the whole
 
 <p align="center">
   <strong>Wilderfolk</strong><br>
+  <em>Don't kill the wolves!</em><br>
   <em>Build inside the food chain — or watch it collapse.</em>
 </p>
