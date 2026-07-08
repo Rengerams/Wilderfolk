@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { initGame } from '@/game/gameEngine';
 import { BuildingType, Season } from '@/game/gameTypes';
-import { WORK_START } from '@/game/dayCycle';
 import {
   addResource,
   applyFoodSpoilage,

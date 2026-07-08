@@ -5,7 +5,6 @@ import {
   getTradeHubCenter,
   tickTradeCaravans,
   tryAdvanceCaravanLeg,
-  TRADE_CARAVAN_ARRIVAL_DIST,
 } from '@/game/tradeCaravans';
 import { EntityType } from '@/game/gameTypes';
 

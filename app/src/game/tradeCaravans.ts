@@ -96,7 +96,7 @@ function applyImports(state: WorldState, route: TradeRoute, mult: number): numbe
   return goldGained;
 }
 
-function removeCarrier(state: WorldState, route: TradeRoute, entity: Entity): void {
+function removeCarrier(_state: WorldState, route: TradeRoute, entity: Entity): void {
   entity.alive = false;
   route.caravanCarrierId = undefined;
   route.caravanLeg = undefined;

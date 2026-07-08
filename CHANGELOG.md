@@ -17,8 +17,17 @@
   - **Personal merit (all candidates)** — each fighter's Guard XP stacks like any job skill; at election `getLeadershipScoreBreakdown()` adds `skillPoints = round(sum(all job skills) × 2)` — challengers and incumbent alike
   - **Incumbent record only** — raid rep bonuses feed `getIncumbentRecordAssessment()` economy/village-health thresholds; **recordPoints** capped at **+8** positive; challengers have no record score
   - **No XP without fighting** — incoming pay-off grants no Guard XP; barricade/defend/outgoing fights do
-- **Vitest** — **346** tests, **64** files (`frontierCombat.test.ts` — outgoing tribute + raid XP/rep; `entityLayer.test.ts` — outgoing raid cache key)
+- **Vitest** — **346** tests, **66** files (`frontierCombat.test.ts` — outgoing tribute + raid XP/rep; `entityLayer.test.ts` — outgoing raid cache key)
 - **`RenderSnapshot`** — `pendingOutgoingRaidEvents` mirrored from `WorldState` (fixes `entityLayer.test.ts` / `tsc` typecheck)
+
+### Changed — victory goals & trade empire (July 8, 2026)
+
+- **Population victory targets raised** — Eco-Utopia **250** humans; Great City **400** humans + **60** buildings; challenge `great_city` **250** + **35** buildings; `thriving_town` **50** (`VICTORY_TARGETS` in `victory.ts`)
+- **Harmony path fixed** — counts **untamed** wolves only (`tamedBy == null`); **8** wild wolves + **15** wildkin — coexistence, not taming
+- **Walking trade caravans** — `tradeCaravans.ts`: merchants walk from Market/Store/Town Hall to partner edge and back; goods exchange at partner (export) and village (import); map **🚚** lines in `renderer.ts`; Progress tab status in `App.tsx`
+- **Trade Empire victory harder** — all **7** routes (added Spice Coast, Granite Reach), **40** round-trips, **50,000** gold from caravan trade (`lifetimeStats.goldFromTradeRoutes`)
+- **Instant abstract trade removed** — `updateTradeRoutes()` replaced by `tickTradeCaravans()` in `gameEngine.ts`
+- **Tests** — `victory.test.ts`, `tradeCaravans.test.ts`
 
 ### Fixed — scandal imprisonment (July 8, 2026)
 

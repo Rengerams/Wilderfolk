@@ -147,7 +147,7 @@ Most profiles launch through **`app/scripts/run-sim.mjs`** (tsx + localStorage s
 
 | Command | What it checks |
 |---------|----------------|
-| `npm test` | **346** Vitest tests, **64** files, **0 skipped** + `tsconfig.vitest.json` typecheck (browser worker suites optional via `vitest.browser-worker.config.ts`) |
+| `npm test` | **346** Vitest tests, **66** files, **0 skipped** + `tsconfig.vitest.json` typecheck (browser worker suites optional via `vitest.browser-worker.config.ts`) |
 | `npm run lint` | ESLint — **0 errors** |
 | `npm run build` | `tsc -b` + Vite production bundle |
 | `npm run dup` | [jscpd](https://github.com/kucherenko/jscpd) clone detection on `app/src` — **0 clones** after July 8 dedup pass |
@@ -274,7 +274,9 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 | `renderer.ts` | OffscreenCanvas compositing, tick-keyed entity draw lists, buildings, weather, night overlay + home glow, speech bubbles, raid march lines (`drawRaidMarchLines`) |
 | `spriteLoader.ts` | PNG preload + alpha trim; calls `generateHumanSprites()` |
 | `terrainGen.ts` | Procedural `WorldMap` from seed + preset |
-| `victory.ts` | Four victory paths; `ACTIVE_VICTORY_PATHS` + `COMING_SOON_VICTORY_PATHS` |
+| `victory.ts` | Four victory paths; `VICTORY_TARGETS` + `ACTIVE_VICTORY_PATHS` |
+| `tradeCaravans.ts` | Walking merchant caravans per active trade route; replaces instant `updateTradeRoutes` |
+| `economy.ts` | Storage caps, `establishTradeRoute`, `initTradeRoutes` (7 routes) |
 | `EventLogPanel.tsx` | Scrollable chronicle log tab UI |
 | `CombatLogPanel.tsx` | Combat-filtered log sub-tab (stats + export) |
 | `FocusPanel.tsx` | Focus / next-step panel |
@@ -470,6 +472,35 @@ Leader in the fight: **+0.45** extra Guard XP (`RAID_LEADER_GUARD_XP_BONUS`). Vi
 - Outgoing raids: orange map banner + rival inspector; abstract combat resolves on player choice (not at launch)
 
 **UI:** `CombatPreviewPanel.tsx`, `CombatLogPanel.tsx` (filters `type === 'combat'`), incoming (rose) + outgoing (orange) raid banners + `FrontierPanel` in `App.tsx`. Player guide → [app/README.md](app/README.md#frontier-raids--militia).
+
+---
+
+## Victory paths (`victory.ts`)
+
+`VICTORY_TARGETS` (July 8, 2026 balance):
+
+| Path | Targets |
+|------|---------|
+| `eco_utopia` | 250 humans + 20 years ecosystem ≥ 80% |
+| `great_city` | 400 humans + 60 completed player buildings |
+| `trade_empire` | 7 active routes + 40 caravan round-trips + 50,000 gold from trade (`lifetimeStats.goldFromTradeRoutes`) |
+| `harmony` | 8 **untamed** wolves (`tamedBy == null`) + 15 wildkin |
+
+Harmony explicitly excludes tamed wolves — taming via Taming Post is separate from coexistence.
+
+---
+
+## Trade caravans (`tradeCaravans.ts`)
+
+Active routes no longer exchange goods instantly. Flow:
+
+1. `establishTradeRoute` → `onTradeRouteEstablished` schedules first departure
+2. `tickTradeCaravans` (each `gameTick`) spawns a `faction: 'trade_caravan'` merchant at Market/Store/Town Hall hub
+3. `lifeSimulation.ts` moves carrier outbound → partner wait → inbound
+4. Export goods deducted at partner; imports applied at village return
+5. `renderer.ts` `drawTradeRouteLines` — gold/green dashed line + **🚚** when marching
+
+Seven routes in `initTradeRoutes()` (Riverdale → Granite Reach). Save load enriches partner coords and re-schedules departures for active routes.
 
 ---
 
@@ -709,7 +740,7 @@ Playtest build remains **`GAME_VERSION` 0.4.2** until the v0.5.0 tag. Items belo
 | **Entity indexing** | Ready — `EntityCatalog` combined alive/byType cache; `resolveAliveHumans()`; `getRenderEntityLayer()` shared with SoA buckets; `emptyEntityByType()` |
 | **Save/UI** | Ready — `saveSchema.ts` allow-list saves; camera pan round-trip; `catalog` state in `App.tsx` from loop subscribe |
 | **Settler chat** | Ready — `sim_dialogue_trees.json` (v1.1, **95** trees); `dialogueTrees.ts` + `humanChat.ts` 3-beat paired sessions; scripted election gossip, marriage `Yes!`, Renffr omen exceptions |
-| **Tests** | Vitest **346** passed, **0 skipped**, **64** files (`npm test`); browser worker suites optional (`vitest.browser-worker.config.ts`); frontier raid tests in `frontierCombat.test.ts` (24); chat tests in `humanChat.test.ts`, `villageLeadership.test.ts`, `lifeSimulation.courtship.test.ts`; layer tests in `entityLayer.test.ts` (4), `terrainLayer.test.ts` |
+| **Tests** | Vitest **346** passed, **0 skipped**, **66** files (`npm test`); browser worker suites optional (`vitest.browser-worker.config.ts`); frontier raid tests in `frontierCombat.test.ts` (24); trade caravan tests in `tradeCaravans.test.ts` (2); victory in `victory.test.ts` (1); layer tests in `entityLayer.test.ts` (4) |
 | **Lint** | **70 → 0** ESLint errors — `useLayoutEffect` ref sync, `BuildCatalogPanel` derived category, test hygiene |
 | **UI** | Ready — `BuildCatalogPanel` replaces deleted `BuildHotbar`; `ResourceBadge` / `resourceLabels.ts` |
 
@@ -721,7 +752,7 @@ Routine settler banter no longer uses inline phrase pools in `humanChat.ts`. All
 
 | Area | Change |
 |------|--------|
-| **`npm test`** | `vitest run && tsc -p tsconfig.vitest.json --noEmit` — **346 passed**, **64** files, **0 skipped** |
+| **`npm test`** | `vitest run && tsc -p tsconfig.vitest.json --noEmit` — **346 passed**, **66** files, **0 skipped** |
 | **`npm run` (app)** | **9 scripts**: `dev`, `build`, `test`, `test:watch`, `lint`, `preview`, `sim`, `bench`, `dup` |
 | **`sim` CLI** | `scripts/sim-cli.mjs` replaces all `simulate:*` / `balance:*` / `benchmark:*` entries |
 | **Vitest** | Browser worker tests excluded from default run; optional `vitest.browser-worker.config.ts` |
