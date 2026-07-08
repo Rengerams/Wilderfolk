@@ -1433,7 +1433,7 @@ function getPlayerCampCenterFromBuildings(buildings: RenderSnapshot['buildings']
 function drawTradeRouteLines(ctx: CanvasRenderingContext2D, state: RenderSnapshot, cw: number, ch: number) {
   if (state.camera.zoom < 0.35) return;
   const cam = state.camera;
-  const hubTypes = [BuildingType.Market, BuildingType.Store, BuildingType.TownHall, BuildingType.Workshop];
+  const hubTypes: BuildingType[] = [BuildingType.Market, BuildingType.Store, BuildingType.TownHall, BuildingType.Workshop];
   let hub = state.buildings.find((b) => b.completed && b.faction !== 'rival' && hubTypes.includes(b.type));
   if (!hub) hub = state.buildings.find((b) => b.completed && b.faction !== 'rival');
   if (!hub) return;

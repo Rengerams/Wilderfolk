@@ -141,9 +141,9 @@ function spawnCaravan(state: WorldState, route: TradeRoute): boolean {
   const hub = getTradeHubCenter(state);
   const carrier = createEntity(EntityType.Human, hub.x, hub.y, state.nextEntityId++, 300, false, {
     name: `${route.targetName} trader`,
-    job: JobType.Merchant,
     gender: 'male',
   });
+  carrier.job = JobType.Merchant;
   carrier.faction = 'trade_caravan';
   carrier.groupId = route.id;
   carrier.occupation = 'merchant';
