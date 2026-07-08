@@ -267,8 +267,8 @@ export interface Entity {
   };
   // Taming
   tamedBy?: number;
-  /** Non-player humans: visiting caravans or rival settlers */
-  faction?: 'visitor' | 'rival';
+  /** Non-player humans: visitors, rivals, or trade-route merchants */
+  faction?: 'visitor' | 'rival' | 'trade_caravan';
   groupId?: string;
   /** Prey or predator being chased — used for hunt lines in the renderer */
   huntTargetId?: number;
@@ -716,6 +716,14 @@ export interface TradeRoute {
   resourcesReceived: Resources;
   reputationRequired: number;
   active: boolean;
+  /** Partner settlement on the map edge — caravans walk here and back. */
+  partnerX?: number;
+  partnerY?: number;
+  caravanCarrierId?: number;
+  caravanLeg?: 'outbound' | 'at_partner' | 'inbound';
+  caravanWaitTicks?: number;
+  nextDepartureTick?: number;
+  caravansCompleted?: number;
 }
 
 export interface BuildingConfig {

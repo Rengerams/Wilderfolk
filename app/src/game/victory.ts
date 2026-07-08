@@ -12,7 +12,7 @@ export const COMING_SOON_VICTORY_PATHS: readonly VictoryPath[] = [];
 /** Numeric targets for victory progress — keep descriptions in sync. */
 export const VICTORY_TARGETS = {
   eco_utopia: { population: 250, ecoYears: 20 },
-  trade_empire: { routes: 5, gold: 10_000 },
+  trade_empire: { routes: 7, goldFromTrade: 50_000, caravans: 40 },
   great_city: { population: 400, buildings: 60 },
   /** Untamed wolves only — taming is not harmony. */
   harmony: { wildWolves: 8, wildkin: 15 },
@@ -26,7 +26,7 @@ export const VICTORY_DEFINITIONS: Record<VictoryPath, { label: string; descripti
   },
   trade_empire: {
     label: 'Trade Empire',
-    description: `Establish ${VICTORY_TARGETS.trade_empire.routes} active trade routes and accumulate ${VICTORY_TARGETS.trade_empire.gold.toLocaleString()} gold`,
+    description: `Open all ${VICTORY_TARGETS.trade_empire.routes} trade routes, complete ${VICTORY_TARGETS.trade_empire.caravans} merchant round-trips, and earn ${VICTORY_TARGETS.trade_empire.goldFromTrade.toLocaleString()} gold from caravan trade`,
     emoji: '💰',
   },
   great_city: {
@@ -59,7 +59,8 @@ export function computeVictoryProgress(state: GameState): VictoryProgress[] {
   const humans = state.humanPopulation;
   const buildings = state.buildings.filter((b) => b.completed && b.faction !== 'rival').length;
   const activeRoutes = state.tradeRoutes.filter((r) => r.active).length;
-  const gold = state.resources.gold;
+  const caravansCompleted = state.lifetimeStats.tradeCaravansCompleted ?? 0;
+  const goldFromTrade = state.lifetimeStats.goldFromTradeRoutes ?? 0;
   const wildWolves = state.entities.filter(
     (e) => e.alive && e.type === EntityType.Wolf && e.tamedBy == null,
   ).length;
@@ -78,8 +79,9 @@ export function computeVictoryProgress(state: GameState): VictoryProgress[] {
         break;
       case 'trade_empire':
         progress = clampPct(
-          (Math.min(activeRoutes, VICTORY_TARGETS.trade_empire.routes) / VICTORY_TARGETS.trade_empire.routes) * 50 +
-            (Math.min(gold, VICTORY_TARGETS.trade_empire.gold) / VICTORY_TARGETS.trade_empire.gold) * 50
+          (Math.min(activeRoutes, VICTORY_TARGETS.trade_empire.routes) / VICTORY_TARGETS.trade_empire.routes) * 34 +
+            (Math.min(caravansCompleted, VICTORY_TARGETS.trade_empire.caravans) / VICTORY_TARGETS.trade_empire.caravans) * 33 +
+            (Math.min(goldFromTrade, VICTORY_TARGETS.trade_empire.goldFromTrade) / VICTORY_TARGETS.trade_empire.goldFromTrade) * 33
         );
         break;
       case 'great_city':

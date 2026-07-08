@@ -91,6 +91,7 @@ import {
 } from './education';
 import { dampScandalReputationLoss } from './townHall';
 import { getPlayerCampCenter, isRaidMarchingForRival } from './frontierCombat';
+import { getCaravanMoveTarget, tryAdvanceCaravanLeg } from './tradeCaravans';
 import { tickFactionCampWander } from './factionWander';
 import type { EntitySpatialGrid, RoadAvoidanceIndex } from './spatialGrid';
 import { USE_SPATIAL_GRID, buildRoadAvoidanceIndex, buildTreeGrid, syncSpatialGridEntity } from './spatialGrid';
@@ -1338,6 +1339,24 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
     }
 
     tickHumanChat(entity, resolveChatPartner);
+
+    // Trade-route merchants — walk export leg to partner, return with imports
+    if (entity.faction === 'trade_caravan') {
+      const target = getCaravanMoveTarget(state, entity);
+      if (target) {
+        const dx = target.x - entity.x;
+        const dy = target.y - entity.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        entity.vx = (dx / dist) * config.speed * target.speedMult;
+        entity.vy = (dy / dist) * config.speed * target.speedMult;
+        entity.x += entity.vx;
+        entity.y += entity.vy;
+        entity.spriteAngle = Math.atan2(entity.vy, entity.vx);
+        tryAdvanceCaravanLeg(state, entity);
+      }
+      syncEntityGrids(ctx, entity);
+      continue;
+    }
 
     // Visitors & rival settlers — camp wandering / raid march, no village job systems
     if (entity.faction === 'visitor' || entity.faction === 'rival') {

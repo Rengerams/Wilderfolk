@@ -521,10 +521,10 @@ Track progress in the **Goals** tab. **Four victory paths** are active:
 |------|----------------|
 | **🌿 Eco-Utopia** | 250 people + healthy ecosystem for 20 years |
 | **🏰 Great City** | 400 people + 60 finished buildings |
-| **💰 Trade Empire** | 5 active trade routes + 10,000 gold |
+| **💰 Trade Empire** | All 7 routes open + 40 merchant round-trips + 50,000 gold from caravan trade |
 | **🐺 Harmony** | 8 **wild** wolves (untamed) + 15 wildkin — coexistence, not taming |
 
-Unlock trade routes in the **Trade** tab as reputation grows (the fifth route, **Silkmarket**, needs high reputation). You can keep playing after you win. The valley doesn't stop.
+Unlock trade routes in the **Trade** tab as reputation grows. Once a route is **active**, a **merchant walks** from your Market/Store/Town Hall to the partner settlement and back — exports leave at the partner, imports arrive when they return (gold dashed **🚚** line on the map). Distant routes (**Silkmarket**, **Spice Coast**, **Granite Reach**) need high reputation. You can keep playing after you win.
 
 ---
 

@@ -174,7 +174,7 @@ export const CONTEXTUAL_TUTORIALS: Record<ContextualTutorialId, ContextualTutori
     id: 'trade_route_opened',
     icon: '🛤️',
     title: 'Trade route established',
-    detail: 'Active routes send caravans on schedule. Keep reputation up to unlock more routes and attract richer visitors.',
+    detail: 'Active routes send a merchant walking to the partner settlement and back — goods exchange on arrival. Keep reputation up to unlock distant routes.',
     action: { label: 'Trade routes', id: 'open_trade' },
   },
   moon_howler_curse: {

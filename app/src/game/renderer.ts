@@ -1430,6 +1430,36 @@ function getPlayerCampCenterFromBuildings(buildings: RenderSnapshot['buildings']
   return { x: 0, y: 0 };
 }
 
+function drawTradeRouteLines(ctx: CanvasRenderingContext2D, state: RenderSnapshot, cw: number, ch: number) {
+  if (state.camera.zoom < 0.35) return;
+  const cam = state.camera;
+  const hubTypes = [BuildingType.Market, BuildingType.Store, BuildingType.TownHall, BuildingType.Workshop];
+  let hub = state.buildings.find((b) => b.completed && b.faction !== 'rival' && hubTypes.includes(b.type));
+  if (!hub) hub = state.buildings.find((b) => b.completed && b.faction !== 'rival');
+  if (!hub) return;
+  const hx = (hub.x + hub.width / 2 - cam.x) * cam.zoom + cw / 2;
+  const hy = (hub.y + hub.height / 2 - cam.y) * cam.zoom + ch / 2;
+
+  for (const route of state.tradeRoutes) {
+    if (!route.active || route.partnerX == null || route.partnerY == null) continue;
+    const px = (route.partnerX - cam.x) * cam.zoom + cw / 2;
+    const py = (route.partnerY - cam.y) * cam.zoom + ch / 2;
+    const marching = route.caravanCarrierId != null;
+    ctx.strokeStyle = marching ? 'rgba(251,191,36,0.55)' : 'rgba(52,211,153,0.35)';
+    ctx.lineWidth = marching ? 2.5 : 1.5;
+    ctx.setLineDash(marching ? [10, 5] : [6, 8]);
+    ctx.beginPath();
+    ctx.moveTo(hx, hy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = `${Math.max(9, 11 * cam.zoom)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = marching ? '#fbbf24' : '#34d399';
+    ctx.fillText('🚚', (hx + px) / 2, (hy + py) / 2 - 6);
+  }
+}
+
 function drawRaidMarchLines(ctx: CanvasRenderingContext2D, state: RenderSnapshot, cw: number, ch: number) {
   if (!state.pendingRaidEvents?.length || state.camera.zoom < 0.35) return;
   const cam = state.camera;
@@ -2109,6 +2139,7 @@ function paintWorldEntityLayer(ctx: CanvasContext2d, state: RenderSnapshot, cw: 
   drawEcoConnections(drawCtx, state, state.camera, cw, ch);
   drawBuildPreview(drawCtx, state, cw, ch);
   drawAnimals(drawCtx, state, cw, ch, true);
+  drawTradeRouteLines(drawCtx, state, cw, ch);
   drawRaidMarchLines(drawCtx, state, cw, ch);
   drawHuntChaseLines(drawCtx, state, cw, ch);
   drawHumans(drawCtx, state, cw, ch, true);

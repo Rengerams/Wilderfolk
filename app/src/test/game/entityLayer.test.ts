@@ -64,6 +64,7 @@ function minimalSnapshot(overrides: Partial<RenderSnapshot> = {}): RenderSnapsho
     villageLeaderId: null,
     pendingRaidEvents: [],
     pendingOutgoingRaidEvents: [],
+    tradeRoutes: [],
     juiceEffectsEnabled: true,
     renderSoA: null,
     renderMetaBySlot: null,

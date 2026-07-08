@@ -33,6 +33,8 @@ export interface LifetimeStats {
   disastersSurvived: number;
   technologiesResearched: number;
   tradeRoutesEstablished: number;
+  tradeCaravansCompleted: number;
+  goldFromTradeRoutes: number;
   longestLivingHuman: { name: string; age: number };
   largestPopulation: { count: number; year: number };
   mostProductiveYear: { year: number; buildings: number };
@@ -49,6 +51,8 @@ export function createEmptyLifetimeStats(): LifetimeStats {
     disastersSurvived: 0,
     technologiesResearched: 0,
     tradeRoutesEstablished: 0,
+    tradeCaravansCompleted: 0,
+    goldFromTradeRoutes: 0,
     longestLivingHuman: { name: '', age: 0 },
     largestPopulation: { count: 0, year: 0 },
     mostProductiveYear: { year: 0, buildings: 0 },

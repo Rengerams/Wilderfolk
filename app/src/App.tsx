@@ -2469,7 +2469,16 @@ export default function App() {
                             {route.active ? 'Active' : `Need ${route.reputationRequired} rep`}
                           </span>
                         </div>
-                        <p className="text-stone-400">Receive: +{route.resourcesReceived.gold > 0 ? `${route.resourcesReceived.gold}g` : `${route.resourcesReceived.stone}s`} / cycle</p>
+                        <p className="text-stone-400">
+                          Receive: +{route.resourcesReceived.gold > 0 ? `${route.resourcesReceived.gold}g` : `${route.resourcesReceived.stone}s`} per round-trip
+                        </p>
+                        {route.active && (
+                          <p className="text-emerald-300/80">
+                            {route.caravanCarrierId != null
+                              ? `🚚 Merchant en route (${route.caravanLeg === 'inbound' ? 'returning' : route.caravanLeg === 'at_partner' ? 'at partner' : 'outbound'})`
+                              : `Trips completed: ${route.caravansCompleted ?? 0}`}
+                          </p>
+                        )}
                         {!route.active && (
                           <button onClick={() => applyGameAction({ proto: 1, op: 'establishTradeRoute', routeId: route.id })}
                             disabled={world.villageReputation < route.reputationRequired}

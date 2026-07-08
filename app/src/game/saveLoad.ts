@@ -29,6 +29,7 @@ import {
 } from './frontierCombat';
 import { computeWildlifeCounts } from './entityCounts';
 import { ensureFullTradeRoutes } from './economy';
+import { enrichTradeRoute, scheduleTradeRouteDeparture } from './tradeCaravans';
 import { clearAllFactionWanderStates } from './factionWander';
 import { validateVillageLeaderOnLoad } from './villageLeadership';
 import { migrateVillageForgeOnLoad } from './forge';
@@ -258,6 +259,15 @@ export function loadGame(): { world: WorldState; view: ViewState } | null {
     mergeCombatResearchNodes(world.researchNodes);
     syncResearchUnlocks(world);
     world.tradeRoutes = ensureFullTradeRoutes(world.tradeRoutes ?? []);
+    world.lifetimeStats.tradeCaravansCompleted ??= 0;
+    world.lifetimeStats.goldFromTradeRoutes ??= 0;
+    for (let i = 0; i < world.tradeRoutes.length; i++) {
+      const route = world.tradeRoutes[i];
+      enrichTradeRoute(route, world, i);
+      if (route.active && route.caravanCarrierId == null && route.nextDepartureTick == null) {
+        scheduleTradeRouteDeparture(world, route);
+      }
+    }
     world.villageLeaderId = (parsed.villageLeaderId as number | null | undefined) ?? null;
     world.leaderSinceYear = (parsed.leaderSinceYear as number | undefined) ?? 0;
     world.lastElectionYear = (parsed.lastElectionYear as number | undefined) ?? -1;

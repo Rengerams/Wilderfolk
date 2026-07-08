@@ -50,7 +50,10 @@ function pushFloat(state: WorldState, x: number, y: number, text: string, color:
 
 /** Colony settler human — excludes visitor/rival faction humans (not "the player character"). */
 export function isPlayerHuman(e: Entity): boolean {
-  return e.type === EntityType.Human && e.faction !== 'visitor' && e.faction !== 'rival';
+  return e.type === EntityType.Human
+    && e.faction !== 'visitor'
+    && e.faction !== 'rival'
+    && e.faction !== 'trade_caravan';
 }
 
 export function playerHumanCount(entities: Entity[]): number {

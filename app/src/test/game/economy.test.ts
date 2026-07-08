@@ -11,13 +11,8 @@ import {
   establishTradeRoute,
   initTradeRoutes,
   updateStorageCaps,
-  updateTradeRoutes,
 } from '@/game/economy';
 import { DEFAULT_WORKSHOP_RECIPE_ID, getWorkshopRecipe } from '@/game/gameTypes';
-
-function tradeProductionTick(): number {
-  return WORK_START;
-}
 
 describe('updateStorageCaps', () => {
   it('raises food cap when a barn is completed', () => {
@@ -85,6 +80,7 @@ describe('establishTradeRoute', () => {
     const next = establishTradeRoute(state, 'trade_1');
     expect(next.tradeRoutes.find((r) => r.id === 'trade_1')?.active).toBe(true);
     expect(next.lifetimeStats.tradeRoutesEstablished).toBe(before + 1);
+    expect(next.tradeRoutes.find((r) => r.id === 'trade_1')?.nextDepartureTick).toBeDefined();
   });
 
   it('does not activate when reputation is too low', () => {
@@ -95,53 +91,11 @@ describe('establishTradeRoute', () => {
   });
 });
 
-describe('updateTradeRoutes', () => {
-  it('does not deduct exports when gold storage cannot fit the full shipment', () => {
-    const state = initGame();
-    state.tradeRoutes = initTradeRoutes().map((r) =>
-      r.id === 'trade_1' ? { ...r, active: true } : r,
-    );
-    state.resources = { wood: 100, stone: 50, food: 100, gold: 99990 };
-    state.storageMax.gold = 99999;
-    state.tick = tradeProductionTick();
-
-    updateTradeRoutes(state);
-
-    expect(state.resources.wood).toBe(100);
-    expect(state.resources.food).toBe(100);
-    expect(state.resources.gold).toBe(99990);
-  });
-
-  it('deducts exports only when the full receive fits storage', () => {
-    const state = initGame();
-    state.tradeRoutes = initTradeRoutes().map((r) =>
-      r.id === 'trade_1' ? { ...r, active: true } : r,
-    );
-    state.resources = { wood: 100, stone: 50, food: 100, gold: 0 };
-    state.storageMax.gold = 99999;
-    state.tick = tradeProductionTick();
-
-    updateTradeRoutes(state);
-
-    expect(state.resources.wood).toBe(80);
-    expect(state.resources.food).toBe(70);
-    expect(state.resources.gold).toBe(15);
-  });
-
-  it('skips inactive routes', () => {
-    const state = initGame();
-    state.resources = { wood: 100, stone: 50, food: 100, gold: 0 };
-    state.tick = tradeProductionTick();
-    updateTradeRoutes(state);
-    expect(state.resources.wood).toBe(100);
-  });
-});
-
 describe('initTradeRoutes / ensureFullTradeRoutes', () => {
   it('ensureFullTradeRoutes adds missing default routes', () => {
     const partial = initTradeRoutes().slice(0, 2);
     const merged = ensureFullTradeRoutes(partial);
     expect(merged.length).toBe(initTradeRoutes().length);
-    expect(merged.some((r) => r.id === 'trade_5')).toBe(true);
+    expect(merged.some((r) => r.id === 'trade_7')).toBe(true);
   });
 });

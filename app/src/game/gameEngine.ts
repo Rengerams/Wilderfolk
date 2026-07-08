@@ -928,8 +928,8 @@ import {
   applyFoodSpoilage,
   canAffordWorkshopRecipe,
   consumeWorkshopRecipeInputs,
-  updateTradeRoutes,
 } from './economy';
+import { tickTradeCaravans } from './tradeCaravans';
 import { updateWeather, updateDisasters } from './worldEvents';
 import { updateResearch } from './research';
 import { tickHumans, tickWildlife, type TickContext } from './lifeSimulation';
@@ -989,7 +989,7 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
   updateWeather(state);
   updateResearch(state);
   updateDisasters(state);
-  updateTradeRoutes(state);
+  tickTradeCaravans(state);
   releasePrisoners(state);
 
   // Food spoilage (once per calendar day)
@@ -1744,7 +1744,6 @@ export {
   applyFoodSpoilage,
   canAffordWorkshopRecipe,
   consumeWorkshopRecipeInputs,
-  updateTradeRoutes,
   initTradeRoutes,
   establishTradeRoute,
   ensureFullTradeRoutes,
