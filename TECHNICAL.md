@@ -701,7 +701,7 @@ terrain blit → entity layer blit → flash overlay → season/weather/night �
 | **Hunt** | **15 380** candidates/tick | **20 490** candidates/tick | varies | Dense mobile cells — broad-phase can rival naive prey-list scans |
 | **Social** | **27 979** candidates/tick | **27 914** candidates/tick | ~0% | Idle roam uses map-span radius on mobile grid |
 
-Steady-state tick cost same run: avg **11.78 ms**, p95 **15.68 ms** (gate **PASS** &lt; 20 ms @ ≥1200 alive).
+Steady-state tick cost same run: avg **11.78 ms**, p95 **15.68 ms** (gate **PASS** &lt; 20 ms @ ≥1200 alive). Gate uses **steady.p95** over all post-warmup ticks (nearest-rank percentile, no interpolation); sampled lines every `PERF_SAMPLE_EVERY` are informational only. Env: `CITY_BENCH_WARMUP` (60), `CITY_BENCH_TICKS` (600), `BENCHMARK_GATE` (`1` or unset = enforce exit code).
 
 **Design estimates (peak naive @ ~1250 alive)** — for comparison before measurement; throttles reduce live averages:
 

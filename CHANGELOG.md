@@ -19,6 +19,14 @@
 - **Founding wildlife:** init spawns keep `birthYear: -1`; runtime replenish sets `recordBirthYear: true`
 - **Hygiene:** shared `nodeRuntime.ts` disk loader; `overlapsPlayerBuilding` delegates to `overlapsAnyBuilding`; ESLint clean (`IntroScreen` purity, App hook deps, perf scripts)
 
+### Fixed — city benchmark gate (`benchmark-city.ts`, July 8, 2026)
+
+- **Gate metric:** PASS/FAIL uses **steady-state p95** (all post-warmup ticks), not sparse `PERF_SAMPLE_EVERY` samples
+- **Loop hygiene:** single `maintainCityBenchmarkState` after tick; `getSimFocus` per tick; alive sampled before maintenance
+- **Metrics:** spatial query instrumentation starts at first steady tick (after warmup)
+- **CI:** `process.exitCode` instead of `process.exit()`; `BENCHMARK_GATE` enabled when unset or `'1'`
+- **Percentile:** nearest-rank p95 documented (differs from Excel/Numpy interpolation)
+
 ### Added — frontier raid response & balance (July 8, 2026)
 
 - **Outgoing raid phase** — `launchRaidOnRival()` dispatches a war-band; rival may **offer tribute** or **choose to fight**; player always gets **Accept tribute** / **Decline — attack anyway** or **Press the attack** (`pendingOutgoingRaidEvents`, `respondToOutgoingRaidEvent`)
