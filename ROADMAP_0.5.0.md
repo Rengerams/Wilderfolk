@@ -108,7 +108,7 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 
 | # | Item | Status | Deliverable |
 |---|------|--------|-------------|
-| 16 | **Big bug checkup** | ✅ Done | **242** items closed (July 8 pass); Vitest **346** (66 files); lint **0**; build clean |
+| 16 | **Big bug checkup** | ✅ Done | **252** items closed (Batch O, July 8); Vitest **358** (67 files); lint **0**; build clean |
 | 16b | **Dialogue-tree settler chat** | ✅ Done | `sim_dialogue_trees.json` (95 trees); `dialogueTrees.ts` + `humanChat.ts`; legacy `wf_*` migration; tests in `humanChat`, `villageLeadership`, `lifeSimulation.courtship` |
 | 16c | **Raid XP → elections** | ✅ Done | `rewardRaidParticipants`; Guard XP + leader rep; docs in CHANGELOG/TECHNICAL |
 | 16d | **Victory balance + Harmony fix** | ✅ Done | `VICTORY_TARGETS` raised; wild wolves only (`tamedBy == null`); Goals tab explainer |

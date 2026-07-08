@@ -27,8 +27,8 @@
 | **Scale (pre-tag)** | Dual-layer **spatial grid**; optional **Web Worker** sim; **OffscreenCanvas** terrain/entity layers (smoother zoom/pan) |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](../TECHNICAL.md#playtest-report) |
-| **Quality** | **346** automated tests (64 files) · lint **0 errors** |
-| **Fixes** | ~40 (July 4) + **242** tracker items (July 7–8) |
+| **Quality** | **358** automated tests (67 files) · lint **0 errors** · `npm run test:all` includes typecheck |
+| **Fixes** | ~40 (July 4) + **252** tracker items (July 7–8, Batch O) |
 
 ### What's coming — v0.5.0 (end July 2026)
 
@@ -406,7 +406,7 @@ Open the **Build** panel on the left (press **B** to collapse for more map space
 | Wood & stone | **Lumber Mill**, **Quarry**, **Mine** |
 | Gold | **Workshop**, **Store**, **Market** |
 | Health & growth | **Hospital**, **School**, **Town Hall** |
-| Love & Moon Howlers | **Church** (speeds courtship, breaks curses) |
+| Love & Moon Howlers | **Church** (speeds courtship; dawn exorcism after full-moon hunts) |
 | Weapons (iron tier) | **Blacksmith** (required for iron spears & shields) |
 | Raid defense | **Wall**, **Watchtower**, **Barracks** (Fortification + Stone Spears research) |
 | Tame wildlife | **Taming Post** (wolves, foxes, deer, rabbits) |
@@ -441,7 +441,8 @@ They look and act like normal humans **most nights**. On a **full moon** (about 
 - Keep settlers **indoors at night** during full moons when possible
 - Research **Wooden Shields** or **Iron Shields** for a chance to block strikes
 - Research **Iron Spears** so settlers can fight back
-- Build a **Church** nearby to break the curse over time
+- Staff a **Church** with a priest — at **dawn (7am)** after each full-moon hunt, the priest may break the curse while the settler is still in 🌝 form (~18% chance, village-wide)
+- Uncured Moon Howlers return every **14 days** until cured
 
 Watch the header and big-news alerts for full-moon warnings.
 

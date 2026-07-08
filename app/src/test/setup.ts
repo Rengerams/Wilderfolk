@@ -1,4 +1,8 @@
+import { preloadDialogueBank } from '../game/dialogueTrees';
 import './canvasPolyfill';
+
+// Top-level await blocks each vitest worker until the bank is loaded (avoids async beforeAll races).
+await preloadDialogueBank();
 
 /** In-memory localStorage so game init/preferences work under Node. */
 class MemoryStorage implements Storage {

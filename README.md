@@ -52,8 +52,8 @@ You are not conquering a blank map. You are sharing a valley with grass, rabbits
 | **Scale (pre-tag)** | Dual-layer **spatial grid**; optional **Web Worker** sim; **OffscreenCanvas** terrain/entity layers |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](TECHNICAL.md#playtest-report) |
-| **Quality** | **346** Vitest tests (66 files) · `npm run lint` **0 errors** · `npm run build` clean |
-| **Fixes** | ~40 (July 4) + **242** tracker items (July 7–8) |
+| **Quality** | **358** Vitest tests (67 files) · `npm run lint` **0 errors** · `npm run build` clean · `npm run test:all` includes typecheck |
+| **Fixes** | ~40 (July 4) + **252** tracker items (July 7–8, Batch O) |
 
 ### What's next — v0.5.0 (end July 2026)
 

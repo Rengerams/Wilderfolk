@@ -17,7 +17,7 @@ Newest version first. 🟢 done · 🟡 in progress · ⬜ open. Detail → [CHA
 | 🟢 | Dead-entity compaction — alive-only entities each tick |
 | 🟢 | Spatial grid — dual-layer grass + mobile cells; graze/hunt/flee wired (`spatialGrid.ts`, on by default) |
 | 🟢 | Web Worker gameTick — opt-in (`VITE_USE_GAME_WORKER=1`); render SoA + proto handshake |
-| 🟢 | Big bug checkup — **242** tracker items closed; Vitest **346** (66 files); lint **0**; build clean |
+| 🟢 | Big bug checkup — **252** tracker items closed (Batch O); Vitest **358** (67 files); lint **0**; build clean |
 | 🟢 | **Raid Guard XP → elections** — fighters earn Guard skill XP; leader +0.45 XP + rep on wins; merit = all skills ×2; incumbent record from rep (+8 cap) |
 | 🟢 | **Victory goals retuned** — Eco-Utopia **250** + 20yr eco; Great City **400** + **60** buildings; Trade Empire **7** routes + **40** caravan trips + **50k** trade gold; Harmony **8 wild** wolves + **15** wildkin (untamed only) |
 | 🟢 | **Walking trade caravans** — merchants walk hub → partner → back; goods on arrival; map **🚚** lines; 7 routes (`tradeCaravans.ts`) |

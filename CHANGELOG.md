@@ -17,7 +17,7 @@
   - **Personal merit (all candidates)** — each fighter's Guard XP stacks like any job skill; at election `getLeadershipScoreBreakdown()` adds `skillPoints = round(sum(all job skills) × 2)` — challengers and incumbent alike
   - **Incumbent record only** — raid rep bonuses feed `getIncumbentRecordAssessment()` economy/village-health thresholds; **recordPoints** capped at **+8** positive; challengers have no record score
   - **No XP without fighting** — incoming pay-off grants no Guard XP; barricade/defend/outgoing fights do
-- **Vitest** — **346** tests, **66** files (`frontierCombat.test.ts` — outgoing tribute + raid XP/rep; `entityLayer.test.ts` — outgoing raid cache key)
+- **Vitest** — **358** tests, **67** files (`frontierCombat.test.ts` — outgoing tribute + raid XP/rep; `moonHowler.cycle.test.ts`; `entityLayer.test.ts` — outgoing raid cache key)
 - **`RenderSnapshot`** — `pendingOutgoingRaidEvents` mirrored from `WorldState` (fixes `entityLayer.test.ts` / `tsc` typecheck)
 
 ### Changed — victory goals & trade empire (July 8, 2026)
@@ -28,6 +28,27 @@
 - **Trade Empire victory harder** — all **7** routes (added Spice Coast, Granite Reach), **40** round-trips, **50,000** gold from caravan trade (`lifetimeStats.goldFromTradeRoutes`)
 - **Instant abstract trade removed** — `updateTradeRoutes()` replaced by `tickTradeCaravans()` in `gameEngine.ts`
 - **Tests** — `victory.test.ts`, `tradeCaravans.test.ts`
+
+### Fixed — Moon Howler 14-day cycle & Church cure (July 8, 2026)
+
+**Bug tracker:** [private/BUGS_TRACKER.md](private/BUGS_TRACKER.md) Batch N #1–#7
+
+- **Recurring hunts** — uncured settlers now transform at **8pm** on full-moon colony days (0, 14, 28…) and revert at **7am** the next morning; no longer reverts on arbitrary daytime ticks (`isMoonHowlerTransformTick` / `isMoonHowlerRevertTick` in `moonHowler.ts`)
+- **Calendar** — moon logic uses `getAbsoluteCalendarDay(state.tick)` so the 14-day cadence stays aligned with the sim clock
+- **New curse** — when no active Moon Howler curse exists and population > 5, one settler is cursed on the next full moon (replaces 8% RNG); transforms the same night
+- **Church cure** — staffed Church rolls **~18%** at **dawn (7am)** while the settler is still in werewolf form (after the hunt); village-wide, no proximity check (`tryMoonHowlerChurchCures`)
+- **Alerts & debug** — “Full Moon!” fires when Moon Howlers are abroad at 8pm even if the transform tick was missed; debug spawn transforms on the current full-moon night
+- **Tests** — `moonHowler.cycle.test.ts` (hunt days 0/14/28/42); `moonHowler.test.ts` (dawn cure RNG, new-curse gate)
+- **UI** — Church panel, help tab, and building hints describe dawn (7am) exorcism in 🌝 form (~18%, village-wide), not “full-moon nights” proximity cure
+
+### Fixed — orphaned marriages, vitest dialogue preload, prison flake (July 8, 2026)
+
+**Bug tracker:** [private/BUGS_TRACKER.md](private/BUGS_TRACKER.md) Batch O #1–#3
+
+- **Orphaned marriages** — end-of-tick `allAlive` prunes dead entities; survivors could keep `partnerId` pointing at a removed id (`human 285 married partner 831 missing or dead` on seed-42 day 29). `reconcileOrphanedMarriages()` in `dayCycle.ts` runs before `state.entities = allAlive` (accepts human **or** cursed 🌝 form as valid partner)
+- **Vitest dialogue bank** — top-level `await preloadDialogueBank()` in `src/test/setup.ts` (disk load via dynamic `import()` like `nameLoader.ts`); fixes parallel-worker race with async `beforeAll`
+- **Prison integration flake** — `lifeSimulation.prison.test.ts` uses `withSeededRandom(123)` and dynamic `nextEntityId++` fixture ids; reliably surfaces `Whispers spread` gossip over 120 days
+- **Tests** — `lifeSimulation.mortality.test.ts` (`reconcileOrphanedMarriages` ×3); social integration seed-42 (30/60 day) green
 
 ### Fixed — scandal imprisonment (July 8, 2026)
 
@@ -46,7 +67,7 @@
 - **Web Worker simulation** (`simWorker/`) — optional `gameTick` off main thread (`VITE_USE_GAME_WORKER=1`); `GameWorkerHost`, render SoA ping-pong (`simBuffers/`), `WORKER_PROTO` negotiation, headless tick path
 - **Entity catalog** (`entityCatalog.ts`) — O(1) citizen lookup; main-thread `catalog` state synced from `GameLoop.subscribe`
 - **Save schema allow-list** (`saveSchema.ts`, `viewState.ts`) — `pickWorldFieldsForSave()` trims save bloat; camera pan preserved on load
-- **Vitest suite** — **320** tests across 63 files (`npm test`); helpers in `src/test/` (housing, social, worker parity, ecosystemPressure, packRenderSoA, protocol, dialogue chat)
+- **Vitest suite** — **358** tests across 67 files (`npm test` / `npm run test:all`); helpers in `src/test/` (housing, social, worker parity, ecosystemPressure, packRenderSoA, protocol, dialogue chat, Moon Howler cycle)
 - **Build catalog sidebar** — `BuildCatalogPanel.tsx` + `buildCatalog.ts` category rail (replaces deleted `BuildHotbar.tsx`)
 - **Resource badges** — `ResourceIcons.tsx`, `ResourceBadge.tsx`, `resourceLabels.ts`
 - **Citizen IDs** — `#id` search, death log age suffix (`citizenId.ts`)
@@ -104,7 +125,8 @@
 
 **Bug tracker:** [private/BUGS_TRACKER.md](private/BUGS_TRACKER.md) Batch J
 
-- **`npm test`** — single gate: `vitest run` (320 tests, 63 files, **0 skipped**) + `tsc -p tsconfig.vitest.json --noEmit`; replaces separate `test:unit` / `test:types`
+- **`npm test`** — `vitest run` (**358** tests, **67** files, **0 skipped**)
+- **`npm run test:all`** — vitest + `tsc -p tsconfig.vitest.json --noEmit`; **`npm run test:types`** — typecheck only
 - **Vitest default config** — browser Web Worker suites (`gameLoop.worker.test.ts`, `gameWorkerHost.test.ts`) excluded from default run (Node has no `globalThis.Worker`); optional `npx vitest run --config vitest.browser-worker.config.ts`
 - **`npm run` shortened (app)** — 24 scripts → **8**: `dev`, `build`, `test`, `test:watch`, `lint`, `preview`, `sim`, `bench`
 - **`sim` CLI** (`scripts/sim-cli.mjs`) — `npm run sim` lists profiles; `npm run sim -- <profile>` replaces `simulate`, `simulate:30min`, `simulate:20year`, `simulate:social`, `simulate:housing`, `simulate:housing:ticks`, `simulate:family`, `simulate:10year`, `simulate:10year:worker`, `simulate:20year:worker`, `balance:militia`, `benchmark:city`, `simulate:30min:city`, `sim:kill` (aliases: `simulate` → `5min`, `balance` → `militia`)
@@ -134,7 +156,7 @@
 
 ### Planned (remaining for v0.5.0 tag)
 - **P0** — renderer cache reuse, settler count denorm, benchmark gate exit codes; incremental `entityById`, `buildingActions` scan cleanup, grass render buckets, App tab split, pooling; OffscreenCanvas terrain/entity layers; logical invariant checks; **`npm run sim -- 20year` full 172800-tick PASS**; `GAME_VERSION` **0.5.0** + save migration
-- **Done in code (pre-tag):** spatial grid ✅, dead-entity compaction ✅, Web Worker `gameTick` ✅ (opt-in), big bug checkup ✅ (tracker closed), `npm test` gate ✅ (320 + types)
+- **Done in code (pre-tag):** spatial grid ✅, dead-entity compaction ✅, Web Worker `gameTick` ✅ (opt-in), big bug checkup ✅ (252 tracker items, Batch O), `npm run test:all` ✅ (358 + types)
 - **P1** — election playtest at Year 10/20; counter-raid militia march visuals; large-map playtests; reputation arc UI; footstep SFX; one visitor quest chain; `npm run bench`
 
 ## [0.4.2] - 2026-07-05

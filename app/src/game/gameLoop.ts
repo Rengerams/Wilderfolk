@@ -1,7 +1,7 @@
 import type { WorldState } from './gameTypes';
 import { gameTick, computeSimulationFocus, type SimulationFocus } from './gameEngine';
 import { EntityCatalog } from './entityCatalog';
-import { renderGame, resetRendererCaches } from './renderer';
+import { renderGame, resetRendererCaches } from './rendererLoader';
 import { buildRenderSnapshot } from './renderSnapshot';
 import { patchCatalogKinematicsFromRenderSoA } from './simBuffers/applyKinematics';
 import type { EntityRenderMeta } from './simBuffers/entityRenderMeta';

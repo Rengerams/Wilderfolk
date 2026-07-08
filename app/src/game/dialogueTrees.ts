@@ -1,5 +1,4 @@
-import dialogueBank from './data/sim_dialogue_trees.json';
-import type { Season, WeatherType } from './gameTypes';
+
 
 export type DialogueCategory =
   | 'work'
@@ -27,16 +26,75 @@ interface DialogueBankFile {
   categories: DialogueCategory[];
 }
 
-const bank = dialogueBank as unknown as DialogueBankFile;
+let bank: DialogueBankFile | null = null;
+let treesByCategory = new Map<DialogueCategory, DialogueTree[]>();
+let loadPromise: Promise<void> | null = null;
 
-export const DIALOGUE_TREES: readonly DialogueTree[] = bank.dialogue_trees;
-export const DIALOGUE_CATEGORIES: readonly DialogueCategory[] = bank.categories;
+function isNodeRuntime(): boolean {
+  const proc = (globalThis as { process?: { versions?: { node?: string } } }).process;
+  return typeof proc?.versions?.node === 'string';
+}
 
-const treesByCategory = new Map<DialogueCategory, DialogueTree[]>();
-for (const tree of DIALOGUE_TREES) {
-  const list = treesByCategory.get(tree.category) ?? [];
-  list.push(tree);
-  treesByCategory.set(tree.category, list);
+/** Headless sims/tests (tsx/node) cannot rely on Vite async JSON chunks. */
+async function loadDialogueFromDisk(): Promise<boolean> {
+  if (!isNodeRuntime()) return false;
+  try {
+    const fsSpec = 'node:fs';
+    const pathSpec = 'node:path';
+    const urlSpec = 'node:url';
+    const { readFileSync } = await import(fsSpec);
+    const { dirname, join } = await import(pathSpec);
+    const { fileURLToPath } = await import(urlSpec);
+    const here = dirname(fileURLToPath(import.meta.url));
+    const raw = readFileSync(join(here, 'data', 'sim_dialogue_trees.json'), 'utf8');
+    indexDialogueBank(JSON.parse(raw) as DialogueBankFile);
+    return bank !== null;
+  } catch {
+    return false;
+  }
+}
+
+function indexDialogueBank(next: DialogueBankFile): void {
+  bank = next;
+  treesByCategory = new Map();
+  for (const tree of next.dialogue_trees) {
+    const list = treesByCategory.get(tree.category) ?? [];
+    list.push(tree);
+    treesByCategory.set(tree.category, list);
+  }
+}
+
+export function isDialogueBankReady(): boolean {
+  return bank !== null;
+}
+
+/** Load dialogue JSON on demand — keeps the main game chunk smaller in production builds. */
+export async function preloadDialogueBank(): Promise<void> {
+  if (bank) return;
+  if (await loadDialogueFromDisk()) return;
+  if (loadPromise) {
+    await loadPromise;
+    return;
+  }
+  loadPromise = import('./data/sim_dialogue_trees.json').then((mod) => {
+    indexDialogueBank(mod.default as unknown as DialogueBankFile);
+  });
+  await loadPromise;
+}
+
+function requireBank(): DialogueBankFile {
+  if (!bank) {
+    throw new Error('Dialogue bank not loaded — call preloadDialogueBank() before chat simulation');
+  }
+  return bank;
+}
+
+export function getDialogueTrees(): readonly DialogueTree[] {
+  return requireBank().dialogue_trees;
+}
+
+export function getDialogueCategories(): readonly DialogueCategory[] {
+  return requireBank().categories;
 }
 
 const CONTEXT_CATEGORY: Partial<Record<string, DialogueCategory | DialogueCategory[]>> = {
@@ -62,8 +120,8 @@ const CONTEXT_CATEGORY: Partial<Record<string, DialogueCategory | DialogueCatego
 };
 
 export type DialoguePickHints = {
-  season?: Season;
-  weather?: WeatherType;
+  season?: 'spring' | 'summer' | 'fall' | 'winter';
+  weather?: 'clear' | 'rain' | 'snow' | 'storm' | 'drought' | 'heatwave' | 'fog';
   festivalActive?: boolean;
   foodLow?: boolean;
 };
@@ -93,13 +151,14 @@ export function pickDialogueTree(
   hints?: DialoguePickHints,
   avoidTreeId?: string,
 ): DialogueTree | null {
+  const trees = getDialogueTrees();
   const categories = resolveDialogueCategories(context, hints);
   const pool: DialogueTree[] = [];
   for (const cat of categories) {
-    const trees = treesByCategory.get(cat);
-    if (trees) pool.push(...trees);
+    const list = treesByCategory.get(cat);
+    if (list) pool.push(...list);
   }
-  if (pool.length === 0) return DIALOGUE_TREES[0] ?? null;
+  if (pool.length === 0) return trees[0] ?? null;
 
   const seed = entityId * 47 + tick * 13;
   let idx = Math.abs(seed) % pool.length;
@@ -114,7 +173,7 @@ export function pickDialogueTree(
 }
 
 export function getDialogueTreeById(id: string): DialogueTree | undefined {
-  return DIALOGUE_TREES.find((t) => t.id === id);
+  return getDialogueTrees().find((t) => t.id === id);
 }
 
 export function speakerRoleIndex(tree: DialogueTree, line: DialogueLine): 0 | 1 {

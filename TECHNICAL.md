@@ -147,7 +147,8 @@ Most profiles launch through **`app/scripts/run-sim.mjs`** (tsx + localStorage s
 
 | Command | What it checks |
 |---------|----------------|
-| `npm test` | **346** Vitest tests, **66** files, **0 skipped** + `tsconfig.vitest.json` typecheck (browser worker suites optional via `vitest.browser-worker.config.ts`) |
+| `npm test` | **358** Vitest tests, **67** files, **0 skipped** (browser worker suites optional via `vitest.browser-worker.config.ts`) |
+| `npm run test:all` | `vitest run` + `tsc -p tsconfig.vitest.json --noEmit` |
 | `npm run lint` | ESLint — **0 errors** |
 | `npm run build` | `tsc -b` + Vite production bundle |
 | `npm run dup` | [jscpd](https://github.com/kucherenko/jscpd) clone detection on `app/src` — **0 clones** after July 8 dedup pass |
@@ -802,7 +803,7 @@ Playtest build remains **`GAME_VERSION` 0.4.2** until the v0.5.0 tag. Items belo
 | **Raid rewards** | Ready — `rewardRaidParticipants()` Guard XP tiers; leader +0.45 XP + rep on wins; merit elections (`skillPoints = sum(skills)×2`); incumbent record from rep |
 | **Victory balance** | Ready — `VICTORY_TARGETS` raised; Harmony wild wolves only; Goals tab explainer |
 | **Trade caravans** | Ready — `tradeCaravans.ts`; walking merchants; 7 routes; instant trade removed |
-| **Tests** | Vitest **346** passed, **0 skipped**, **66** files (`npm test`); browser worker suites optional (`vitest.browser-worker.config.ts`); frontier raid tests in `frontierCombat.test.ts` (24); trade caravan tests in `tradeCaravans.test.ts` (2); victory in `victory.test.ts` (1); layer tests in `entityLayer.test.ts` (4) |
+| **Tests** | Vitest **358** passed, **0 skipped**, **67** files (`npm test`); `npm run test:all` adds vitest typecheck; browser worker suites optional (`vitest.browser-worker.config.ts`); Moon Howler cycle in `moonHowler.cycle.test.ts` (3); frontier raid tests in `frontierCombat.test.ts` (24); trade caravan tests in `tradeCaravans.test.ts` (2); victory in `victory.test.ts` (1); layer tests in `entityLayer.test.ts` (4) |
 | **Lint** | **70 → 0** ESLint errors — `useLayoutEffect` ref sync, `BuildCatalogPanel` derived category, test hygiene |
 | **UI** | Ready — `BuildCatalogPanel` replaces deleted `BuildHotbar`; `ResourceBadge` / `resourceLabels.ts` |
 
@@ -827,8 +828,9 @@ Routine settler banter no longer uses inline phrase pools in `humanChat.ts`. All
 
 | Area | Change |
 |------|--------|
-| **`npm test`** | `vitest run && tsc -p tsconfig.vitest.json --noEmit` — **346 passed**, **66** files, **0 skipped** |
-| **`npm run` (app)** | **9 scripts**: `dev`, `build`, `test`, `test:watch`, `lint`, `preview`, `sim`, `bench`, `dup` |
+| **`npm test`** | `vitest run` — **358 passed**, **67** files, **0 skipped** |
+| **`npm run test:all`** | vitest + `tsc -p tsconfig.vitest.json --noEmit` |
+| **`npm run` (app)** | **10 scripts**: `dev`, `build`, `test`, `test:all`, `test:types`, `test:watch`, `lint`, `preview`, `sim`, `bench`, `dup` |
 | **`sim` CLI** | `scripts/sim-cli.mjs` replaces all `simulate:*` / `balance:*` / `benchmark:*` entries |
 | **Vitest** | Browser worker tests excluded from default run; optional `vitest.browser-worker.config.ts` |
 
@@ -837,11 +839,29 @@ Routine settler banter no longer uses inline phrase pools in `humanChat.ts`. All
 | Batch | Theme |
 |-------|-------|
 | **I** | `killHuman` widow routing; `isSettlerRelationshipEntity` for Moon Howler marriages; `tickQueries.ts` pairwise hotspot elimination; collision-free social integration test ids |
-| **J** | `isKillableSettlerEntity` + `markWildlifeDead` for werewolf-form deaths; test helper type fixes folded into `npm test` |
+| **J** | `isKillableSettlerEntity` + `markWildlifeDead` for werewolf-form deaths; test helper type fixes (`test:types` / `test:all`) |
+
+### July 8, 2026 — Batch N (Moon Howler 14-day cycle & Church cure)
+
+| Area | Change |
+|------|--------|
+| **Cycle** | Transform 8pm on full-moon colony days (0, 14, 28…); revert 7am only (`isMoonHowlerTransformTick` / `isMoonHowlerRevertTick`) |
+| **Calendar** | `getAbsoluteCalendarDay(state.tick)` for moon scheduling |
+| **New curse** | Guaranteed when `activeCursed === 0` and humans > 5; same-night `transformToWerewolfForm` |
+| **Church cure** | `tryMoonHowlerChurchCures` at dawn (7am) after hunt, ~18% RNG, village-wide, werewolf form required |
+| **Tests** | `moonHowler.cycle.test.ts` (days 0/14/28/42); `moonHowler.test.ts` (cure timing, new-curse gate) |
+
+### July 8, 2026 — Batch O (orphaned marriages + vitest + prison flake)
+
+| # | Fix |
+|---|-----|
+| 1 | `reconcileOrphanedMarriages` in `dayCycle.ts` before entity prune — clears stale `partnerId` when dead spouse row removed |
+| 2 | Top-level `await preloadDialogueBank()` in vitest setup; dynamic `import()` disk load (no `require()` in app tsconfig) |
+| 3 | `lifeSimulation.prison.test.ts` — `withSeededRandom(123)` + dynamic fixture ids |
 
 ### July 8, 2026 — jscpd duplicate cleanup
 
-`jscpd` scan found **8 clones** (93 lines, 0.4%) in `stripRender.ts`, `trackPlayer.ts`, `director.ts`, intro/background music mute sync, and inline `lifetimeStats` in `worldGen.ts`. Refactored to shared helpers; **`npm run dup`** now reports **0 clones**. Quality gates: `npm test` **346** passed, `npm run build` PASS.
+`jscpd` scan found **8 clones** (93 lines, 0.4%) in `stripRender.ts`, `trackPlayer.ts`, `director.ts`, intro/background music mute sync, and inline `lifetimeStats` in `worldGen.ts`. Refactored to shared helpers; **`npm run dup`** now reports **0 clones**. Quality gates: `npm test` **358** passed, `npm run build` PASS.
 
 ---
 

@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "vitest run && tsc -p tsconfig.vitest.json --noEmit",
+    "test": "vitest run",
+    "test:all": "vitest run && tsc -p tsconfig.vitest.json --noEmit",
+    "test:types": "tsc -p tsconfig.vitest.json --noEmit",
     "test:watch": "vitest",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -869,7 +869,7 @@ export const BUILDING_CONFIGS: Record<BuildingType, BuildingConfig> = {
     width: 50, height: 56,
     cost: { wood: 45, stone: 35, gold: 20 },
     buildTime: 4, maxOccupants: 1,
-    emoji: '⛪', label: 'Church', description: 'Staffed church boosts courtship, cures Moon Howlers nearby, and catches affairs.',
+    emoji: '⛪', label: 'Church', description: 'Staffed church boosts courtship, may break Moon Howler curses at dawn after full-moon hunts, and catches affairs.',
     sprite: '/sprites/church.png', backgroundColor: '#4f46e5', padShape: 'round',
   },
   [BuildingType.Well]: {
@@ -1108,7 +1108,7 @@ export const ECOLOGICAL_FACTS = [
   'Mycorrhizal fungi connect trees in a "wood wide web" of nutrient exchange.',
   'Coral reefs support 25% of all marine species despite covering less than 1% of the ocean floor.',
   'Moon Howlers are cursed villagers — human by day, deadly on full-moon nights about every 2 weeks.',
-  'A Church nearby can break the Moon Howler curse before the next full moon.',
+  'Uncured Moon Howlers transform every 14 days; a staffed Church may exorcise them at dawn while still in 🌝 form (~18% roll, village-wide).',
 ];
 
 export interface WeatherConfig {

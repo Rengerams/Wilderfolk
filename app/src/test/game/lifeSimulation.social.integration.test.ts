@@ -15,14 +15,16 @@ function buildSocialVillage(seed: number) {
   const loverBId = state.nextEntityId++;
   const spouseAId = state.nextEntityId++;
   const spouseBId = state.nextEntityId++;
+  const guardId = state.nextEntityId++;
+  const priestId = state.nextEntityId++;
 
-  const prison = createBuilding(BuildingType.Prison, 400, 400, 90, 0);
+  const prison = createBuilding(BuildingType.Prison, 400, 400, state.nextBuildingId++, 0);
   prison.completed = true;
-  const church = createBuilding(BuildingType.Church, 380, 380, 80, 0);
+  const church = createBuilding(BuildingType.Church, 380, 380, state.nextBuildingId++, 0);
   church.completed = true;
   state.buildings.push(prison, church);
 
-  const guard = createEntity(EntityType.Human, 400, 400, 10, 400, false, {
+  const guard = createEntity(EntityType.Human, 400, 400, guardId, 400, false, {
     gender: 'male',
     surname: 'Guard',
     ageYears: 30,
@@ -32,7 +34,7 @@ function buildSocialVillage(seed: number) {
   guard.isJuvenile = false;
   prison.occupants = [guard.id];
 
-  const priest = createEntity(EntityType.Human, 380, 380, 11, 400, false, {
+  const priest = createEntity(EntityType.Human, 380, 380, priestId, 400, false, {
     gender: 'male',
     surname: 'Priest',
     ageYears: 30,

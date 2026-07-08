@@ -1,4 +1,5 @@
-import type { Camera, Entity, EntityByType } from './gameEngine';
+import type { Entity, EntityByType } from './gameEngine';
+import { worldToScreen as w2s } from './viewState';
 import { buildEntityDrawBuckets } from './gameEngine';
 import { UNCACHED_RENDER_TICK } from './gameTypes';
 import type { RenderSnapshot } from './renderSnapshot';
@@ -8,7 +9,7 @@ import { invalidateRenderSoABucketsCache } from './simBuffers/renderSoAEntities'
 import { EntityType, BuildingType, Season, WeatherType, SPECIES_CONFIG, BUILDING_CONFIGS, GRID_SIZE, snapToGrid, TerrainType } from './gameEngine';
 import { WEATHER_CONFIGS } from './gameTypes';
 import { categoryBorderDashForType } from './buildCatalog';
-import type { MapPreset } from './gameTypes';
+import type { Camera, MapPreset } from './gameTypes';
 import {
   getBuildingFootprintForType,
   normalizeBuildingRotation,
@@ -299,14 +300,6 @@ function getCachedNameWidth(
 // ============ HELPERS ============
 let _time = 0;
 let _lastRenderTime = 0;
-function w2s(x: number, y: number, cam: Camera, cw: number, ch: number): [number, number] {
-  return [(x - cam.x) * cam.zoom + cw / 2, (y - cam.y) * cam.zoom + ch / 2];
-}
-
-function s2w(sx: number, sy: number, cam: Camera, cw: number, ch: number): [number, number] {
-  return [(sx - cw / 2) / cam.zoom + cam.x, (sy - ch / 2) / cam.zoom + cam.y];
-}
-
 interface SpriteMotion {
   bobY?: number;
   scaleX?: number;
@@ -2277,4 +2270,4 @@ export function renderGame(ctx: CanvasRenderingContext2D, state: RenderSnapshot,
   }
 }
 
-export { w2s as worldToScreen, s2w as screenToWorld };
+

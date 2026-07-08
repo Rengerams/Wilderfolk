@@ -110,6 +110,7 @@ import {
 } from './simWorkerRuntime';
 import { saveJuiceEffectsEnabled } from '../src/game/preferences';
 import { formatCitizenName } from '../src/game/citizenId';
+import { preloadDialogueBank } from '../src/game/dialogueTrees';
 import { getNamePoolInfo, loadNames } from '../src/game/nameLoader';
 
 const TICKS_PER_YEAR = TICKS_PER_DAY * DAYS_PER_YEAR;
@@ -2551,7 +2552,7 @@ function autoRivalActions(
 // ─── Main simulation ─────────────────────────────────────────────────────────
 
 async function runSimulation(): Promise<void> {
-  await loadNames();
+  await Promise.all([loadNames(), preloadDialogueBank()]);
   // Particles / screen shake are no-ops in balance testing but still cost allocations.
   saveJuiceEffectsEnabled(false);
   resetGrowthState();

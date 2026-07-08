@@ -15,6 +15,10 @@ import {
   shouldMoonHowlerTransform,
   syncMoonHowlerForms,
   transformToWerewolfForm,
+  tryMoonHowlerChurchCures,
+  shouldApplyNewMoonHowlerCurse,
+  isMoonHowlerCureTick,
+  MOON_HOWLER_CHURCH_CURE_CHANCE,
 } from '@/game/moonHowler';
 
 describe('shouldMoonHowlerTransform', () => {
@@ -101,7 +105,7 @@ describe('cureMoonHowler', () => {
 });
 
 describe('syncMoonHowlerForms', () => {
-  it('transforms cursed humans on full-moon night and reverts by day', () => {
+  it('transforms at full-moon 8pm and reverts at the next dawn 7am', () => {
     const h = createEntity(EntityType.Human, 0, 0, 1, 250, false);
     withLifeAge(h, 22);
     curseMoonHowler(h);
@@ -111,8 +115,8 @@ describe('syncMoonHowlerForms', () => {
     expect(night.transformed).toHaveLength(1);
     expect(h.type).toBe(EntityType.Werewolf);
 
-    const day = syncMoonHowlerForms(entities, 0, WORK_START);
-    expect(day.reverted).toHaveLength(1);
+    const dawn = syncMoonHowlerForms(entities, 1, WORK_START);
+    expect(dawn.reverted).toHaveLength(1);
     expect(h.type).toBe(EntityType.Human);
   });
 
@@ -154,6 +158,71 @@ describe('isActiveMoonHowler', () => {
     expect(isActiveMoonHowler(h)).toBe(false);
     transformToWerewolfForm(h);
     expect(isActiveMoonHowler(h)).toBe(true);
+  });
+});
+
+describe('isMoonHowlerCureTick', () => {
+  it('is true at dawn after a full-moon colony day', () => {
+    expect(isMoonHowlerCureTick(1, WORK_START)).toBe(true);
+    expect(isMoonHowlerCureTick(15, WORK_START)).toBe(true);
+  });
+
+  it('is false on non-dawn hours or non-full-moon mornings', () => {
+    expect(isMoonHowlerCureTick(1, NIGHT_START)).toBe(false);
+    expect(isMoonHowlerCureTick(5, WORK_START)).toBe(false);
+    expect(isMoonHowlerCureTick(0, WORK_START)).toBe(false);
+  });
+});
+
+describe('tryMoonHowlerChurchCures', () => {
+  it('only rolls at post-hunt dawn with a staffed church while in werewolf form', () => {
+    const h = createEntity(EntityType.Human, 0, 0, 1, 250, false);
+    withLifeAge(h, 22);
+    curseMoonHowler(h);
+    transformToWerewolfForm(h);
+    const entities = [h];
+    const alwaysWin = () => 0;
+
+    expect(tryMoonHowlerChurchCures(entities, 1, NIGHT_START, false, alwaysWin).cured).toHaveLength(0);
+    expect(tryMoonHowlerChurchCures(entities, 1, WORK_START, false, alwaysWin).cured).toHaveLength(0);
+    expect(tryMoonHowlerChurchCures(entities, 1, NIGHT_START, true, alwaysWin).cured).toHaveLength(0);
+    expect(tryMoonHowlerChurchCures(entities, 5, WORK_START, true, alwaysWin).cured).toHaveLength(0);
+
+    const result = tryMoonHowlerChurchCures(entities, 1, WORK_START, true, alwaysWin);
+    expect(result.cured).toHaveLength(1);
+    expect(h.moonHowlerCursed).toBe(false);
+    expect(h.type).toBe(EntityType.Human);
+  });
+
+  it('does not cure human-form cursed settlers', () => {
+    const h = createEntity(EntityType.Human, 0, 0, 1, 250, false);
+    withLifeAge(h, 22);
+    curseMoonHowler(h);
+    tryMoonHowlerChurchCures([h], 1, WORK_START, true, () => 0);
+    expect(h.moonHowlerCursed).toBe(true);
+    expect(h.type).toBe(EntityType.Human);
+  });
+
+  it('fails the roll when RNG is above the cure chance', () => {
+    const h = createEntity(EntityType.Human, 0, 0, 1, 250, false);
+    withLifeAge(h, 22);
+    curseMoonHowler(h);
+    transformToWerewolfForm(h);
+    const failRng = () => MOON_HOWLER_CHURCH_CURE_CHANCE;
+    const result = tryMoonHowlerChurchCures([h], 1, WORK_START, true, failRng);
+    expect(result.cured).toHaveLength(0);
+    expect(h.moonHowlerCursed).toBe(true);
+    expect(h.type).toBe(EntityType.Werewolf);
+  });
+});
+
+describe('shouldApplyNewMoonHowlerCurse', () => {
+  it('fires on full-moon night only when no active curse and enough humans', () => {
+    expect(shouldApplyNewMoonHowlerCurse(0, NIGHT_START, 8, 0)).toBe(true);
+    expect(shouldApplyNewMoonHowlerCurse(0, NIGHT_START, 5, 0)).toBe(false);
+    expect(shouldApplyNewMoonHowlerCurse(0, NIGHT_START, 8, 1)).toBe(false);
+    expect(shouldApplyNewMoonHowlerCurse(1, NIGHT_START, 8, 0)).toBe(false);
+    expect(shouldApplyNewMoonHowlerCurse(0, WORK_START, 8, 0)).toBe(false);
   });
 });
 

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, useCallback, useMemo, memo, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useCallback, useMemo, memo, lazy, Suspense, type RefObject } from 'react';
 import {
   initGame, canPlaceBuilding, canAssignWorkerToBuilding,
   buildStripPreview, isStripBuildType, inferStripRotation,
@@ -26,6 +26,7 @@ import {
   estimateWorkshopGold, getAgeInYears,
 } from './game/gameEngine';
 import { getForgeOrder } from './game/forge';
+import { MOON_HOWLER_CHURCH_CURE_CHANCE } from './game/moonHowler';
 import { MapSize, MapPreset } from './game/gameTypes';
 import {
   isResidenceBuildingType, isResidenceBuilding,
@@ -42,7 +43,7 @@ import {
   TOWN_HALL_FESTIVAL_COST,
   TOWN_HALL_FESTIVAL_DAYS,
 } from './game/townHall';
-import { screenToWorld } from './game/renderer';
+import { screenToWorld } from './game/viewState';
 import { GameLoop } from './game/gameLoop';
 import type { WorkerCommand } from './game/simWorker/commands';
 import type { EntityCatalog } from './game/entityCatalog';
@@ -70,17 +71,22 @@ import { preloadAllSprites } from './game/spriteLoader';
 import { getHumanVariantLabel, getHumanSelectionBounds } from './game/humanSprites';
 import { isPlayerHuman } from './game/groupEvents';
 import { loadNames, fixDefaultNames } from './game/nameLoader';
-import IntroScreen from './game/IntroScreen';
-import MapSetupScreen from './game/MapSetupScreen';
-import StatisticsPanel from './game/StatisticsPanel';
-import EventLogPanel from './game/EventLogPanel';
-import CombatLogPanel from './components/CombatLogPanel';
-import FocusPanel from './game/FocusPanel';
-import PopulationPanel from './game/PopulationPanel';
-
-import VillageLeadershipPanel from './game/VillageLeadershipPanel';
-import RoadmapPanel from './game/RoadmapPanel';
-import CombatPreviewPanel from './game/CombatPreviewPanel';
+import { preloadDialogueBank } from './game/dialogueTrees';
+import { preloadRenderer } from './game/rendererLoader';
+const IntroScreen = lazy(() => import('./game/IntroScreen'));
+const MapSetupScreen = lazy(() => import('./game/MapSetupScreen'));
+const CombatLogPanel = lazy(() => import('./components/CombatLogPanel'));
+const FocusPanel = lazy(() => import('./game/FocusPanel'));
+const PopulationPanel = lazy(() => import('./game/PopulationPanel'));
+const VillageLeadershipPanel = lazy(() => import('./game/VillageLeadershipPanel'));
+const CombatPreviewPanel = lazy(() => import('./game/CombatPreviewPanel'));
+const StatisticsPanel = lazy(() => import('./game/StatisticsPanel'));
+const EventLogPanel = lazy(() => import('./game/EventLogPanel'));
+const RoadmapPanel = lazy(() => import('./game/RoadmapPanel'));
+const FrontierPanel = lazy(() => import('./components/FrontierPanel'));
+const BuildCatalogPanel = lazy(() => import('./components/BuildCatalogPanel'));
+const BlacksmithForgePanel = lazy(() => import('./components/BlacksmithForgePanel'));
+const ChallengesPanel = lazy(() => import('./components/ChallengesPanel'));
 
 import { downloadChronicleLog, loadExportChronicleOnSave } from './game/eventLogExport';
 import { beginAudio, primeAudioUnlock, playClickSound } from './audio';
@@ -99,12 +105,11 @@ import {
   saveFirstNightWarningDismissed,
 } from './game/preferences';
 import CollapsibleSection from './components/CollapsibleSection';
-import ChallengesPanel from './components/ChallengesPanel';
-import FrontierPanel from './components/FrontierPanel';
+
+
 import AlertBar from './components/AlertBar';
 import GameHeader from './components/GameHeader';
-import BuildCatalogPanel from './components/BuildCatalogPanel';
-import BlacksmithForgePanel from './components/BlacksmithForgePanel';
+
 import { getPriorityAlerts, type PriorityAlert } from './game/priorityAlerts';
 import type { FocusHintAction } from './game/focusHints';
 import './App.css';
@@ -290,9 +295,9 @@ export default function App() {
     gameplayActiveRef.current = gameplayActive;
   }, [selectedBuildingType, gameplayActive]);
 
-  // Preload sprites and names
+  // Preload sprites, names, and dialogue bank
   useEffect(() => {
-    Promise.all([preloadAllSprites(), loadNames()])
+    Promise.all([preloadAllSprites(), loadNames(), preloadDialogueBank(), preloadRenderer()])
       .then(() => {
         fixDefaultNames(world);
         setSpritesLoaded(true);
@@ -1267,18 +1272,21 @@ export default function App() {
 
   if (showIntro) {
     return (
-      <IntroScreen
-        onContinue={() => {
-          setShowIntro(false);
-          setMapSetupSource('intro');
-          setShowMapSetup(true);
-        }}
-      />
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-stone-950 text-stone-400">Loading…</div>}>
+        <IntroScreen
+          onContinue={() => {
+            setShowIntro(false);
+            setMapSetupSource('intro');
+            setShowMapSetup(true);
+          }}
+        />
+      </Suspense>
     );
   }
 
   if (showMapSetup) {
     return (
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-stone-950 text-stone-400">Loading…</div>}>
       <MapSetupScreen
         selectedSize={selectedMapSize}
         selectedPreset={selectedMapPreset}
@@ -1301,6 +1309,7 @@ export default function App() {
         }}
         hasSave={hasSavedGame || hasSave()}
       />
+      </Suspense>
     );
   }
 
@@ -1408,17 +1417,19 @@ export default function App() {
           </button>
 
           {buildPanelOpen ? (
-            <BuildCatalogPanel
-              world={world}
-              selected={selectedBuildingType}
-              buildRotation={view.buildRotation}
-              showGrid={view.showGrid}
-              hotkeys={BUILDING_HOTKEYS}
-              onSelect={selectBuildingType}
-              onLocked={(type) => applyGameAction({ proto: 1, op: 'notifyBuildingLocked', type })}
-              onCancel={cancelBuildMode}
-              onToggleGrid={toggleGrid}
-            />
+            <Suspense fallback={<p className="p-3 text-[10px] text-stone-500">Loading build catalog…</p>}>
+              <BuildCatalogPanel
+                world={world}
+                selected={selectedBuildingType}
+                buildRotation={view.buildRotation}
+                showGrid={view.showGrid}
+                hotkeys={BUILDING_HOTKEYS}
+                onSelect={selectBuildingType}
+                onLocked={(type) => applyGameAction({ proto: 1, op: 'notifyBuildingLocked', type })}
+                onCancel={cancelBuildMode}
+                onToggleGrid={toggleGrid}
+              />
+            </Suspense>
           ) : (
             <div className="flex h-full flex-col items-center gap-2 py-3">
               <span
@@ -1602,11 +1613,13 @@ export default function App() {
                         )}
                       </p>
                       <div className="mt-2">
-                        <CombatPreviewPanel
-                          compact
-                          preview={raidPreview}
-                          title="If they raid you — defend or barricade"
-                        />
+                        <Suspense fallback={<p className="text-[9px] text-stone-500">Loading preview…</p>}>
+                          <CombatPreviewPanel
+                            compact
+                            preview={raidPreview}
+                            title="If they raid you — defend or barricade"
+                          />
+                        </Suspense>
                       </div>
                       <div className="mt-2 grid grid-cols-1 gap-1">
                         {evt.choices.map((choice) => {
@@ -2047,12 +2060,14 @@ export default function App() {
             {/* Village Tab */}
             {activeTab === 'village' && (
               <div className="space-y-2.5">
-                <FocusPanel
-                  state={world}
-                  buildings={world.buildings}
-                  onOpenGoals={() => { setActiveTab('progress'); setProgressSubTab('goals'); }}
-                  onHintAction={handleHintAction}
-                />
+                <Suspense fallback={<p className="text-[10px] text-stone-500">Loading focus…</p>}>
+                  <FocusPanel
+                    state={world}
+                    buildings={world.buildings}
+                    onOpenGoals={() => { setActiveTab('progress'); setProgressSubTab('goals'); }}
+                    onHintAction={handleHintAction}
+                  />
+                </Suspense>
                 <CollapsibleSection
                   icon="👥"
                   title="Population"
@@ -2131,7 +2146,9 @@ export default function App() {
                 </CollapsibleSection>
 
                 <CollapsibleSection icon="👑" title="Village leadership" accent="amber" defaultOpen={false}>
-                  <VillageLeadershipPanel state={world} />
+                  <Suspense fallback={<p className="text-[10px] text-stone-500">Loading leadership…</p>}>
+                    <VillageLeadershipPanel state={world} />
+                  </Suspense>
                 </CollapsibleSection>
 
                 <CollapsibleSection
@@ -2141,7 +2158,9 @@ export default function App() {
                   accent="stone"
                   defaultOpen={false}
                 >
-                  <PopulationPanel state={world} onFocusCitizen={focusCitizenOnMap} />
+                  <Suspense fallback={<p className="text-[10px] text-stone-500">Loading families…</p>}>
+                    <PopulationPanel state={world} onFocusCitizen={focusCitizenOnMap} />
+                  </Suspense>
                 </CollapsibleSection>
 
                 <CollapsibleSection
@@ -2207,18 +2226,20 @@ export default function App() {
             )}
 
             {activeTab === 'frontier' && (
-              <FrontierPanel
-                state={world}
-                pendingRaidCount={pendingRaids.length}
-                pendingOutgoingRaidCount={pendingOutgoingRaids.length}
-                pendingDiplomacyCount={pendingDiplomacy.length}
-                onFocusVisitor={(id, x, y) => focusCampOnMap('visitor', id, x, y)}
-                onFocusRival={(id, x, y, buildingId) => focusCampOnMap('rival', id, x, y, buildingId)}
-                onLaunchRaid={(rivalId) => {
-                  playClickSound();
-                  applyGameAction({ proto: 1, op: 'launchRaidOnRival', rivalId });
-                }}
-              />
+              <Suspense fallback={<p className="text-[10px] text-stone-500">Loading frontier…</p>}>
+                <FrontierPanel
+                  state={world}
+                  pendingRaidCount={pendingRaids.length}
+                  pendingOutgoingRaidCount={pendingOutgoingRaids.length}
+                  pendingDiplomacyCount={pendingDiplomacy.length}
+                  onFocusVisitor={(id, x, y) => focusCampOnMap('visitor', id, x, y)}
+                  onFocusRival={(id, x, y, buildingId) => focusCampOnMap('rival', id, x, y, buildingId)}
+                  onLaunchRaid={(rivalId) => {
+                    playClickSound();
+                    applyGameAction({ proto: 1, op: 'launchRaidOnRival', rivalId });
+                  }}
+                />
+              </Suspense>
             )}
 
             {/* Nature Tab */}
@@ -2566,9 +2587,13 @@ export default function App() {
                   )}
                 </div>
                 <CollapsibleSection icon="🏆" title="Challenges" accent="amber" defaultOpen>
-                  <ChallengesPanel state={world} />
+                  <Suspense fallback={<p className="text-[10px] text-stone-500">Loading challenges…</p>}>
+                    <ChallengesPanel state={world} />
+                  </Suspense>
                 </CollapsibleSection>
-                <StatisticsPanel state={world} />
+                <Suspense fallback={<p className="text-[10px] text-stone-500">Loading statistics…</p>}>
+                  <StatisticsPanel state={world} />
+                </Suspense>
               </div>
             )}
               </div>
@@ -2596,16 +2621,18 @@ export default function App() {
                       Full history of your settlement — births, marriages, scandals, research, disasters, and more.
                       Scroll to read older entries, filter by type, or <strong className="text-stone-400">Copy log</strong> to save it in a note. Saved with your game.
                     </p>
-                    <EventLogPanel
-                      events={world.eventLog}
-                      meta={{
-                        villageName: world.villageName,
-                        year: world.year,
-                        day: world.dayInYear,
-                        tick: world.tick,
-                        population: world.humanPopulation,
-                      }}
-                    />
+                    <Suspense fallback={<p className="text-[10px] text-stone-500">Loading chronicle…</p>}>
+                      <EventLogPanel
+                        events={world.eventLog}
+                        meta={{
+                          villageName: world.villageName,
+                          year: world.year,
+                          day: world.dayInYear,
+                          tick: world.tick,
+                          population: world.humanPopulation,
+                        }}
+                      />
+                    </Suspense>
                   </>
                 ) : (
                   <>
@@ -2613,16 +2640,18 @@ export default function App() {
                     <p className="mb-2 text-[9px] leading-relaxed text-stone-500">
                       Incoming raids, proactive strikes, counter-raids, militia battles, and barricades — dedicated combat log with export.
                     </p>
-                    <CombatLogPanel
-                      events={world.eventLog}
-                      meta={{
-                        villageName: world.villageName,
-                        year: world.year,
-                        day: world.dayInYear,
-                        tick: world.tick,
-                        population: world.humanPopulation,
-                      }}
-                    />
+                    <Suspense fallback={<p className="text-[10px] text-stone-500">Loading combat log…</p>}>
+                      <CombatLogPanel
+                        events={world.eventLog}
+                        meta={{
+                          villageName: world.villageName,
+                          year: world.year,
+                          day: world.dayInYear,
+                          tick: world.tick,
+                          population: world.humanPopulation,
+                        }}
+                      />
+                    </Suspense>
                   </>
                 )}
               </div>
@@ -2644,7 +2673,11 @@ export default function App() {
                   ))}
                 </div>
 
-            {moreSubTab === 'roadmap' && <RoadmapPanel />}
+            {moreSubTab === 'roadmap' && (
+              <Suspense fallback={<p className="text-[10px] text-stone-500">Loading roadmap…</p>}>
+                <RoadmapPanel />
+              </Suspense>
+            )}
 
             {moreSubTab === 'guide' && (
               <div className="space-y-3 text-[10px] text-stone-300">
@@ -2784,8 +2817,8 @@ export default function App() {
                     Sometimes a grown settler is <strong className="text-violet-200">cursed as a Moon Howler</strong>.
                     Cursed settlers stay <strong className="text-violet-200">normal humans most nights</strong>. Only on a
                     <strong className="text-violet-200"> full moon</strong> (about every 2 weeks) do they transform and
-                    <strong className="text-rose-300"> hunt settlers</strong>. Build a
-                    <strong className="text-indigo-200"> Church</strong> nearby to break the curse.
+                    <strong className="text-rose-300"> hunt settlers</strong>. Staff a
+                    <strong className="text-indigo-200"> Church</strong> — uncured settlers transform every 14 days; at dawn after each hunt the priest may break the curse while they are still in 🌝 form (village-wide, ~18% chance).
                   </p>
                 </div>
 
@@ -2868,7 +2901,7 @@ export default function App() {
                     <p>2. Click a wild <strong className="text-stone-200">wolf, fox, deer, or rabbit</strong> within ~140px of the post.</p>
                     <p>3. Pick an adult settler — costs food: rabbit 10, fox 25, deer 30, wolf 40.</p>
                     <p>4. Tamed animals <strong className="text-stone-200">follow their owner</strong>. Wolves and foxes sometimes hunt nearby prey for them.</p>
-                    <p className="text-stone-500 italic">Moon Howlers cannot be tamed — staff a Church and keep cursed settlers nearby; cures roll each morning at 7am.</p>
+                    <p className="text-stone-500 italic">Moon Howlers cannot be tamed — staff a Church; cures roll at dawn (7am) after the hunt in 🌝 form.</p>
                   </div>
                 </div>
 
@@ -3220,7 +3253,7 @@ function SelectedEntityPanel({ entity, allEntities, state, onTame, onMoveOut, on
             <p className="text-[9px] font-semibold text-rose-300">🌝 Full moon form — curse NOT cured · hunting tonight</p>
           )}
           {isHuman && entity.moonHowlerCursed && (
-            <p className="text-[9px] font-semibold text-violet-300">🌝 Moon Howler curse — NOT cured yet (human until next full moon)</p>
+            <p className="text-[9px] font-semibold text-violet-300">🌝 Moon Howler curse — transforms again every 14 days until cured</p>
           )}
           {isVisitor && visitorGroup && (
             <p className="text-[9px] text-cyan-300">Visiting — {visitorGroup.name} ({visitorGroup.daysLeft}d)</p>
@@ -3359,7 +3392,7 @@ function SelectedEntityPanel({ entity, allEntities, state, onTame, onMoveOut, on
       </div>
 
       {isMoonHowler && (
-        <p className="mt-2 text-[9px] text-rose-300">🌝 Curse NOT cured — hunting tonight. Staff a Church and keep them nearby by day for morning cures.</p>
+        <p className="mt-2 text-[9px] text-rose-300">🌝 Curse NOT cured — hunting tonight. Staff a Church; the priest may break the curse while they are in Moon Howler form.</p>
       )}
 
       {/* Taming */}
@@ -3422,7 +3455,7 @@ const BUILDING_OUTPUT_HINTS: Partial<Record<BuildingType, string>> = {
   [BuildingType.Store]: 'Generates passive gold income.',
   [BuildingType.Market]: 'Trades goods for gold with assigned workers.',
   [BuildingType.Workshop]: 'Pick a recipe below — crafts every 2 days when staffed and stocked.',
-  [BuildingType.Church]: 'Staffed church boosts courtship, cures Moon Howlers nearby, and catches affairs.',
+  [BuildingType.Church]: 'Staffed church boosts courtship, may break Moon Howler curses at dawn after full-moon hunts, and catches affairs.',
   [BuildingType.School]: 'Assign a teacher — children walk here by day; schooling speeds growth and grants graduation perks.',
   [BuildingType.Blacksmith]: 'Forge iron spears & shields here after Defense research. Staffed smith boosts lumber, quarry & mine (+25% per worker).',
   [BuildingType.Hospital]: 'Staffed hospital adds reputation every 5 days; any hospital lowers energy drain.',
@@ -3504,17 +3537,19 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
         )}
         {rival && (
           <div className="mb-2">
-            <CombatPreviewPanel
-              compact
-              showOutgoingRaid
-              outgoingRaidIsCounter={isCounterRaid}
-              preview={getCombatPreview(state, {
-                rival,
-                attackerStrength: raidsForRival[0]?.attackerStrength ?? rivalStr,
-                incomingPayoffFood: raidsForRival[0]?.lootFood,
-              })}
-              title={`vs ${rival.name} — ${formatCampDistance(getCampDistancePixels(state, state.buildings, rival))} · raid ${raidFoodCost}🍖`}
-            />
+            <Suspense fallback={<p className="text-[9px] text-stone-500">Loading preview…</p>}>
+              <CombatPreviewPanel
+                compact
+                showOutgoingRaid
+                outgoingRaidIsCounter={isCounterRaid}
+                preview={getCombatPreview(state, {
+                  rival,
+                  attackerStrength: raidsForRival[0]?.attackerStrength ?? rivalStr,
+                  incomingPayoffFood: raidsForRival[0]?.lootFood,
+                })}
+                title={`vs ${rival.name} — ${formatCampDistance(getCampDistancePixels(state, state.buildings, rival))} · raid ${raidFoodCost}🍖`}
+              />
+            </Suspense>
           </div>
         )}
         {raidsForRival.map((evt) => (
@@ -3724,10 +3759,10 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
           <p className="text-[9px] text-amber-400">⚠️ No priest — Moon Howler cures disabled; courtship/morals bonuses reduced.</p>
         )}
         {building.completed && building.type === BuildingType.Church && (() => {
-          const nearbyCursed = state.entities.filter(
-            (e) => e.alive && e.moonHowlerCursed && Math.hypot(e.x - building.x, e.y - building.y) < 140,
-          );
           const totalCursed = state.entities.filter((e) => e.alive && e.moonHowlerCursed).length;
+          const huntingTonight = state.entities.filter(
+            (e) => e.alive && e.type === EntityType.Werewolf && e.moonHowlerCursed,
+          ).length;
           if (totalCursed === 0) {
             return (
               <p className="text-[9px] text-emerald-400">✓ No active Moon Howler curses in the village.</p>
@@ -3735,10 +3770,10 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
           }
           if (building.occupants.length === 0) return null;
           return (
-            <p className={`text-[9px] ${nearbyCursed.length > 0 ? 'text-violet-300' : 'text-amber-400'}`}>
-              {nearbyCursed.length > 0
-                ? `🌝 ${nearbyCursed.length} cursed settler${nearbyCursed.length === 1 ? '' : 's'} in range — cure attempts each morning (7am).`
-                : `🌝 ${totalCursed} curse${totalCursed === 1 ? '' : 's'} active but none near this church yet.`}
+            <p className="text-[9px] text-violet-300">
+              {huntingTonight > 0
+                ? `🌝 ${huntingTonight} Moon Howler${huntingTonight === 1 ? '' : 's'} abroad — priest exorcises at dawn while still in 🌝 form (~${Math.round(MOON_HOWLER_CHURCH_CURE_CHANCE * 100)}%, anywhere in village).`
+                : `🌝 ${totalCursed} curse${totalCursed === 1 ? '' : 's'} — transforms every 14 days; dawn exorcism in 🌝 form (~${Math.round(MOON_HOWLER_CHURCH_CURE_CHANCE * 100)}%).`}
             </p>
           );
         })()}
@@ -3773,11 +3808,13 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
           <p className="text-[9px] text-amber-400">⚠️ No guards assigned — militia bonus inactive until you staff the barracks.</p>
         )}
         {building.completed && building.type === BuildingType.Blacksmith && onQueueForge && (
-          <BlacksmithForgePanel
-            state={state}
-            buildingId={building.id}
-            onQueueForge={onQueueForge}
-          />
+          <Suspense fallback={<p className="text-[9px] text-stone-500">Loading forge…</p>}>
+            <BlacksmithForgePanel
+              state={state}
+              buildingId={building.id}
+              onQueueForge={onQueueForge}
+            />
+          </Suspense>
         )}
         {building.completed && building.type === BuildingType.Workshop && (() => {
           const recipe = getWorkshopRecipe(building.workshopRecipeId);

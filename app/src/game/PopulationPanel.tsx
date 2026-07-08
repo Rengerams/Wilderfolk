@@ -167,7 +167,7 @@ export default function PopulationPanel({
         <div className="mb-3 rounded-lg border border-violet-500/35 bg-violet-950/35 px-2.5 py-2 text-[10px] text-violet-200">
           <p className="font-bold">🌝 {moonHowlerCursed} Moon Howler curse{moonHowlerCursed === 1 ? '' : 's'} active</p>
           <p className="mt-0.5 text-[9px] text-violet-300/90">
-            Still cursed: 🌝 on name below · click settler for details · cured = Log says &quot;was cured of the Moon Howler curse&quot; and banner &quot;⛪ Curse Broken!&quot;
+            Still cursed: 🌝 on name below · dawn after each full-moon hunt, staffed Church may exorcise in 🌝 form (village-wide) · Log: &quot;was cured of the Moon Howler curse&quot;
           </p>
         </div>
       )}

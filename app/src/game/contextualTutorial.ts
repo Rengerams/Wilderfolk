@@ -181,7 +181,7 @@ export const CONTEXTUAL_TUTORIALS: Record<ContextualTutorialId, ContextualTutori
     id: 'moon_howler_curse',
     icon: '🌝',
     title: 'Moon Howler curse',
-    detail: 'A settler carries the curse — human most nights, dangerous on full moons. Build a Church to break the curse, or guard the village on moon nights.',
+    detail: 'A settler carries the curse — human most nights, dangerous every 14 days on full moons. Staff a Church; at dawn after the hunt the priest may break the curse while they are still in Moon Howler (🌝) form — no need to bring them to the church.',
   },
   moon_howler_hunt: {
     id: 'moon_howler_hunt',

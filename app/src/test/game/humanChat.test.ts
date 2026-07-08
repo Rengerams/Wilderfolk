@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Season, WeatherType } from '@/game/gameTypes';
-import { getDialogueTreeById, pickDialogueTree } from '@/game/dialogueTrees';
+import { getDialogueTreeById, pickDialogueTree, preloadDialogueBank } from '@/game/dialogueTrees';
 import {
   chatHintsFromWorld,
   formatChatLine,
@@ -19,6 +19,10 @@ import {
 function chatEntity(id: number, isJuvenile = false, name?: string): ChatSpeaker {
   return { id, isJuvenile, name };
 }
+
+beforeAll(async () => {
+  await preloadDialogueBank();
+});
 
 beforeEach(() => {
   resetDialogueSessions();

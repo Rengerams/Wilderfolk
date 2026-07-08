@@ -315,3 +315,23 @@ export function syncScreenShakeFromWorld(view: ViewState, world: WorldState): Vi
 export function clearScreenShakeImpulse(world: WorldState): void {
   world.screenShakeImpulse = 0;
 }
+
+export function worldToScreen(
+  x: number,
+  y: number,
+  cam: Camera,
+  cw: number,
+  ch: number,
+): [number, number] {
+  return [(x - cam.x) * cam.zoom + cw / 2, (y - cam.y) * cam.zoom + ch / 2];
+}
+
+export function screenToWorld(
+  sx: number,
+  sy: number,
+  cam: Camera,
+  cw: number,
+  ch: number,
+): [number, number] {
+  return [(sx - cw / 2) / cam.zoom + cam.x, (sy - ch / 2) / cam.zoom + cam.y];
+}

@@ -1327,6 +1327,30 @@ export function killHuman(
   finalizeHumanDeath(entity, buildings, entityById);
 }
 
+/** Human settler or cursed villager in werewolf form — valid marriage partner for lookups. */
+function isLivingMarriagePartner(entity: Entity | undefined): boolean {
+  if (!entity?.alive) return false;
+  if (entity.type === EntityType.Human) return true;
+  return entity.type === EntityType.Werewolf && !!entity.moonHowlerCursed;
+}
+
+/**
+ * Clear marriage links when the partner row was removed from the alive list.
+ * Runs after dead entities are pruned — safety net when widow cleanup missed a death path.
+ */
+export function reconcileOrphanedMarriages(entities: readonly Entity[]): void {
+  const byId = new Map<number, Entity>();
+  for (const entity of entities) byId.set(entity.id, entity);
+  for (const human of entities) {
+    if (!human.alive || human.type !== EntityType.Human) continue;
+    if (human.partnerId == null || human.relationshipStatus !== 'married') continue;
+    if (!isLivingMarriagePartner(byId.get(human.partnerId))) {
+      human.partnerId = undefined;
+      human.relationshipStatus = human.pregnant ? 'expecting' : 'single';
+    }
+  }
+}
+
 /** Keep house/mansion occupants in sync with residenceBuildingId for the UI. */
 export function syncResidenceOccupants(humans: Entity[], buildings: Building[]): void {
   for (const building of buildings) {

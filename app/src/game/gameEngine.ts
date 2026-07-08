@@ -41,13 +41,14 @@ import { isEntityOnBuilding } from './buildingRotation';
 import {
   assignMissingResidences, buildWorkTicks, getCalendarDay, getHourOfDay,
   HUMAN_MAX_LIFESPAN_YEARS,
-  getColonyDay,
   IMMIGRATION_CHECK_TICKS, FESTIVAL_CHECK_TICKS, isProductionTick,
   PRODUCTION_INTERVAL, REPRODUCTION_COOLDOWN_TICKS,
   hasWorkAssignment, isImprisoned,
   isResidenceBuildingType, isWorkHour, getResidenceCapacity,
-  TICKS_PER_DAY, WORK_START, NIGHT_START, isNightHour, ticksForDays,
-  EVENT_INTERVAL, isFullMoonNight, isNewCalendarDayTick, markCalendarDayProcessed,
+  TICKS_PER_DAY, WORK_START, isNightHour, ticksForDays,
+  EVENT_INTERVAL, isNewCalendarDayTick, markCalendarDayProcessed,
+  getAbsoluteCalendarDay, syncHumanAgeFromCalendar,
+  reconcileOrphanedMarriages,
 } from './dayCycle';
 
 /** Region of the world that receives full simulation this tick. */
@@ -583,8 +584,9 @@ export {
   getLeadershipScoreBreakdown,
 } from './villageLeadership';
 import {
-  canMoonHowlerCurse, cureMoonHowler, curseMoonHowler,
-  syncMoonHowlerForms,
+  canMoonHowlerCurse, countActiveMoonHowlerCurses, curseMoonHowler,
+  shouldApplyNewMoonHowlerCurse, syncMoonHowlerForms, transformToWerewolfForm,
+  tryMoonHowlerChurchCures,
 } from './moonHowler';
 
 // ============ WORKFORCE HELPERS ============
@@ -1007,11 +1009,29 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
   const newEntities: Entity[] = [];
   const aliveEntities = state.entities.filter(e => e.alive);
 
+  for (const entity of aliveEntities) {
+    if (entity.moonHowlerCursed && entity.type === EntityType.Human) {
+      syncHumanAgeFromCalendar(entity, state);
+    }
+  }
+
   let byType = buildEntityByType(aliveEntities);
 
   const hourOfDay = getHourOfDay(state.tick);
   const isNewCalendarDay = isNewCalendarDayTick(state);
-  const colonyDay = getColonyDay(state);
+  const colonyDay = getAbsoluteCalendarDay(state.tick);
+  const churchStaffed = getChurchStrength(state.buildings, aliveEntities) >= 1;
+  const dawnCures = tryMoonHowlerChurchCures(aliveEntities, colonyDay, hourOfDay, churchStaffed);
+  if (dawnCures.cured.length > 0) {
+    for (const curedOne of dawnCures.cured) {
+      const who = curedOne.name ? `${curedOne.name}${curedOne.surname ? ` ${curedOne.surname}` : ''}` : 'A settler';
+      const line = WEREWOLF_TAME_LINES[Math.floor(Math.random() * WEREWOLF_TAME_LINES.length)];
+      addBigNews(state, '⛪ Curse Broken!', `${who} — ${line}`, 'positive');
+      addFloatingText(state, curedOne.x, curedOne.y - 20, 'Cured!', '#22c55e');
+      logEvent(state, 'event', `${who} was cured of the Moon Howler curse`, who);
+    }
+  }
+
   const moonSync = syncMoonHowlerForms(aliveEntities, colonyDay, hourOfDay);
   if (moonSync.transformed.length > 0 || moonSync.reverted.length > 0) {
     byType = buildEntityByType(aliveEntities);
@@ -1025,6 +1045,30 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
     const line = WEREWOLF_TRANSFORM_LINES[Math.floor(Math.random() * WEREWOLF_TRANSFORM_LINES.length)](who);
     addFloatingText(state, were.x, were.y - 20, 'AWOO!', '#c4b5fd');
     logEvent(state, 'event', line, who);
+  }
+
+  const activeMoonCurses = countActiveMoonHowlerCurses(aliveEntities);
+  const humanPop = aliveEntities.filter((e) => e.alive && isPlayerHuman(e)).length;
+  if (shouldApplyNewMoonHowlerCurse(colonyDay, hourOfDay, humanPop, activeMoonCurses)) {
+    const candidates = byType[EntityType.Human].filter((h) => isPlayerHuman(h) && canMoonHowlerCurse(h));
+    const human = candidates[Math.floor(Math.random() * candidates.length)];
+    if (human) {
+      const who = human.name ? `${human.name}${human.surname ? ` ${human.surname}` : ''}` : 'A settler';
+      curseMoonHowler(human);
+      transformToWerewolfForm(human);
+      byType = buildEntityByType(aliveEntities);
+      const line = WEREWOLF_CURSE_LINES[Math.floor(Math.random() * WEREWOLF_CURSE_LINES.length)](who);
+      addBigNews(state, '🌝 Moon Howler Curse!', line, 'negative');
+      addFloatingText(state, human.x, human.y - 20, 'Cursed…', '#c4b5fd');
+      logEvent(state, 'event', `${who} was cursed as a Moon Howler`, who);
+      const transformLine = WEREWOLF_TRANSFORM_LINES[Math.floor(Math.random() * WEREWOLF_TRANSFORM_LINES.length)](who);
+      addFloatingText(state, human.x, human.y - 20, 'AWOO!', '#c4b5fd');
+      logEvent(state, 'event', transformLine, who);
+      if (!moonSync.nightFall) {
+        addBigNews(state, '🌝 Full Moon!', 'Moon Howlers are abroad. Keep settlers indoors — they hunt tonight.', 'negative');
+        logEvent(state, 'event', 'Full moon rose — cursed settlers transformed');
+      }
+    }
   }
 
   const entityById = new Map<number, Entity>();
@@ -1215,39 +1259,6 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
   pruneFactionWanderStates(allAlive.map((e) => e.id));
 
   const counts = computePopulationCounts(allAlive);
-
-  // Moon Howler curse — settler stays human until the next full-moon night (~2 weeks)
-  if (isFullMoonNight(colonyDay, hourOfDay) && hourOfDay === NIGHT_START && counts.humans > 5 && Math.random() < 0.08) {
-    const candidates = byType[EntityType.Human].filter((h) => isPlayerHuman(h) && canMoonHowlerCurse(h));
-    const human = candidates[Math.floor(Math.random() * candidates.length)];
-    if (human) {
-      const who = human.name ? `${human.name}${human.surname ? ` ${human.surname}` : ''}` : 'A settler';
-      curseMoonHowler(human);
-      const line = WEREWOLF_CURSE_LINES[Math.floor(Math.random() * WEREWOLF_CURSE_LINES.length)](who);
-      addBigNews(state, '🌝 Moon Howler Curse!', line, 'negative');
-      addFloatingText(state, human.x, human.y - 20, 'Cursed…', '#c4b5fd');
-      logEvent(state, 'event', `${who} was cursed as a Moon Howler`, who);
-    }
-  }
-
-  // Church breaks the Moon Howler curse
-  const churches = updatedBuildings.filter(b => b.completed && b.type === BuildingType.Church);
-  if (churches.length > 0 && isProductionTick(state.tick, EVENT_INTERVAL.churchCure)) {
-    const cursed = allAlive.filter((e) => e.alive && e.moonHowlerCursed);
-    for (const cursedOne of cursed) {
-      const staffedChurch = churches.find(
-        (c) => c.occupants.length > 0 && Math.hypot(c.x - cursedOne.x, c.y - cursedOne.y) < 140,
-      );
-      if (staffedChurch && Math.random() < 0.06) {
-        const who = cursedOne.name ? `${cursedOne.name}${cursedOne.surname ? ` ${cursedOne.surname}` : ''}` : 'A settler';
-        cureMoonHowler(cursedOne);
-        const line = WEREWOLF_TAME_LINES[Math.floor(Math.random() * WEREWOLF_TAME_LINES.length)];
-        addBigNews(state, '⛪ Curse Broken!', `${who} — ${line}`, 'positive');
-        addFloatingText(state, cursedOne.x, cursedOne.y - 20, 'Cured!', '#22c55e');
-        logEvent(state, 'event', `${who} was cured of the Moon Howler curse`, who);
-      }
-    }
-  }
 
   // Village festival / party
   const townHallFestivalBoost = updatedBuildings.some(
@@ -1607,6 +1618,7 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
     logEvent(state, 'season', `Victory: ${def?.label ?? victoryResult.newlyAchieved}`);
   }
 
+  reconcileOrphanedMarriages(allAlive);
   state.entities = allAlive;
   if (state.tick > 0 && state.tick % ticksForDays(7) === 0) {
     replenishDepletedWildlife(state);

@@ -35,10 +35,17 @@ import {
   tryMoveOutOfFamilyHome,
   HUMAN_ADULT_MIN_AGE,
   HUMAN_MOVE_OUT_MIN_AGE,
+  getAbsoluteCalendarDay,
   getColonyDay,
+  getHourOfDay,
   setHumanBirthFromAge,
 } from './dayCycle';
-import { canMoonHowlerCurse, curseMoonHowler } from './moonHowler';
+import {
+  canMoonHowlerCurse,
+  curseMoonHowler,
+  isMoonHowlerTransformTick,
+  transformToWerewolfForm,
+} from './moonHowler';
 import { notifyBuildingLocked } from './research';
 import { type BuildingRotation, getBuildingFootprintForType } from './buildingRotation';
 import {
@@ -809,6 +816,11 @@ export function spawnMoonHowlerDebug(originalState: WorldState): WorldState {
   if (pick) {
     const who = pick.name ? `${pick.name}${pick.surname ? ` ${pick.surname}` : ''}` : 'A settler';
     curseMoonHowler(pick);
+    const colonyDay = getAbsoluteCalendarDay(state.tick);
+    const hourOfDay = getHourOfDay(state.tick);
+    if (isMoonHowlerTransformTick(colonyDay, hourOfDay)) {
+      transformToWerewolfForm(pick);
+    }
     const line = WEREWOLF_CURSE_LINES[Math.floor(Math.random() * WEREWOLF_CURSE_LINES.length)](who);
     addBigNews(state, '🌝 Debug Moon Howler!', `(Test) ${line}`, 'negative');
     addFloatingText(state, pick.x, pick.y - 20, 'Cursed…', '#c4b5fd');
@@ -853,7 +865,7 @@ export function tameEntity(originalState: WorldState, entityId: number, humanId:
   }
 
   if (entity.type === EntityType.Werewolf) {
-    addFloatingText(state, entity.x, entity.y - 10, 'Build a Church to break the curse', '#ef4444');
+    addFloatingText(state, entity.x, entity.y - 10, 'Staff a Church — cures roll at dawn after the hunt', '#ef4444');
     return state;
   }
 

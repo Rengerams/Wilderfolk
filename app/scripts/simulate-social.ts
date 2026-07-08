@@ -26,6 +26,7 @@ import {
   getDiplomacyChoiceEligibility,
 } from '../src/game/groupEvents';
 import { formatSettlerName } from '../src/game/villageLeadership';
+import { preloadDialogueBank } from '../src/game/dialogueTrees';
 import { getNamePoolInfo, loadNames } from '../src/game/nameLoader';
 import { startResearch, syncResearchUnlocks } from '../src/game/research';
 import { getSimFocus } from './simFocus';
@@ -154,7 +155,7 @@ function section(lines: string[], title: string) {
 }
 
 async function main() {
-  await loadNames();
+  await Promise.all([loadNames(), preloadDialogueBank()]);
   const namePool = getNamePoolInfo();
 
   const lines: string[] = [];

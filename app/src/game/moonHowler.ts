@@ -1,6 +1,40 @@
 import { EntityType, JobType } from './gameTypes';
 import type { Entity } from './gameTypes';
-import { HUMAN_ADULT_MIN_AGE, isFullMoonNight, NIGHT_START } from './dayCycle';
+import {
+  DAYS_PER_MOON_CYCLE,
+  HUMAN_ADULT_MIN_AGE,
+  isFullMoonDay,
+  isFullMoonNight,
+  NIGHT_START,
+  WORK_START,
+} from './dayCycle';
+
+/** Dawn exorcism roll after a full-moon hunt (7am, still in 🌝 form). */
+export const MOON_HOWLER_CHURCH_CURE_CHANCE = 0.18;
+
+export function countActiveMoonHowlerCurses(entities: Entity[]): number {
+  return entities.filter((e) => e.alive && e.moonHowlerCursed).length;
+}
+
+export function daysUntilNextFullMoon(colonyDay: number): number {
+  const mod = colonyDay % DAYS_PER_MOON_CYCLE;
+  return mod === 0 ? 0 : DAYS_PER_MOON_CYCLE - mod;
+}
+
+/** New curse when no uncured settler is already carrying the moon (full moon, 8pm). */
+export function shouldApplyNewMoonHowlerCurse(
+  colonyDay: number,
+  hourOfDay: number,
+  humanCount: number,
+  activeCursed: number,
+): boolean {
+  return (
+    activeCursed === 0
+    && humanCount > 5
+    && hourOfDay === NIGHT_START
+    && isFullMoonNight(colonyDay, hourOfDay)
+  );
+}
 
 const HUMAN_FORM = { maxEnergy: 500, speed: 2.25, size: 10 };
 const WEREWOLF_FORM = { maxEnergy: 700, speed: 3.4, size: 14 };
@@ -26,8 +60,28 @@ export interface MoonHowlerSavedState {
   combatTicks?: number;
 }
 
+/** True while the settler should be in werewolf form (full-moon night through pre-dawn). */
 export function shouldMoonHowlerTransform(colonyDay: number, hourOfDay: number): boolean {
   return isFullMoonNight(colonyDay, hourOfDay);
+}
+
+/** 8pm on a full-moon colony day — when cursed settlers transform for the hunt. */
+export function isMoonHowlerTransformTick(colonyDay: number, hourOfDay: number): boolean {
+  return hourOfDay === NIGHT_START && isFullMoonDay(colonyDay);
+}
+
+/** 7am — cursed settlers revert to human until the next full moon (14 colony days). */
+export function isMoonHowlerRevertTick(hourOfDay: number): boolean {
+  return hourOfDay === WORK_START;
+}
+
+/** 7am the morning after a full-moon hunt — priest may exorcise while still in 🌝 form. */
+export function isMoonHowlerCureTick(colonyDay: number, hourOfDay: number): boolean {
+  return hourOfDay === WORK_START && colonyDay > 0 && isFullMoonDay(colonyDay - 1);
+}
+
+export function isMoonHowlerEligible(entity: Entity): boolean {
+  return !entity.isJuvenile && entity.age >= HUMAN_ADULT_MIN_AGE;
 }
 
 export function canMoonHowlerCurse(entity: Entity): boolean {
@@ -129,6 +183,36 @@ export function cureMoonHowler(entity: Entity): void {
   entity.tamedBy = undefined;
 }
 
+export interface MoonHowlerCureAttempt {
+  cured: Entity[];
+}
+
+/**
+ * Staffed Church can break the curse at dawn after a full-moon hunt while the
+ * settler is still in Moon Howler (werewolf) form — village-wide, no proximity.
+ */
+export function tryMoonHowlerChurchCures(
+  entities: Entity[],
+  colonyDay: number,
+  hourOfDay: number,
+  churchStaffed: boolean,
+  rng: () => number = Math.random,
+): MoonHowlerCureAttempt {
+  if (!churchStaffed || !isMoonHowlerCureTick(colonyDay, hourOfDay)) {
+    return { cured: [] };
+  }
+
+  const cured: Entity[] = [];
+  for (const entity of entities) {
+    if (!isActiveMoonHowler(entity)) continue;
+    if (rng() < MOON_HOWLER_CHURCH_CURE_CHANCE) {
+      cureMoonHowler(entity);
+      cured.push(entity);
+    }
+  }
+  return { cured };
+}
+
 /** Convert legacy permanent werewolf saves into cursed villagers. */
 export function migrateLegacyMoonHowler(entity: Entity, colonyDay: number, hourOfDay: number): void {
   if (entity.type !== EntityType.Werewolf || entity.moonHowlerCursed) return;
@@ -161,26 +245,28 @@ export function syncMoonHowlerForms(
   colonyDay: number,
   hourOfDay: number,
 ): MoonHowlerSyncResult {
-  const transforming = shouldMoonHowlerTransform(colonyDay, hourOfDay);
+  const transformTick = isMoonHowlerTransformTick(colonyDay, hourOfDay);
+  const revertTick = isMoonHowlerRevertTick(hourOfDay);
   const transformed: Entity[] = [];
   const reverted: Entity[] = [];
 
   for (const entity of entities) {
-    if (!entity.alive || !entity.moonHowlerCursed) continue;
-    if (entity.isJuvenile || entity.age < HUMAN_ADULT_MIN_AGE) continue;
+    if (!entity.alive || !entity.moonHowlerCursed || !isMoonHowlerEligible(entity)) continue;
 
-    if (transforming && entity.type === EntityType.Human) {
+    if (transformTick && entity.type === EntityType.Human) {
       transformToWerewolfForm(entity);
       transformed.push(entity);
-    } else if (!transforming && entity.type === EntityType.Werewolf) {
+    } else if (revertTick && entity.type === EntityType.Werewolf) {
       revertToHumanForm(entity);
       reverted.push(entity);
     }
   }
 
+  const huntingTonight = entities.some((e) => isActiveMoonHowler(e));
+
   return {
     transformed,
     reverted,
-    nightFall: transforming && hourOfDay === NIGHT_START && transformed.length > 0,
+    nightFall: transformTick && (transformed.length > 0 || huntingTonight),
   };
 }

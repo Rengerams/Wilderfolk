@@ -3,7 +3,7 @@ import { withRandomSequence } from '@/test/helpers/seededRandom';
 import { initGame } from '@/game/gameEngine';
 import { createEntity } from '@/game/worldGen';
 import { EntityType, BuildingType } from '@/game/gameTypes';
-import { HUMAN_MAX_LIFESPAN_YEARS, killHuman } from '@/game/dayCycle';
+import { HUMAN_MAX_LIFESPAN_YEARS, killHuman, reconcileOrphanedMarriages } from '@/game/dayCycle';
 import { curseMoonHowler, transformToWerewolfForm } from '@/game/moonHowler';
 import { tryDailyHumanMortality } from '@/game/lifeSimulation';
 import {
@@ -105,5 +105,50 @@ describe('tryDailyHumanMortality', () => {
     expect(wife.type).toBe(EntityType.Werewolf);
     expect(husband.partnerId).toBeUndefined();
     expect(husband.relationshipStatus).toBe('single');
+  });
+});
+
+describe('reconcileOrphanedMarriages', () => {
+  it('clears marriage when partner row was pruned from the alive list', () => {
+    const survivor = createEntity(EntityType.Human, 0, 0, 10, 400, false, { gender: 'male', ageYears: 30 });
+    survivor.isJuvenile = false;
+    survivor.relationshipStatus = 'married';
+    survivor.partnerId = 99;
+
+    reconcileOrphanedMarriages([survivor]);
+
+    expect(survivor.partnerId).toBeUndefined();
+    expect(survivor.relationshipStatus).toBe('single');
+  });
+
+  it('keeps marriage when partner is alive in cursed werewolf form', () => {
+    const survivor = createEntity(EntityType.Human, 0, 0, 10, 400, false, { gender: 'male', ageYears: 30 });
+    const spouse = createEntity(EntityType.Human, 5, 0, 11, 400, false, { gender: 'female', ageYears: 30 });
+    survivor.isJuvenile = false;
+    spouse.isJuvenile = false;
+    survivor.relationshipStatus = 'married';
+    spouse.relationshipStatus = 'married';
+    survivor.partnerId = spouse.id;
+    spouse.partnerId = survivor.id;
+    curseMoonHowler(spouse);
+    transformToWerewolfForm(spouse);
+
+    reconcileOrphanedMarriages([survivor, spouse]);
+
+    expect(survivor.partnerId).toBe(spouse.id);
+    expect(survivor.relationshipStatus).toBe('married');
+  });
+
+  it('sets expecting when pregnant survivor loses pruned partner', () => {
+    const survivor = createEntity(EntityType.Human, 0, 0, 10, 400, false, { gender: 'female', ageYears: 30 });
+    survivor.isJuvenile = false;
+    survivor.relationshipStatus = 'married';
+    survivor.partnerId = 99;
+    survivor.pregnant = true;
+
+    reconcileOrphanedMarriages([survivor]);
+
+    expect(survivor.partnerId).toBeUndefined();
+    expect(survivor.relationshipStatus).toBe('expecting');
   });
 });
