@@ -9,7 +9,7 @@
   <em>Early Alpha · v0.4.2 shipped · v0.5.0 in progress (July 8, 2026)</em>
 </p>
 
-> **Player guide** — full how-to-play manual (this file). Repo pitch, doc index, and developer commands → **[README.md](../README.md)** (repo root).
+> **Install + how to play** (this file). Repo overview → **[README.md](../README.md)** · developer docs → **[TECHNICAL.md](../TECHNICAL.md)**.
 
 ---
 
@@ -20,14 +20,12 @@
 | Area | Highlights |
 |------|------------|
 | **UI** | 6-tab sidebar, alert strip, **left build catalog** (category rail), tab hotkeys `V/F/N/P/L/M` |
+| **Climate** | Header shows **season + daily °C**; Nature tab **Season & Climate** — winter gameplay from day 270 |
 | **Defense** | Walls, towers, barracks, guard patrols; **Log → Combat** raid history |
 | **Raids** | Preparation-focused — combat preview + Frontier readiness card; **no battle screen** |
 | **Craft** | Blacksmith forge queue for iron spears & shields (research + staffed smith) |
 | **Social** | Settlers chat in **3-line dialogue trees** (work, home, courtship, fear, festivals); election gossip + marriage `Yes!` scripted moments |
-| **Scale (pre-tag)** | Dual-layer **spatial grid**; optional **Web Worker** sim; **OffscreenCanvas** terrain/entity layers (smoother zoom/pan) |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
-| **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](../TECHNICAL.md#playtest-report) |
-| **Quality** | **390** automated tests (71 files) · lint **0 errors** · `npm run test:all` includes typecheck |
 | **Fixes** | ~40 (July 4) + **252** tracker items (July 7–8, Batch O) |
 
 ### What's coming — v0.5.0 (end July 2026)
@@ -36,12 +34,10 @@ All open perf, UI, and architecture work ships in one release. Full plan → [RO
 
 | Track | What it means for you |
 |-------|------------------------|
-| **Sim scale** | Dual spatial grid (grass 56px / mobile 80px) ✅; OffscreenCanvas layers ✅; benchmark gate — [TECHNICAL.md](../TECHNICAL.md#dual-layer-spatial-grid) |
-| **UI at city size** | Sidebar tabs stay fast; App split for Village / Nature / Progress |
-| **Architecture** | Web Worker sim ✅ (opt-in); render SoA buffers |
-| **Social** | Dialogue-tree settler chat ✅ in code (95 JSON trees, paired 3-line banter) |
-| **Quality** | Bug checkup ✅; **`simulate:20year` PASS** |
-| **Polish** | Election ceremony ✅ in code (playtest Year 10/20) |
+| **Performance** | Smoother zoom and pan on large villages |
+| **UI at city size** | Sidebar tabs stay fast; clearer Village / Nature / Progress panels |
+| **Social** | More settler dialogue — paired 3-line banter at work, home, and festivals |
+| **Polish** | Election ceremony at Year 10 and Year 20 |
 | **Steam / installer** | After v0.5.0 — download and play, no terminal |
 
 Check **More → Roadmap** in-game for the live slice, or the full plan at [ROADMAP.md](../ROADMAP.md).
@@ -103,6 +99,54 @@ Caravans camp on the edge of your map. Rival settlements stake their own claim o
 > **Early alpha playtest** — not a finished game. Things will break, look rough, and change between updates. Save often. Your feedback shapes what ships for real.
 
 **Don't kill all the wolves.** Seriously. That's the whole game in one sentence.
+
+## Fun options & ways to play
+
+Wilderfolk is a sandbox inside a food chain — pick how you want to win, who you befriend, and how wild you let the valley stay.
+
+### Frontier setup
+
+| Choice | What it changes |
+|--------|-----------------|
+| **Map size** — Small · Medium · Large | How far you can spread before rivals and wildlife compete for the same hills |
+| **Land type** — Verdant · Mountainous · Coastal · Arid · Harsh | Rivers, hills, forests, and how forgiving the terrain feels |
+| **Village name** | Shows in the header, saves, and chronicle exports |
+| **Game speed** — 0.5× · 1× · 2× · 3× · 5× · 10× | Header speed buttons; **Space** pauses anytime |
+
+### Four victory legacies (pick your path — or ignore them)
+
+| Path | The challenge |
+|------|----------------|
+| **🌿 Eco-Utopia** | 250 people + 80%+ ecosystem health for 20 years |
+| **🏰 Great City** | 400 people + 60 finished buildings |
+| **💰 Trade Empire** | All 7 trade routes, 40 merchant round-trips, 50,000 gold from caravan trade |
+| **🐺 Harmony** | 8 **wild** wolves (untamed) + 15 wildkin — coexistence, not taming |
+
+Track progress in **Progress → Goals**. Mid-game **challenges** nudge you toward milestones without forcing one play style.
+
+### Neighbors, visitors & drama
+
+| Who | Fun things to do |
+|-----|------------------|
+| **Visitors** (cyan camps) | Trade with **Traders**; bless with **Pilgrims**; research boost from **Scholars**; **Performers** spark **Visitor Revelry**; **Nomads** gift timber; decide **Refugee** fate; negotiate **Hunter** shared grounds |
+| **Rival camps** (indigo) | Send gifts, sign **peace treaties** (60-day calm), trade pacts, **raid their camp**, or **counter-raid** when they march on you |
+| **Merchant trade routes** | Unlock in **Progress → Trade**; watch gold dashed **🚚** lines when merchants walk exports and imports |
+
+### Life in the village
+
+| System | What to watch for |
+|--------|-------------------|
+| **Dialogue trees** | Three-line banter at work, home, courtship, wolf panic, festivals, elections |
+| **Families** | Courtship 💕 → marriage 💍 → children 🤰 → surnames; orphans adopted |
+| **Elections** 👑 | Merit vote every 10 years from Year 10; **Election Revelry** after the ceremony |
+| **Moon Howlers** 🌝 | Full-moon hunts every ~2 weeks; shields block, Church may break the curse at dawn |
+| **Taming** | **Taming Post** near wildlife — Harmony victory needs **untamed** wolves |
+| **Town Hall festivals** | Staff officials, then **🎉 Host town festival** from the Town Hall inspector |
+| **Forge queue** | Queue **Iron Spears** or **Iron Shields** at a staffed **Blacksmith** (~6 in-game days per order) |
+
+### Map spectacle (toggle in ☰ menu)
+
+Chase lines on hunts and raids, night window glow, confetti on build complete, camera nudge on click, status badges (🏹 🛡️ 🪖 ⚔️). Turn **Juice effects** off if you prefer a calmer map.
 
 ## How to Play
 
@@ -321,14 +365,20 @@ Adult settlers contribute base strength; bonuses stack from:
 
 **Building placement:** You cannot build on water, mountains, or snow. Farms and industry work better on matching terrain (grassland for farms, forest for lumber mills, etc.).
 
-### Seasons
+### Seasons & climate
 
-- **Spring** — Grass grows fast, babies everywhere. Best time to expand.
-- **Summer** — Steady and warm.
-- **Fall** — Harvest weather, slower growth.
-- **Winter** — Grass barely grows. **Stock food** or people go hungry.
+The calendar runs **360 days per year**. The header and **Nature → Season & Climate** show the **season name** and **daily temperature (°C)**. The map stays green year-round; winter is felt through **gameplay**, not a snow overlay.
 
-Weather shifts too: rain, snow, storms, fog, drought. Storms hurt buildings. Drought starves the land unless you've researched irrigation.
+| Season | Days | Gameplay feel |
+|--------|------|---------------|
+| **Spring** | 0–89 | Grass grows fast, reproduction up — best time to expand |
+| **Summer** | 90–179 | Steady warmth, normal growth |
+| **Fall** | 180–269 | Harvest weather, slower grass |
+| **Winter** | 270–359 | Grass barely grows; settlers **burn wood for heating**; extra energy drain |
+
+**Winter prep:** stock **food** and **wood** before day 270. A contextual tip fires on your first winter.
+
+**Weather** shifts too: rain, snow, storms, fog, drought. Rain helps grass; storms hurt buildings. Drought starves the land unless you've researched irrigation.
 
 ---
 
@@ -499,7 +549,7 @@ See the **Village** tab leadership panel for the current 👑 head, record break
 
 **Every couple of years**, something big happens: wolf migrations, bumper harvests, merchant caravans, superblooms, new rivals moving in, royal surveyors, surprise visitors, and more.
 
-**Festivals** (🎉 in the header) randomly boost production, love, and immigration for a stretch — Harvest Festival, Moonlight Feast, Founders Day, and others.
+**Festivals** (🎉 in the header) boost production, courtship, and immigration — random village parties, **Visitor Revelry** from performers, **Election Revelry** after merit votes, and **Town Hall** festivals you host yourself.
 
 **Disasters** strike without warning: fire, flood, tornado, earthquake, plague. Research **Medicine** and **Defense** to survive the worst.
 
@@ -535,8 +585,9 @@ Unlock trade routes in the **Trade** tab as reputation grows. Once a route is **
 |---|---|
 | **WASD / drag** | Move the camera |
 | **Scroll wheel** | Zoom |
-| **Space** | Pause |
-| **☀️ / 🌙 + time** | Current hour in the header |
+| **Space** | Pause / resume |
+| **Speed buttons** | 0.5× · 1× · 2× · 3× · 5× · 10× (header) |
+| **Season · °C · Y/D · time** | Season, daily temperature, year/day, hour, weather, festival 🎉 |
 | **Click** | Select or build |
 | **ESC** | Cancel building / clear selection |
 | **B** | Show/hide left build panel |
@@ -558,7 +609,7 @@ Unlock trade routes in the **Trade** tab as reputation grows. Once a route is **
 | **Inspector** (collapsible, auto-opens on map click) | Whoever or whatever you clicked |
 | **Village** | Focus hints with **Go →** actions, population, 👑 leadership, armament |
 | **Frontier** | Visitors, rivals, raids, diplomacy |
-| **Nature** | Ecosystem health, wildlife counts, disasters |
+| **Nature** | **Season & Climate**, ecosystem health, wildlife counts, disasters |
 | **Progress → Research** | Tech tree (amber dot when researching) |
 | **Progress → Trade** | Trade routes (badge when routes are ready to open) |
 | **Progress → Goals** | Victory progress, challenges & stats |
@@ -575,7 +626,7 @@ Unlock trade routes in the **Trade** tab as reputation grows. Once a route is **
 
 1. **Don't kill all the wolves.** Seriously.
 2. **House before night → farm → workers.** That order works.
-3. **Winter is coming.** Always have food in storage.
+3. **Winter is coming (day 270).** Stock food **and wood** — settlers burn wood to heat homes.
 4. **Watch hunt lines** — if settlers aren't hunting, research Stone Spears or let them go off-duty hungry.
 5. **Pollution is quiet until it isn't.** Don't overbuild early.
 6. **Roads are fast for you, hard on wildlife.**
@@ -591,22 +642,6 @@ Unlock trade routes in the **Trade** tab as reputation grows. Once a route is **
 ## Secrets (no spoilers, barely)
 
 Some nights, if the higher gods are in a mood, something **golden** might cross the sky. If you see a name you don't recognize, check the **Log**. The letters never stay friends for long.
-
----
-
-## For developers
-
-| Doc | For |
-|-----|-----|
-| **[README.md](../README.md)** | Repo landing — install, doc index, npm commands |
-| **[TECHNICAL.md](../TECHNICAL.md)** | Architecture, tick model, dialogue trees, file map |
-| **[ROADMAP.md](../ROADMAP.md)** · **[ROADMAP_0.5.0.md](../ROADMAP_0.5.0.md)** | Release plan |
-| **[CHANGELOG.md](../CHANGELOG.md)** | Version history |
-
-
-From the **repo root** (forwards into `app/`): `npm start`, `npm run build`, `npm run lint`, `npm run simulate:*`, `npm run sprites:humans`.
-
-From **`app/`** (this folder): `npm test`, `npm run test:watch`, `npm run benchmark:gate`, and other sim/benchmark scripts. See [TECHNICAL.md § Running & building](../TECHNICAL.md#running--building).
 
 ---
 

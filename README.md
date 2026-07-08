@@ -114,7 +114,7 @@ Running `npm install` at the repo root also installs the `app/` package (via `po
 | Blank or stale page | Hard-refresh: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac) |
 | Install fails | Delete `node_modules` in the root **and** in `app/`, then run `npm install` again |
 
-**Player guide** (first day, controls, raids, settlers, tips) → **[app/README.md](app/README.md)** · this root file stays the short repo overview
+**Player guide** (install, gameplay, tips) → **[app/README.md](app/README.md)**
 
 ---
 
@@ -122,7 +122,7 @@ Running `npm install` at the repo root also installs the `app/` package (via `po
 
 | Doc | For |
 |-----|-----|
-| **[app/README.md](app/README.md)** | Players — how to play, tips, controls *(only markdown in `app/`)* |
+| **[app/README.md](app/README.md)** | Players — install + how to play *(only markdown in `app/`)* |
 | **[TECHNICAL.md](TECHNICAL.md)** | Developers — architecture, dev log, playtests, audio credits |
 | **[ROADMAP.md](ROADMAP.md)** | Plan — alpha → v1 → Steam |
 | **[ROADMAP_0.5.0.md](ROADMAP_0.5.0.md)** | **v0.5.0** — scale + architecture + open work (end July 2026) |
