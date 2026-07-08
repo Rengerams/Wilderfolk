@@ -19,6 +19,12 @@
 - **Founding wildlife:** init spawns keep `birthYear: -1`; runtime replenish sets `recordBirthYear: true`
 - **Hygiene:** shared `nodeRuntime.ts` disk loader; `overlapsPlayerBuilding` delegates to `overlapsAnyBuilding`; ESLint clean (`IntroScreen` purity, App hook deps, perf scripts)
 
+### Changed — town perf script (`perf-97.ts`, July 8, 2026)
+
+- **Reproducible spawns:** mulberry32 seed 42 (was `Math.random()`)
+- **Diagnostics:** per-tick alive min/final; map/`nextEntityId` guards; optional dialogue preload (`SIM_PRELOAD_DIALOGUE=1`)
+- **Focus:** `SIM_FULL_SIM=1` disables viewport culling; `process.exitCode` on failure
+
 ### Fixed — city benchmark gate (`benchmark-city.ts`, July 8, 2026)
 
 - **Gate metric:** PASS/FAIL uses **steady-state p95** (all post-warmup ticks), not sparse `PERF_SAMPLE_EVERY` samples
