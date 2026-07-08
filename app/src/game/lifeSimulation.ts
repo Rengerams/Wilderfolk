@@ -116,6 +116,7 @@ import {
   forEachEntityInRadius,
   getHousemates,
   getLivingEntity,
+  grassPopulationTotal,
   recordGrassBirth,
   recordGrassDeath,
   recordWildlifeBirth,
@@ -198,12 +199,17 @@ function pushNewEntity(state: WorldState, ctx: TickContext, entity: Entity): voi
   ctx.newEntities.push(entity);
   ctx.entityById.set(entity.id, entity);
   if (ctx.wildlifePopulation) {
-    recordWildlifeBirth(ctx.wildlifePopulation, entity.type, ctx.wildlifeSpawnParent?.get(entity.id));
+    recordWildlifeBirth(
+      ctx.wildlifePopulation,
+      entity.type,
+      ctx.wildlifeSpawnParent?.get(entity.id),
+      entity.id,
+    );
   }
   if (entity.type === EntityType.Grass && ctx.grassPopulation) {
-    recordGrassBirth(ctx.grassPopulation);
+    recordGrassBirth(ctx.grassPopulation, entity.id);
   }
-  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid);
+  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid, ctx.treeGrid);
 }
 
 function markGrassDead(ctx: TickContext, grass: Entity): void {
@@ -227,7 +233,7 @@ function markWildlifeDead(
 }
 
 function syncEntityGrids(ctx: TickContext, entity: Entity): void {
-  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid);
+  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid, ctx.treeGrid);
 }
 
 const UNPASSABLE_GRASS_TERRAIN = new Set<TerrainType>([
@@ -648,6 +654,7 @@ function tryDailyAffairEncounter(
       if (human.type !== EntityType.Human || !isPlayerHuman(human)) return;
       considerParamour(human, distSq);
     },
+    'social',
     playerHumans,
   );
   if (!paramour) return;
@@ -1314,8 +1321,8 @@ function findCourtshipPartner(
     entity.y,
     courtRange,
     (candidate) => isCourtshipCandidate(entity, candidate),
-    fallbackHumans,
     'social',
+    fallbackHumans,
   );
   if (nearby) {
     const dx = nearby.x - entity.x;
@@ -1986,6 +1993,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
           && !!h.gender
           && h.gender !== entity.gender
           && h.relationshipStatus === 'single',
+        'social',
         allHumans,
       ) != null;
       if (!nearbySingle) {
@@ -2174,6 +2182,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
         entity.y,
         affairRange,
         (h) => isValidAffairTarget(entity, h, state.tick) && !isSpouseNearby(h, entityById, AFFAIR_SPOUSE_BLOCK_RADIUS),
+        'social',
         playerHumans,
       );
 
@@ -2332,6 +2341,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
           entity.y,
           socialScanRadius,
           (tree) => tree.type === EntityType.Tree && tree.alive,
+          'social',
           byType[EntityType.Tree],
         );
         if (closestTree) {
@@ -2353,8 +2363,8 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
           entity.y,
           socialScanRadius,
           (h) => h.id !== entity.id && !h.isJuvenile,
-          allHumans,
           'social',
+          allHumans,
         );
         if (nearest) {
           const sdx = nearest.x - entity.x;
@@ -2442,7 +2452,7 @@ export function tickWildlife(state: WorldState, ctx: TickContext): void {
   const {
     width, height, grassMult, reproMult, winterPenalty,
     byType, newEntities, updatedBuildings, roadBuildings, focus, entityById, predators,
-    grassGrid, mobileGrid, scentGrid,
+    grassGrid, mobileGrid, treeGrid, scentGrid,
   } = ctx;
 
   const roadAvoidance = ctx.roadAvoidance ?? buildRoadAvoidanceIndex(width, height, roadBuildings);
@@ -2521,7 +2531,7 @@ export function tickWildlife(state: WorldState, ctx: TickContext): void {
       entity.energy = Math.min(entity.maxEnergy, entity.energy + GRASS_GROWTH_PER_TICK * growMult);
 
       if (entity.energy > config.reproductionEnergyThreshold && Math.random() < config.reproductionChance * grassMult) {
-        if (grassPopulation.alive < grassCap) {
+        if (grassPopulationTotal(grassPopulation) < grassCap) {
           const angle = Math.random() * Math.PI * 2;
           const dist = 15 + Math.random() * 25;
           const nx = entity.x + Math.cos(angle) * dist;
@@ -2896,15 +2906,15 @@ export function tickWildlife(state: WorldState, ctx: TickContext): void {
           && dist < 80
           && isProductionTick(state.tick, EVENT_INTERVAL.tamedHuntAssist)
         ) {
-          syncSpatialGridEntity(entity, grassGrid, mobileGrid);
+          syncSpatialGridEntity(entity, grassGrid, mobileGrid, treeGrid);
           const assistPrey = findClosestEntityInRadius(
             mobileGrid,
             entity.x,
             entity.y,
             config.huntRange,
             (p) => (p.type === EntityType.Rabbit || p.type === EntityType.Deer) && p.alive,
-            preyFallback,
             'tamed_hunt',
+            preyFallback,
           );
           if (assistPrey?.alive) {
             const preyId = assistPrey.id;
@@ -2944,8 +2954,8 @@ export function tickWildlife(state: WorldState, ctx: TickContext): void {
           m.type === entity.type
           && m.id !== entity.id
           && m.energy > config.reproductionEnergyThreshold * 0.3,
-        byType[entity.type],
         'mate',
+        byType[entity.type],
       );
       if (mate) {
         const angle = Math.random() * Math.PI * 2;

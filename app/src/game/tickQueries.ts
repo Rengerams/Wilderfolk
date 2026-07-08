@@ -1,5 +1,6 @@
 import type { Entity } from './gameTypes';
 import { EntityType } from './gameTypes';
+import { isPlayerHuman } from './groupEvents';
 import type { EntitySpatialGrid } from './spatialGrid';
 import type { SpatialQueryCategory } from './spatialQueryMetrics';
 import {
@@ -24,7 +25,7 @@ export function buildResidenceOccupantIndex(
 ): Map<number, Entity[]> {
   const index = new Map<number, Entity[]>();
   for (const human of playerHumans) {
-    if (!human.alive) continue;
+    if (!human.alive || human.type !== EntityType.Human || !isPlayerHuman(human)) continue;
     const residenceId = human.residenceBuildingId;
     if (residenceId == null) continue;
     let bucket = index.get(residenceId);
@@ -41,6 +42,7 @@ export function getHousemates(
   entity: Entity,
   residenceOccupants: Map<number, Entity[]>,
 ): Entity[] {
+  if (entity.type !== EntityType.Human || !isPlayerHuman(entity)) return [];
   const residenceId = entity.residenceBuildingId;
   if (residenceId == null) return [];
   const bucket = residenceOccupants.get(residenceId);
@@ -58,8 +60,8 @@ export function findClosestEntityInRadius(
   y: number,
   radius: number,
   predicate: (entity: Entity, distSq: number) => boolean,
+  metricCategory: SpatialQueryCategory,
   fallback?: readonly Entity[],
-  metricCategory: SpatialQueryCategory = 'social',
 ): Entity | undefined {
   if (mobileGrid && typeof mobileGrid.findClosestInRadius === 'function') {
     return withSpatialQuery(metricCategory, () => {
@@ -74,11 +76,12 @@ export function findClosestEntityInRadius(
     let bestDistSq = radiusSq;
     for (const entity of fallback) {
       if (!entity.alive) continue;
-      if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate(metricCategory);
       const dx = entity.x - x;
       const dy = entity.y - y;
       const distSq = dx * dx + dy * dy;
-      if (distSq <= bestDistSq && predicate(entity, distSq)) {
+      if (distSq > radiusSq || !predicate(entity, distSq)) continue;
+      if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate(metricCategory);
+      if (distSq <= bestDistSq) {
         bestDistSq = distSq;
         best = entity;
       }
@@ -93,8 +96,8 @@ export function forEachEntityInRadius(
   y: number,
   radius: number,
   fn: (entity: Entity, distSq: number) => void,
+  metricCategory: SpatialQueryCategory,
   fallback?: readonly Entity[],
-  metricCategory: SpatialQueryCategory = 'hunt',
 ): void {
   if (mobileGrid && typeof mobileGrid.forEachInRadius === 'function') {
     withSpatialQuery(metricCategory, () => {
@@ -107,11 +110,13 @@ export function forEachEntityInRadius(
     const radiusSq = radius * radius;
     for (const entity of fallback) {
       if (!entity.alive) continue;
-      if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate(metricCategory);
       const dx = entity.x - x;
       const dy = entity.y - y;
       const distSq = dx * dx + dy * dy;
-      if (distSq <= radiusSq) fn(entity, distSq);
+      if (distSq <= radiusSq) {
+        if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate(metricCategory);
+        fn(entity, distSq);
+      }
     }
   });
 }
@@ -121,6 +126,8 @@ export interface WildlifePopulationSnapshot {
   aliveByType: Map<EntityType, number>;
   newByType: Map<EntityType, number>;
   newSpawnedByParent: Map<number, number>;
+  /** Entity ids folded into aliveByType from newEntities at snapshot build. */
+  absorbedEntityIds: Set<number>;
 }
 
 const REPRO_WILDLIFE_TYPES: EntityType[] = [
@@ -138,6 +145,7 @@ export function buildWildlifePopulationSnapshot(
   const aliveByType = new Map<EntityType, number>();
   const newByType = new Map<EntityType, number>();
   const newSpawnedByParent = new Map<number, number>();
+  const absorbedEntityIds = new Set<number>();
 
   for (const type of REPRO_WILDLIFE_TYPES) {
     let alive = 0;
@@ -149,14 +157,15 @@ export function buildWildlifePopulationSnapshot(
 
   for (const entity of newEntities) {
     if (!entity.alive || !REPRO_WILDLIFE_TYPES.includes(entity.type)) continue;
-    newByType.set(entity.type, (newByType.get(entity.type) ?? 0) + 1);
+    aliveByType.set(entity.type, (aliveByType.get(entity.type) ?? 0) + 1);
+    absorbedEntityIds.add(entity.id);
     const parentId = spawnParents?.get(entity.id);
     if (parentId != null) {
       newSpawnedByParent.set(parentId, (newSpawnedByParent.get(parentId) ?? 0) + 1);
     }
   }
 
-  return { aliveByType, newByType, newSpawnedByParent };
+  return { aliveByType, newByType, newSpawnedByParent, absorbedEntityIds };
 }
 
 export function wildlifeTypePopulation(
@@ -171,29 +180,44 @@ export function wildlifeTypePopulation(
 
 /** Alive grass count for reproduction cap — built once per tickWildlife. */
 export interface GrassPopulationSnapshot {
-  alive: number;
+  /** Grass alive when the snapshot is taken (byType + tickHumans newEntities). */
+  baselineAlive: number;
+  /** Grass spawned after the snapshot within the same tickWildlife pass. */
+  bornAfterSnapshot: number;
+  /** Entity ids folded into baselineAlive from newEntities at snapshot build. */
+  absorbedEntityIds: Set<number>;
+}
+
+export function grassPopulationTotal(snapshot: GrassPopulationSnapshot): number {
+  return snapshot.baselineAlive + snapshot.bornAfterSnapshot;
 }
 
 export function buildGrassPopulationSnapshot(
   byType: Record<EntityType, Entity[]>,
   newEntities: readonly Entity[],
 ): GrassPopulationSnapshot {
-  let alive = 0;
+  let baselineAlive = 0;
+  const absorbedEntityIds = new Set<number>();
   for (const grass of byType[EntityType.Grass]) {
-    if (grass.alive) alive++;
+    if (grass.alive) baselineAlive++;
   }
   for (const entity of newEntities) {
-    if (entity.alive && entity.type === EntityType.Grass) alive++;
+    if (entity.alive && entity.type === EntityType.Grass) {
+      baselineAlive++;
+      absorbedEntityIds.add(entity.id);
+    }
   }
-  return { alive };
+  return { baselineAlive, bornAfterSnapshot: 0, absorbedEntityIds };
 }
 
-export function recordGrassBirth(snapshot: GrassPopulationSnapshot): void {
-  snapshot.alive++;
+export function recordGrassBirth(snapshot: GrassPopulationSnapshot, entityId?: number): void {
+  if (entityId != null && snapshot.absorbedEntityIds.has(entityId)) return;
+  snapshot.bornAfterSnapshot++;
 }
 
 export function recordGrassDeath(snapshot: GrassPopulationSnapshot): void {
-  if (snapshot.alive > 0) snapshot.alive--;
+  if (snapshot.bornAfterSnapshot > 0) snapshot.bornAfterSnapshot--;
+  else if (snapshot.baselineAlive > 0) snapshot.baselineAlive--;
 }
 
 /** Increment wildlife birth counters when offspring spawn mid-tick. */
@@ -201,8 +225,10 @@ export function recordWildlifeBirth(
   snapshot: WildlifePopulationSnapshot,
   type: EntityType,
   parentId?: number,
+  entityId?: number,
 ): void {
   if (!REPRO_WILDLIFE_TYPES.includes(type)) return;
+  if (entityId != null && snapshot.absorbedEntityIds.has(entityId)) return;
   snapshot.newByType.set(type, (snapshot.newByType.get(type) ?? 0) + 1);
   if (parentId != null) {
     snapshot.newSpawnedByParent.set(

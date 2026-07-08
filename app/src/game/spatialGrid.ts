@@ -68,10 +68,12 @@ export function distSq(ax: number, ay: number, bx: number, by: number): number {
  * Optional `influence` layer reserved for post-P0 scent maps (Float32Array per cell).
  */
 export class EntitySpatialGrid {
+  readonly mapWidth: number;
+  readonly mapHeight: number;
+  readonly cellSize: number;
   private readonly cells: Entity[][];
   private readonly cols: number;
   private readonly rows: number;
-  private readonly cellSize: number;
   /** entity id → cell coords (invariant: alive filtered entities appear exactly once). */
   private readonly entityCell = new Map<number, { col: number; row: number }>();
   /** Future: wolf scent / ecology gradients per cell. */
@@ -83,6 +85,8 @@ export class EntitySpatialGrid {
     cellSize: number,
     withInfluenceLayer = false,
   ) {
+    this.mapWidth = mapWidth;
+    this.mapHeight = mapHeight;
     this.cellSize = cellSize;
     this.cols = Math.max(1, Math.ceil(mapWidth / cellSize));
     this.rows = Math.max(1, Math.ceil(mapHeight / cellSize));
@@ -98,6 +102,12 @@ export class EntitySpatialGrid {
 
   get gridRows(): number {
     return this.rows;
+  }
+
+  matchesLayout(mapWidth: number, mapHeight: number, cellSize: number): boolean {
+    return this.mapWidth === mapWidth
+      && this.mapHeight === mapHeight
+      && this.cellSize === cellSize;
   }
 
   private cellIndex(col: number, row: number): number {
@@ -216,6 +226,7 @@ export class EntitySpatialGrid {
     y: number,
     radius: number,
     fn: (entity: Entity, distSq: number) => void,
+    recordCandidates = true,
   ): void {
     const coords = this.cellCoords(x, y);
     if (!coords) return;
@@ -236,9 +247,11 @@ export class EntitySpatialGrid {
         const bucket = this.cells[this.cellIndex(col, row)];
         for (const entity of bucket) {
           if (!entity.alive) continue;
-          if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate();
           const dSq = distSq(x, y, entity.x, entity.y);
-          if (dSq <= radiusSq) fn(entity, dSq);
+          if (dSq <= radiusSq) {
+            if (recordCandidates && isSpatialQueryMetricsEnabled()) recordSpatialCandidate();
+            fn(entity, dSq);
+          }
         }
       }
     }
@@ -282,8 +295,9 @@ export class EntitySpatialGrid {
     let best: { entity: Entity; distSq: number } | null = null;
     this.forEachInRadius(x, y, radius, (entity, dSq) => {
       if (!entity.alive || !predicate(entity, dSq)) return;
+      if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate();
       if (!best || dSq < best.distSq) best = { entity, distSq: dSq };
-    });
+    }, false);
     return best;
   }
 
@@ -340,9 +354,29 @@ function resolveGridOptions(options?: boolean | BuildSpatialGridOptions): BuildS
 }
 
 /** structuredClone strips class methods — stale plain objects must not be reused. */
-function isReusableSpatialGrid(grid: unknown): grid is EntitySpatialGrid {
+function isReusableSpatialGrid(
+  grid: unknown,
+  mapWidth: number,
+  mapHeight: number,
+  cellSize: number,
+): grid is EntitySpatialGrid {
   return grid instanceof EntitySpatialGrid
-    && typeof (grid as EntitySpatialGrid).rebuild === 'function';
+    && typeof grid.rebuild === 'function'
+    && grid.matchesLayout(mapWidth, mapHeight, cellSize);
+}
+
+/** Allocate or reuse a spatial grid only when layout and class methods match. */
+export function resolveSpatialGrid(
+  existing: EntitySpatialGrid | undefined,
+  mapWidth: number,
+  mapHeight: number,
+  cellSize: number,
+  withInfluenceLayer = false,
+): EntitySpatialGrid {
+  if (isReusableSpatialGrid(existing, mapWidth, mapHeight, cellSize)) {
+    return existing;
+  }
+  return new EntitySpatialGrid(mapWidth, mapHeight, cellSize, withInfluenceLayer);
 }
 
 /** @param options Pass `{ withInfluenceLayer: true }` to allocate scent/ecology gradients per cell. */
@@ -366,9 +400,7 @@ export function syncGrassRenderGrid(
   grassEntities: Iterable<Entity>,
 ): EntitySpatialGrid | undefined {
   if (!USE_SPATIAL_GRID) return undefined;
-  const grid = isReusableSpatialGrid(existing)
-    ? existing
-    : new EntitySpatialGrid(mapWidth, mapHeight, GRASS_CELL_SIZE);
+  const grid = resolveSpatialGrid(existing, mapWidth, mapHeight, GRASS_CELL_SIZE);
   grid.rebuild(grassEntities, isGrassGridEntity);
   return grid;
 }
@@ -387,7 +419,10 @@ export function collectGrassInViewport(
 ): Entity[] {
   const vp = viewportFromCamera(camX, camY, zoom, canvasW, canvasH);
   const visible: Entity[] = [];
-  if (grassGrid) {
+  if (
+    grassGrid
+    && grassGrid.matchesLayout(mapWidth, mapHeight, GRASS_CELL_SIZE)
+  ) {
     grassGrid.forEachInRect(vp.minX, vp.minY, vp.maxX, vp.maxY, (grass) => visible.push(grass));
     return visible;
   }
@@ -424,15 +459,17 @@ export function viewportFromCamera(
   };
 }
 
-/** Keep grass/mobile grids aligned after mid-tick movement, birth, or death. */
+/** Keep grass/mobile/tree grids aligned after mid-tick movement, birth, or death. */
 export function syncSpatialGridEntity(
   entity: Entity,
   grassGrid?: EntitySpatialGrid,
   mobileGrid?: EntitySpatialGrid,
+  treeGrid?: EntitySpatialGrid,
 ): void {
   if (!USE_SPATIAL_GRID) return;
   if (grassGrid && isGrassGridEntity(entity)) grassGrid.update(entity);
   if (mobileGrid && isMobileGridEntity(entity)) mobileGrid.update(entity);
+  if (treeGrid && isTreeGridEntity(entity)) treeGrid.update(entity);
 }
 
 const ROAD_AVOID_CELL = 128;
@@ -449,12 +486,16 @@ interface RoadCellEntry {
 
 /** Road centers indexed by cell — avoids scanning every road segment per entity. */
 export class RoadAvoidanceIndex {
+  readonly mapWidth: number;
+  readonly mapHeight: number;
+  readonly cellSize: number;
   private readonly cells: RoadCellEntry[][];
-  private readonly cellSize: number;
   private readonly cols: number;
   private readonly rows: number;
 
   constructor(mapWidth: number, mapHeight: number, roads: readonly Building[]) {
+    this.mapWidth = mapWidth;
+    this.mapHeight = mapHeight;
     this.cellSize = ROAD_AVOID_CELL;
     this.cols = Math.max(1, Math.ceil(mapWidth / this.cellSize));
     this.rows = Math.max(1, Math.ceil(mapHeight / this.cellSize));
@@ -476,6 +517,12 @@ export class RoadAvoidanceIndex {
     }
   }
 
+  matchesLayout(mapWidth: number, mapHeight: number): boolean {
+    return this.mapWidth === mapWidth
+      && this.mapHeight === mapHeight
+      && this.cellSize === ROAD_AVOID_CELL;
+  }
+
   /** Human road speed boost — same AABB test as legacy `roadBuildings.some`. */
   isNearRoad(x: number, y: number, margin = 12): boolean {
     const col = Math.floor(x / this.cellSize);
@@ -486,13 +533,13 @@ export class RoadAvoidanceIndex {
         const r = row + dr;
         if (c < 0 || r < 0 || c >= this.cols || r >= this.rows) continue;
         for (const road of this.cells[r * this.cols + c]) {
-          if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate('road_near');
           if (
             x >= road.x - margin
             && x <= road.x + road.width + margin
             && y >= road.y - margin
             && y <= road.y + road.height + margin
           ) {
+            if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate('road_near');
             return true;
           }
         }
@@ -514,11 +561,11 @@ export class RoadAvoidanceIndex {
         if (c < 0 || r < 0 || c >= this.cols || r >= this.rows) continue;
         const bucket = this.cells[r * this.cols + c];
         for (const road of bucket) {
-          if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate('road_avoid');
           const dx = entity.x - road.cx;
           const dy = entity.y - road.cy;
           const distSq = dx * dx + dy * dy;
           if (distSq >= radiusSq || distSq <= 0) continue;
+          if (isSpatialQueryMetricsEnabled()) recordSpatialCandidate('road_avoid');
           const dist = Math.sqrt(distSq);
           entity.vx += (dx / dist) * 0.5;
           entity.vy += (dy / dist) * 0.5;
@@ -549,20 +596,15 @@ export function buildTreeGrid(
   return grid;
 }
 
-/** Rebuild tree layer only when alive tree count changes (trees are static between chops). */
+/** Rebuild tree layer once per sim tick (trees are static but identity can change). */
 export function syncTreeSimGrid(
   existing: EntitySpatialGrid | undefined,
-  aliveStamp: number | undefined,
   mapWidth: number,
   mapHeight: number,
   trees: Iterable<Entity>,
-  aliveTreeCount: number,
 ): EntitySpatialGrid | undefined {
   if (!USE_SPATIAL_GRID) return undefined;
-  if (existing && aliveStamp === aliveTreeCount && isReusableSpatialGrid(existing)) return existing;
-  const grid = isReusableSpatialGrid(existing)
-    ? existing
-    : new EntitySpatialGrid(mapWidth, mapHeight, MOBILE_CELL_SIZE, false);
+  const grid = resolveSpatialGrid(existing, mapWidth, mapHeight, MOBILE_CELL_SIZE, false);
   grid.rebuild(trees, isTreeGridEntity);
   return grid;
 }
@@ -575,9 +617,7 @@ export function syncMobileSimGrid(
   entities: Iterable<Entity>,
 ): EntitySpatialGrid | undefined {
   if (!USE_SPATIAL_GRID) return undefined;
-  const grid = isReusableSpatialGrid(existing)
-    ? existing
-    : buildMobileGrid(mapWidth, mapHeight, []);
+  const grid = resolveSpatialGrid(existing, mapWidth, mapHeight, MOBILE_CELL_SIZE, false);
   grid.rebuild(entities, isMobileGridEntity);
   return grid;
 }
@@ -614,6 +654,7 @@ export function assertSpatialGridInvariants(
   grassGrid: EntitySpatialGrid | undefined,
   mobileGrid: EntitySpatialGrid | undefined,
   entities: Iterable<Entity>,
+  treeGrid?: EntitySpatialGrid,
 ): void {
   if (!SPATIAL_GRID_INVARIANT_CHECK || !grassGrid || !mobileGrid) return;
 
@@ -622,7 +663,10 @@ export function assertSpatialGridInvariants(
     .map((msg) => `[grass] ${msg}`);
   const mobileErrors = mobileGrid.validateInvariant(list, isMobileGridEntity)
     .map((msg) => `[mobile] ${msg}`);
-  const errors = [...grassErrors, ...mobileErrors];
+  const treeErrors = treeGrid
+    ? treeGrid.validateInvariant(list, isTreeGridEntity).map((msg) => `[tree] ${msg}`)
+    : [];
+  const errors = [...grassErrors, ...mobileErrors, ...treeErrors];
   if (errors.length > 0) {
     throw new Error(`Spatial grid invariant failed:\n${errors.slice(0, 8).join('\n')}`);
   }

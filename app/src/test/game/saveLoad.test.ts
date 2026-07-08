@@ -41,6 +41,10 @@ describe('saveLoad', () => {
   it('strips runtime spatial indexes before stringify', () => {
     const world = initGame();
     world.mobileGrid = { insert: () => {}, remove: () => {}, update: () => {}, forEachInRect: () => {} } as never;
+    world.treeGrid = { rebuild: () => {} } as never;
+    world.treeGridAlive = 12;
+    world.roadAvoidance = { isNearRoad: () => false } as never;
+    world.roadAvoidanceStamp = 3;
     const view = createInitialView(world.width, world.height);
 
     const result = saveGame(world, view);
@@ -48,6 +52,11 @@ describe('saveLoad', () => {
 
     const raw = readSavePayload();
     expect(raw.valid).toBe(true);
-    expect(raw.valid && 'mobileGrid' in raw.parsed).toBe(false);
+    if (!raw.valid) return;
+    expect('mobileGrid' in raw.parsed).toBe(false);
+    expect('treeGrid' in raw.parsed).toBe(false);
+    expect('treeGridAlive' in raw.parsed).toBe(false);
+    expect('roadAvoidance' in raw.parsed).toBe(false);
+    expect('roadAvoidanceStamp' in raw.parsed).toBe(false);
   });
 });

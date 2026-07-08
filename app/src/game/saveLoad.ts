@@ -107,7 +107,11 @@ function stripRuntimeWorldFields(world: WorldState): WorldState {
     entityByType: _entityByType,
     grassGrid: _grassGrid,
     mobileGrid: _mobileGrid,
+    treeGrid: _treeGrid,
+    treeGridAlive: _treeGridAlive,
     scentGrid: _scentGrid,
+    roadAvoidance: _roadAvoidance,
+    roadAvoidanceStamp: _roadAvoidanceStamp,
     ...serializable
   } = world;
   return serializable;

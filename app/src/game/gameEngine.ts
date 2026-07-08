@@ -941,7 +941,6 @@ import { updateResearch } from './research';
 import { tickHumans, tickWildlife, type TickContext } from './lifeSimulation';
 import {
   USE_SPATIAL_GRID,
-  buildGrassGrid,
   syncMobileSimGrid,
   syncTreeSimGrid,
   buildRoadAvoidanceIndex,
@@ -1238,38 +1237,24 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
     ...byType[EntityType.Werewolf].filter((e) => e.alive),
   ];
 
-  let grassGrid = USE_SPATIAL_GRID && state.grassGrid?.rebuild
-    ? state.grassGrid
+  let grassGrid = USE_SPATIAL_GRID
+    ? syncGrassRenderGrid(state.grassGrid, width, height, byType[EntityType.Grass] ?? [])
     : undefined;
-  if (USE_SPATIAL_GRID && !grassGrid) {
-    grassGrid = buildGrassGrid(width, height, aliveEntities);
-  }
   const mobileGrid = USE_SPATIAL_GRID
     ? syncMobileSimGrid(state.mobileGrid, width, height, aliveEntities)
     : undefined;
   state.mobileGrid = mobileGrid;
 
   const treeTypeList = byType[EntityType.Tree];
-  let aliveTreeCount = 0;
-  for (const tree of treeTypeList) {
-    if (tree.alive) aliveTreeCount++;
-  }
-  const treeGrid = syncTreeSimGrid(
-    state.treeGrid,
-    state.treeGridAlive,
-    width,
-    height,
-    treeTypeList,
-    aliveTreeCount,
-  );
+  const treeGrid = syncTreeSimGrid(state.treeGrid, width, height, treeTypeList);
   state.treeGrid = treeGrid;
-  state.treeGridAlive = aliveTreeCount;
 
   const roadStamp = roadBuildings.length;
   if (
     !state.roadAvoidance
     || state.roadAvoidanceStamp !== roadStamp
     || typeof state.roadAvoidance.isNearRoad !== 'function'
+    || !state.roadAvoidance.matchesLayout(width, height)
   ) {
     state.roadAvoidance = buildRoadAvoidanceIndex(width, height, roadBuildings);
     state.roadAvoidanceStamp = roadStamp;
@@ -1321,7 +1306,7 @@ export function gameTick(state: WorldState, focus?: SimulationFocus): WorldState
     if (e.alive) allAlive.push(e);
   }
 
-  assertSpatialGridInvariants(grassGrid, mobileGrid, allAlive);
+  assertSpatialGridInvariants(grassGrid, mobileGrid, allAlive, treeGrid);
 
   tickVisitorGroups(state, allAlive);
   tickPendingRaidEvents(state, allAlive, updatedBuildings);

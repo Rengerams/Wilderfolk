@@ -10,13 +10,17 @@ import {
   RoadAvoidanceIndex,
   buildGrassGrid,
   buildMobileGrid,
+  buildTreeGrid,
   collectGrassInViewport,
   distSq,
   isGrassGridEntity,
   syncGrassRenderGrid,
   syncMobileSimGrid,
+  syncTreeSimGrid,
   isMobileGridEntity,
+  isTreeGridEntity,
   assertSpatialGridInvariants,
+  buildRoadAvoidanceIndex,
   syncSpatialGridEntity,
   viewportFromCamera,
 } from '@/game/spatialGrid';
@@ -265,6 +269,84 @@ describe('grass render grid reuse', () => {
     expect(centered.map((g) => g.id)).not.toContain(2);
     expect(panned.map((g) => g.id)).toContain(2);
     expect(panned.map((g) => g.id)).not.toContain(1);
+  });
+});
+
+describe('spatial grid layout reuse', () => {
+  it('matchesLayout rejects different map dimensions or cell size', () => {
+    const grid = new EntitySpatialGrid(400, 400, MOBILE_CELL_SIZE);
+    expect(grid.matchesLayout(400, 400, MOBILE_CELL_SIZE)).toBe(true);
+    expect(grid.matchesLayout(800, 400, MOBILE_CELL_SIZE)).toBe(false);
+    expect(grid.matchesLayout(400, 400, GRASS_CELL_SIZE)).toBe(false);
+  });
+
+  it('syncMobileSimGrid allocates a fresh grid when map dimensions change', () => {
+    const deer = createEntity(EntityType.Deer, 10, 20, 1, 200);
+    const oldGrid = buildMobileGrid(400, 400, [deer]);
+    const newGrid = syncMobileSimGrid(oldGrid, 800, 600, [deer]);
+    expect(newGrid).not.toBe(oldGrid);
+    expect(newGrid?.mapWidth).toBe(800);
+    expect(newGrid?.mapHeight).toBe(600);
+    expect(newGrid?.gridCols).toBe(Math.ceil(800 / MOBILE_CELL_SIZE));
+  });
+
+  it('syncTreeSimGrid rebuilds when map dimensions change even if tree count is unchanged', () => {
+    const tree = createEntity(EntityType.Tree, 50, 50, 1, 200);
+    const oldGrid = buildTreeGrid(400, 400, [tree])!;
+    const newGrid = syncTreeSimGrid(oldGrid, 800, 600, [tree]);
+    expect(newGrid).not.toBe(oldGrid);
+    expect(newGrid?.mapWidth).toBe(800);
+    expect(newGrid?.mapHeight).toBe(600);
+  });
+
+  it('syncGrassRenderGrid allocates a fresh grid when map dimensions change', () => {
+    const patch = createEntity(EntityType.Grass, 44, 44, 2, 80);
+    const oldGrid = buildGrassGrid(400, 400, [patch]);
+    const newGrid = syncGrassRenderGrid(oldGrid, 800, 600, [patch]);
+    expect(newGrid).not.toBe(oldGrid);
+    expect(newGrid?.mapWidth).toBe(800);
+    expect(newGrid?.mapHeight).toBe(600);
+    expect(newGrid?.cellSize).toBe(GRASS_CELL_SIZE);
+  });
+
+  it('syncTreeSimGrid rebuilds when tree identity changes but count is unchanged', () => {
+    const treeA = createEntity(EntityType.Tree, 50, 50, 1, 200);
+    const treeB = createEntity(EntityType.Tree, 200, 200, 2, 200);
+    const oldGrid = buildTreeGrid(400, 400, [treeA])!;
+    treeA.alive = false;
+    const newGrid = syncTreeSimGrid(oldGrid, 400, 400, [treeB]);
+    const hit = newGrid?.findClosestInRadius(200, 200, 40, (t) => t.type === EntityType.Tree && t.alive);
+    expect(hit?.entity.id).toBe(treeB.id);
+    expect(newGrid?.validateInvariant([treeB], isTreeGridEntity)).toEqual([]);
+  });
+
+  it('collectGrassInViewport ignores stale grass grid with wrong layout', () => {
+    const near = createEntity(EntityType.Grass, 44, 44, 1, 80);
+    const far = createEntity(EntityType.Grass, 900, 900, 2, 80);
+    const staleGrid = buildGrassGrid(400, 400, [near]);
+    const visible = collectGrassInViewport(
+      staleGrid,
+      [near, far],
+      1000,
+      1000,
+      900,
+      900,
+      1,
+      800,
+      600,
+    );
+    expect(visible.map((g) => g.id)).toContain(2);
+    expect(visible.map((g) => g.id)).not.toContain(1);
+  });
+
+  it('RoadAvoidanceIndex matchesLayout rejects map resize', () => {
+    const road = createBuilding(BuildingType.Road, 100, 200, 1, 90);
+    road.completed = true;
+    const index = buildRoadAvoidanceIndex(400, 400, [road])!;
+    expect(index.matchesLayout(400, 400)).toBe(true);
+    expect(index.matchesLayout(800, 600)).toBe(false);
+    expect(index.mapWidth).toBe(400);
+    expect(index.mapHeight).toBe(400);
   });
 });
 
