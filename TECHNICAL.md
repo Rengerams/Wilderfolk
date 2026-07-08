@@ -192,6 +192,7 @@ gameLoop → gameTick(world) [or worker tick]
 | Sim tick | `world.entityByType` | Built at end of `gameTick()` via `buildEntityByType()`; not saved |
 | Render snapshot | `RenderSnapshot.entityByType` | Prefers `world.entityByType` → `catalog.getEntityByType()` → fallback scan |
 | Render snapshot | `pendingOutgoingRaidEvents` | Mirrored from `WorldState` for UI/renderer cache keys (`entityLayer.ts`) |
+| Render snapshot | `tradeRoutes` | Active routes + caravan state for `drawTradeRouteLines` (`renderer.ts`) |
 | UI catalog | `EntityCatalog.ensureAliveIndex()` | Single pass builds `getAlive()` + per-type buckets; invalidated on rebuild/delta |
 | Canvas cache | `renderer.ts` `_cachedTrees/Animals/Humans/Grass` | Invalidates on tick change; grass also on viewport key |
 | Offscreen layers | `terrainLayer.ts`, `entityLayer.ts` | Terrain tiles/decor baked until map or season changes; entity layer rebuilt on `buildEntityLayerKey()` mismatch |
@@ -217,6 +218,8 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 - Loading `0.4` saves logs v0.4.1 migration (diplomacy, leadership, trade routes, victory paths)
 - `syncEventLogIdFromState()` restores monotonic event-log ids after load
 - v0.4.1 fields default on load: `pendingDiplomacyEvents: []`, `pendingRaidEvents: []`; `pendingOutgoingRaidEvents: []` defaults on load (v0.5.0+); visitor groups get `tradesCompleted: 0`, `refugeeResolved`, `leaderTalked`; rivals get `peaceTreatyDays`, `raidCooldownDays`; leadership fields via `validateVillageLeaderOnLoad`
+- Trade routes on load: `ensureFullTradeRoutes()` merges **7** default routes; `enrichTradeRoute()` sets `partnerX/Y`; active routes without a carrier get `scheduleTradeRouteDeparture()`; challenge targets refreshed from `INITIAL_CHALLENGES`
+- `lifetimeStats` defaults: `tradeCaravansCompleted: 0`, `goldFromTradeRoutes: 0` (July 8, 2026)
 
 ---
 
@@ -227,7 +230,7 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 | `gameEngine.ts` | Tick orchestrator, `SPECIES_CONFIG`, shared helpers, re-exports |
 | `lifeSimulation.ts` | Human AI (schedule, hunt, courtship, reproduction) and wildlife/grass AI |
 | `buildingActions.ts` | Placement, construction, worker assignment, repair, upgrade, demolish, taming |
-| `economy.ts` | Resources, storage caps, food spoilage, trade routes, workshop inputs |
+| `economy.ts` | Resources, storage caps, food spoilage, `establishTradeRoute`, `initTradeRoutes`, workshop inputs |
 | `research.ts` | Tech tree unlocks, active research, completion notifications |
 | `worldGen.ts` | `initGame`, entity/building creation, wildlife spawning |
 | `worldEvents.ts` | Weather and disaster systems |
@@ -271,7 +274,7 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 | `canvasLayer.ts` | OffscreenCanvas surface helpers (create, resize, dispose, clear) |
 | `terrainLayer.ts` | Baked terrain tiles + decor (rivers, border); `terrainLayerNeedsRebuild` / `terrainDecorNeedsRebuild` |
 | `entityLayer.ts` | Dynamic entity offscreen cache; `buildEntityLayerKey`, `beginEntityLayerPaint`, `paintEntityLayerTo` |
-| `renderer.ts` | OffscreenCanvas compositing, tick-keyed entity draw lists, buildings, weather, night overlay + home glow, speech bubbles, raid march lines (`drawRaidMarchLines`) |
+| `renderer.ts` | OffscreenCanvas compositing, tick-keyed entity draw lists, buildings, weather, night overlay + home glow, speech bubbles, trade route lines (`drawTradeRouteLines`), raid march lines (`drawRaidMarchLines`) |
 | `spriteLoader.ts` | PNG preload + alpha trim; calls `generateHumanSprites()` |
 | `terrainGen.ts` | Procedural `WorldMap` from seed + preset |
 | `victory.ts` | Four victory paths; `VICTORY_TARGETS` + `ACTIVE_VICTORY_PATHS` |
@@ -282,7 +285,7 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 | `FocusPanel.tsx` | Focus / next-step panel |
 | `PopulationPanel.tsx` | Village population & family overview |
 | `RoadmapPanel.tsx` | In-game read-only roadmap (`roadmapContent.ts` — v0.4.2 shipped, targets v0.5.0) |
-| `stats.ts` | Yearly / lifetime statistics |
+| `stats.ts` | Yearly / lifetime statistics; `tradeCaravansCompleted`, `goldFromTradeRoutes` (Trade Empire progress) |
 | `IntroScreen.tsx` | ~20s opening timeline (aurora → logo → title → food chain → ready); skip after logo; village setup form |
 
 ---
@@ -477,30 +480,66 @@ Leader in the fight: **+0.45** extra Guard XP (`RAID_LEADER_GUARD_XP_BONUS`). Vi
 
 ## Victory paths (`victory.ts`)
 
-`VICTORY_TARGETS` (July 8, 2026 balance):
+`VICTORY_TARGETS` (July 8, 2026 balance). Descriptions auto-sync from constants in `computeVictoryProgress()` and on save load.
 
-| Path | Targets |
-|------|---------|
-| `eco_utopia` | 250 humans + 20 years ecosystem ≥ 80% |
-| `great_city` | 400 humans + 60 completed player buildings |
-| `trade_empire` | 7 active routes + 40 caravan round-trips + 50,000 gold from trade (`lifetimeStats.goldFromTradeRoutes`) |
-| `harmony` | 8 **untamed** wolves (`tamedBy == null`) + 15 wildkin |
+| Path | Targets | Progress formula (`computeVictoryProgress`) |
+|------|---------|---------------------------------------------|
+| `eco_utopia` | 250 humans + 20 years ecosystem ≥ 80% | 50% population + 50% `ecoHealthYearsAbove80` |
+| `great_city` | 400 humans + 60 completed **player** buildings | 50% population + 50% buildings (`faction !== 'rival'`) |
+| `trade_empire` | 7 active routes + 40 caravan round-trips + 50,000 gold from trade | 34% routes + 33% `lifetimeStats.tradeCaravansCompleted` + 33% `lifetimeStats.goldFromTradeRoutes` |
+| `harmony` | 8 **untamed** wolves + 15 wildkin | 50% wild wolves (`type === Wolf && tamedBy == null`) + 50% wildkin count |
 
-Harmony explicitly excludes tamed wolves — taming via Taming Post is separate from coexistence.
+**Harmony:** taming via Taming Post sets `tamedBy` — those wolves do **not** count. Coexistence with a free pack, not domestication.
+
+**Challenges** (`INITIAL_CHALLENGES` in `gameTypes.ts`, synced on load for incomplete entries):
+
+| Challenge | Targets |
+|-----------|---------|
+| `thriving_town` | 50 population |
+| `great_city` | 250 population + 35 buildings (stepping stone; victory path is 400/60) |
+
+**UI:** Progress → Goals — victory cards + collapsible **“How each path works”** (`App.tsx`); tutorial `victory_progress` in `contextualTutorial.ts`.
+
+**Tests:** `victory.test.ts` (untamed-wolf filter), `challengeProgress.test.ts`.
 
 ---
 
 ## Trade caravans (`tradeCaravans.ts`)
 
-Active routes no longer exchange goods instantly. Flow:
+Replaces instant per-tick `updateTradeRoutes()` (removed July 8, 2026). Goods move only when a walking merchant completes a leg.
 
-1. `establishTradeRoute` → `onTradeRouteEstablished` schedules first departure
-2. `tickTradeCaravans` (each `gameTick`) spawns a `faction: 'trade_caravan'` merchant at Market/Store/Town Hall hub
-3. `lifeSimulation.ts` moves carrier outbound → partner wait → inbound
-4. Export goods deducted at partner; imports applied at village return
-5. `renderer.ts` `drawTradeRouteLines` — gold/green dashed line + **🚚** when marching
+| Function | Role |
+|----------|------|
+| `onTradeRouteEstablished` | First departure scheduled (`FIRST_CARAVAN_DELAY`); log + event |
+| `tickTradeCaravans` | Spawn carrier when `nextDepartureTick` reached and route has no active carrier |
+| `getTradeHubCenter` | Market → Store → Town Hall → Workshop → camp center |
+| `getCaravanMoveTarget` | Outbound/at_partner → `partnerX/Y`; inbound → hub |
+| `tryAdvanceCaravanLeg` | Partner arrival → wait → deduct exports; hub arrival → apply imports, complete trip |
+| `enrichTradeRoute` | Default partner position on map edge; `caravansCompleted` init |
 
-Seven routes in `initTradeRoutes()` (Riverdale → Granite Reach). Save load enriches partner coords and re-schedules departures for active routes.
+**`TradeRoute` fields** (beyond v0.4.1): `partnerX`, `partnerY`, `caravanCarrierId`, `caravanLeg` (`outbound` \| `at_partner` \| `inbound`), `caravanWaitTicks`, `nextDepartureTick`, `caravansCompleted`.
+
+**Carrier entity:** `faction: 'trade_caravan'`, `groupId` = route id, `JobType.Merchant`; excluded from `isPlayerHuman()` / population count.
+
+**Tick wiring:** `gameEngine.ts` calls `tickTradeCaravans(state)` each tick; `lifeSimulation.ts` moves carrier and calls `tryAdvanceCaravanLeg`.
+
+**Seven routes** (`initTradeRoutes()` in `economy.ts`):
+
+| id | Partner | Rep required |
+|----|---------|--------------|
+| `trade_1` | Riverdale | 15 |
+| `trade_2` | Oakhaven | 25 |
+| `trade_3` | Ironport | 40 |
+| `trade_4` | Goldhaven | 60 |
+| `trade_5` | Silkmarket | 75 |
+| `trade_6` | Spice Coast | 85 |
+| `trade_7` | Granite Reach | 95 |
+
+**Lifetime stats** (`stats.ts`): `tradeCaravansCompleted`, `goldFromTradeRoutes` — feed Trade Empire victory progress.
+
+**Presentation:** `renderer.ts` `drawTradeRouteLines` (gold dashed when marching); Progress → Trade shows leg status + trip count (`App.tsx`).
+
+**Tests:** `tradeCaravans.test.ts` (spawn + round-trip gold).
 
 ---
 
@@ -740,9 +779,24 @@ Playtest build remains **`GAME_VERSION` 0.4.2** until the v0.5.0 tag. Items belo
 | **Entity indexing** | Ready — `EntityCatalog` combined alive/byType cache; `resolveAliveHumans()`; `getRenderEntityLayer()` shared with SoA buckets; `emptyEntityByType()` |
 | **Save/UI** | Ready — `saveSchema.ts` allow-list saves; camera pan round-trip; `catalog` state in `App.tsx` from loop subscribe |
 | **Settler chat** | Ready — `sim_dialogue_trees.json` (v1.1, **95** trees); `dialogueTrees.ts` + `humanChat.ts` 3-beat paired sessions; scripted election gossip, marriage `Yes!`, Renffr omen exceptions |
+| **Raid rewards** | Ready — `rewardRaidParticipants()` Guard XP tiers; leader +0.45 XP + rep on wins; merit elections (`skillPoints = sum(skills)×2`); incumbent record from rep |
+| **Victory balance** | Ready — `VICTORY_TARGETS` raised; Harmony wild wolves only; Goals tab explainer |
+| **Trade caravans** | Ready — `tradeCaravans.ts`; walking merchants; 7 routes; instant trade removed |
 | **Tests** | Vitest **346** passed, **0 skipped**, **66** files (`npm test`); browser worker suites optional (`vitest.browser-worker.config.ts`); frontier raid tests in `frontierCombat.test.ts` (24); trade caravan tests in `tradeCaravans.test.ts` (2); victory in `victory.test.ts` (1); layer tests in `entityLayer.test.ts` (4) |
 | **Lint** | **70 → 0** ESLint errors — `useLayoutEffect` ref sync, `BuildCatalogPanel` derived category, test hygiene |
 | **UI** | Ready — `BuildCatalogPanel` replaces deleted `BuildHotbar`; `ResourceBadge` / `resourceLabels.ts` |
+
+### July 8, 2026 — Victory balance, trade caravans & raid → elections
+
+| Area | Implementation |
+|------|----------------|
+| **Raid XP** | `frontierCombat.ts` `rewardRaidParticipants()` — `RAID_GUARD_XP` 0.3–1.1; `RAID_LEADER_GUARD_XP_BONUS` +0.45; `RAID_LEADER_REP_BONUS` on wins; pay-off = no XP |
+| **Elections** | `villageLeadership.ts` `getLeadershipScoreBreakdown()` — all job skills ×2; `getIncumbentRecordAssessment()` — rep thresholds, +8 cap |
+| **Victory** | `victory.ts` `VICTORY_TARGETS` — Eco 250, Great City 400/60, Trade 7/40/50k, Harmony 8 wild + 15 wildkin |
+| **Harmony fix** | `computeVictoryProgress` filters `EntityType.Wolf && tamedBy == null` — taming is not harmony |
+| **Caravans** | `tradeCaravans.ts` + `tickTradeCaravans` in `gameEngine.ts`; `faction: 'trade_caravan'` in `lifeSimulation.ts`; `drawTradeRouteLines` in `renderer.ts` |
+| **Removed** | `economy.ts` `updateTradeRoutes()` instant exchange — replaced by caravan round-trips |
+| **UI/docs** | Goals tab “How each path works” (`App.tsx`); `ROADMAP.md` July 8 section; `CHANGELOG.md` `[Unreleased]` |
 
 ### July 8, 2026 — Dialogue-tree settler chat
 
