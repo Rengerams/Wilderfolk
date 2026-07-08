@@ -279,7 +279,6 @@ Food spoilage and some daily logic use `tick % TICKS_PER_DAY`.
 | `terrainGen.ts` | Procedural `WorldMap` from seed + preset |
 | `victory.ts` | Four victory paths; `VICTORY_TARGETS` + `ACTIVE_VICTORY_PATHS` |
 | `tradeCaravans.ts` | Walking merchant caravans per active trade route; replaces instant `updateTradeRoutes` |
-| `economy.ts` | Storage caps, `establishTradeRoute`, `initTradeRoutes` (7 routes) |
 | `EventLogPanel.tsx` | Scrollable chronicle log tab UI |
 | `CombatLogPanel.tsx` | Combat-filtered log sub-tab (stats + export) |
 | `FocusPanel.tsx` | Focus / next-step panel |
@@ -438,9 +437,12 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 | `launchRaidOnRival` | Dispatches player war-band (provisions by distance); queues `pendingOutgoingRaidEvents` — does **not** resolve combat instantly |
 | `rollRivalOutgoingRaidResponse` | Rival offers tribute or chooses to fight (fight always possible) |
 | `respondToOutgoingRaidEvent` | Player accepts tribute, declines and attacks, or presses attack when rival fought |
+| `isCounterRaidOnRival` | True when rival has a pending **incoming** raid — drives counter-raid label |
 | `getOutgoingRaidActionLabel` | **Raid** vs **Counter-raid** copy — counter only when `pendingRaidEvents` includes that rival |
 | `getCombatPreview` | UI forecasts: militia count/strength, defend/barricade/outgoing ratios, payoff vs raid hint |
 | `getRaidCasualtyBounds` | Population-scaled death tiers on fight outcomes (payoff = 0 deaths) |
+| `rollIncomingRaidLoot` / `raidEventLoot` | Multi-resource loot bundles (`RaidLootBundle`: food/wood/stone/gold) on incoming raids |
+| `formatRaidLootSummary` | Banner copy for seized or lost loot |
 | `getRaidParticipants` | Adults in the fight — militia/outgoing need spears; barricade = all adults |
 | `rewardRaidParticipants` | Grant **Guard** skill XP by outcome tier; leader +0.45 XP bonus + rep on victories |
 | `getMilitiaStrength` | Adults × base + spears/shields + `getBarracksGuardBonus` + wall/tower from `defenseStructures.ts` |
@@ -459,6 +461,24 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 | `tribute` (war-band march, no fight) | 0.3 |
 
 Leader in the fight: **+0.45** extra Guard XP (`RAID_LEADER_GUARD_XP_BONUS`). Victory rep (`RAID_LEADER_REP_BONUS`): decisive +4, narrow +2, outgoing success +3, outgoing meager +1.
+
+**Outgoing raid flow** (player war-band):
+
+1. `launchRaidOnRival` — spends provisions (`getOutgoingRaidFoodCost`); queues `OutgoingRaidEvent`; does **not** resolve combat instantly.
+2. `rollRivalOutgoingRaidResponse` — rival offers **tribute** (`payoff_offer`) or **fights** (`fight` — always possible).
+3. Player picks via `respondToOutgoingRaidEvent`: accept tribute, decline and attack anyway, or press attack when rival chose fight.
+4. Peace treaties recall in-flight marches (`cancelPendingOutgoingRaidsForRival`).
+
+**Raid casualties** (`getRaidCasualtyBounds` — adult population scaled; pay-off / tribute = 0 deaths):
+
+| Tier | % of adults | Floor band |
+|------|-------------|------------|
+| `victory` | 1.2–2.2% | 1–2 |
+| `costly` | 2.2–4.0% | 2–4 |
+| `moderate` | 4.0–7.0% | 3–6 |
+| `heavy` | 7.5–13% | 6–10 |
+
+Incoming defense losses and outgoing wins apply `RaidLootBundle` transfers (`rollIncomingRaidLoot` scales with rival pop/mood).
 
 **Raid XP → elections** (`skills.ts` → `villageLeadership.ts`):
 
@@ -796,7 +816,8 @@ Playtest build remains **`GAME_VERSION` 0.4.2** until the v0.5.0 tag. Items belo
 | **Harmony fix** | `computeVictoryProgress` filters `EntityType.Wolf && tamedBy == null` — taming is not harmony |
 | **Caravans** | `tradeCaravans.ts` + `tickTradeCaravans` in `gameEngine.ts`; `faction: 'trade_caravan'` in `lifeSimulation.ts`; `drawTradeRouteLines` in `renderer.ts` |
 | **Removed** | `economy.ts` `updateTradeRoutes()` instant exchange — replaced by caravan round-trips |
-| **UI/docs** | Goals tab “How each path works” (`App.tsx`); `ROADMAP.md` July 8 section; `CHANGELOG.md` `[Unreleased]` |
+| **UI/docs** | Goals tab “How each path works” (`App.tsx`); `ROADMAP.md` July 8 section; `CHANGELOG.md` `[Unreleased]`; this file (Victory paths, Trade caravans, Frontier combat) |
+| **Scandal fix** | `isMarriedScandalOffender` in `lifeSimulation.ts` — only **married** affair offenders imprisoned; arrest before divorce clears marital status |
 
 ### July 8, 2026 — Dialogue-tree settler chat
 
@@ -820,7 +841,7 @@ Routine settler banter no longer uses inline phrase pools in `humanChat.ts`. All
 
 ### July 8, 2026 — jscpd duplicate cleanup
 
-`jscpd` scan found **8 clones** (93 lines, 0.4%) in `stripRender.ts`, `trackPlayer.ts`, `director.ts`, intro/background music mute sync, and inline `lifetimeStats` in `worldGen.ts`. Refactored to shared helpers; **`npm run dup`** now reports **0 clones**. Quality gates: `npm test` **320** passed, `npm run build` PASS.
+`jscpd` scan found **8 clones** (93 lines, 0.4%) in `stripRender.ts`, `trackPlayer.ts`, `director.ts`, intro/background music mute sync, and inline `lifetimeStats` in `worldGen.ts`. Refactored to shared helpers; **`npm run dup`** now reports **0 clones**. Quality gates: `npm test` **346** passed, `npm run build` PASS.
 
 ---
 
@@ -860,6 +881,10 @@ Wall, Wall Corner, Wall Gate, Watchtower, Barracks; barricade + militia bonuses;
 ### July 4, 2026 — v0.4.2 polish
 
 Road/wall/gate rotation (**R**), juice pass (night glow, build confetti, camera nudge), intro screen refine (~20s timeline).
+
+### July 8, 2026 — Scandal imprisonment
+
+Only **married** affair offenders are sent to prison (`isMarriedScandalOffender` in `lifeSimulation.ts`); single paramours are not jailed. Arrest runs before divorce clears marital status.
 
 ### July 4, 2026 — Comprehensive bug-fix pass (~40 fixes)
 

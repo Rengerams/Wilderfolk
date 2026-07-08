@@ -57,7 +57,7 @@ Newest version first. 🟢 done · 🟡 in progress · ⬜ open. Detail → [CHA
 | **Harmony** | 8 **untamed** wolves (`tamedBy == null`) + 15 wildkin — taming via Taming Post does **not** count |
 | **Caravans** | `establishTradeRoute` → walking merchant; export at partner, import at village; Progress → Trade shows leg status |
 
-Detail → [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` · [TECHNICAL.md](TECHNICAL.md) (Victory paths + Trade caravans)
+Detail → [CHANGELOG.md](CHANGELOG.md) `[Unreleased]` · [TECHNICAL.md](TECHNICAL.md) (Frontier combat · Victory paths · Trade caravans)
 
 ---
 
