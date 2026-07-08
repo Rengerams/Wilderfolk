@@ -46,13 +46,13 @@ You are not conquering a blank map. You are sharing a valley with grass, rabbits
 |------|------------|
 | **UI** | 6-tab sidebar, alert strip, **left build catalog** (category rail), tab hotkeys `V/F/N/P/L/M` |
 | **Defense** | Walls, towers, barracks, guard patrols; **Log → Combat** raid history |
-| **Raids** | Prepare for incoming war-bands; raid or counter-raid rivals; rivals may offer tribute when you attack — accept or fight; **no battle screen** |
+| **Raids** | Prepare, raid/counter-raid, rival tribute offers; fighters earn **Guard XP** (0.4–1.1 by outcome); village head 👑 +0.45 XP + rep on wins → **merit elections** (skills ×2 for all candidates; rep feeds incumbent record only); pay-off = no XP; **no battle screen** |
 | **Craft** | Blacksmith forge queue for iron spears & shields (research + staffed smith) |
 | **Social** | Settlers chat in **3-line dialogue trees** (work, home, courtship, fear, festivals); election gossip + marriage `Yes!` scripted moments |
 | **Scale (pre-tag)** | Dual-layer **spatial grid**; optional **Web Worker** sim; **OffscreenCanvas** terrain/entity layers |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](TECHNICAL.md#playtest-report) |
-| **Quality** | **343** Vitest tests (64 files) · `npm run lint` **0 errors** · `npm run build` clean |
+| **Quality** | **346** Vitest tests (64 files) · `npm run lint` **0 errors** · `npm run build` clean |
 | **Fixes** | ~40 (July 4) + **242** tracker items (July 7–8) |
 
 ### What's next — v0.5.0 (end July 2026)

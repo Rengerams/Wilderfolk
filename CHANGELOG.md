@@ -11,7 +11,14 @@
 - **Population-scaled raid casualties** — victories and barricade holds always cost lives; tiers scale with village size (`getRaidCasualtyBounds`)
 - **Raid loot bundles** — incoming defense can lose food/wood/stone/gold; outgoing wins grant multi-resource spoils (`RaidLootBundle`, `formatRaidLootSummary` on banners)
 - **Peace + outgoing marches** — treaties recall in-flight player war-bands (`cancelPendingOutgoingRaidsForRival`)
-- **Vitest** — **343** tests, **64** files (`frontierCombat.test.ts` +6 for outgoing tribute flow)
+- **Raid participant rewards** — everyone who fights earns **Guard** skill XP (`rewardRaidParticipants`, `getRaidParticipants`); tier scales with outcome (decisive win 1.1 → defeat 0.4 / outgoing success 1.0 → fail 0.45 / tribute march 0.3)
+- **Leader raid glory** — sitting village head who was in the fight gets **+0.45** extra Guard XP; on a win they also gain **village reputation** (+1 meager / +2 narrow / +3 outgoing success / +4 decisive)
+- **Raid XP → merit elections** (`villageLeadership.ts`, `skills.ts`):
+  - **Personal merit (all candidates)** — each fighter's Guard XP stacks like any job skill; at election `getLeadershipScoreBreakdown()` adds `skillPoints = round(sum(all job skills) × 2)` — challengers and incumbent alike
+  - **Incumbent record only** — raid rep bonuses feed `getIncumbentRecordAssessment()` economy/village-health thresholds; **recordPoints** capped at **+8** positive; challengers have no record score
+  - **No XP without fighting** — incoming pay-off grants no Guard XP; barricade/defend/outgoing fights do
+- **Vitest** — **346** tests, **64** files (`frontierCombat.test.ts` — outgoing tribute + raid XP/rep; `entityLayer.test.ts` — outgoing raid cache key)
+- **`RenderSnapshot`** — `pendingOutgoingRaidEvents` mirrored from `WorldState` (fixes `entityLayer.test.ts` / `tsc` typecheck)
 
 ### Fixed — scandal imprisonment (July 8, 2026)
 

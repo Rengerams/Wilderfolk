@@ -1,10 +1,11 @@
 import type { Building, Entity, RivalSettlement, WorldState } from './gameTypes';
-import { BuildingType } from './gameTypes';
+import { BuildingType, JobType } from './gameTypes';
 import { TICKS_PER_DAY, killHuman } from './dayCycle';
 import { hasIronSpears, hasStoneSpears } from './combat';
 import { formatCitizenName, formatDeathLog } from './citizenId';
 import { logEvent } from './eventLog';
 import { isPlayerHuman, isRivalAtPeace } from './groupEvents';
+import { gainSkill } from './skills';
 import {
   computeMilitiaBreakdown,
   getMilitiaArmamentLabel,
@@ -433,6 +434,120 @@ function flashMilitia(entities: Entity[], ticks = 22) {
   }
 }
 
+export type RaidParticipantMode = 'militia' | 'barricade' | 'outgoing';
+
+/** Adults who fought — militia/outgoing need village spears; barricade includes all adults. */
+export function getRaidParticipants(
+  state: WorldState,
+  entities: Entity[],
+  mode: RaidParticipantMode,
+): Entity[] {
+  return entities.filter((e) => {
+    if (!e.alive || !isPlayerHuman(e) || e.isJuvenile) return false;
+    if (mode === 'barricade') return true;
+    return hasIronSpears(state) || hasStoneSpears(state);
+  });
+}
+
+export type RaidExperienceTier =
+  | 'decisive_win'
+  | 'narrow_win'
+  | 'stalemate'
+  | 'defeat'
+  | 'outgoing_success'
+  | 'outgoing_meager'
+  | 'outgoing_fail'
+  | 'tribute';
+
+const RAID_GUARD_XP: Record<RaidExperienceTier, number> = {
+  decisive_win: 1.1,
+  narrow_win: 0.85,
+  stalemate: 0.55,
+  defeat: 0.4,
+  outgoing_success: 1.0,
+  outgoing_meager: 0.7,
+  outgoing_fail: 0.45,
+  tribute: 0.3,
+};
+
+const RAID_LEADER_GUARD_XP_BONUS = 0.45;
+
+/** Extra village reputation when the sitting head led a winning raid. */
+const RAID_LEADER_REP_BONUS: Partial<Record<RaidExperienceTier, number>> = {
+  decisive_win: 4,
+  narrow_win: 2,
+  outgoing_success: 3,
+  outgoing_meager: 1,
+};
+
+function isRaidVictoryTier(tier: RaidExperienceTier): boolean {
+  return tier === 'decisive_win'
+    || tier === 'narrow_win'
+    || tier === 'outgoing_success'
+    || tier === 'outgoing_meager';
+}
+
+function defenseOutcomeToReward(outcome: RaidOutcomeTier): RaidExperienceTier {
+  switch (outcome) {
+    case 'decisive': return 'decisive_win';
+    case 'narrow': return 'narrow_win';
+    case 'stalemate': return 'stalemate';
+    default: return 'defeat';
+  }
+}
+
+function counterRaidToReward(tier: CounterRaidTier): RaidExperienceTier {
+  if (tier === 'success') return 'outgoing_success';
+  if (tier === 'meager') return 'outgoing_meager';
+  return 'outgoing_fail';
+}
+
+/** Grant Guard skill XP to everyone in the fight; leader earns extra XP and rep on victories. */
+function rewardRaidParticipants(
+  state: WorldState,
+  participants: Entity[],
+  tier: RaidExperienceTier,
+  rivalName: string,
+): void {
+  if (participants.length === 0) return;
+
+  const baseXp = RAID_GUARD_XP[tier];
+  const leaderId = state.villageLeaderId;
+  let leaderInFight = false;
+
+  for (const fighter of participants) {
+    gainSkill(state, fighter.id, JobType.Guard, baseXp);
+    if (fighter.id === leaderId) {
+      leaderInFight = true;
+      gainSkill(state, fighter.id, JobType.Guard, RAID_LEADER_GUARD_XP_BONUS);
+    }
+  }
+
+  const repBonus = leaderInFight ? (RAID_LEADER_REP_BONUS[tier] ?? 0) : 0;
+  if (repBonus > 0 && isRaidVictoryTier(tier)) {
+    const before = state.villageReputation;
+    state.villageReputation = Math.min(100, state.villageReputation + repBonus);
+    const leader = participants.find((p) => p.id === leaderId);
+    if (leader) {
+      logEvent(
+        state,
+        'event',
+        `${formatCitizenName(leader)} led the raid against ${rivalName} — village reputation +${repBonus}`,
+        formatCitizenName(leader),
+      );
+      pushFloat(state, leader.x, leader.y - 24, `👑 +${repBonus} rep`, '#fbbf24');
+    }
+    if (state.villageReputation > before) {
+      pushNews(
+        state,
+        '👑 Leader honored',
+        `${leader ? formatCitizenName(leader) : 'The village head'} rallied the war-band — reputation rises.`,
+        'positive',
+      );
+    }
+  }
+}
+
 function damageRandomPlayerBuilding(state: WorldState, amount: number): Building | null {
   const targets = state.buildings.filter((b) => b.completed && b.faction !== 'rival');
   if (targets.length === 0) return null;
@@ -852,6 +967,13 @@ export function respondToRaidEvent(
     const effectiveDef = getBarricadeStrength(state, allAlive);
     const outcome = resolveDefenseRatio(effectiveDef, event.attackerStrength);
     const raidLoot = raidEventLoot(event);
+    const barricadeFighters = getRaidParticipants(state, allAlive, 'barricade');
+    rewardRaidParticipants(
+      state,
+      barricadeFighters,
+      defenseOutcomeToReward(outcome),
+      event.rivalName,
+    );
     if (outcome === 'defeat' || outcome === 'stalemate') {
       const frac = outcome === 'defeat' ? 0.85 : 0.55;
       const taken = applyRaidLootTaken(state, raidLoot, frac);
@@ -897,6 +1019,13 @@ export function respondToRaidEvent(
 
     const outcome = resolveDefenseRatio(defenderStrength, event.attackerStrength);
     const raidLoot = raidEventLoot(event);
+    const militiaFighters = getRaidParticipants(state, allAlive, 'militia');
+    rewardRaidParticipants(
+      state,
+      militiaFighters,
+      defenseOutcomeToReward(outcome),
+      event.rivalName,
+    );
     flashMilitia(allAlive, 24);
     state.screenShakeImpulse = Math.max(state.screenShakeImpulse, 6);
 
@@ -977,6 +1106,8 @@ function resolveOutgoingRaidCombat(
 ): void {
   const outcome = resolveCounterRaidRatio(event.attackerStrength, event.defenderStrength);
   const verb = event.isCounterRaid ? 'Counter-raid' : 'Raid';
+  const warBand = getRaidParticipants(state, state.entities, 'outgoing');
+  rewardRaidParticipants(state, warBand, counterRaidToReward(outcome), rival.name);
 
   flashMilitia(state.entities, 20);
   state.screenShakeImpulse = Math.max(state.screenShakeImpulse, 4);
@@ -1074,6 +1205,12 @@ export function respondToOutgoingRaidEvent(
   if (choiceId === 'accept_payoff') {
     if (event.rivalResponse !== 'payoff_offer') return state;
     const gained = grantRaidSpoils(state, raidEventLoot(event));
+    rewardRaidParticipants(
+      state,
+      getRaidParticipants(state, state.entities, 'outgoing'),
+      'tribute',
+      rival.name,
+    );
     rival.relationship = 'tense';
     rival.raidCooldownDays = 12;
     rival.daysUntilAction = 28;

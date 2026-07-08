@@ -17,7 +17,7 @@ Newest version first. 🟢 done · 🟡 in progress · ⬜ open. Detail → [CHA
 | 🟢 | Dead-entity compaction — alive-only entities each tick |
 | 🟢 | Spatial grid — dual-layer grass + mobile cells; graze/hunt/flee wired (`spatialGrid.ts`, on by default) |
 | 🟢 | Web Worker gameTick — opt-in (`VITE_USE_GAME_WORKER=1`); render SoA + proto handshake |
-| 🟢 | Big bug checkup — **242** tracker items closed; Vitest **343** (64 files); lint **0**; build clean |
+| 🟢 | Big bug checkup — **242** tracker items closed; Vitest **346** (64 files); lint **0**; build clean |
 | 🟢 | Dialogue-tree settler chat — `sim_dialogue_trees.json` (95 trees); legacy `wf_*` migration; election/marriage chat tests |
 | 🟢 | Build catalog sidebar — `BuildCatalogPanel` (replaces hotbar) |
 | 🟢 | Renderer cache — `world.entityByType` → `RenderSnapshot` → `updateCachedEntities`; viewport grass culling |

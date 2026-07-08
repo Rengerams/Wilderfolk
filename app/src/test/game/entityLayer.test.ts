@@ -109,4 +109,15 @@ describe('entityLayer', () => {
     const building = buildEntityLayerKey({ ...base, buildMode: BuildingType.House }, 640, 480);
     expect(building).not.toBe(plain);
   });
+
+  it('invalidates when outgoing raid queue changes', () => {
+    const base = minimalSnapshot();
+    const plain = buildEntityLayerKey(base, 640, 480);
+    const marching = buildEntityLayerKey(
+      minimalSnapshot({ pendingOutgoingRaidEvents: [{ id: 'out_1' } as RenderSnapshot['pendingOutgoingRaidEvents'][number]] }),
+      640,
+      480,
+    );
+    expect(marching).not.toBe(plain);
+  });
 });

@@ -20,8 +20,9 @@ import {
   raidEventLoot,
 } from '@/game/frontierCombat';
 import { createEntity } from '@/game/worldGen';
-import { EntityType } from '@/game/gameTypes';
+import { EntityType, JobType } from '@/game/gameTypes';
 import { isRivalAtPeace, signPeaceTreaty } from '@/game/groupEvents';
+import { readSkill } from '@/game/skills';
 
 function minimalRaid(id: string, rivalId: string): RaidEvent {
   return {
@@ -164,6 +165,70 @@ describe('respondToRaidEvent', () => {
     expect(next.eventLog.some((e) => e.type === 'combat' && e.message.includes('routed'))).toBe(true);
     expect(warDeaths.length).toBeGreaterThanOrEqual(1);
     expect(warDeaths.length).toBeLessThanOrEqual(2);
+  });
+
+  it('grants Guard XP to everyone who fought on a decisive defense', () => {
+    const state = initGame();
+    state.resources = { wood: 200, stone: 200, food: 500, gold: 200 };
+    state.unlockedTechs = [...state.unlockedTechs, 'defense_2'];
+    state.researchNodes = state.researchNodes.map((n) => (
+      n.id === 'defense_2' ? { ...n, researched: true } : n
+    ));
+    state.rivalSettlements = [mockRival()];
+    const adults = Array.from({ length: 6 }, (_, i) => {
+      const e = createEntity(EntityType.Human, 100 + i, 100, 100 + i, 400, false, {
+        gender: i % 2 === 0 ? 'male' : 'female',
+        ageYears: 30,
+      });
+      e.isJuvenile = false;
+      return e;
+    });
+    state.entities = adults;
+    state.pendingRaidEvents = [{
+      ...minimalRaid('sim_xp', 'rival_1'),
+      attackerStrength: 40,
+      lootFood: 20,
+      lootGold: 5,
+    }];
+
+    const next = respondToRaidEvent(state, 'sim_xp', 'defend');
+    for (const fighter of next.entities.filter((e) => e.alive && e.type === EntityType.Human && !e.isJuvenile)) {
+      expect(readSkill(fighter, JobType.Guard)).toBeGreaterThanOrEqual(1.1);
+    }
+  });
+
+  it('grants the village leader extra reputation and Guard XP on a decisive win', () => {
+    const state = initGame();
+    state.resources = { wood: 200, stone: 200, food: 500, gold: 200 };
+    state.villageReputation = 50;
+    state.unlockedTechs = [...state.unlockedTechs, 'defense_2'];
+    state.researchNodes = state.researchNodes.map((n) => (
+      n.id === 'defense_2' ? { ...n, researched: true } : n
+    ));
+    state.rivalSettlements = [mockRival()];
+    const adults = Array.from({ length: 6 }, (_, i) => {
+      const e = createEntity(EntityType.Human, 100 + i, 100, 100 + i, 400, false, {
+        gender: i % 2 === 0 ? 'male' : 'female',
+        ageYears: 30,
+      });
+      e.isJuvenile = false;
+      return e;
+    });
+    state.entities = adults;
+    state.villageLeaderId = adults[0].id;
+    state.pendingRaidEvents = [{
+      ...minimalRaid('sim_leader', 'rival_1'),
+      attackerStrength: 40,
+      lootFood: 20,
+      lootGold: 5,
+    }];
+
+    const next = respondToRaidEvent(state, 'sim_leader', 'defend');
+    const leader = next.entities.find((e) => e.id === adults[0].id);
+    expect(leader).toBeDefined();
+    expect(readSkill(leader!, JobType.Guard)).toBeGreaterThanOrEqual(1.55);
+    expect(next.villageReputation).toBe(58);
+    expect(next.eventLog.some((e) => e.message.includes('led the raid'))).toBe(true);
   });
 
   it('kills many defenders when the militia is overrun', () => {

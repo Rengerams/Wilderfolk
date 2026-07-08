@@ -108,7 +108,7 @@ Run: `npm run simulate:30min` with `SIM_PROFILE=village|town|city`. City profile
 
 | # | Item | Status | Deliverable |
 |---|------|--------|-------------|
-| 16 | **Big bug checkup** | ✅ Done | **242** items closed (July 8 pass); Vitest **343** (64 files); lint **0**; build clean |
+| 16 | **Big bug checkup** | ✅ Done | **242** items closed (July 8 pass); Vitest **346** (64 files); lint **0**; build clean |
 | 16b | **Dialogue-tree settler chat** | ✅ Done | `sim_dialogue_trees.json` (95 trees); `dialogueTrees.ts` + `humanChat.ts`; legacy `wf_*` migration; tests in `humanChat`, `villageLeadership`, `lifeSimulation.courtship` |
 | 17 | **Logical invariant checks** | ❌ Open | Entity maps, peace vs raids, migration `0.4.2`→`0.5.0`, no ghost workers |
 | 18 | **20-year simulation gatekeeper** | 🟡 Partial | Script + smoke PASS (8640 ticks); **full 172800-tick run still required** |

@@ -27,7 +27,7 @@
 | **Scale (pre-tag)** | Dual-layer **spatial grid**; optional **Web Worker** sim; **OffscreenCanvas** terrain/entity layers (smoother zoom/pan) |
 | **Polish** | **R** to rotate roads/walls/gates; night glow, confetti, camera nudge (toggle in ☰) |
 | **Balance** | 10-year town PASS (9/9 gates) · [10-user beta](../TECHNICAL.md#playtest-report) |
-| **Quality** | **343** automated tests (64 files) · lint **0 errors** |
+| **Quality** | **346** automated tests (64 files) · lint **0 errors** |
 | **Fixes** | ~40 (July 4) + **242** tracker items (July 7–8) |
 
 ### What's coming — v0.5.0 (end July 2026)
@@ -240,6 +240,28 @@ From a rival camp panel (Frontier tab or map click):
 - **Fight outcomes:** success (multi-resource spoils), meager spoils, or repelled (extra food loss, casualties, they may raid back)
 - **Peace treaties** (🕊️) block incoming raids, outgoing marches, and recall war-bands for **60 days**
 
+#### Raid rewards — Guard XP & elections
+
+Everyone who **fights** in a raid (defend, barricade, or outgoing march) earns **Guard** skill experience. Better outcomes give more XP; paying tribute without a fight gives a small march XP only to the war-band.
+
+| Fight outcome | Guard XP (each fighter) |
+|---------------|-------------------------|
+| Decisive defense win | 1.1 |
+| Narrow / costly win | 0.85 |
+| Stalemate | 0.55 |
+| Defeat | 0.4 |
+| Outgoing raid — success | 1.0 |
+| Outgoing raid — meager / fail | 0.7 / 0.45 |
+
+The **village head** 👑 who was in the fight gets **+0.45 extra Guard XP**. On a **win**, they also raise **village reputation** (+1 to +4 depending on how decisive the victory was).
+
+**How this ties into elections** (Village tab → Village head):
+
+1. **Personal merit** — Guard XP is a job skill like Farmer or Hunter. At each merit election (every 10 years from Year 10), **all** skills are summed and ×2 into your **skill** score. Raid veterans — leader or challenger — climb the standings.
+2. **Leader record** — only the **sitting** head gets record bonus/penalty from economy, scandals, and village health. Raid wins that boost **village reputation** help that record at the next election (reputation thresholds in economy/health assessment). Challengers do **not** get record points — they win on personal merit alone.
+
+Paying off an incoming raid without fighting gives **no** Guard XP.
+
 #### Militia strength (what the preview counts)
 
 Adult settlers contribute base strength; bonuses stack from:
@@ -260,6 +282,7 @@ Adult settlers contribute base strength; bonuses stack from:
 - Combat preview + pay-off vs raid hint; raid vs counter-raid labels
 - Outgoing raid tribute offer (accept / decline) or rival fights
 - Population-scaled raid casualties; multi-resource loot on raids
+- Raid fighters earn Guard XP; leader gets extra XP + reputation on wins (feeds merit elections)
 - Village + Frontier respond UI, map banner, alert strip
 - **Walls, wall corners, wall gates, watchtowers, barracks** — full Defense build category; barricade bonuses in combat; **R** to rotate walls/gates
 - **Barracks guards** — manual assign; patrol village core (🪖); +14 militia strength each
@@ -465,7 +488,7 @@ Be a good neighbor — or at least a careful one.
 
 The **first male pioneer** leads at founding until **Year 10**. After that, settlers elect a **village head** by merit — job skills, experience, Town Hall service, and community standing. **Every 10 years** the village holds an election ceremony (gather, gossip, reveal, then a 3-day *Election Revelry* festival).
 
-The **sitting head always runs** when still eligible. They get a **modest record bonus or penalty** from the village economy, scandals, and overall health — but a high-merit challenger can still win. If the head dies or is jailed, a **merit election is scheduled two years later** (no instant replacement).
+The **sitting head always runs** when still eligible. They get a **modest record bonus or penalty** from the village economy, scandals, and overall health — but a high-merit challenger can still win. **Raid victories** help the incumbent indirectly: Guard XP raises personal merit, and the leader’s reputation bonus on wins improves record assessment. If the head dies or is jailed, a **merit election is scheduled two years later** (no instant replacement).
 
 See the **Village** tab leadership panel for the current 👑 head, record breakdown, years until the next election, and ranked candidates. The leader appears on the map and in the population panel.
 

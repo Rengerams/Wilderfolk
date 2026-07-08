@@ -61,6 +61,7 @@ export interface RenderSnapshot {
   readonly villageForge: WorldState['villageForge'];
   readonly villageLeaderId: number | null;
   readonly pendingRaidEvents: WorldState['pendingRaidEvents'];
+  readonly pendingOutgoingRaidEvents: WorldState['pendingOutgoingRaidEvents'];
   readonly juiceEffectsEnabled: boolean;
   /** Phase B — canvas reads kinematics from transferable buffer when set. */
   readonly renderSoA: RenderSoAReaderV1 | null;
@@ -135,6 +136,7 @@ export function buildRenderSnapshot(
     villageForge: world.villageForge,
     villageLeaderId: world.villageLeaderId,
     pendingRaidEvents: world.pendingRaidEvents ?? [],
+    pendingOutgoingRaidEvents: world.pendingOutgoingRaidEvents ?? [],
     juiceEffectsEnabled: loadJuiceEffectsEnabled(),
     renderSoA: options.renderSoA ?? null,
     renderMetaBySlot: options.renderMetaBySlot ?? null,

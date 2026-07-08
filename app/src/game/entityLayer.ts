@@ -47,6 +47,7 @@ export function buildEntityLayerKey(state: RenderSnapshot, cw: number, ch: numbe
     ghost ? `${ghost.x.toFixed(0)},${ghost.y.toFixed(0)},${ghost.valid ? 1 : 0}` : '',
     strip ? `${strip.segments.length}|${strip.rotation}` : '',
     state.pendingRaidEvents?.length ?? 0,
+    state.pendingOutgoingRaidEvents?.length ?? 0,
     state.visitorGroups.length,
     state.buildings.length,
     state.deathParticles.length,

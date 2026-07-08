@@ -147,7 +147,7 @@ Most profiles launch through **`app/scripts/run-sim.mjs`** (tsx + localStorage s
 
 | Command | What it checks |
 |---------|----------------|
-| `npm test` | **343** Vitest tests, **64** files, **0 skipped** + `tsconfig.vitest.json` typecheck (browser worker suites optional via `vitest.browser-worker.config.ts`) |
+| `npm test` | **346** Vitest tests, **64** files, **0 skipped** + `tsconfig.vitest.json` typecheck (browser worker suites optional via `vitest.browser-worker.config.ts`) |
 | `npm run lint` | ESLint — **0 errors** |
 | `npm run build` | `tsc -b` + Vite production bundle |
 | `npm run dup` | [jscpd](https://github.com/kucherenko/jscpd) clone detection on `app/src` — **0 clones** after July 8 dedup pass |
@@ -191,6 +191,7 @@ gameLoop → gameTick(world) [or worker tick]
 |-------|--------|-------|
 | Sim tick | `world.entityByType` | Built at end of `gameTick()` via `buildEntityByType()`; not saved |
 | Render snapshot | `RenderSnapshot.entityByType` | Prefers `world.entityByType` → `catalog.getEntityByType()` → fallback scan |
+| Render snapshot | `pendingOutgoingRaidEvents` | Mirrored from `WorldState` for UI/renderer cache keys (`entityLayer.ts`) |
 | UI catalog | `EntityCatalog.ensureAliveIndex()` | Single pass builds `getAlive()` + per-type buckets; invalidated on rebuild/delta |
 | Canvas cache | `renderer.ts` `_cachedTrees/Animals/Humans/Grass` | Invalidates on tick change; grass also on viewport key |
 | Offscreen layers | `terrainLayer.ts`, `entityLayer.ts` | Terrain tiles/decor baked until map or season changes; entity layer rebuilt on `buildEntityLayerKey()` mismatch |
@@ -435,7 +436,30 @@ Combat is **strength-ratio resolution**, not tactical map battles. Key flow in `
 | `getOutgoingRaidActionLabel` | **Raid** vs **Counter-raid** copy — counter only when `pendingRaidEvents` includes that rival |
 | `getCombatPreview` | UI forecasts: militia count/strength, defend/barricade/outgoing ratios, payoff vs raid hint |
 | `getRaidCasualtyBounds` | Population-scaled death tiers on fight outcomes (payoff = 0 deaths) |
+| `getRaidParticipants` | Adults in the fight — militia/outgoing need spears; barricade = all adults |
+| `rewardRaidParticipants` | Grant **Guard** skill XP by outcome tier; leader +0.45 XP bonus + rep on victories |
 | `getMilitiaStrength` | Adults × base + spears/shields + `getBarracksGuardBonus` + wall/tower from `defenseStructures.ts` |
+
+**Guard XP tiers** (`RAID_GUARD_XP` in `frontierCombat.ts`):
+
+| Tier | XP (each fighter) |
+|------|-------------------|
+| `decisive_win` | 1.1 |
+| `narrow_win` | 0.85 |
+| `stalemate` | 0.55 |
+| `defeat` | 0.4 |
+| `outgoing_success` | 1.0 |
+| `outgoing_meager` | 0.7 |
+| `outgoing_fail` | 0.45 |
+| `tribute` (war-band march, no fight) | 0.3 |
+
+Leader in the fight: **+0.45** extra Guard XP (`RAID_LEADER_GUARD_XP_BONUS`). Victory rep (`RAID_LEADER_REP_BONUS`): decisive +4, narrow +2, outgoing success +3, outgoing meager +1.
+
+**Raid XP → elections** (`skills.ts` → `villageLeadership.ts`):
+
+1. **Personal merit (every candidate)** — `gainSkill(state, id, JobType.Guard, amount)` on each fighter; at election `getLeadershipScoreBreakdown()` adds `skillPoints = round(sum(all job skills) × 2)` — applies to challengers and incumbent alike.
+2. **Incumbent record only** — raid rep raises `villageReputation`, which feeds `getIncumbentRecordAssessment()` economy (+4/−5) and village health (+3/−6) thresholds; **recordPoints** positive cap **+8**; challengers have no record score.
+3. **No XP without fighting** — `respondToRaidEvent` pay-off path skips `rewardRaidParticipants`; defend, barricade, and outgoing fights grant XP.
 
 **State:** `pendingRaidEvents` (incoming), `pendingOutgoingRaidEvents` (player war-band awaiting response). Peace treaties cancel both (`cancelPendingRaidsForRival`, `cancelPendingOutgoingRaidsForRival`).
 
@@ -663,7 +687,8 @@ Playtest: **200+ citizens**, performance still good. Entity budget is higher tha
 | Ceremony | `electionCeremony` phases: gathering → gossip → tension → reveal → 3-day *Election Revelry* |
 | Gather site | Town Hall center, else map center (`getElectionGatherSite`) |
 | Incumbent in race | `getElectionRaceCandidates()` — sitting head always listed when eligible |
-| Record score | `getIncumbentRecordAssessment()` — economy (+4/−5), scandals (+3 clean / −5 each), village health (+3/−6); **+8 positive cap**; only incumbent gets `recordPoints` |
+| Record score | `getIncumbentRecordAssessment()` — economy (+4/−5), scandals (+3 clean / −5 each), village health (+3/−6); **+8 positive cap**; only incumbent gets `recordPoints`; fed partly by `villageReputation` (raid leader wins raise rep) |
+| Merit skills | `getLeadershipScoreBreakdown()` — `skillPoints = round(sum(all job skills) × 2)`; raid **Guard** XP counts like any other job skill |
 | UI | `VillageLeadershipPanel`, `focusHints`, `contextualTutorial` |
 | Save | `electionCeremony`, `electionBuildupNotifiedYear`, `pendingElectionYear` via `saveLoad.ts` |
 
@@ -684,7 +709,7 @@ Playtest build remains **`GAME_VERSION` 0.4.2** until the v0.5.0 tag. Items belo
 | **Entity indexing** | Ready — `EntityCatalog` combined alive/byType cache; `resolveAliveHumans()`; `getRenderEntityLayer()` shared with SoA buckets; `emptyEntityByType()` |
 | **Save/UI** | Ready — `saveSchema.ts` allow-list saves; camera pan round-trip; `catalog` state in `App.tsx` from loop subscribe |
 | **Settler chat** | Ready — `sim_dialogue_trees.json` (v1.1, **95** trees); `dialogueTrees.ts` + `humanChat.ts` 3-beat paired sessions; scripted election gossip, marriage `Yes!`, Renffr omen exceptions |
-| **Tests** | Vitest **343** passed, **0 skipped**, **64** files (`npm test`); browser worker suites optional (`vitest.browser-worker.config.ts`); frontier raid tests in `frontierCombat.test.ts` (22); chat tests in `humanChat.test.ts`, `villageLeadership.test.ts`, `lifeSimulation.courtship.test.ts`; layer tests in `entityLayer.test.ts`, `terrainLayer.test.ts` |
+| **Tests** | Vitest **346** passed, **0 skipped**, **64** files (`npm test`); browser worker suites optional (`vitest.browser-worker.config.ts`); frontier raid tests in `frontierCombat.test.ts` (24); chat tests in `humanChat.test.ts`, `villageLeadership.test.ts`, `lifeSimulation.courtship.test.ts`; layer tests in `entityLayer.test.ts` (4), `terrainLayer.test.ts` |
 | **Lint** | **70 → 0** ESLint errors — `useLayoutEffect` ref sync, `BuildCatalogPanel` derived category, test hygiene |
 | **UI** | Ready — `BuildCatalogPanel` replaces deleted `BuildHotbar`; `ResourceBadge` / `resourceLabels.ts` |
 
@@ -696,7 +721,7 @@ Routine settler banter no longer uses inline phrase pools in `humanChat.ts`. All
 
 | Area | Change |
 |------|--------|
-| **`npm test`** | `vitest run && tsc -p tsconfig.vitest.json --noEmit` — **343 passed**, **64** files, **0 skipped** |
+| **`npm test`** | `vitest run && tsc -p tsconfig.vitest.json --noEmit` — **346 passed**, **64** files, **0 skipped** |
 | **`npm run` (app)** | **9 scripts**: `dev`, `build`, `test`, `test:watch`, `lint`, `preview`, `sim`, `bench`, `dup` |
 | **`sim` CLI** | `scripts/sim-cli.mjs` replaces all `simulate:*` / `balance:*` / `benchmark:*` entries |
 | **Vitest** | Browser worker tests excluded from default run; optional `vitest.browser-worker.config.ts` |
