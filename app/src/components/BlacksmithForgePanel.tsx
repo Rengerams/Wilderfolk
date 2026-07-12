@@ -5,6 +5,7 @@ import {
   isForgeOrderComplete,
   type ForgeOrderId,
 } from '../game/forge';
+import Emoji from './Emoji';
 import ResourceCost from './ResourceCost';
 import type { WorldState } from '../game/gameTypes';
 
@@ -69,7 +70,7 @@ export default function BlacksmithForgePanel({ state, buildingId, onQueueForge }
               }`}
             >
               <span className="font-bold">
-                {ready ? '✓ ' : ''}{order.emoji} {order.label}
+                {ready ? '✓ ' : ''}<Emoji>{order.emoji}</Emoji> {order.label}
               </span>
               <span className="block text-[7px] opacity-80">{order.description}</span>
               <ResourceCost

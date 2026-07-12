@@ -13,6 +13,7 @@ export function useContextualTutorial(world: WorldState, enabled: boolean) {
   const prevRef = useRef<WorldState | null>(null);
   const [queue, setQueue] = useState<ContextualTutorialTip[]>([]);
   const seededRef = useRef(false);
+  const locallySeenRef = useRef(new Set<string>());
 
   const active = enabled && queue.length > 0 ? queue[0] : null;
 
@@ -33,6 +34,7 @@ export function useContextualTutorial(world: WorldState, enabled: boolean) {
     if (discovered.length > 0) {
       setQueue((q) => {
         const seen = new Set([
+          ...locallySeenRef.current,
           ...(world.tutorialSeen ?? []),
           ...q.map((t) => t.id),
           ...(active ? [active.id] : []),
@@ -68,5 +70,10 @@ export function useContextualTutorial(world: WorldState, enabled: boolean) {
     setQueue((q) => q.slice(1));
   }, []);
 
-  return { active, dismissActive };
+  const markSeen = useCallback((id: string) => {
+    locallySeenRef.current.add(id);
+    setQueue((q) => q.filter((t) => t.id !== id));
+  }, []);
+
+  return { active, dismissActive, markSeen };
 }

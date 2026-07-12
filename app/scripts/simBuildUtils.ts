@@ -21,7 +21,7 @@ export function findBuildSpot(
   cy: number,
   rotation: BuildingRotation = 0,
 ): [number, number] | null {
-  for (let ring = 0; ring < 16; ring++) {
+  for (let ring = 0; ring < 28; ring++) {
     const radius = 60 + ring * 36;
     const steps = 10 + ring * 2;
     for (let i = 0; i < steps; i++) {

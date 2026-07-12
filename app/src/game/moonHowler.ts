@@ -1,16 +1,105 @@
-import { EntityType, JobType } from './gameTypes';
-import type { Entity } from './gameTypes';
+import { BuildingType, EntityType, JobType } from './gameTypes';
+import type { Building, Entity, WorldState } from './gameTypes';
 import {
   DAYS_PER_MOON_CYCLE,
   HUMAN_ADULT_MIN_AGE,
   isFullMoonDay,
   isFullMoonNight,
+  NIGHT_END,
   NIGHT_START,
-  WORK_START,
 } from './dayCycle';
+import {
+  addFloatingText,
+  createDeathParticles,
+  impulseScreenShake,
+} from './simEffects';
+import { logEvent } from './eventLog';
+import {
+  WEREWOLF_ATTACK_LINES,
+  WEREWOLF_CURE_LINES,
+} from './gameTypes';
 
-/** Dawn exorcism roll after a full-moon hunt (7am, still in 🌝 form). */
-export const MOON_HOWLER_CHURCH_CURE_CHANCE = 0.18;
+/**
+ * Night exorcism — only if a Church is **staffed** (priest on duty).
+ * No church / unstaffed church → nothing stops the howler: they hunt all night
+ * and return next full moon still cursed.
+ *
+ * One roll, three mutually exclusive outcomes (weights sum to 1):
+ *   1. Cured + priest lives
+ *   2. Not cured + priest dies
+ *   3. Not cured + priest flees (lives)
+ *
+ * Failed cures (2 & 3) leave moonHowlerCursed = true → transforms again next full moon.
+ * Howler may still kill other settlers via wildlife AI while active.
+ */
+/** Base weights with 1 priest (sum = 1). */
+export const MOON_HOWLER_OUTCOME_CURE = 0.35;
+export const MOON_HOWLER_OUTCOME_KILL_PRIEST = 0.40;
+export const MOON_HOWLER_OUTCOME_FLEE = 0.25;
+
+/** Extra cure weight per priest beyond the first. */
+export const MOON_HOWLER_CURE_BONUS_PER_PRIEST = 0.12;
+/** Cap on cure weight even with many priests. */
+export const MOON_HOWLER_CURE_CHANCE_MAX = 0.78;
+
+/** @deprecated UI compat — base cure with 1 priest */
+export const MOON_HOWLER_CHURCH_CURE_CHANCE = MOON_HOWLER_OUTCOME_CURE;
+/** @deprecated UI compat — kill share among failures at base weights */
+export const MOON_HOWLER_PRIEST_KILL_CHANCE =
+  MOON_HOWLER_OUTCOME_KILL_PRIEST / (MOON_HOWLER_OUTCOME_KILL_PRIEST + MOON_HOWLER_OUTCOME_FLEE);
+
+/** How often (in-game hours / ticks) a priest may attempt while the night window is open. */
+export const MOON_HOWLER_EXORCISM_INTERVAL_HOURS = 2;
+
+export type MoonHowlerRiteOutcome = 'cured' | 'priest_killed' | 'priest_fled';
+
+export interface MoonHowlerRiteWeights {
+  cure: number;
+  killPriest: number;
+  flee: number;
+  priestCount: number;
+}
+
+/**
+ * More priests on duty (all staffed churches) → higher cure chance.
+ * Fail weight shrinks; kill-vs-flee ratio among failures stays the same.
+ */
+export function moonHowlerRiteWeights(priestCount: number): MoonHowlerRiteWeights {
+  const n = Math.max(0, Math.floor(priestCount));
+  if (n <= 0) {
+    return { cure: 0, killPriest: 0, flee: 0, priestCount: 0 };
+  }
+  const cure = Math.min(
+    MOON_HOWLER_CURE_CHANCE_MAX,
+    MOON_HOWLER_OUTCOME_CURE + (n - 1) * MOON_HOWLER_CURE_BONUS_PER_PRIEST,
+  );
+  const fail = Math.max(0, 1 - cure);
+  const failBase = MOON_HOWLER_OUTCOME_KILL_PRIEST + MOON_HOWLER_OUTCOME_FLEE;
+  const killPriest = fail * (MOON_HOWLER_OUTCOME_KILL_PRIEST / failBase);
+  const flee = fail * (MOON_HOWLER_OUTCOME_FLEE / failBase);
+  return { cure, killPriest, flee, priestCount: n };
+}
+
+/** Display helper — cure % for N priests (0 if none). */
+export function moonHowlerCureChanceForPriests(priestCount: number): number {
+  return moonHowlerRiteWeights(priestCount).cure;
+}
+
+/** Single weighted roll → one of the three rite outcomes. */
+export function rollMoonHowlerRiteOutcome(
+  rng: () => number = Math.random,
+  priestCount = 1,
+): MoonHowlerRiteOutcome {
+  const w = moonHowlerRiteWeights(priestCount);
+  if (w.priestCount <= 0) return 'priest_fled'; // should not roll without priests
+  const r = rng();
+  if (r < w.cure) return 'cured';
+  if (r < w.cure + w.killPriest) return 'priest_killed';
+  return 'priest_fled';
+}
+
+const HUMAN_FORM = { maxEnergy: 500, speed: 2.25, size: 10 };
+const WEREWOLF_FORM = { maxEnergy: 700, speed: 3.4, size: 14 };
 
 export function countActiveMoonHowlerCurses(entities: Entity[]): number {
   return entities.filter((e) => e.alive && e.moonHowlerCursed).length;
@@ -35,9 +124,6 @@ export function shouldApplyNewMoonHowlerCurse(
     && isFullMoonNight(colonyDay, hourOfDay)
   );
 }
-
-const HUMAN_FORM = { maxEnergy: 500, speed: 2.25, size: 10 };
-const WEREWOLF_FORM = { maxEnergy: 700, speed: 3.4, size: 14 };
 
 export interface MoonHowlerSavedState {
   energy: number;
@@ -70,14 +156,25 @@ export function isMoonHowlerTransformTick(colonyDay: number, hourOfDay: number):
   return hourOfDay === NIGHT_START && isFullMoonDay(colonyDay);
 }
 
-/** 7am — cursed settlers revert to human until the next full moon (14 colony days). */
+/**
+ * 6am — hunt night ends; cursed settlers still in 🌝 form revert to human
+ * until the next full moon (curse may remain).
+ */
 export function isMoonHowlerRevertTick(hourOfDay: number): boolean {
-  return hourOfDay === WORK_START;
+  return hourOfDay === NIGHT_END;
 }
 
-/** 7am the morning after a full-moon hunt — priest may exorcise while still in 🌝 form. */
+/**
+ * Cure window: full-moon night only — from transform hour (20) through hours before 06:00.
+ * Not available at 7am work start (old bug).
+ */
+export function isMoonHowlerCureWindow(colonyDay: number, hourOfDay: number): boolean {
+  return isFullMoonNight(colonyDay, hourOfDay);
+}
+
+/** @deprecated Use isMoonHowlerCureWindow — kept name for call-site clarity in older comments. */
 export function isMoonHowlerCureTick(colonyDay: number, hourOfDay: number): boolean {
-  return hourOfDay === WORK_START && colonyDay > 0 && isFullMoonDay(colonyDay - 1);
+  return isMoonHowlerCureWindow(colonyDay, hourOfDay);
 }
 
 export function isMoonHowlerEligible(entity: Entity): boolean {
@@ -113,6 +210,43 @@ export function curseMoonHowler(human: Entity): void {
   human.flash = 10;
 }
 
+/** Push the howler out of buildings into the open night. */
+export function forceMoonHowlerOutside(
+  entity: Entity,
+  buildings: Building[],
+  mapWidth: number,
+  mapHeight: number,
+): void {
+  // Detach from workplace / residence / prison so AI doesn't commute home mid-hunt.
+  if (entity.homeBuildingId != null) {
+    const job = buildings.find((b) => b.id === entity.homeBuildingId);
+    if (job) job.occupants = job.occupants.filter((id) => id !== entity.id);
+    entity.homeBuildingId = undefined;
+  }
+  if (entity.residenceBuildingId != null) {
+    const home = buildings.find((b) => b.id === entity.residenceBuildingId);
+    if (home) home.occupants = home.occupants.filter((id) => id !== entity.id);
+    // Keep id in moonHowlerSaved for morning restore; clear active residence so they don't path home.
+    entity.residenceBuildingId = undefined;
+  }
+  if (entity.prisonBuildingId != null) {
+    const prison = buildings.find((b) => b.id === entity.prisonBuildingId);
+    if (prison) prison.occupants = prison.occupants.filter((id) => id !== entity.id);
+    entity.prisonBuildingId = undefined;
+    entity.prisonerUntilTick = undefined;
+    entity.prisonSentenceCrime = undefined;
+  }
+
+  // Nudge away from map center-ish open ground (small random walk from current pos).
+  const angle = Math.random() * Math.PI * 2;
+  const dist = 40 + Math.random() * 50;
+  entity.x = Math.max(24, Math.min(mapWidth - 24, entity.x + Math.cos(angle) * dist));
+  entity.y = Math.max(24, Math.min(mapHeight - 24, entity.y + Math.sin(angle) * dist));
+  entity.vx = Math.cos(angle) * 1.2;
+  entity.vy = Math.sin(angle) * 1.2;
+  entity.spriteAngle = angle;
+}
+
 export function transformToWerewolfForm(human: Entity): void {
   const cfg = WEREWOLF_FORM;
   human.moonHowlerSaved = {
@@ -146,6 +280,9 @@ export function transformToWerewolfForm(human: Entity): void {
   human.speed = cfg.speed;
   human.size = cfg.size;
   human.flash = 12;
+  // Do not path home during the hunt
+  human.homeBuildingId = undefined;
+  human.residenceBuildingId = undefined;
 }
 
 export function revertToHumanForm(were: Entity): void {
@@ -191,32 +328,266 @@ export function finalizeMoonHowlerDeath(entity: Entity): void {
 
 export interface MoonHowlerCureAttempt {
   cured: Entity[];
+  /** Priests slain when the exorcism failed. */
+  priestsKilled: Entity[];
+  /** Priest left the church for the rite (even if outcome pending/fail without death). */
+  priestsDeployed: Entity[];
+  attempted: boolean;
+  /** Why no rite ran — useful for UI/debug. */
+  skippedReason?: 'not_full_moon_night' | 'no_howler' | 'no_staffed_church' | 'rate_limited' | 'no_priest';
+  /** Which of the three RNG outcomes landed (only if attempted). */
+  outcome?: MoonHowlerRiteOutcome;
+  /** Priests on duty this attempt (scales cure odds). */
+  priestCount?: number;
+  /** Cure weight used for the roll (0–1). */
+  cureChance?: number;
+}
+
+function findStaffedChurches(buildings: Building[]): Building[] {
+  return buildings.filter(
+    (b) =>
+      b.completed
+      && b.type === BuildingType.Church
+      && b.faction !== 'rival'
+      && b.occupants.length > 0,
+  );
+}
+
+function isEligiblePriest(e: Entity | undefined): e is Entity {
+  return !!e
+    && e.alive
+    && e.type === EntityType.Human
+    && !e.faction
+    && !e.moonHowlerCursed;
+}
+
+function pickPriest(
+  church: Building,
+  entityById: Map<number, Entity>,
+): Entity | null {
+  for (const id of church.occupants) {
+    const e = entityById.get(id);
+    if (isEligiblePriest(e)) return e;
+  }
+  return null;
+}
+
+/** Living eligible priests on all staffed churches (village-wide count). */
+export function countStaffedPriests(
+  buildings: Building[],
+  entityById: Map<number, Entity>,
+): number {
+  let n = 0;
+  for (const church of findStaffedChurches(buildings)) {
+    for (const id of church.occupants) {
+      if (isEligiblePriest(entityById.get(id))) n++;
+    }
+  }
+  return n;
+}
+
+function humanDisplayName(entity: Entity): string {
+  if (entity.name) {
+    return entity.surname ? `${entity.name} ${entity.surname}` : entity.name;
+  }
+  return 'A settler';
 }
 
 /**
- * Staffed Church can break the curse at dawn after a full-moon hunt while the
- * settler is still in Moon Howler (werewolf) form — village-wide, no proximity.
+ * Full-moon night (20:00–06:00) only.
+ *
+ * **No staffed Church → no attempt.** Howler is not stopped: keeps hunting
+ * settlers/wildlife and stays cursed for the next full moon.
+ *
+ * With a staffed Church: one weighted RNG outcome (see rollMoonHowlerRiteOutcome).
+ * Outcomes 2 & 3 never call cureMoonHowler — curse persists.
  */
 export function tryMoonHowlerChurchCures(
+  state: WorldState,
   entities: Entity[],
+  buildings: Building[],
   colonyDay: number,
   hourOfDay: number,
-  churchStaffed: boolean,
+  entityById: Map<number, Entity>,
   rng: () => number = Math.random,
 ): MoonHowlerCureAttempt {
-  if (!churchStaffed || !isMoonHowlerCureTick(colonyDay, hourOfDay)) {
-    return { cured: [] };
+  const empty = (
+    skippedReason: NonNullable<MoonHowlerCureAttempt['skippedReason']>,
+  ): MoonHowlerCureAttempt => ({
+    cured: [],
+    priestsKilled: [],
+    priestsDeployed: [],
+    attempted: false,
+    skippedReason,
+  });
+
+  if (!isMoonHowlerCureWindow(colonyDay, hourOfDay)) {
+    return empty('not_full_moon_night');
   }
 
-  const cured: Entity[] = [];
-  for (const entity of entities) {
-    if (!isActiveMoonHowler(entity)) continue;
-    if (rng() < MOON_HOWLER_CHURCH_CURE_CHANCE) {
-      cureMoonHowler(entity);
-      cured.push(entity);
-    }
+  const howlers = entities.filter(isActiveMoonHowler);
+  if (howlers.length === 0) return empty('no_howler');
+
+  // No staffed church ⇒ howler is not opposed tonight.
+  const churches = findStaffedChurches(buildings);
+  if (churches.length === 0) return empty('no_staffed_church');
+
+  const priestCount = countStaffedPriests(buildings, entityById);
+  if (priestCount <= 0) return empty('no_priest');
+
+  const last = state.lastMoonHowlerExorcismTick ?? -9999;
+  if (state.tick - last < MOON_HOWLER_EXORCISM_INTERVAL_HOURS) {
+    return empty('rate_limited');
   }
-  return { cured };
+
+  const howler = howlers[Math.floor(rng() * howlers.length)]!;
+  const church = churches[Math.floor(rng() * churches.length)]!;
+  const priest = pickPriest(church, entityById);
+  if (!priest) return empty('no_priest');
+
+  const weights = moonHowlerRiteWeights(priestCount);
+  state.lastMoonHowlerExorcismTick = state.tick;
+
+  // Priest leaves the church and approaches the howler.
+  church.occupants = church.occupants.filter((id) => id !== priest.id);
+  if (priest.homeBuildingId === church.id) {
+    priest.homeBuildingId = undefined;
+  }
+  const approachAngle = Math.atan2(howler.y - church.y, howler.x - church.x);
+  priest.x = howler.x - Math.cos(approachAngle) * 28;
+  priest.y = howler.y - Math.sin(approachAngle) * 28;
+  priest.vx = 0;
+  priest.vy = 0;
+  priest.spriteAngle = approachAngle;
+  priest.flash = 6;
+
+  howler.x = Math.max(24, Math.min(state.width - 24, howler.x));
+  howler.y = Math.max(24, Math.min(state.height - 24, howler.y));
+  howler.spriteAngle = approachAngle + Math.PI;
+  howler.combatTicks = Math.max(howler.combatTicks ?? 0, 8);
+
+  const result: MoonHowlerCureAttempt = {
+    cured: [],
+    priestsKilled: [],
+    priestsDeployed: [priest],
+    attempted: true,
+    priestCount,
+    cureChance: weights.cure,
+  };
+
+  const priestName = humanDisplayName(priest);
+  const howlerName = humanDisplayName(howler);
+  const curePct = Math.round(weights.cure * 100);
+
+  addFloatingText(state, priest.x, priest.y - 18, 'Exorcism!', '#a5b4fc', 'brief');
+  if (priestCount > 1) {
+    addFloatingText(
+      state,
+      church.x + church.width / 2,
+      church.y - 12,
+      `${priestCount} priests · ${curePct}%`,
+      '#a5b4fc',
+      'brief',
+    );
+  }
+  logEvent(
+    state,
+    'event',
+    `${priestName} left the Church to confront Moon Howler ${howlerName}`
+      + (priestCount > 1
+        ? ` (${priestCount} priests on duty — ${curePct}% cure chance)`
+        : ''),
+    priestName,
+  );
+
+  const outcome = rollMoonHowlerRiteOutcome(rng, priestCount);
+  result.outcome = outcome;
+
+  // ── 1) Cured + priest lives ─────────────────────────────────
+  if (outcome === 'cured') {
+    cureMoonHowler(howler);
+    result.cured.push(howler);
+    const line = WEREWOLF_CURE_LINES[Math.floor(rng() * WEREWOLF_CURE_LINES.length)]!;
+    addFloatingText(state, howler.x, howler.y - 22, 'Cured!', '#22c55e', 'emphasis');
+    addFloatingText(state, priest.x, priest.y - 28, 'Amen', '#c4b5fd', 'brief');
+    logEvent(state, 'event', `${howlerName} — ${line}`, howlerName);
+    logEvent(state, 'event', `${priestName} survived the rite and returned to the Church`, priestName);
+    priest.x = church.x + church.width / 2;
+    priest.y = church.y + church.height * 0.9;
+    if (!church.occupants.includes(priest.id)) church.occupants.push(priest.id);
+    priest.homeBuildingId = church.id;
+    priest.job = JobType.Priest;
+    priest.occupation = 'priest';
+    return result;
+  }
+
+  // Failed cures: howler STAYS cursed (moonHowlerCursed untouched) → next full moon again.
+  // Howler remains free to hunt other settlers the rest of the night via wildlife AI.
+
+  // ── 2) Not cured + priest dies ──────────────────────────────
+  if (outcome === 'priest_killed') {
+    const attack = WEREWOLF_ATTACK_LINES[Math.floor(rng() * WEREWOLF_ATTACK_LINES.length)]!(
+      howlerName,
+      priestName,
+    );
+    priest.alive = false;
+    entityById.delete(priest.id);
+    for (const b of buildings) {
+      if (b.occupants.includes(priest.id)) {
+        b.occupants = b.occupants.filter((id) => id !== priest.id);
+      }
+    }
+    priest.homeBuildingId = undefined;
+    priest.residenceBuildingId = undefined;
+    priest.prisonBuildingId = undefined;
+    if (priest.partnerId != null) {
+      const spouse = entityById.get(priest.partnerId);
+      if (spouse?.alive && spouse.partnerId === priest.id) {
+        spouse.partnerId = undefined;
+        spouse.relationshipStatus = spouse.pregnant ? 'expecting' : 'single';
+      }
+      priest.partnerId = undefined;
+    }
+    createDeathParticles(state, priest.x, priest.y, '#8B0000', 10);
+    impulseScreenShake(state, 5);
+    howler.energy = Math.min(howler.maxEnergy, howler.energy + 120);
+    howler.combatTicks = 12;
+    howler.flash = 10;
+    // Explicit: curse remains
+    howler.moonHowlerCursed = true;
+    result.priestsKilled.push(priest);
+    addFloatingText(state, howler.x, howler.y - 20, 'Devoured!', '#ef4444', 'emphasis');
+    addFloatingText(state, howler.x, howler.y - 34, 'Still cursed', '#c4b5fd', 'brief');
+    logEvent(state, 'death', attack, priestName);
+    logEvent(
+      state,
+      'combat',
+      `Moon Howler ${howlerName} killed priest ${priestName} — curse unbroken; will hunt again next full moon`,
+      howlerName,
+    );
+    return result;
+  }
+
+  // ── 3) Not cured + priest flees (lives) ─────────────────────
+  priest.x = church.x + church.width / 2 + (rng() - 0.5) * 10;
+  priest.y = church.y + church.height * 0.95;
+  if (!church.occupants.includes(priest.id)) church.occupants.push(priest.id);
+  priest.homeBuildingId = church.id;
+  priest.job = JobType.Priest;
+  priest.occupation = 'priest';
+  priest.flash = 8;
+  howler.moonHowlerCursed = true;
+  howler.flash = 8;
+  addFloatingText(state, priest.x, priest.y - 18, 'Fled!', '#fca5a5', 'brief');
+  addFloatingText(state, howler.x, howler.y - 18, 'AWOO!', '#c4b5fd', 'brief');
+  addFloatingText(state, howler.x, howler.y - 32, 'Still cursed', '#c4b5fd', 'brief');
+  logEvent(
+    state,
+    'event',
+    `${priestName} failed to break ${howlerName}'s curse and fled to the Church — howler remains cursed for the next full moon`,
+    priestName,
+  );
+  return result;
 }
 
 /** Convert legacy permanent werewolf saves into cursed villagers. */
@@ -250,6 +621,9 @@ export function syncMoonHowlerForms(
   entities: Entity[],
   colonyDay: number,
   hourOfDay: number,
+  buildings?: Building[],
+  mapWidth = 1200,
+  mapHeight = 900,
 ): MoonHowlerSyncResult {
   const transformTick = isMoonHowlerTransformTick(colonyDay, hourOfDay);
   const revertTick = isMoonHowlerRevertTick(hourOfDay);
@@ -261,6 +635,9 @@ export function syncMoonHowlerForms(
 
     if (transformTick && entity.type === EntityType.Human) {
       transformToWerewolfForm(entity);
+      if (buildings) {
+        forceMoonHowlerOutside(entity, buildings, mapWidth, mapHeight);
+      }
       transformed.push(entity);
     } else if (revertTick && entity.type === EntityType.Werewolf) {
       revertToHumanForm(entity);

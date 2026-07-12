@@ -1,5 +1,4 @@
 import { soundDirector } from './director';
-import { introMusic } from './introMusic';
 import { audioGraph } from './graph';
 import { preloadAllSamples } from './sampleLoader';
 
@@ -17,8 +16,7 @@ export function bootstrapIntroAudio(): void {
     void soundDirector.ensureIntroAudio();
   };
 
-  // Same tick + next frame — catches navigation click activation before it expires.
-  void introMusic.tryAutoplay();
+  // Route through director so gameplay sessions never restart intro on gesture.
   attempt();
   requestAnimationFrame(attempt);
 

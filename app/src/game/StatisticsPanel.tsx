@@ -9,7 +9,7 @@ interface Props {
 function MiniBar({ value, max, color, label }: { value: number; max: number; color: string; label: string }) {
   const pct = max > 0 ? (value / max) * 100 : 0;
   return (
-    <div className="flex items-center gap-2 text-[10px]">
+    <div className="flex items-center gap-2 text-[11px]">
       <span className="w-16 shrink-0 truncate text-right text-stone-400">{label}</span>
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-stone-700">
         <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: color }} />
@@ -36,7 +36,7 @@ function arrayMin(values: number[], ceiling = 0): number {
 }
 
 function MiniLineChart({ data, color, height = 40 }: { data: number[]; color: string; height?: number }) {
-  if (data.length < 2) return <div className="text-[9px] text-stone-500">Not enough data</div>;
+  if (data.length < 2) return <div className="text-[11px] text-stone-500">Not enough data</div>;
   const max = arrayMax(data, 1);
   const min = arrayMin(data, 0);
   const range = max - min || 1;
@@ -68,7 +68,7 @@ export default function StatisticsPanel({ state }: Props) {
 
   if (stats.length === 0) {
     return (
-      <div className="flex h-40 items-center justify-center text-[10px] text-stone-500">
+      <div className="flex h-40 items-center justify-center text-[11px] text-stone-500">
         <div className="text-center">
           <span className="mb-2 block text-2xl">📊</span>
           <p>Statistics will appear after the first year.</p>
@@ -86,10 +86,10 @@ export default function StatisticsPanel({ state }: Props) {
   const maxPop = arrayMax(humanHistory, 1);
 
   return (
-    <div className="space-y-3 text-[10px] text-stone-300">
+    <div className="space-y-3 text-[11px] text-stone-300">
       {/* Current Population Overview */}
       <div className="rounded-xl bg-stone-700/50 p-3">
-        <h3 className="mb-2 text-xs font-bold text-emerald-300">📊 Population Overview</h3>
+        <h3 className="mb-2 text-sm font-bold text-emerald-300">📊 Population Overview</h3>
         <div className="space-y-1">
           <MiniBar value={latest.population.humans} max={maxPop} color="#fbbf24" label="👤 Humans" />
           <MiniBar value={latest.population.rabbits} max={maxPop * 2} color="#c4875a" label="🐰 Rabbits" />
@@ -104,10 +104,10 @@ export default function StatisticsPanel({ state }: Props) {
       <div className="rounded-xl bg-stone-700/50 p-3">
         <div className="mb-1.5 flex items-center justify-between">
           <h3 className="text-xs font-bold text-amber-300">👤 Human Population</h3>
-          <span className="text-[9px] font-mono text-stone-500">Peak: {arrayMax(humanHistory, 0).toLocaleString()}</span>
+          <span className="text-[11px] font-mono text-stone-500">Peak: {arrayMax(humanHistory, 0).toLocaleString()}</span>
         </div>
         <MiniLineChart data={humanHistory} color="#fbbf24" />
-        <div className="mt-1 flex justify-between text-[9px] tabular-nums text-stone-500">
+        <div className="mt-1 flex justify-between text-[11px] tabular-nums text-stone-500">
           <span>Y{stats[0].year}</span>
           <span>Y{latest.year}</span>
         </div>
@@ -117,10 +117,10 @@ export default function StatisticsPanel({ state }: Props) {
       <div className="rounded-xl bg-stone-700/50 p-3">
         <div className="mb-1.5 flex items-center justify-between">
           <h3 className="text-xs font-bold text-emerald-300">🌍 Ecosystem Health</h3>
-          <span className="text-[9px] font-mono text-stone-500">{Math.round(latest.ecosystem.health)}%</span>
+          <span className="text-[11px] font-mono text-stone-500">{Math.round(latest.ecosystem.health)}%</span>
         </div>
         <MiniLineChart data={ecoHistory} color="#22c55e" />
-        <div className="mt-1 flex justify-between text-[9px] tabular-nums text-stone-500">
+        <div className="mt-1 flex justify-between text-[11px] tabular-nums text-stone-500">
           <span>Y{stats[0].year}</span>
           <span>Y{latest.year}</span>
         </div>
@@ -130,10 +130,10 @@ export default function StatisticsPanel({ state }: Props) {
       <div className="rounded-xl bg-stone-700/50 p-3">
         <div className="mb-1.5 flex items-center justify-between">
           <h3 className="text-xs font-bold text-rose-300">🏭 Pollution Level</h3>
-          <span className="text-[9px] font-mono text-stone-500">{Math.round(latest.ecosystem.pollution)}%</span>
+          <span className="text-[11px] font-mono text-stone-500">{Math.round(latest.ecosystem.pollution)}%</span>
         </div>
         <MiniLineChart data={pollutionHistory} color="#ef4444" />
-        <div className="mt-1 flex justify-between text-[9px] tabular-nums text-stone-500">
+        <div className="mt-1 flex justify-between text-[11px] tabular-nums text-stone-500">
           <span>Y{stats[0].year}</span>
           <span>Y{latest.year}</span>
         </div>
@@ -141,7 +141,7 @@ export default function StatisticsPanel({ state }: Props) {
 
       {/* Lifetime Stats */}
       <div className="rounded-xl bg-stone-700/50 p-3">
-        <h3 className="mb-2 text-xs font-bold text-cyan-300">📈 Lifetime Records</h3>
+        <h3 className="mb-2 text-sm font-bold text-cyan-300">📈 Lifetime Records</h3>
         <div className="grid grid-cols-2 gap-1.5">
           <StatBox label="Humans Born" value={ls.totalHumansBorn} icon="👶" color="text-pink-400" />
           <StatBox label="Humans Died" value={ls.totalHumansDied} icon="⚰️" color="text-stone-400" />
@@ -180,7 +180,7 @@ export default function StatisticsPanel({ state }: Props) {
 
       {/* Resources History */}
       <div className="rounded-xl bg-stone-700/50 p-3">
-        <h3 className="mb-2 text-xs font-bold text-stone-300">📦 Current Resources</h3>
+        <h3 className="mb-2 text-sm font-bold text-stone-300">📦 Current Resources</h3>
         <div className="grid grid-cols-2 gap-1.5">
           <StatBox label="Wood" value={latest.resources.wood} resource="wood" color="text-amber-500" />
           <StatBox label="Stone" value={latest.resources.stone} resource="stone" color="text-stone-400" />

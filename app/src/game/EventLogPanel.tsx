@@ -120,7 +120,7 @@ export default function EventLogPanel({ events, meta }: Props) {
 
   if (events.length === 0) {
     return (
-      <div className="flex h-40 items-center justify-center text-[10px] text-stone-500">
+      <div className="flex h-40 items-center justify-center text-[11px] text-stone-500">
         <div className="text-center">
           <span className="mb-2 block text-2xl">📜</span>
           <p>No events yet.</p>
@@ -149,7 +149,7 @@ export default function EventLogPanel({ events, meta }: Props) {
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 text-[9px] text-stone-500">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-stone-500">
         <span>
           {allFiltered.length > IN_GAME_LOG_LIMIT
             ? `Showing ${filtered.length} of ${allFiltered.length.toLocaleString()} ${filter === 'all' ? '' : filter}`
@@ -188,7 +188,7 @@ export default function EventLogPanel({ events, meta }: Props) {
         </div>
       </div>
 
-      <label className="flex cursor-pointer items-start gap-2 text-[9px] text-stone-500">
+      <label className="flex cursor-pointer items-start gap-2 text-[11px] text-stone-500">
         <input
           type="checkbox"
           checked={exportOnSave}
@@ -204,7 +204,7 @@ export default function EventLogPanel({ events, meta }: Props) {
         {filtered.map((evt) => (
           <div
             key={evt.id}
-            className="flex items-start gap-1.5 rounded-lg bg-stone-800/40 px-2 py-1 text-[10px] transition-colors hover:bg-stone-700/60"
+            className="flex items-start gap-1.5 rounded-lg bg-stone-800/40 px-2 py-1 text-[11px] transition-colors hover:bg-stone-700/60"
           >
             <span className="mt-0.5 shrink-0 text-xs" title={evt.type}>
               {EVENT_ICONS[evt.type]}
@@ -220,7 +220,7 @@ export default function EventLogPanel({ events, meta }: Props) {
           </div>
         ))}
         {filtered.length === 0 && (
-          <p className="py-4 text-center text-[10px] text-stone-500">No events in this category.</p>
+          <p className="py-4 text-center text-[11px] text-stone-500">No events in this category.</p>
         )}
       </div>
 

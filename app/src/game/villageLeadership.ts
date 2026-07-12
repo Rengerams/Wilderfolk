@@ -12,11 +12,13 @@ export const VACANCY_ELECTION_DELAY_YEARS = 2;
 export const ELECTION_PARTY_DAYS = 3;
 export const ELECTION_PARTY_NAME = 'Election Revelry';
 
-const PHASE_TICKS = {
-  gathering: 12,
-  gossip: TICKS_PER_DAY,
-  tension: 12,
-} as const;
+function getPhaseTicks(phase: 'gathering' | 'gossip' | 'tension'): number {
+  switch (phase) {
+    case 'gathering': return 12;
+    case 'gossip': return TICKS_PER_DAY;
+    case 'tension': return 12;
+  }
+}
 
 export type LeadershipElectionReason = 'founding' | 'decennial' | 'succession';
 export type { ElectionCeremonyPhase, ElectionCeremonyState } from './gameTypes';
@@ -551,7 +553,7 @@ export function startElectionCeremony(
   const site = getElectionGatherSite(state);
   state.electionCeremony = {
     phase: 'gathering',
-    phaseTicksLeft: PHASE_TICKS.gathering,
+    phaseTicksLeft: getPhaseTicks('gathering'),
     gatherX: site.x,
     gatherY: site.y,
     reason,
@@ -608,10 +610,10 @@ function refreshCeremonyPendingLeader(state: WorldState, ceremony: ElectionCerem
 function advanceCeremonyPhase(state: WorldState, ceremony: ElectionCeremonyState): void {
   if (ceremony.phase === 'gathering') {
     ceremony.phase = 'gossip';
-    ceremony.phaseTicksLeft = PHASE_TICKS.gossip;
+    ceremony.phaseTicksLeft = getPhaseTicks('gossip');
   } else if (ceremony.phase === 'gossip') {
     ceremony.phase = 'tension';
-    ceremony.phaseTicksLeft = PHASE_TICKS.tension;
+    ceremony.phaseTicksLeft = getPhaseTicks('tension');
   } else if (ceremony.phase === 'tension') {
     ceremony.phase = 'reveal';
     ceremony.phaseTicksLeft = 1;

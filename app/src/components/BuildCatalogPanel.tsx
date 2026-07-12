@@ -5,6 +5,7 @@ import {
   BUILDING_CATEGORIES,
   categoryForBuildingType,
 } from '../game/buildCatalog';
+import Emoji from './Emoji';
 import ResourceCost from './ResourceCost';
 import { isRotatableBuildingType } from '../game/buildingRotation';
 
@@ -79,7 +80,7 @@ export default function BuildCatalogPanel({
                     : 'border-transparent text-stone-400 hover:border-stone-600 hover:bg-stone-800 hover:text-stone-200'
                 }`}
               >
-                <span className="text-base leading-none">{cat.icon}</span>
+                <Emoji className="text-base">{cat.icon}</Emoji>
               </button>
             );
           })}

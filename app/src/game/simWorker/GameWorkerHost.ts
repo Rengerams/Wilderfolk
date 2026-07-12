@@ -39,7 +39,15 @@ export type CommandResultHandler = (
 
 export type WorkerUiPatch = Pick<
   WorldState,
-  'bigNews' | 'floatingTexts' | 'autoSave' | 'nextFloatingTextId'
+  | 'bigNews'
+  | 'floatingTexts'
+  | 'autoSave'
+  | 'nextFloatingTextId'
+  | 'dismissedBigNewsIds'
+  | 'dismissedNotificationIds'
+  | 'dismissedActiveEventIds'
+  | 'activeEvent'
+  | 'tutorialSeen'
 >;
 
 /** Max ticks in flight — reserve one pool slot for the display buffer held on main. */
@@ -313,6 +321,11 @@ export class GameWorkerHost {
       floatingTexts: patch.floatingTexts,
       autoSave: patch.autoSave,
       nextFloatingTextId: patch.nextFloatingTextId,
+      dismissedBigNewsIds: patch.dismissedBigNewsIds,
+      dismissedNotificationIds: patch.dismissedNotificationIds,
+      dismissedActiveEventIds: patch.dismissedActiveEventIds,
+      activeEvent: patch.activeEvent,
+      tutorialSeen: patch.tutorialSeen,
     };
     this.worker.postMessage(msg);
   }

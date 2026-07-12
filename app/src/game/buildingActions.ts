@@ -23,7 +23,7 @@ import {
 } from './gameEngine';
 import { unindexAdjacency } from './adjacencyIndex';
 import { indexLivingEntity } from './entityIndex';
-import { isPlayerHuman } from './groupEvents';
+import { isPlayerHuman, playerHumanCount } from './groupEvents';
 import {
   assignMissingResidences,
   collectOwnHousehold,
@@ -62,6 +62,7 @@ import {
   type CornerRotation,
 } from './buildingRotation';
 import { createEntity, createBuilding } from './worldGen';
+import { getRandomSurname } from './nameLoader';
 import { logEvent } from './eventLog';
 import {
   isBuildingTechUnlocked,
@@ -485,6 +486,32 @@ export function removeResidentFromBuilding(
   return state;
 }
 
+/** Fill every open worker/builder slot on one building (one click). */
+export function fillBuildingWorkers(originalState: WorldState, buildingId: number, preferredHumanId?: number): WorldState {
+  let state = originalState;
+  const preview = state.buildings.find((b) => b.id === buildingId);
+  if (!preview || preview.faction === 'rival') return state;
+
+  const cap = BUILDING_CONFIGS[preview.type].maxOccupants;
+  let guard = 0;
+  while (guard++ < Math.max(cap * 3, 6)) {
+    const building = state.buildings.find((b) => b.id === buildingId);
+    if (!building || building.occupants.length >= cap) break;
+    const before = building.occupants.length;
+    state = assignIdleWorkerToBuilding(state, buildingId, preferredHumanId);
+    const afterBuilding = state.buildings.find((b) => b.id === buildingId);
+    if (!afterBuilding || afterBuilding.occupants.length <= before) break;
+    preferredHumanId = undefined;
+  }
+  return state;
+}
+
+export function autoStaffAllWorkers(originalState: WorldState): WorldState {
+  const state = structuredClone(originalState) as WorldState;
+  assignMissingWorkers(state.entities.filter(isPlayerHuman), state.buildings);
+  return state;
+}
+
 export function assignIdleWorkerToBuilding(originalState: WorldState, buildingId: number, preferredHumanId?: number): WorldState {
   const state = structuredClone(originalState) as WorldState;
   const building = state.buildings.find(b => b.id === buildingId);
@@ -733,7 +760,7 @@ export function recruitSettler(originalState: WorldState): WorldState {
   const costFood = 30;
   const costGold = 20;
 
-  if (state.humanPopulation >= state.maxHumanPopulation) {
+  if (playerHumanCount(state.entities) >= state.maxHumanPopulation) {
     addFloatingText(state, state.width / 2, state.height / 2, 'At max population!', '#ef4444');
     return state;
   }
@@ -750,9 +777,16 @@ export function recruitSettler(originalState: WorldState): WorldState {
   const home = state.buildings.find(b => b.type === BuildingType.House && b.completed);
   if (home) { spawnX = home.x + home.width / 2; spawnY = home.y + home.height / 2; }
 
-  const settler = createEntity(EntityType.Human, spawnX + (Math.random() - 0.5) * 40, spawnY + (Math.random() - 0.5) * 40, state.nextEntityId++, 250);
   const recruitAge = HUMAN_ADULT_MIN_AGE + Math.floor(Math.random() * 20);
-  setHumanBirthFromAge(settler, recruitAge, getColonyDay(state));
+  const settler = createEntity(
+    EntityType.Human,
+    spawnX + (Math.random() - 0.5) * 40,
+    spawnY + (Math.random() - 0.5) * 40,
+    state.nextEntityId++,
+    undefined,
+    false,
+    { ageYears: recruitAge, colonyDay: getColonyDay(state), surname: getRandomSurname() },
+  );
   settler.relationshipStatus = 'single';
   settler.partnerId = undefined;
   settler.courtshipProgress = 0;

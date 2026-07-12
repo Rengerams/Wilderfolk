@@ -23,14 +23,14 @@ function FeatureRow({ feature }: { feature: RoadmapFeature }) {
 
 export default function RoadmapPanel() {
   return (
-    <div className="space-y-3 text-[10px] text-stone-300">
+    <div className="space-y-3 text-[11px] text-stone-300">
       <div className="rounded-xl border border-indigo-700/40 bg-indigo-950/25 p-3">
-        <h3 className="mb-1 text-xs font-bold text-indigo-300">🗺️ Roadmap</h3>
-        <p className="text-[9px] text-stone-500">
+        <h3 className="mb-1 text-sm font-bold text-indigo-300">🗺️ Roadmap</h3>
+        <p className="text-[11px] text-stone-500">
           {GAME_PHASE} · playing v{GAME_VERSION} · next tag v{ROADMAP_TARGET_VERSION}
         </p>
         <p className="mt-2 leading-relaxed text-stone-400">{ROADMAP_NORTH_STAR}</p>
-        <p className="mt-2 text-[9px] text-stone-500">
+        <p className="mt-2 text-[11px] text-stone-500">
           🟢 done · 🟡 in progress · ⬜ open
         </p>
       </div>
@@ -40,11 +40,11 @@ export default function RoadmapPanel() {
           <h4 className="text-xs font-bold text-stone-200">
             v{v.version} — {v.theme}
           </h4>
-          <p className="mb-2 text-[9px] text-stone-500">
+          <p className="mb-2 text-[11px] text-stone-500">
             Shipped: {v.shipDate}
             {v.tagTarget ? ` · Tag target: ${v.tagTarget}` : ''}
           </p>
-          <table className="w-full border-collapse text-[10px]">
+          <table className="w-full border-collapse text-[11px]">
             <tbody>
               {v.features.map((feature) => (
                 <FeatureRow key={feature.label} feature={feature} />

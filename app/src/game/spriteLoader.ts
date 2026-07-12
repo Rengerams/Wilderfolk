@@ -80,6 +80,7 @@ export function preloadAllSprites(): Promise<void> {
     '/sprites/rabbit.png',
     '/sprites/deer.png',
     '/sprites/wolf.png',
+    '/sprites/hunterspot.png',
     '/sprites/fox.png',
     '/sprites/tree.png',
     '/sprites/grass.png',

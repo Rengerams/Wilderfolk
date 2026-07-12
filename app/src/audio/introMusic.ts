@@ -12,6 +12,7 @@ class IntroMusicPlayer {
   private htmlAudio: HTMLAudioElement | null = null;
   private fallbackTimeout: ReturnType<typeof setTimeout> | null = null;
   private fallbackSection = 0;
+  private startPromise: Promise<void> | null = null;
 
   get isRunning() {
     return this.running;
@@ -26,7 +27,7 @@ class IntroMusicPlayer {
     void playPromise
       .then(() => {
         this.running = true;
-        this.usingSamples = true;
+        this.usingSamples = false;
         this.usingHtmlAudio = true;
         audioGraph.setMusicBrightness(true);
       })
@@ -40,39 +41,46 @@ class IntroMusicPlayer {
   }
 
   async start() {
-    if (this.running || audioGraph.isMuted) return;
+    if (this.startPromise) return this.startPromise;
+    this.startPromise = (async () => {
+      if (this.running || audioGraph.isMuted) return;
 
-    if (!this.usingHtmlAudio) {
-      this.tryAutoplay();
-      if (this.running) return;
-    } else if (this.htmlAudio?.paused) {
-      try {
-        await this.htmlAudio.play();
+      if (!this.usingHtmlAudio) {
+        this.tryAutoplay();
+        if (this.running) return;
+      } else if (this.htmlAudio && !this.htmlAudio.paused) {
         return;
-      } catch {
-        /* fall through to Web Audio */
+      } else if (this.htmlAudio?.paused) {
+        try {
+          await this.htmlAudio.play();
+          this.running = true;
+          return;
+        } catch {
+          /* fall through to Web Audio */
+        }
       }
-    }
 
-    const unlocked = await audioGraph.unlock();
-    if (!unlocked) return;
+      const unlocked = await audioGraph.unlock();
+      if (!unlocked) return;
 
-    this.stopHtmlAudio();
-    this.running = true;
-    audioGraph.setMusicBrightness(true);
+      this.stopHtmlAudio();
+      this.running = true;
+      audioGraph.setMusicBrightness(true);
 
-    const ok = await musicPlayer.playLoop(TRACKS.intro, 'music', TRACK_VOLUMES.intro, 1.8);
-    if (ok) {
-      this.usingSamples = true;
+      const ok = await musicPlayer.playLoop(TRACKS.intro, 'music', TRACK_VOLUMES.intro, 1.8);
+      if (ok) {
+        this.usingSamples = true;
+        this.usingHtmlAudio = false;
+        return;
+      }
+
+      this.usingSamples = false;
       this.usingHtmlAudio = false;
-      return;
-    }
-
-    this.usingSamples = false;
-    this.usingHtmlAudio = false;
-    this.startProceduralFallback();
+      this.startProceduralFallback();
+    })();
+    await this.startPromise;
+    this.startPromise = null;
   }
-
   stop() {
     this.running = false;
     if (this.fallbackTimeout) {

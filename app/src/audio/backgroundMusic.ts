@@ -36,6 +36,7 @@ class BackgroundMusicPlayer {
   private isNight = false;
   private phraseIndex = 0;
   private timeout: ReturnType<typeof setTimeout> | null = null;
+  private ensurePromise: Promise<void> | null = null;
 
   get isRunning() {
     return this.running;
@@ -64,9 +65,17 @@ class BackgroundMusicPlayer {
 
   /** Start or recover gameplay music after unlock, unmute, or entering the map. */
   async ensurePlaying(): Promise<void> {
-    if (this.isAudible()) return;
-    if (this.running) this.stop();
-    await this.start();
+    if (this.ensurePromise) return this.ensurePromise;
+    this.ensurePromise = (async () => {
+      try {
+        if (this.isAudible()) return;
+        if (this.running) this.stop();
+        await this.start();
+      } finally {
+        this.ensurePromise = null;
+      }
+    })();
+    return this.ensurePromise;
   }
 
   private ensureHtmlAudio(url: string): HTMLAudioElement {

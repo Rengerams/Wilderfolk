@@ -49,10 +49,10 @@ export default function CollapsibleSection({
             )}
           </div>
           {subtitle && !open && (
-            <p className="truncate text-[9px] text-stone-500">{subtitle}</p>
+            <p className="truncate text-[11px] text-stone-500">{subtitle}</p>
           )}
         </div>
-        <span className={`shrink-0 text-[10px] text-stone-500 transition-transform ${open ? 'rotate-180' : ''}`}>
+        <span className={`shrink-0 text-[11px] text-stone-500 transition-transform ${open ? 'rotate-180' : ''}`}>
           ▾
         </span>
       </button>

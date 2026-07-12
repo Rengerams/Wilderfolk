@@ -54,6 +54,11 @@ export function isDialogueBankReady(): boolean {
   return bank !== null;
 }
 
+/** Install pre-serialized dialogue data (e.g. worker static JSON bundle). */
+export function installDialogueBankPayload(payload: DialogueBankFile): void {
+  indexDialogueBank(payload);
+}
+
 /** Load dialogue JSON on demand — keeps the main game chunk smaller in production builds. */
 export async function preloadDialogueBank(): Promise<void> {
   if (bank) return;
@@ -81,7 +86,8 @@ function requireBank(): DialogueBankFile {
 }
 
 export function getDialogueTrees(): readonly DialogueTree[] {
-  return requireBank().dialogue_trees;
+  if (!bank) return [];
+  return bank.dialogue_trees;
 }
 
 export function getDialogueCategories(): readonly DialogueCategory[] {

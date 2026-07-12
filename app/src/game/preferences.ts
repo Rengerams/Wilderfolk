@@ -2,6 +2,7 @@ const AUTOSAVE_KEY = 'wilderfolk-autosave';
 const TUTORIALS_ENABLED_KEY = 'wilderfolk-tutorials-enabled';
 const JUICE_EFFECTS_KEY = 'wilderfolk-juice-effects';
 const FIRST_NIGHT_WARNING_KEY = 'wilderfolk-first-night-warning-dismissed';
+const SHOW_SIM_TICK_KEY = 'wilderfolk-show-sim-tick';
 
 let cachedJuiceEffects: boolean | null = null;
 
@@ -62,5 +63,18 @@ export function saveFirstNightWarningDismissed(dismissed: boolean): void {
     } else {
       localStorage.removeItem(FIRST_NIGHT_WARNING_KEY);
     }
+  } catch { /* ignore */ }
+}
+
+export function loadShowSimTick(): boolean {
+  try {
+    return localStorage.getItem(SHOW_SIM_TICK_KEY) === '1';
+  } catch { /* ignore */ }
+  return false;
+}
+
+export function saveShowSimTick(enabled: boolean): void {
+  try {
+    localStorage.setItem(SHOW_SIM_TICK_KEY, enabled ? '1' : '0');
   } catch { /* ignore */ }
 }

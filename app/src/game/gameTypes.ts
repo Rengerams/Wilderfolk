@@ -65,6 +65,8 @@ export const BuildingType = {
   WallGate: 'wallGate',
   Watchtower: 'watchtower',
   Barracks: 'barracks',
+  /** Outdoor hunting post — staffed hunters harvest nearby wildlife. */
+  HuntingSpot: 'huntingSpot',
 } as const;
 export type BuildingType = (typeof BuildingType)[keyof typeof BuildingType];
 
@@ -140,7 +142,6 @@ export const JOB_LABELS: Record<JobType, string> = {
 export const BUILDING_JOB_TYPES: Partial<Record<BuildingType, JobType>> = {
   [BuildingType.Farm]: JobType.Farmer,
   [BuildingType.Greenhouse]: JobType.Farmer,
-
   [BuildingType.LumberMill]: JobType.Lumberjack,
   [BuildingType.Quarry]: JobType.Miner,
   [BuildingType.Mine]: JobType.Miner,
@@ -154,6 +155,7 @@ export const BUILDING_JOB_TYPES: Partial<Record<BuildingType, JobType>> = {
   [BuildingType.Church]: JobType.Priest,
   [BuildingType.Prison]: JobType.Guard,
   [BuildingType.Barracks]: JobType.Guard,
+  [BuildingType.HuntingSpot]: JobType.Hunter,
 };
 
 export interface Entity {
@@ -467,7 +469,11 @@ export interface Resources {
   gold: number;
 }
 
-export interface PopulationHistoryPoint {
+/**
+ * One sample in `WorldState.populationHistory` (stats layer / charts).
+ * Older saves may only have the core population fields — treat newer keys as optional when reading.
+ */
+export interface PopulationHistoryEntry {
   tick: number;
   year: number;
   grass: number;
@@ -479,7 +485,20 @@ export interface PopulationHistoryPoint {
   werewolves: number;
   wildkin: number;
   buildings: number;
+  /** Calendar day in year (0–359). Added with stats-layer expansion. */
+  day?: number;
+  season?: Season;
+  gold?: number;
+  food?: number;
+  wood?: number;
+  stone?: number;
+  pollution?: number;
+  ecosystemHealth?: number;
+  biodiversity?: number;
 }
+
+/** @deprecated Prefer PopulationHistoryEntry (same shape, richer optional fields). */
+export type PopulationHistoryPoint = PopulationHistoryEntry;
 
 /** Denormalized wildlife counts — updated each tick for UI without scanning entities. */
 export interface WildlifeCounts {
@@ -568,6 +587,21 @@ export interface ElectionCeremonyState {
   pendingChanged: boolean;
 }
 
+/** Bow/arrow hunt FX — transient, not required in saves. */
+export interface HuntVisual {
+  id: string;
+  hunterId: number;
+  preyType: EntityType;
+  fromX: number;
+  fromY: number;
+  toX: number;
+  toY: number;
+  startedAtTick: number;
+  startedAtMs: number;
+  success: boolean;
+  foughtBack: boolean;
+}
+
 /** Pure simulation state — no camera, selection, or UI presentation fields. */
 export interface WorldState {
   entities: Entity[];
@@ -578,7 +612,7 @@ export interface WorldState {
   season: Season;
   year: number;
   dayInYear: number;
-  populationHistory: PopulationHistoryPoint[];
+  populationHistory: PopulationHistoryEntry[];
   width: number;
   height: number;
   nextEntityId: number;
@@ -595,6 +629,10 @@ export interface WorldState {
   maxHumanPopulation: number;
   /** ⚠️ Denormalized — must stay in sync with `entities` each tick. */
   wildlifeCounts: WildlifeCounts;
+  /** ⚠️ Denormalized — must stay in sync with `entities` each tick. */
+  workingSettlers: number;
+  /** ⚠️ Denormalized — must stay in sync with `entities` each tick. */
+  idleSettlers: number;
   villageName: string;
   villageReputation: number;
   resources: Resources;
@@ -665,6 +703,19 @@ export interface WorldState {
   tutorialSeen?: string[];
   /** Colony day of last wildlife replenish event-log entry (throttles meadow spam). */
   lastWildlifeReplenishLogDay?: number;
+  /** Player-dismissed big-news ids (UI patch / worker sync). */
+  dismissedBigNewsIds?: string[];
+  /** Player-dismissed active-event ids (UI patch / worker sync). */
+  dismissedActiveEventIds?: string[];
+  /** Player-dismissed notification ids (UI patch / worker sync). */
+  dismissedNotificationIds?: string[];
+  /** Active hunt VFX — transient, not required in saves. */
+  huntVisuals?: HuntVisual[];
+  /**
+   * Last sim tick a priest attempted a full-moon exorcism (rate-limit).
+   * Transient — not required in saves.
+   */
+  lastMoonHowlerExorcismTick?: number;
   /** Ephemeral predator scent field — rebuilt each session, not saved. */
   scentGrid?: import('./scentGrid').ScentGrid;
   /** Alive entities by type — rebuilt each sim tick for render/UI; not saved. */
@@ -892,7 +943,7 @@ export const BUILDING_CONFIGS: Record<BuildingType, BuildingConfig> = {
     width: 50, height: 56,
     cost: { wood: 45, stone: 35, gold: 20 },
     buildTime: 4, maxOccupants: 1,
-    emoji: '⛪', label: 'Church', description: 'Staffed church boosts courtship, may break Moon Howler curses at dawn after full-moon hunts, and catches affairs.',
+    emoji: '⛪', label: 'Church', description: 'Staffed church boosts courtship and morals. Full-moon nights: priests may confront a Moon Howler — more priests raise cure odds; no priest means the howler is not stopped.',
     sprite: '/sprites/church.png', backgroundColor: '#4f46e5', padShape: 'round',
   },
   [BuildingType.Well]: {
@@ -971,6 +1022,13 @@ export const BUILDING_CONFIGS: Record<BuildingType, BuildingConfig> = {
     emoji: '⚔️', label: 'Barracks', description: 'Staff Guards to patrol the village (+12 militia strength each).',
     sprite: '/sprites/barracks.png', backgroundColor: '#57534e', padShape: 'rect',
     unlockRequirement: 'defense_2',
+  },
+  [BuildingType.HuntingSpot]: {
+    width: 44, height: 40,
+    cost: { wood: 30, stone: 10, gold: 15 },
+    buildTime: 3, maxOccupants: 2,
+    emoji: '🏹', label: 'Hunting Spot', description: 'Staff hunters to harvest nearby wildlife for food. Wolves may fight back.',
+    sprite: '/sprites/rabbit.png', backgroundColor: '#854d0e', padShape: 'circle',
   },
 };
 
@@ -1068,13 +1126,15 @@ export interface WorldMap {
 }
 
 export const GRID_SIZE = 20;
+/** Terrain raster cell size in world units (see terrainGen / terrainLayer). */
+export const TERRAIN_TILE_SIZE = 10;
 export const GRID_SNAP = true;
 
 export function snapToGrid(value: number, gridSize: number = GRID_SIZE): number {
   return Math.round(value / gridSize) * gridSize;
 }
 
-export { GAME_VERSION, GAME_PHASE, GAME_TITLE, GAME_SUBTITLE } from './version';
+export { GAME_VERSION, GAME_PHASE, GAME_TITLE, GAME_SUBTITLE, ECOLOGICAL_FACTS } from './version';
 
 export const WEREWOLF_CURSE_LINES = [
   (name: string) => `${name} was touched by the full moon. They seem fine… for now.`,
@@ -1120,21 +1180,6 @@ export const WEREWOLF_BEFRIEND_LINES = [
 ] as const;
 
 export const WEREWOLF_TAME_LINES: readonly string[] = [...WEREWOLF_CURE_LINES];
-
-export const ECOLOGICAL_FACTS = [
-  'Apex predators like wolves help regulate prey populations and maintain ecosystem balance.',
-  'Biodiversity hotspots often contain species found nowhere else on Earth.',
-  'Grasslands store carbon in their deep root systems.',
-  'Keystone species have a disproportionate impact on their environment.',
-  'Habitat fragmentation can isolate populations and reduce genetic diversity.',
-  'Seasonal changes drive migration, reproduction, and food availability.',
-  'Wetlands act as natural water filters and flood protectors.',
-  'Beavers are ecosystem engineers that create habitats for hundreds of species.',
-  'Mycorrhizal fungi connect trees in a "wood wide web" of nutrient exchange.',
-  'Coral reefs support 25% of all marine species despite covering less than 1% of the ocean floor.',
-  'Moon Howlers are cursed villagers — human by day, deadly on full-moon nights about every 2 weeks.',
-  'Uncured Moon Howlers transform every 14 days; a staffed Church may exorcise them at dawn while still in 🌝 form (~18% roll, village-wide).',
-];
 
 export interface WeatherConfig {
   label: string;

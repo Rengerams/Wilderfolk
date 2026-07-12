@@ -96,6 +96,10 @@ def stats(im: Image.Image) -> str:
 
 
 def main() -> None:
+    import sys
+    if "--confirm" not in sys.argv:
+        print("Refusing to overwrite sprites without --confirm.", file=sys.stderr)
+        sys.exit(1)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print(f"Output: {OUT_DIR}\n")
     for src_name, out_name in INPUTS.items():

@@ -1,5 +1,5 @@
 import type { Entity } from './gameTypes';
-import { loadSprite, type SpriteFrame } from './spriteLoader';
+import { getSpriteFrame, loadSprite, type SpriteFrame } from './spriteLoader';
 
 export const HUMAN_WALK_FRAMES = 4;
 export const HUMAN_VARIANT_COUNT = 4;
@@ -221,38 +221,15 @@ export function getHumanVariantLabel(gender: HumanGender | undefined, variant: n
   return HUMAN_VARIANT_LABELS[g][v] ?? `Outfit ${v + 1}`;
 }
 
-const humanFrameCanvasCache = new Map<string, HTMLCanvasElement>();
-
 export function getHumanSpriteFrame(
   gender: HumanGender | undefined,
   variant: number,
-  frame: number,
+  _frame: number,
 ): SpriteFrame | null {
   if (!ready) return null;
   const g = gender ?? 'male';
   const v = normalizeVariant(variant);
-  const f = ((Math.floor(frame) % HUMAN_WALK_FRAMES) + HUMAN_WALK_FRAMES) % HUMAN_WALK_FRAMES;
-  const cacheKey = `${g}:${v}:${f}`;
-  let canvas = humanFrameCanvasCache.get(cacheKey);
-  if (!canvas) {
-    canvas = document.createElement('canvas');
-    canvas.width = PIONEER_FRAME_W;
-    canvas.height = PIONEER_FRAME_H;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.imageSmoothingEnabled = false;
-      drawPioneerFrame(ctx, f, g, paletteFor(g, v));
-    }
-    humanFrameCanvasCache.set(cacheKey, canvas);
-  }
-  return {
-    image: canvas,
-    sx: 0,
-    sy: 0,
-    sw: PIONEER_FRAME_W,
-    sh: PIONEER_FRAME_H,
-    anchorY: 1,
-  };
+  return getSpriteFrame(getHumanWalkSheetPath(g, v)) ?? getSpriteFrame(HUMAN_BASE_SPRITES[g]);
 }
 
 export function isHumanSpritesReady(): boolean {

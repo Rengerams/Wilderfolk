@@ -14,9 +14,9 @@ export async function readUtf8RelativeToModule(
     const fsSpec = 'node:fs';
     const pathSpec = 'node:path';
     const urlSpec = 'node:url';
-    const { readFileSync } = await import(fsSpec);
-    const { dirname, join } = await import(pathSpec);
-    const { fileURLToPath } = await import(urlSpec);
+    const { readFileSync } = await import(/* @vite-ignore */ fsSpec);
+    const { dirname, join } = await import(/* @vite-ignore */ pathSpec);
+    const { fileURLToPath } = await import(/* @vite-ignore */ urlSpec);
     const here = dirname(fileURLToPath(moduleUrl));
     return readFileSync(join(here, ...pathSegments), 'utf8');
   } catch {

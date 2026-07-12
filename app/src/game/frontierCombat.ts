@@ -79,7 +79,9 @@ export interface OutgoingRaidEvent {
 const RAID_RESPONSE_MIN_DAYS = 2;
 const RAID_RESPONSE_MAX_DAYS = 6;
 /** Legacy fixed window for saves/events missing `expiresAtTick`. */
-const RAID_EXPIRE_TICKS_LEGACY = 3 * TICKS_PER_DAY;
+function getRaidExpireTicksLegacy(): number {
+  return 3 * TICKS_PER_DAY;
+}
 const PIXELS_PER_TILE = 10;
 const RAID_FOOD_MIN = 22;
 const RAID_FOOD_MAX = 50;
@@ -118,7 +120,7 @@ export function getIncomingRaidExpireTicks(distancePixels: number): number {
 }
 
 export function getRaidExpiresAtTick(evt: RaidEvent): number {
-  return evt.expiresAtTick ?? evt.createdAtTick + RAID_EXPIRE_TICKS_LEGACY;
+  return evt.expiresAtTick ?? evt.createdAtTick + getRaidExpireTicksLegacy();
 }
 
 export function getRaidTicksRemaining(evt: RaidEvent, currentTick: number): number {

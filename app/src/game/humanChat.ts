@@ -58,6 +58,18 @@ export const DIALOGUE_LINE_CHAR_TICKS = 1.8;
 export const CHAT_BUBBLE_MAX_CHARS_PER_LINE = 38;
 export const CHAT_BUBBLE_MAX_LINES = 3;
 
+const DEFAULT_FALLBACK_LINES = ['Lovely weather.', 'Good to see friendly faces.', 'The village grows every season.'];
+
+const FALLBACK_CHAT_LINES: Partial<Record<HumanChatContext, string[]>> = {
+  social: DEFAULT_FALLBACK_LINES,
+  home: ['Home at last.', 'Pass the stew?', 'Quiet night in.'],
+  work: ['Back to it.', 'Tools need sharpening.', 'Steady hands today.'],
+  courtship: ['You have a kind smile.', 'Walk with me?', 'The stars are bright.'],
+  child: ['Tag, you\'re it!', 'Can we play outside?', 'Story time?'],
+  food: ['Stores are thin.', 'Who\'s cooking tonight?', 'We need more grain.'],
+  winter: ['Wood pile\'s low.', 'Frost on the roof.', 'Stay warm, friend.'],
+};
+
 interface DialogueSession {
   treeId: string;
   step: number;
@@ -326,7 +338,16 @@ export function maybeDialogueChat(
   if (Math.random() > chance) return;
 
   const tree = pickDialogueTree(context, entity.id, tick, options, options.avoidTreeId);
-  if (!tree) return;
+  if (!tree) {
+    const fallback = FALLBACK_CHAT_LINES[context] ?? DEFAULT_FALLBACK_LINES;
+    const phrase = fallback[(entity.id + tick) % fallback.length]!;
+    sayHumanChatPhrase(entity, phrase, CHAT_DEFAULT_DURATION_TICKS);
+    if (partner) {
+      const reply = fallback[(entity.id + tick + 1) % fallback.length]!;
+      sayHumanChatPhrase(partner, reply, CHAT_DEFAULT_DURATION_TICKS);
+    }
+    return;
+  }
   startDialogueTreeChat(entity, partner, tree, partner == null);
 }
 

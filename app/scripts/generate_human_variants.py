@@ -128,6 +128,13 @@ def generate_gender(
 
 
 def main() -> None:
+    import sys
+    if "--confirm" not in sys.argv:
+        print(
+            "Refusing to overwrite human variant PNGs without --confirm.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print("Generating male variants...")
     male_paths = generate_gender("male", "human_male.png", MALE_STYLES)

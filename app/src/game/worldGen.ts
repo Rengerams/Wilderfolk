@@ -411,6 +411,18 @@ export function replenishDepletedWildlife(state: WorldState): boolean {
   return true;
 }
 
+/** Ensure periodic immigrants/refugees never show as age 0 adults in the UI. */
+export function finalizeSettlerAge(entity: Entity, state: Pick<WorldState, 'year' | 'dayInYear' | 'tick'>): void {
+  const colonyDay = getColonyDay(state);
+  const targetAge = Math.max(
+    HUMAN_ADULT_MIN_AGE,
+    entity.age > 0 ? entity.age : HUMAN_ADULT_MIN_AGE + Math.floor(Math.random() * 20),
+  );
+  setHumanBirthFromAge(entity, targetAge, colonyDay);
+  entity.isJuvenile = false;
+  entity.generation = Math.max(entity.generation ?? 0, 2);
+}
+
 /** Player settler from immigration — may arrive as a expecting couple with father linked. */
 export function createImmigrantSettler(
   state: WorldState,
@@ -440,6 +452,8 @@ export function createImmigrantSettler(
     });
     husband.partnerId = wife.id;
     wife.relationshipStatus = 'married';
+    finalizeSettlerAge(husband, state);
+    finalizeSettlerAge(wife, state);
     return [husband, wife];
   }
 
@@ -449,6 +463,7 @@ export function createImmigrantSettler(
     surname: getRandomSurname(),
   });
   newcomer.relationshipStatus = 'single';
+  finalizeSettlerAge(newcomer, state);
   return [newcomer];
 }
 
@@ -475,6 +490,8 @@ export function initGame(options: InitGameOptions = {}): WorldState {
     bountifulHarvest: false,
     humanPopulation: 0, maxHumanPopulation: 8,
     wildlifeCounts: { grass: 0, rabbits: 0, deer: 0, wolves: 0, foxes: 0, werewolves: 0, wildkin: 0, trees: 0 },
+    workingSettlers: 0,
+    idleSettlers: 0,
     villageName: villageName || 'New Frontier',
     villageReputation: 10,
     resources: { wood: 220, stone: 70, food: 530, gold: 80 }, // balance v2.2 — +50 starting food
@@ -597,6 +614,11 @@ export function initGame(options: InitGameOptions = {}): WorldState {
   // Guaranteed friendly visitor in the first week: traders arrive at founding.
   if (state.visitorGroups.length === 0) {
     spawnVisitorGroup(state, state.entities, state.buildings, 'traders');
+    state.tutorialSeen = [...new Set([
+      ...(state.tutorialSeen ?? []),
+      'visitors_arrived',
+      'visitor_traders',
+    ])];
   }
 
   appointFoundingLeader(state, father);

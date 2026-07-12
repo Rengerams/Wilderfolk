@@ -24,8 +24,9 @@ export const BUILDING_CATEGORIES: BuildingCategoryDef[] = [
     label: 'Food',
     icon: '🌾',
     color: 'bg-green-500',
-    types: [BuildingType.Farm, BuildingType.Greenhouse, BuildingType.Barn, BuildingType.Silo, BuildingType.Mill],
+    types: [BuildingType.Farm, BuildingType.Greenhouse, BuildingType.Barn, BuildingType.Silo, BuildingType.Mill, BuildingType.HuntingSpot],
   },
+
   {
     id: 'resources',
     label: 'Resources',

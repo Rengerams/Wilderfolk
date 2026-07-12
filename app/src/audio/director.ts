@@ -4,10 +4,15 @@ import { audioGraph } from './graph';
 import { introMusic } from './introMusic';
 import type { VolumePreset } from './preferences';
 import { preloadAllSamples } from './sampleLoader';
+import { setGameplayAudioActive } from './session';
 
 /** Orchestrates intro, gameplay music, ambient layers, and mute state. */
 class SoundDirector {
   private gameplayActive = false;
+
+  isGameplayActive(): boolean {
+    return this.gameplayActive;
+  }
 
   async unlock(): Promise<boolean> {
     return audioGraph.unlock();
@@ -19,7 +24,7 @@ class SoundDirector {
 
   /** Unlock the audio context and start or resume intro music (safe to call repeatedly). */
   async ensureIntroAudio(): Promise<void> {
-    if (audioGraph.isMuted) return;
+    if (audioGraph.isMuted || this.gameplayActive) return;
     introMusic.tryAutoplay();
     await this.unlock();
     await preloadAllSamples();
@@ -31,11 +36,12 @@ class SoundDirector {
   }
 
   async beginGameplayAudio(): Promise<void> {
+    this.gameplayActive = true;
+    setGameplayAudioActive(true);
     introMusic.stop();
     audioGraph.primeUnlock();
     await this.unlock();
     await preloadAllSamples();
-    this.gameplayActive = true;
     await backgroundMusic.ensurePlaying();
     await ambientNature.ensurePlaying();
   }
@@ -46,6 +52,7 @@ class SoundDirector {
 
   stopAll() {
     this.gameplayActive = false;
+    setGameplayAudioActive(false);
     introMusic.stop();
     backgroundMusic.stop();
     ambientNature.stop();

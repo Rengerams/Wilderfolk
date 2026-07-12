@@ -42,17 +42,49 @@ function extractUiPatch(world: WorldState): WorkerUiPatch {
     floatingTexts: world.floatingTexts,
     autoSave: world.autoSave,
     nextFloatingTextId: world.nextFloatingTextId,
+    dismissedBigNewsIds: world.dismissedBigNewsIds ? [...world.dismissedBigNewsIds] : undefined,
+    dismissedNotificationIds: world.dismissedNotificationIds
+      ? [...world.dismissedNotificationIds]
+      : undefined,
+    dismissedActiveEventIds: world.dismissedActiveEventIds
+      ? [...world.dismissedActiveEventIds]
+      : undefined,
+    activeEvent: world.activeEvent,
+    tutorialSeen: world.tutorialSeen ? [...world.tutorialSeen] : undefined,
   };
+}
+
+function bigNewsPatchChanged(before: WorkerUiPatch['bigNews'], after: WorkerUiPatch['bigNews']): boolean {
+  if (before.length !== after.length) return true;
+  for (let i = 0; i < before.length; i++) {
+    if (before[i]?.id !== after[i]?.id) return true;
+    if (before[i]?.dismissed !== after[i]?.dismissed) return true;
+  }
+  return false;
+}
+
+function idsPatchChanged(before?: readonly string[], after?: readonly string[]): boolean {
+  const a = before ?? [];
+  const b = after ?? [];
+  if (a.length !== b.length) return true;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return true;
+  }
+  return false;
 }
 
 function uiPatchChanged(before: WorkerUiPatch, after: WorkerUiPatch): boolean {
   return (
     before.autoSave !== after.autoSave
     || before.nextFloatingTextId !== after.nextFloatingTextId
-    || before.bigNews.length !== after.bigNews.length
+    || bigNewsPatchChanged(before.bigNews, after.bigNews)
     || before.floatingTexts.length !== after.floatingTexts.length
-    || before.bigNews[before.bigNews.length - 1]?.id !== after.bigNews[after.bigNews.length - 1]?.id
     || before.floatingTexts[before.floatingTexts.length - 1]?.id !== after.floatingTexts[after.floatingTexts.length - 1]?.id
+    || idsPatchChanged(before.dismissedBigNewsIds, after.dismissedBigNewsIds)
+    || idsPatchChanged(before.dismissedNotificationIds, after.dismissedNotificationIds)
+    || idsPatchChanged(before.dismissedActiveEventIds, after.dismissedActiveEventIds)
+    || (before.activeEvent?.id ?? null) !== (after.activeEvent?.id ?? null)
+    || idsPatchChanged(before.tutorialSeen, after.tutorialSeen)
   );
 }
 
@@ -95,7 +127,16 @@ export class GameLoop {
       this.workerHost = new GameWorkerHost();
       const initGen = this.sessionGen;
       void this.workerHost.init(world).then(() => {
-        if (initGen !== this.sessionGen || !this.running || !this.workerHost) return;
+        if (initGen !== this.sessionGen || !this.running || !this.workerHost) {
+          // Stale boot (e.g. new game during init) — release lock so main-thread ticks can run.
+          this.workerBooting = false;
+          this.workerEnabled = false;
+          if (initGen !== this.sessionGen) {
+            this.workerHost?.dispose();
+            this.workerHost = null;
+          }
+          return;
+        }
         this.workerHost.importSave(this.world);
         this.workerEnabled = true;
         this.workerBooting = false;
@@ -110,6 +151,7 @@ export class GameLoop {
             patchCatalogKinematicsFromRenderSoA(this.catalog, render.reader);
           }
           this.view = syncScreenShakeFromWorld(this.view, this.world);
+          clearScreenShakeImpulse(this.world);
           this.workerTickChanged = changed;
         });
         this.workerHost.setCommandResultHandler((world, _delta, render) => {
@@ -441,11 +483,12 @@ export class GameLoop {
           tickChanged = true;
           this.workerTickChanged = false;
         }
-      } else if (!this.workerHost) {
+      } else if (!this.workerEnabled) {
         while (this.tickAccumulator >= msPerTick && steps < MAX_CATCHUP_STEPS) {
           gameTick(this.world, focus);
           this.catalog.rebuild(this.world.entities);
           this.view = syncScreenShakeFromWorld(this.view, this.world);
+          clearScreenShakeImpulse(this.world);
           this.tickAccumulator -= msPerTick;
           steps++;
           tickChanged = true;

@@ -52,6 +52,7 @@ export const CAMERA_ZOOM_MAX = 3;
 export const CAMERA_ZOOM_DEFAULT = 1.45;
 export const CAMERA_ZOOM_STEP_IN = 1.1;
 export const CAMERA_ZOOM_STEP_OUT = 0.9;
+export const CAMERA_ZOOM_PRESETS: number[] = [0.5, 0.75, 1, 1.25, 1.45, 1.75, 2, 2.5, 3];
 
 const BUILDING_TYPE_VALUES = new Set<string>(Object.values(BuildingTypeEnum));
 const CAMP_KEY_PATTERN = /^(rival|visitor):/;

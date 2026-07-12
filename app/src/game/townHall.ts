@@ -7,7 +7,9 @@ import { addResource } from './economy';
 import { logEvent } from './eventLog';
 import { getVillageLeader } from './villageLeadership';
 
-export const TOWN_HALL_FESTIVAL_COOLDOWN_TICKS = ticksForDays(50);
+export function getTownHallFestivalCooldownTicks(): number {
+  return ticksForDays(50);
+}
 export const TOWN_HALL_FESTIVAL_COST = { food: 25, gold: 20 };
 export const TOWN_HALL_FESTIVAL_DAYS = 14;
 
@@ -136,7 +138,7 @@ export function hostTownFestival(originalState: WorldState, buildingId: number):
   state.resources.gold -= TOWN_HALL_FESTIVAL_COST.gold;
   state.festival = { active: true, name: 'Town Hall Festival', daysLeft: TOWN_HALL_FESTIVAL_DAYS };
   state.villageReputation = Math.min(100, state.villageReputation + 6);
-  state.townHallFestivalCooldownUntilTick = state.tick + TOWN_HALL_FESTIVAL_COOLDOWN_TICKS;
+  state.townHallFestivalCooldownUntilTick = state.tick + getTownHallFestivalCooldownTicks();
   addNotification(
     state,
     'Town Festival',

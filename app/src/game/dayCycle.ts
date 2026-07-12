@@ -4,7 +4,7 @@ import { finalizeMoonHowlerDeath } from './moonHowler';
 
 /** 24 ticks = one in-game day. At 1× speed (~1 tick/s) a day lasts ~24 real seconds. */
 export const TICKS_PER_DAY = 24;
-export const DAYS_PER_YEAR = 365;
+export const DAYS_PER_YEAR = 360;
 /** Full moon hits every ~2 in-game weeks */
 export const DAYS_PER_MOON_CYCLE = 14;
 
@@ -37,9 +37,9 @@ export const HUMAN_ADULT_MIN_AGE = 16;
 export const HUMAN_MOVE_OUT_MIN_AGE = 18;
 
 /** Female fertility window. Fertility is 1.0 until peak end, then linearly declines to 0. */
-export const HUMAN_FERTILITY_START = 16;
+export const HUMAN_FERTILITY_START = 12;
 export const HUMAN_FERTILITY_PEAK_END = 35;
-export const HUMAN_FERTILITY_END = 40;
+export const HUMAN_FERTILITY_END = 50;
 
 export function getFemaleFertility(age: number): number {
   if (age < HUMAN_FERTILITY_START || age >= HUMAN_FERTILITY_END) return 0;
@@ -145,7 +145,7 @@ export const HUMAN_DAILY_PREGNANCY_CHANCE_HOME = 0.008;
 export const HUMAN_DAILY_PREGNANCY_CHANCE_NEAR = 0.003;
 export const HUMAN_DAILY_AFFAIR_PREGNANCY_CHANCE = 0.01;
 
-export const PREGNANCY_TICKS = ticksForDays(60);
+export const PREGNANCY_TICKS = ticksForDays(24);
 export const REPRODUCTION_COOLDOWN_TICKS = ticksForDays(150);
 
 /** Building output intervals tied to the day/night calendar. */
@@ -161,6 +161,7 @@ export const PRODUCTION_INTERVAL = {
   silo: ticksForDays(2),
   townHall: ticksForDays(3),
   hospital: ticksForDays(5),
+  huntingSpot: ticksForDays(1),
 } as const;
 
 export const IMMIGRATION_CHECK_TICKS = ticksForDays(2);

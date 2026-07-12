@@ -346,7 +346,7 @@ header, aside, .absolute {
 
 /* ============ Intro screen ============ */
 .intro-root {
-  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-family: 'Source Sans 3', system-ui, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', emoji;
 }
 
 .intro-title {

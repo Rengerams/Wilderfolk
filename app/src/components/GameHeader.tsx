@@ -1,3 +1,4 @@
+import Emoji from './Emoji';
 import GameMenu from './GameMenu';
 import ResourceBadge from './ResourceBadge';
 import type { WorldState } from '../game/gameTypes';
@@ -27,8 +28,10 @@ interface Props {
   muted: boolean;
   volumePreset: 'soft' | 'normal' | 'loud';
   hasSavedGame: boolean;
-  tutorialsEnabled: boolean;
+tutorialsEnabled: boolean;
   juiceEffectsEnabled: boolean;
+  /** Show raw sim tick (and absolute day) next to the clock. */
+  showSimTick: boolean;
   speedOptions: number[];
   onTogglePause: () => void;
   onSetSpeed: (speed: number) => void;
@@ -38,6 +41,7 @@ interface Props {
   onToggleAutoSave: () => void;
   onToggleTutorials: () => void;
   onToggleJuiceEffects: () => void;
+  onToggleShowSimTick: () => void;
   onToggleMute: () => void;
   onVolumePreset: (v: 'soft' | 'normal' | 'loud') => void;
   onOpenGuide: () => void;
@@ -55,8 +59,9 @@ export default function GameHeader({
   muted,
   volumePreset,
   hasSavedGame,
-  tutorialsEnabled,
+tutorialsEnabled,
   juiceEffectsEnabled,
+  showSimTick,
   speedOptions,
   onTogglePause,
   onSetSpeed,
@@ -66,6 +71,7 @@ export default function GameHeader({
   onToggleAutoSave,
   onToggleTutorials,
   onToggleJuiceEffects,
+  onToggleShowSimTick,
   onToggleMute,
   onVolumePreset,
   onOpenGuide,
@@ -78,6 +84,7 @@ export default function GameHeader({
   const popNearCap = population / Math.max(1, world.maxHumanPopulation) >= 0.9;
   const beds = getTotalBeds(world);
   const openBeds = getOpenBeds(world);
+  const absoluteDay = Math.floor(Math.max(0, world.tick) / 24);
   return (
     <header className="flex items-center justify-between gap-3 border-b border-stone-700 bg-stone-800 px-3 py-1.5 shadow-lg">
       <div
@@ -93,19 +100,34 @@ export default function GameHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <div
+<div
           className="flex items-center gap-1.5 rounded-md bg-stone-700/50 px-2 py-1 text-[10px] sm:px-2.5 sm:text-[11px]"
-          title={`${seasonLabel} · ${formatTemperatureC(dailyTempC)} · Year ${world.year} · Day ${world.dayInYear}${world.weather !== 'clear' ? ` · ${WEATHER_CONFIGS[world.weather].label}` : ''}${world.festival ? ` · ${world.festival.name}` : ''}`}
+          title={`${seasonLabel} · ${formatTemperatureC(dailyTempC)} · Year ${world.year} · Day ${world.dayInYear}${world.weather !== 'clear' ? ` · ${WEATHER_CONFIGS[world.weather].label}` : ''}${world.festival ? ` · ${world.festival.name}` : ''} · sim tick ${world.tick} (day ${absoluteDay})${showSimTick ? '' : ' — enable “Show sim tick” in Menu → Settings to pin tick on the bar'}`}
         >
           <span className={seasonTextClass(world.season)}>{seasonLabel}</span>
           <span className="font-mono text-stone-200">{formatTemperatureC(dailyTempC)}</span>
           <span className="text-stone-500">·</span>
           <span className="text-stone-300">Y{world.year} D{world.dayInYear}</span>
           <span className="text-stone-500">·</span>
-          <span>{isNight ? '🌙' : '☀️'}</span>
+          <Emoji>{isNight ? '🌙' : '☀️'}</Emoji>
           <span className="font-mono text-white">{formatHour(hour)}</span>
-          {world.weather !== 'clear' && <span>{WEATHER_CONFIGS[world.weather].emoji}</span>}
-          {world.festival && <span title={world.festival.name}>🎉</span>}
+          {world.weather !== 'clear' && <Emoji>{WEATHER_CONFIGS[world.weather].emoji}</Emoji>}
+          {world.festival && <Emoji title={world.festival.name}>🎉</Emoji>}
+          {showSimTick && (
+            <>
+              <span className="text-stone-500">·</span>
+              <button
+                type="button"
+                onClick={onToggleShowSimTick}
+                className="rounded bg-cyan-950/60 px-1.5 py-0.5 font-mono text-[10px] font-bold tabular-nums text-cyan-300 ring-1 ring-cyan-700/50 hover:bg-cyan-900/50"
+                title={`Simulation tick ${world.tick} · absolute day ${absoluteDay} (24 ticks/day) · click to hide`}
+                aria-label={`Simulation tick ${world.tick}`}
+              >
+                t{world.tick}
+                <span className="ml-1 hidden font-normal text-cyan-500/90 sm:inline">d{absoluteDay}</span>
+              </button>
+            </>
+          )}
         </div>
 
         <div
@@ -181,7 +203,7 @@ export default function GameHeader({
           </div>
         </div>
 
-        <GameMenu
+<GameMenu
           gameTitle={gameTitle}
           gameVersion={gameVersion}
           gamePhase={gamePhase}
@@ -190,6 +212,7 @@ export default function GameHeader({
           autoSave={world.autoSave}
           tutorialsEnabled={tutorialsEnabled}
           juiceEffectsEnabled={juiceEffectsEnabled}
+          showSimTick={showSimTick}
           muted={muted}
           volumePreset={volumePreset}
           onSave={onSave}
@@ -197,6 +220,7 @@ export default function GameHeader({
           onToggleAutoSave={onToggleAutoSave}
           onToggleTutorials={onToggleTutorials}
           onToggleJuiceEffects={onToggleJuiceEffects}
+          onToggleShowSimTick={onToggleShowSimTick}
           onToggleMute={onToggleMute}
           onVolumePreset={onVolumePreset}
           onOpenGuide={onOpenGuide}

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, useCallback, useMemo, memo, lazy, Suspense, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useCallback, useMemo, lazy, Suspense, type RefObject } from 'react';
 import {
   initGame, canPlaceBuilding, canAssignWorkerToBuilding,
   buildStripPreview, isStripBuildType, inferStripRotation,
@@ -7,7 +7,7 @@ import {
   EntityType, BuildingType,
   BUILDING_CONFIGS, BUILDING_JOB_TYPES, WORKSHOP_RECIPES, getWorkshopRecipe, formatRecipeInputs,
   GAME_TITLE, GAME_VERSION, GAME_PHASE, GAME_SUBTITLE,
-  SPECIES_CONFIG, WeatherType, ResearchType,
+  SPECIES_CONFIG,
 
   saveGame, loadGame, hasSave, deleteSave,
   getTerrainEfficiencyMultiplier, getAdjacencyMultiplier, getBuildingUpgradeCost, getTameFoodCost,
@@ -20,20 +20,17 @@ import {
   getOutgoingRaidFoodCostForRival, formatCampDistance, getCampDistancePixels,
   formatRaidDeadline, formatRaidLootSummary, raidEventLoot,
   isVillageLeader,
-  getGrazingPressureReport, getEcosystemBreakdown, getArmamentSteps,
+  getGrazingPressureReport, getEcosystemBreakdown,
   formatRivalPopulationLabel,
   getHumanArmamentLabel, hasIronSpears, hasStoneSpears,
   estimateWorkshopGold, getAgeInYears,
 } from './game/gameEngine';
-import { getForgeOrder } from './game/forge';
-import { MOON_HOWLER_CHURCH_CURE_CHANCE } from './game/moonHowler';
-import { MapSize, MapPreset, Season } from './game/gameTypes';
 import {
-  computeDailyTemperatureC,
-  formatTemperatureC,
-  SEASON_LABELS,
-  seasonTextClass,
-} from './game/temperature';
+  moonHowlerRiteWeights,
+  moonHowlerCureChanceForPriests,
+} from './game/moonHowler';
+
+import { MapSize, MapPreset } from './game/gameTypes';
 import {
   isResidenceBuildingType, isResidenceBuilding,
   hasResidenceAssignment, hasWorkAssignment, isImprisoned, getResidenceCapacity, getResidenceUpgradeSlotGain,
@@ -63,8 +60,11 @@ import {
   zoomCameraViewAt,
   focusCameraOn,
   CAMERA_ZOOM_DEFAULT,
+  CAMERA_ZOOM_MIN,
+  CAMERA_ZOOM_MAX,
   CAMERA_ZOOM_STEP_IN,
   CAMERA_ZOOM_STEP_OUT,
+  CAMERA_ZOOM_PRESETS,
   clampCameraZoom,
   nudgeCameraToward,
   clampCameraTarget,
@@ -82,41 +82,38 @@ import { preloadDialogueBank } from './game/dialogueTrees';
 import { preloadRenderer } from './game/rendererLoader';
 const IntroScreen = lazy(() => import('./game/IntroScreen'));
 const MapSetupScreen = lazy(() => import('./game/MapSetupScreen'));
-const CombatLogPanel = lazy(() => import('./components/CombatLogPanel'));
-const FocusPanel = lazy(() => import('./game/FocusPanel'));
-const PopulationPanel = lazy(() => import('./game/PopulationPanel'));
-const VillageLeadershipPanel = lazy(() => import('./game/VillageLeadershipPanel'));
 const CombatPreviewPanel = lazy(() => import('./game/CombatPreviewPanel'));
-const StatisticsPanel = lazy(() => import('./game/StatisticsPanel'));
-const EventLogPanel = lazy(() => import('./game/EventLogPanel'));
-const RoadmapPanel = lazy(() => import('./game/RoadmapPanel'));
-const FrontierPanel = lazy(() => import('./components/FrontierPanel'));
 const BuildCatalogPanel = lazy(() => import('./components/BuildCatalogPanel'));
 const BlacksmithForgePanel = lazy(() => import('./components/BlacksmithForgePanel'));
-const ChallengesPanel = lazy(() => import('./components/ChallengesPanel'));
 
 import { downloadChronicleLog, loadExportChronicleOnSave } from './game/eventLogExport';
-import { beginAudio, primeAudioUnlock, playClickSound } from './audio';
+import { beginAudio, primeAudioUnlock, playClickSound, stopIntroSong } from './audio';
 import { useGameAudio } from './hooks/useGameAudio';
 import { useContextualTutorial } from './hooks/useContextualTutorial';
 import ContextualTutorialCard from './components/ContextualTutorialCard';
-import { ACTIVE_VICTORY_PATHS, COMING_SOON_VICTORY_PATHS } from './game/victory';
-// COMING_SOON_VICTORY_PATHS kept for Goals tab when new paths are deferred
 import {
   loadTutorialsEnabled,
   loadJuiceEffectsEnabled,
+  loadShowSimTick,
   loadFirstNightWarningDismissed,
   saveAutoSavePreference,
   saveTutorialsEnabled,
   saveJuiceEffectsEnabled,
+  saveShowSimTick,
   saveFirstNightWarningDismissed,
 } from './game/preferences';
-import CollapsibleSection from './components/CollapsibleSection';
 import { LabelWithResourceCost } from './components/ResourceCost';
 import { BARRICADE_RAID_COST, canAffordResourceCost, formatResourceCostNeed } from './game/resourceCost';
+import VillageTabPanel from './components/tabPanels/VillageTabPanel';
+import FrontierTabPanel from './components/tabPanels/FrontierTabPanel';
+import NatureTabPanel from './components/tabPanels/NatureTabPanel';
+import ProgressTabPanel from './components/tabPanels/ProgressTabPanel';
+import LogTabPanel from './components/tabPanels/LogTabPanel';
+import MoreTabPanel from './components/tabPanels/MoreTabPanel';
 
 
 import AlertBar from './components/AlertBar';
+import Emoji from './components/Emoji';
 import GameHeader from './components/GameHeader';
 
 import { getPriorityAlerts, type PriorityAlert } from './game/priorityAlerts';
@@ -216,18 +213,6 @@ const TUTORIAL_DONE_KEY = 'wilderfolk-tutorial-done';
 
 
 
-const WEATHER_ICONS: Record<WeatherType, string> = {
-  [WeatherType.Clear]: '', [WeatherType.Rain]: '🌧️', [WeatherType.Snow]: '❄️',
-  [WeatherType.Storm]: '⛈️', [WeatherType.Fog]: '🌫️', [WeatherType.Drought]: '🌵',
-};
-
-const RESEARCH_COLORS: Record<ResearchType, string> = {
-  [ResearchType.Agriculture]: '#22c55e', [ResearchType.Mining]: '#6b7280',
-  [ResearchType.Forestry]: '#92400e', [ResearchType.Architecture]: '#3b82f6',
-  [ResearchType.Medicine]: '#ec4899', [ResearchType.Trade]: '#f59e0b',
-  [ResearchType.Education]: '#8b5cf6', [ResearchType.Defense]: '#ef4444',
-};
-
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [world, setWorld] = useState<WorldState>(() => {
@@ -251,7 +236,22 @@ export default function App() {
 
   const [saveToast, setSaveToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [spritesLoaded, setSpritesLoaded] = useState(false);
-  const [activeTab, setActiveTab] = useState<SidebarTab>('village');
+  const [openTabs, setOpenTabs] = useState<Set<SidebarTab>>(() => new Set(['village']));
+  const activeTab = useMemo(() => {
+    const tabs = Array.from(openTabs);
+    return tabs[tabs.length - 1] ?? 'village';
+  }, [openTabs]);
+  const openTab = useCallback((tab: SidebarTab) => {
+    setOpenTabs((prev) => new Set(prev).add(tab));
+  }, []);
+  const toggleTab = useCallback((tab: SidebarTab) => {
+    setOpenTabs((prev) => {
+      const next = new Set(prev);
+      if (next.has(tab)) next.delete(tab);
+      else next.add(tab);
+      return next;
+    });
+  }, []);
   const [progressSubTab, setProgressSubTab] = useState<ProgressSubTab>('research');
   const [moreSubTab, setMoreSubTab] = useState<MoreSubTab>('guide');
   const [logSubTab, setLogSubTab] = useState<LogSubTab>('chronicle');
@@ -259,6 +259,7 @@ export default function App() {
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [tutorialsEnabled, setTutorialsEnabled] = useState(() => loadTutorialsEnabled());
   const [juiceEffectsEnabled, setJuiceEffectsEnabled] = useState(() => loadJuiceEffectsEnabled());
+  const [showSimTick, setShowSimTick] = useState(() => loadShowSimTick());
   const [showTutorial, setShowTutorial] = useState(() => {
     if (!loadTutorialsEnabled()) return false;
     try {
@@ -272,14 +273,21 @@ export default function App() {
   const [showMapSetup, setShowMapSetup] = useState(false);
   const [mapSetupSource, setMapSetupSource] = useState<'intro' | 'game'>('intro');
   const [hasSavedGame, setHasSavedGame] = useState(hasSave());
+  const [hiddenBigNewsIds, setHiddenBigNewsIds] = useState<ReadonlySet<string>>(() => new Set());
+  const [hiddenActiveEventIds, setHiddenActiveEventIds] = useState<ReadonlySet<string>>(() => new Set());
   const gameplayActive = !showIntro && !showMapSetup && spritesLoaded;
   const { muted, volumePreset, toggleMute: handleToggleMute, setVolumePreset: handleVolumePreset } = useGameAudio(world, gameplayActive);
+
+  useEffect(() => {
+    if (showIntro || gameplayActive) return;
+    stopIntroSong();
+  }, [showIntro, gameplayActive]);
 
   useEffect(() => {
     if (!gameplayActive) return;
     void beginAudio();
   }, [gameplayActive]);
-  const { active: contextualTip, dismissActive: dismissContextualTip } = useContextualTutorial(
+  const { active: contextualTip, dismissActive: dismissContextualTip, markSeen: markContextualTipSeen } = useContextualTutorial(
     world,
     gameplayActive && tutorialsEnabled && !showTutorial,
   );
@@ -317,6 +325,12 @@ export default function App() {
   const keysRef = useRef<Set<string>>(new Set());
   const sidebarContentRef = useRef<HTMLDivElement>(null);
   const gameplayActiveRef = useRef(gameplayActive);
+  const dismissBigNewsRef = useRef<(id: string) => void>(() => {});
+  const dismissActiveEventRef = useRef<() => void>(() => {});
+  const dismissTipRef = useRef<() => void>(() => {});
+  const topBigNewsIdRef = useRef<string | null>(null);
+  const hasActiveEventRef = useRef(false);
+  const hasContextualTipRef = useRef(false);
   const persistCurrentGameRef = useRef<
     (options?: { chronicle?: boolean; feedback?: boolean }) => Promise<boolean>
   >(async () => false);
@@ -451,6 +465,18 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
+  // Fade out toast notifications after ~12s unless the player dismisses them first
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const cutoff = Date.now() - 12_000;
+      loopRef.current?.mutateWorld((w) => {
+        const next = w.notifications.filter((n) => n.createdAt > cutoff);
+        if (next.length !== w.notifications.length) w.notifications = next;
+      });
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Best-effort save on unmount when a session is still active
   useEffect(() => {
     return () => {
@@ -510,12 +536,17 @@ export default function App() {
   }, [spritesLoaded, showIntro, showMapSetup]);
 
   const togglePause = useCallback(() => {
-    loopRef.current?.mutateWorld((w) => { w.paused = !w.paused; });
+    const loop = loopRef.current;
+    if (!loop) return;
+    const wasPaused = loop.getWorld().paused;
+    loop.mutateWorld((w) => { w.paused = !w.paused; });
+    if (wasPaused) {
+      void loop.applyCommand({ proto: 1, op: 'autoStaffWorkers' });
+    }
   }, []);
 
   const resumeAfterTutorialOverlay = useCallback(() => {
     primeAudioUnlock();
-    void beginAudio();
     const loop = loopRef.current;
     if (!loop) return;
     const w = loop.getWorld();
@@ -534,10 +565,11 @@ export default function App() {
     if (!contextualTip) return;
     const tipId = contextualTip.id;
     dismissContextualTip();
+    markContextualTipSeen(tipId);
     loopRef.current?.mutateWorld((w) => {
       w.tutorialSeen = [...new Set([...(w.tutorialSeen ?? []), tipId])];
     });
-  }, [contextualTip, dismissContextualTip]);
+  }, [contextualTip, dismissContextualTip, markContextualTipSeen]);
 
   const disableAllTutorials = useCallback(() => {
     saveTutorialsEnabled(false);
@@ -570,6 +602,12 @@ export default function App() {
     }
   }, [tutorialsEnabled, dismissContextualTip]);
 
+  const handleToggleShowSimTick = useCallback(() => {
+    const next = !showSimTick;
+    saveShowSimTick(next);
+    setShowSimTick(next);
+  }, [showSimTick]);
+
   const finishTutorial = useCallback(() => {
     try {
       localStorage.setItem(TUTORIAL_DONE_KEY, '1');
@@ -578,6 +616,59 @@ export default function App() {
     setTutorialStep(0);
     resumeAfterTutorialOverlay();
   }, [resumeAfterTutorialOverlay]);
+
+  const dismissNotification = useCallback((id: string) => {
+    playClickSound();
+    loopRef.current?.mutateWorld((w) => {
+      w.dismissedNotificationIds = [...new Set([...(w.dismissedNotificationIds ?? []), id])];
+      w.notifications = w.notifications.filter((n) => n.id !== id);
+    });
+  }, []);
+
+  const dismissBigNewsItem = useCallback((id: string) => {
+    playClickSound();
+    setHiddenBigNewsIds((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+    loopRef.current?.mutateWorld((w) => {
+      w.dismissedBigNewsIds = [...new Set([...(w.dismissedBigNewsIds ?? []), id])];
+      w.bigNews = w.bigNews.filter((n) => n.id !== id);
+    });
+  }, []);
+
+  const dismissActiveEvent = useCallback(() => {
+    const w = worldRef.current;
+    const evt = w.activeEvent;
+    if (!evt) return;
+    playClickSound();
+    const visitorNewsIds = evt.id.startsWith('visitor_')
+      ? w.bigNews.filter((n) => n.title.includes('Visitors Arrived')).map((n) => n.id)
+      : [];
+    setHiddenActiveEventIds((prev) => {
+      if (prev.has(evt.id)) return prev;
+      const next = new Set(prev);
+      next.add(evt.id);
+      return next;
+    });
+    if (visitorNewsIds.length > 0) {
+      setHiddenBigNewsIds((prev) => {
+        const next = new Set(prev);
+        for (const id of visitorNewsIds) next.add(id);
+        return next;
+      });
+    }
+    loopRef.current?.mutateWorld((session) => {
+      session.dismissedActiveEventIds = [...new Set([...(session.dismissedActiveEventIds ?? []), evt.id])];
+      session.activeEvent = null;
+      if (visitorNewsIds.length > 0) {
+        session.dismissedBigNewsIds = [...new Set([...(session.dismissedBigNewsIds ?? []), ...visitorNewsIds])];
+        session.bigNews = session.bigNews.filter((n) => !visitorNewsIds.includes(n.id));
+      }
+    });
+  }, []);
 
   const toggleGrid = useCallback(() => {
     const loop = loopRef.current;
@@ -683,28 +774,28 @@ export default function App() {
     playClickSound();
     switch (action.id) {
       case 'open_goals':
-        setActiveTab('progress');
+        openTab('progress');
         setProgressSubTab('goals');
         break;
       case 'open_frontier':
-        setActiveTab('frontier');
+        openTab('frontier');
         break;
       case 'open_trade':
-        setActiveTab('progress');
+        openTab('progress');
         setProgressSubTab('trade');
         break;
       case 'open_research':
-        setActiveTab('progress');
+        openTab('progress');
         setProgressSubTab('research');
         break;
       case 'open_village':
-        setActiveTab('village');
+        openTab('village');
         break;
       case 'open_nature':
-        setActiveTab('nature');
+        openTab('nature');
         break;
       case 'open_log':
-        setActiveTab('log');
+        openTab('log');
         break;
       case 'build_house':
         selectBuildingType(BuildingType.House);
@@ -716,21 +807,21 @@ export default function App() {
         break;
       case 'focus_visitor':
         if (action.visitorId != null && action.visitorX != null && action.visitorY != null) {
-          setActiveTab('frontier');
+          openTab('frontier');
           focusCampOnMap('visitor', action.visitorId, action.visitorX, action.visitorY);
           setInspectorCollapsed(false);
         }
         break;
       case 'focus_rival':
         if (action.rivalId != null && action.rivalX != null && action.rivalY != null) {
-          setActiveTab('frontier');
+          openTab('frontier');
           focusCampOnMap('rival', action.rivalId, action.rivalX, action.rivalY, action.rivalBuildingId);
           setInspectorCollapsed(false);
         }
         break;
       case 'focus_blacksmith':
         if (action.buildingId != null && action.buildingX != null && action.buildingY != null) {
-          setActiveTab('village');
+          openTab('village');
           focusBuildingOnMap(action.buildingId, action.buildingX, action.buildingY);
         }
         break;
@@ -739,14 +830,14 @@ export default function App() {
         setBuildPanelOpen(true);
         break;
     }
-  }, [selectBuildingType, focusCampOnMap, focusBuildingOnMap]);
+  }, [selectBuildingType, focusCampOnMap, focusBuildingOnMap, openTab]);
 
   const handlePriorityAlert = useCallback((alert: PriorityAlert) => {
     playClickSound();
     const action = alert.action;
     switch (action.type) {
       case 'tab':
-        setActiveTab(action.tab);
+        openTab(action.tab);
         if (action.progressSub) setProgressSubTab(action.progressSub);
         break;
       case 'build':
@@ -754,12 +845,12 @@ export default function App() {
         setBuildPanelOpen(true);
         break;
       case 'focus_rival':
-        setActiveTab('frontier');
+        openTab('frontier');
         focusCampOnMap('rival', action.rivalId, action.x, action.y, action.buildingId);
         setInspectorCollapsed(false);
         break;
       case 'focus_visitor':
-        setActiveTab('frontier');
+        openTab('frontier');
         focusCampOnMap('visitor', action.groupId, action.x, action.y);
         setInspectorCollapsed(false);
         break;
@@ -767,7 +858,7 @@ export default function App() {
         focusBuildingOnMap(action.buildingId, action.x, action.y);
         break;
     }
-  }, [selectBuildingType, focusCampOnMap, focusBuildingOnMap]);
+  }, [selectBuildingType, focusCampOnMap, focusBuildingOnMap, openTab]);
 
   const applyGameAction = useCallback((action: WorkerCommand | ((w: WorldState) => WorldState)) => {
     if (typeof action === 'function') {
@@ -818,6 +909,16 @@ export default function App() {
     loop.patchView({ camera: clampCameraTarget(next.camera, world.width, world.height) });
   }, []);
 
+  /** Jump to a preset zoom level (keeps camera center). */
+  const setZoomLevel = useCallback((zoom: number) => {
+    const loop = loopRef.current;
+    if (!loop) return;
+    const world = loop.getWorld();
+    const cam = loop.getView().camera;
+    const next = focusCameraOn(loop.getView(), cam.targetX, cam.targetY, clampCameraZoom(zoom));
+    loop.patchView({ camera: clampCameraTarget(next.camera, world.width, world.height) });
+  }, []);
+
   // passive:false — React onWheel cannot preventDefault on modern browsers
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -863,7 +964,7 @@ export default function App() {
             (document.activeElement as HTMLElement | null)?.blur();
           }
           if (tab === 'progress') setProgressSubTab('research');
-          setActiveTab(tab);
+          openTab(tab);
           return;
         }
       }
@@ -880,6 +981,12 @@ export default function App() {
       if (e.key === 'Escape') {
         if (showShortcutsRef.current) {
           setShowShortcuts(false);
+        } else if (hasActiveEventRef.current) {
+          dismissActiveEventRef.current();
+        } else if (topBigNewsIdRef.current) {
+          dismissBigNewsRef.current(topBigNewsIdRef.current);
+        } else if (hasContextualTipRef.current) {
+          dismissTipRef.current();
         } else if (selectedBuildingTypeRef.current) {
           cancelBuildModeRef.current();
         } else {
@@ -980,7 +1087,7 @@ export default function App() {
       window.removeEventListener('keyup', handleKeyUp);
       cancelAnimationFrame(animId);
     };
-  }, []);
+  }, [openTab]);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     if (clickOriginRef.current) {
@@ -1188,10 +1295,7 @@ export default function App() {
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     if (gameplayActive && e.button === 0) {
       primeAudioUnlock();
-      if (!audioStartedRef.current) {
-        audioStartedRef.current = true;
-        void beginAudio();
-      }
+      audioStartedRef.current = true;
     }
     if (e.button === 2 && selectedBuildingType) {
       cancelBuildMode();
@@ -1259,22 +1363,25 @@ export default function App() {
   }, []);
 
   const handleOpenTrade = useCallback(() => {
-    setActiveTab('progress');
+    openTab('progress');
     setProgressSubTab('trade');
-  }, []);
+  }, [openTab]);
 
   const handleOpenGuide = useCallback(() => {
-    setActiveTab('more');
+    openTab('more');
     setMoreSubTab('guide');
-  }, []);
+  }, [openTab]);
   const beginNewGameSession = useCallback((villageName: string) => {
     deleteSave();
     const s = initGame({ size: selectedMapSize, preset: selectedMapPreset, villageName });
-    s.paused = true;
+    // Only pause when the quick-start overlay will actually show — otherwise the sim stays frozen.
+    s.paused = tutorialsEnabled;
     s.tradeRoutes = ensureFullTradeRoutes(initTradeRoutes());
     const nextView = createInitialView(s.width, s.height);
     worldRef.current = s;
     viewRef.current = nextView;
+    setHiddenBigNewsIds(new Set());
+    setHiddenActiveEventIds(new Set());
     setWorld(s);
     setView(nextView);
     loopRef.current?.setSession(s, nextView);
@@ -1310,6 +1417,11 @@ export default function App() {
     fixDefaultNames(loaded.world);
     worldRef.current = loaded.world;
     viewRef.current = loaded.view;
+    setHiddenBigNewsIds(new Set([
+      ...(loaded.world.dismissedBigNewsIds ?? []),
+      ...loaded.world.bigNews.filter((n) => n.dismissed).map((n) => n.id),
+    ]));
+    setHiddenActiveEventIds(new Set(loaded.world.dismissedActiveEventIds ?? []));
     setWorld(loaded.world);
     setView(loaded.view);
     loopRef.current?.setSession(loaded.world, loaded.view);
@@ -1342,10 +1454,32 @@ export default function App() {
     }
   }, [applyLoadedSession]);
 
-  const activeBigNews = useMemo(
-    () => world.bigNews.filter((n) => !n.dismissed),
-    [world.bigNews],
+  const activeBigNews = world.bigNews.filter(
+    (n) => !n.dismissed && !hiddenBigNewsIds.has(n.id),
   );
+  const activeEventDismissible = !!(
+    world.activeEvent && !hiddenActiveEventIds.has(world.activeEvent.id)
+  );
+
+  useLayoutEffect(() => {
+    dismissBigNewsRef.current = dismissBigNewsItem;
+    dismissActiveEventRef.current = dismissActiveEvent;
+    dismissTipRef.current = acknowledgeContextualTip;
+    topBigNewsIdRef.current = activeBigNews.length > 0
+      ? activeBigNews[activeBigNews.length - 1].id
+      : null;
+    hasActiveEventRef.current = activeEventDismissible;
+    hasContextualTipRef.current = !!(contextualTip && tutorialsEnabled && !showTutorial);
+  }, [
+    dismissBigNewsItem,
+    dismissActiveEvent,
+    acknowledgeContextualTip,
+    activeBigNews,
+    activeEventDismissible,
+    contextualTip,
+    tutorialsEnabled,
+    showTutorial,
+  ]);
 
   const priorityAlerts = getPriorityAlerts(world);
   const tradeReadyCount = useMemo(
@@ -1402,12 +1536,10 @@ export default function App() {
         backLabel={mapSetupSource === 'game' ? '← Back to game' : '← Back to intro'}
         onStart={(villageName) => {
           primeAudioUnlock();
-          void beginAudio();
           beginNewGameSession(villageName);
         }}
         onLoad={() => {
           primeAudioUnlock();
-          void beginAudio();
           handleLoadFromSetup();
         }}
         hasSave={hasSavedGame || hasSave()}
@@ -1438,6 +1570,15 @@ export default function App() {
   const pendingDiplomacy = world.pendingDiplomacyEvents ?? [];
   const pendingRaids = world.pendingRaidEvents ?? [];
   const pendingOutgoingRaids = world.pendingOutgoingRaidEvents ?? [];
+  const activeEventForBanner = world.activeEvent && !hiddenActiveEventIds.has(world.activeEvent.id)
+    ? world.activeEvent
+    : null;
+  const showActiveEventBanner = !!(
+    activeEventForBanner
+    && pendingDiplomacy.length === 0
+    && pendingRaids.length === 0
+  );
+
   const frontierAlertCount = pendingRaids.length + pendingOutgoingRaids.length + pendingDiplomacy.length;
   const selectedVisitorCamp = view.selectedCampKey?.startsWith('visitor:')
     ? world.visitorGroups.find((g) => g.id === view.selectedCampKey!.slice(8)) ?? null
@@ -1470,9 +1611,11 @@ export default function App() {
         onLoad={handleLoad}
         tutorialsEnabled={tutorialsEnabled}
         juiceEffectsEnabled={juiceEffectsEnabled}
+        showSimTick={showSimTick}
         onToggleAutoSave={toggleAutoSave}
         onToggleTutorials={handleToggleTutorials}
         onToggleJuiceEffects={handleToggleJuiceEffects}
+        onToggleShowSimTick={handleToggleShowSimTick}
         onToggleMute={handleToggleMute}
         onVolumePreset={handleVolumePreset}
         onOpenGuide={handleOpenGuide}
@@ -1569,6 +1712,7 @@ export default function App() {
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', imageRendering: 'pixelated', cursor: canvasCursor, display: 'block' }}
           />
 
+          <div className="pointer-events-none absolute inset-0 z-10">
           {/* Build mode banner */}
           {selectedBuildingType && (
             <div className="pointer-events-none absolute bottom-20 left-1/2 z-20 -translate-x-1/2">
@@ -1593,27 +1737,33 @@ export default function App() {
             </div>
           )}
           
-          {/* Floating notifications */}
-          <div className="absolute left-4 top-4 flex max-w-xs flex-col gap-1">
+          {/* Floating notifications — click or × to dismiss */}
+          <div className="pointer-events-auto absolute left-4 top-4 z-20 flex max-w-xs flex-col gap-1">
             {world.notifications.slice(-3).map(n => (
-              <div key={n.id} className={`rounded-lg border px-3 py-1.5 text-xs shadow-lg backdrop-blur transition-all animate-in slide-in-from-left ${
+              <button
+                key={n.id}
+                type="button"
+                onClick={() => dismissNotification(n.id)}
+                title="Dismiss"
+                className={`group relative w-full rounded-lg border px-3 py-1.5 pr-7 text-left text-xs shadow-lg backdrop-blur transition-all animate-in slide-in-from-left hover:brightness-110 ${
                 n.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/20 text-emerald-200' :
                 n.type === 'warning' ? 'border-amber-500/30 bg-amber-500/20 text-amber-200' :
                 n.type === 'event' ? 'border-amber-500/30 bg-amber-500/20 text-amber-200' :
                 'border-stone-600 bg-stone-800/90 text-stone-200'
               }`}>
                 <strong>{n.title}</strong> {n.message}
-              </div>
+                <span className="absolute right-2 top-1.5 text-sm leading-none text-stone-400 group-hover:text-white">×</span>
+              </button>
             ))}
           </div>
 
           {/* Raid defense — respond before march deadline (distance-scaled) */}
           {pendingOutgoingRaids.length > 0 && (
-            <div className={`absolute left-1/2 ${pendingRaids.length > 0 ? 'top-44' : 'top-4'} z-20 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top`}>
+            <div className={`pointer-events-auto absolute left-1/2 ${pendingRaids.length > 0 ? 'top-44' : 'top-4'} z-20 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top`}>
               {pendingOutgoingRaids.slice(0, 2).map((evt) => (
                 <div key={evt.id} className="mb-2 rounded-xl border border-orange-500/50 bg-orange-950/95 p-3 shadow-xl backdrop-blur">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">{evt.emoji}</span>
+                    <Emoji className="text-2xl">{evt.emoji}</Emoji>
                     <div className="flex-1">
                       <h3 className="font-bold text-orange-100">{evt.title}</h3>
                       <p className="text-xs text-stone-300">{evt.description}</p>
@@ -1666,7 +1816,7 @@ export default function App() {
           )}
 
           {pendingRaids.length > 0 && (
-            <div className="absolute left-1/2 top-4 z-20 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top">
+            <div className="pointer-events-auto absolute left-1/2 top-4 z-20 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top">
               {pendingRaids.slice(0, 2).map((evt) => {
                 const raidRival = world.rivalSettlements.find((r) => r.id === evt.rivalId);
                 const raidPreview = getCombatPreview(world, {
@@ -1677,7 +1827,7 @@ export default function App() {
                 return (
                 <div key={evt.id} className="mb-2 rounded-xl border border-rose-500/50 bg-rose-950/95 p-3 shadow-xl backdrop-blur">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">{evt.emoji}</span>
+                    <Emoji className="text-2xl">{evt.emoji}</Emoji>
                     <div className="flex-1">
                       <h3 className="font-bold text-rose-100">{evt.title}</h3>
                       <p className="text-xs text-stone-300">{evt.description}</p>
@@ -1753,11 +1903,11 @@ export default function App() {
 
           {/* Diplomacy event cards — player must respond */}
           {pendingDiplomacy.length > 0 && (
-            <div className={`absolute left-1/2 ${pendingRaids.length > 0 || pendingOutgoingRaids.length > 0 ? 'top-44' : 'top-4'} z-10 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top`}>
+            <div className={`pointer-events-auto absolute left-1/2 ${pendingRaids.length > 0 || pendingOutgoingRaids.length > 0 ? 'top-44' : 'top-4'} z-10 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top`}>
               {pendingDiplomacy.slice(0, 2).map((evt) => (
                 <div key={evt.id} className="mb-2 rounded-xl border border-amber-500/40 bg-amber-950/90 p-3 shadow-xl backdrop-blur">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">{evt.emoji}</span>
+                    <Emoji className="text-2xl">{evt.emoji}</Emoji>
                     <div className="flex-1">
                       <h3 className="font-bold text-amber-100">{evt.title}</h3>
                       <p className="text-xs text-stone-300">{evt.description}</p>
@@ -1799,35 +1949,12 @@ export default function App() {
             </div>
           )}
 
-          {/* Active event banner */}
-          {world.activeEvent && pendingDiplomacy.length === 0 && pendingRaids.length === 0 && (
-            <div className="absolute left-1/2 top-4 w-full max-w-md -translate-x-1/2 animate-in fade-in slide-in-from-top">
-              <div className={`rounded-xl border p-3 shadow-xl backdrop-blur ${
-                world.activeEvent.type === 'positive' ? 'border-emerald-500/30 bg-emerald-900/80' :
-                world.activeEvent.type === 'negative' ? 'border-rose-500/30 bg-rose-900/80' :
-                'border-stone-500/30 bg-stone-800/90'
-              }`}>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{world.activeEvent.emoji}</span>
-                  <div>
-                    <h3 className="font-bold text-white">{world.activeEvent.title}</h3>
-                    <p className="text-xs text-stone-300">{world.activeEvent.description}</p>
-                    <p className={`mt-1 text-xs font-bold ${
-                      world.activeEvent.type === 'positive' ? 'text-emerald-400' :
-                      world.activeEvent.type === 'negative' ? 'text-rose-400' : 'text-amber-400'
-                    }`}>{world.activeEvent.effect}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* First-night shelter warning */}
           {showFirstNightWarning && (
-            <div className="absolute left-1/2 top-16 z-20 w-full max-w-md -translate-x-1/2 animate-in fade-in slide-in-from-top">
+            <div className="pointer-events-auto absolute left-1/2 top-16 z-20 w-full max-w-md -translate-x-1/2 animate-in fade-in slide-in-from-top">
               <div className="rounded-xl border border-amber-500/40 bg-amber-950/90 p-3 shadow-xl backdrop-blur">
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">{isFirstGameDay && world.tick < NIGHT_START ? '🌅' : '🌙'}</span>
+                  <Emoji className="text-2xl">{isFirstGameDay && world.tick < NIGHT_START ? '🌅' : '🌙'}</Emoji>
                   <div className="flex-1">
                     <h3 className="font-bold text-amber-200">
                       {isFirstGameDay && world.tick < NIGHT_START ? 'Sunset is approaching' : 'Your pioneers need shelter'}
@@ -1850,57 +1977,62 @@ export default function App() {
             </div>
           )}
 
-          {/* Big News banner */}
-          {activeBigNews.length > 0 && (
-            <BigNewsBanner
-              news={activeBigNews}
-              onDismiss={() => {
-                const item = activeBigNews[activeBigNews.length - 1];
-                if (!item) return;
-                loopRef.current?.mutateWorld((prev) => {
-                  const target = prev.bigNews.find((n) => n.id === item.id);
-                  if (target) target.dismissed = true;
-                });
-              }}
-            />
-          )}
-
-          {contextualTip && tutorialsEnabled && !showTutorial && (
-            <ContextualTutorialCard
-              tip={contextualTip}
-              onDismiss={acknowledgeContextualTip}
-              onDisableAll={disableAllTutorials}
-              onAction={(action) => {
-                acknowledgeContextualTip();
-                handleHintAction(action);
-              }}
-            />
-          )}
-
           {/* Minimap */}
           <MiniMap worldRef={worldRef} viewRef={viewRef} />
 
-          {/* Zoom controls */}
-          <div className="absolute bottom-4 right-4 z-20 flex flex-col items-stretch gap-0.5 rounded-lg border border-stone-600 bg-stone-800/85 p-1 shadow-xl backdrop-blur">
+          {/* Zoom controls — wider range; speech bubbles visible from ~28% zoom */}
+          <div className="pointer-events-auto absolute bottom-4 right-4 z-20 flex flex-col items-stretch gap-0.5 rounded-lg border border-stone-600 bg-stone-800/85 p-1 shadow-xl backdrop-blur">
             <button
               type="button"
               onClick={() => applyZoom(CAMERA_ZOOM_STEP_IN)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-lg font-bold text-stone-200 hover:bg-stone-700/80 hover:text-white"
+              disabled={view.camera.targetZoom >= CAMERA_ZOOM_MAX - 1e-3}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-lg font-bold text-stone-200 hover:bg-stone-700/80 hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
               title="Zoom in (+)"
               aria-label="Zoom in"
             >
               +
             </button>
+            <label className="sr-only" htmlFor="camera-zoom-preset">Zoom level</label>
+            <select
+              id="camera-zoom-preset"
+              value={
+                // Snap select to nearest preset for display
+                (() => {
+                  const z = clampCameraZoom(view.camera.targetZoom);
+                  let best = CAMERA_ZOOM_PRESETS[0];
+                  let bestD = Math.abs(z - best);
+                  for (const p of CAMERA_ZOOM_PRESETS) {
+                    const d = Math.abs(z - p);
+                    if (d < bestD) {
+                      best = p;
+                      bestD = d;
+                    }
+                  }
+                  return String(best);
+                })()
+              }
+              onChange={(e) => setZoomLevel(Number(e.target.value))}
+              className="h-7 w-8 cursor-pointer appearance-none rounded-md border-0 bg-stone-700/60 px-0 text-center text-[9px] font-semibold tabular-nums text-stone-200 hover:bg-stone-600/80 focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+              title={`Zoom ${Math.round(clampCameraZoom(view.camera.targetZoom) * 100)}% — pick a preset`}
+              aria-label="Zoom preset"
+            >
+              {CAMERA_ZOOM_PRESETS.map((p) => (
+                <option key={p} value={p}>
+                  {Math.round(p * 100)}%
+                </option>
+              ))}
+            </select>
             <div
-              className="px-1 text-center text-[9px] font-semibold tabular-nums text-stone-400"
-              title="Current zoom"
+              className="px-0.5 text-center text-[8px] font-medium tabular-nums text-stone-500"
+              title="Live zoom"
             >
               {Math.round(clampCameraZoom(view.camera.targetZoom) * 100)}%
             </div>
             <button
               type="button"
               onClick={() => applyZoom(CAMERA_ZOOM_STEP_OUT)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-lg font-bold text-stone-200 hover:bg-stone-700/80 hover:text-white"
+              disabled={view.camera.targetZoom <= CAMERA_ZOOM_MIN + 1e-3}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-lg font-bold text-stone-200 hover:bg-stone-700/80 hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
               title="Zoom out (-)"
               aria-label="Zoom out"
             >
@@ -1910,7 +2042,7 @@ export default function App() {
               type="button"
               onClick={resetZoom}
               className="flex h-7 w-8 items-center justify-center rounded-md text-[11px] text-stone-400 hover:bg-stone-700/80 hover:text-stone-200"
-              title="Reset zoom"
+              title={`Reset zoom (${Math.round(CAMERA_ZOOM_DEFAULT * 100)}%)`}
               aria-label="Reset zoom"
             >
               ⟲
@@ -1919,13 +2051,17 @@ export default function App() {
 
           {/* Save toast */}
           {saveToast && (
-            <div className={`absolute bottom-16 left-1/2 z-30 -translate-x-1/2 rounded-lg border px-4 py-2 text-sm font-semibold shadow-2xl backdrop-blur ${
+            <button
+              type="button"
+              onClick={() => setSaveToast(null)}
+              title="Dismiss"
+              className={`pointer-events-auto absolute bottom-16 left-1/2 z-30 -translate-x-1/2 rounded-lg border px-4 py-2 text-sm font-semibold shadow-2xl backdrop-blur hover:brightness-110 ${
               saveToast.type === 'success'
                 ? 'border-emerald-500/40 bg-emerald-950/90 text-emerald-200'
                 : 'border-rose-500/40 bg-rose-950/90 text-rose-200'
             }`}>
               {saveToast.type === 'success' ? '💾 ' : '⚠️ '}{saveToast.message}
-            </div>
+            </button>
           )}
 
           {/* Pause HUD — map stays clickable for inspect/build while frozen */}
@@ -1937,7 +2073,10 @@ export default function App() {
 
           {/* Quick-start tutorial */}
           {showTutorial && (
-            <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/65 backdrop-blur-sm">
+            <div
+              className="pointer-events-auto absolute inset-0 z-30 flex items-center justify-center bg-black/65 backdrop-blur-sm"
+              onClick={finishTutorial}
+            >
               <div className="mx-4 w-full max-w-sm rounded-2xl border border-stone-600 bg-stone-800 p-5 shadow-2xl" onClick={e => e.stopPropagation()}>
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <div>
@@ -1955,7 +2094,7 @@ export default function App() {
 
                 <div className="mb-4 rounded-xl bg-stone-900/60 p-4">
                   <div className="mb-2 flex items-center gap-2">
-                    <span className="text-2xl">{QUICK_START_STEPS[tutorialStep].icon}</span>
+                    <Emoji className="text-2xl">{QUICK_START_STEPS[tutorialStep].icon}</Emoji>
                     <h3 className="text-base font-bold text-emerald-300">{QUICK_START_STEPS[tutorialStep].title}</h3>
                   </div>
                   <p className="text-sm leading-relaxed text-stone-300">{QUICK_START_STEPS[tutorialStep].detail}</p>
@@ -2005,6 +2144,20 @@ export default function App() {
               </div>
             </div>
           )}
+          </div>
+
+          {contextualTip && tutorialsEnabled && !showTutorial && (
+            <ContextualTutorialCard
+              tip={contextualTip}
+              onDismiss={acknowledgeContextualTip}
+              onDisableAll={disableAllTutorials}
+              onAction={(action) => {
+                acknowledgeContextualTip();
+                handleHintAction(action);
+              }}
+            />
+          )}
+
         </main>
 
         {/* Right sidebar */}
@@ -2074,6 +2227,7 @@ export default function App() {
                 building={selectedBuilding}
                 state={world}
                 onAssign={() => applyGameAction({ proto: 1, op: 'assignWorker', buildingId: selectedBuilding.id })}
+                onAutoStaffAll={() => applyGameAction({ proto: 1, op: 'autoStaffWorkers' })}
                 onAssignWorker={(humanId: number) => {
                   playClickSound();
                   applyGameAction({ proto: 1, op: 'assignWorker', buildingId: selectedBuilding.id, humanId });
@@ -2120,12 +2274,12 @@ export default function App() {
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`sidebar-tab relative ${activeTab === tab.id ? 'sidebar-tab--active text-emerald-400' : 'text-stone-500 hover:text-stone-300'}`}
+                onClick={() => toggleTab(tab.id)}
+                className={`sidebar-tab relative ${openTabs.has(tab.id) ? 'sidebar-tab--active text-emerald-400' : 'text-stone-500 hover:text-stone-300'}`}
                 title={tab.hint}
               >
-                <span className="text-lg leading-none">{tab.icon}</span>
-                <span className="text-[10px] font-bold leading-tight sm:text-[11px]">{tab.label}</span>
+                <Emoji className="text-lg">{tab.icon}</Emoji>
+                <span className="text-[11px] font-bold leading-tight sm:text-xs">{tab.label}</span>
                 {tab.id === 'frontier' && frontierAlertCount > 0 && (
                   <span className="sidebar-tab-badge">{frontierAlertCount}</span>
                 )}
@@ -2139,177 +2293,45 @@ export default function App() {
           </div>
 
           <div ref={sidebarContentRef} className="flex-1 overflow-y-auto p-3">
-            {/* Village Tab */}
-            {activeTab === 'village' && (
-              <div className="space-y-2.5">
-                <Suspense fallback={<p className="text-[10px] text-stone-500">Loading focus…</p>}>
-                  <FocusPanel
-                    state={world}
-                    buildings={world.buildings}
-                    onOpenGoals={() => { setActiveTab('progress'); setProgressSubTab('goals'); }}
-                    onHintAction={handleHintAction}
-                  />
-                </Suspense>
-                <CollapsibleSection
-                  icon="👥"
-                  title="Population"
-                  subtitle={`${villageStats.total}/${world.maxHumanPopulation} cap · 🛏️ ${villageStats.beds} beds · ${villageStats.working} working · ⭐${world.villageReputation}`}
-                  accent="emerald"
-                  defaultOpen={false}
-                >
-                  <div className="mb-2 grid grid-cols-2 gap-2">
-                    <div>
-                      <div className="flex items-end justify-between gap-1">
-                        <p className="text-2xl font-black leading-none text-emerald-300">
-                          {villageStats.total}
-                          <span className="text-sm font-bold text-stone-500"> / {world.maxHumanPopulation}</span>
-                        </p>
-                        <p className="text-[9px] text-stone-500">immigration cap</p>
-                      </div>
-                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-stone-600">
-                        <div className="h-full rounded-full bg-emerald-500 transition-all"
-                          style={{ width: `${Math.min(100, (villageStats.total / Math.max(1, world.maxHumanPopulation)) * 100)}%` }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-end justify-between gap-1">
-                        <p className="text-2xl font-black leading-none text-sky-300">
-                          {villageStats.beds}
-                          <span className="text-sm font-bold text-stone-500"> beds</span>
-                        </p>
-                        <p className="text-[9px] text-stone-500" title="Empty housing slots for assignment">
-                          {villageStats.openBeds} open
-                        </p>
-                      </div>
-                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-stone-600">
-                        <div className="h-full rounded-full bg-sky-500 transition-all"
-                          style={{ width: `${Math.min(100, (villageStats.total / Math.max(1, villageStats.beds)) * 100)}%` }} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mb-2 grid grid-cols-4 gap-1 text-[9px]">
-                    <div className="rounded bg-stone-600/30 px-2 py-1 text-center">
-                      <div className="font-bold text-sky-300">{villageStats.working}</div>
-                      <div className="text-stone-500">working</div>
-                    </div>
-                    <div className="rounded bg-stone-600/30 px-2 py-1 text-center">
-                      <div className="font-bold text-amber-300">{villageStats.idle}</div>
-                      <div className="text-stone-500">idle</div>
-                    </div>
-                    <div className="rounded bg-stone-600/30 px-2 py-1 text-center">
-                      <div className="font-bold text-slate-300">{villageStats.imprisoned}</div>
-                      <div className="text-stone-500">jailed</div>
-                    </div>
-                    <div className="rounded bg-stone-600/30 px-2 py-1 text-center">
-                      <div className="font-bold text-pink-300">{villageStats.children}</div>
-                      <div className="text-stone-500">children</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1.5 text-[10px]">
-                    <StatBadge label="Adults" value={villageStats.adults} icon="👤" />
-                    <StatBadge label="Reputation" value={world.villageReputation} icon="⭐" />
-                    <StatBadge label="Buildings" value={world.buildings.filter(b => b.completed).length} icon="🏗️" />
-                    <StatBadge label="Techs" value={world.unlockedTechs.length} icon="🔬" />
-                  </div>
+            {openTabs.has('village') && (
+              <div className="mb-3 rounded-xl border border-stone-600/30 bg-stone-800/20 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-stone-300">🏘️ Village</h3>
                   <button
-                    onClick={() => applyGameAction({ proto: 1, op: 'recruitSettler' })}
-                    disabled={villageStats.total >= world.maxHumanPopulation || world.resources.food < 30 || world.resources.gold < 20}
-                    title={
-                      villageStats.total >= world.maxHumanPopulation
-                        ? 'Build more houses to increase population cap'
-                        : world.resources.food < 30 || world.resources.gold < 20
-                          ? 'Need 30 food and 20 gold'
-                          : 'Recruit a new settler'
-                    }
-                    className="mt-2 w-full rounded-lg bg-emerald-600 py-1.5 text-[10px] font-bold text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-stone-600 transition-all"
+                    type="button"
+                    onClick={() => toggleTab('village')}
+                    className="text-xs text-stone-500 hover:text-stone-300"
+                    title="Close panel"
                   >
-                    📯 Recruit Settler (30🍖 20💰)
+                    ✕
                   </button>
-                </CollapsibleSection>
-
-                <CollapsibleSection icon="👑" title="Village leadership" accent="amber" defaultOpen={false}>
-                  <Suspense fallback={<p className="text-[10px] text-stone-500">Loading leadership…</p>}>
-                    <VillageLeadershipPanel state={world} />
-                  </Suspense>
-                </CollapsibleSection>
-
-                <CollapsibleSection
-                  icon="👨‍👩‍👧"
-                  title="Families"
-                  subtitle="Household units"
-                  accent="stone"
-                  defaultOpen={false}
-                >
-                  <Suspense fallback={<p className="text-[10px] text-stone-500">Loading families…</p>}>
-                    <PopulationPanel state={world} onFocusCitizen={focusCitizenOnMap} />
-                  </Suspense>
-                </CollapsibleSection>
-
-                <CollapsibleSection
-                  icon="⚔️"
-                  title="Armament"
-                  subtitle={getHumanArmamentLabel(world) ?? 'Research Defense tech'}
-                  accent="orange"
-                  defaultOpen={false}
-                >
-                  <p className="mb-2 text-[9px] leading-relaxed text-stone-500">
-                    Stone/wood gear unlocks from Defense research. Iron needs research <strong className="text-stone-400">and</strong> a forge run at a staffed Blacksmith.
-                  </p>
-                  {world.villageForge?.activeOrder && (
-                    <p className="mb-2 rounded bg-orange-950/40 px-2 py-1 text-[9px] text-orange-200">
-                      🔨 Forging {getForgeOrder(world.villageForge.activeOrder)?.label ?? 'gear'} — {Math.round(world.villageForge.progress)}%
-                    </p>
-                  )}
-                  <div className="space-y-1">
-                    {getArmamentSteps(world).map((step) => {
-                      const smith = world.buildings.find(
-                        (b) => b.completed && b.type === BuildingType.Blacksmith,
-                      );
-                      const showForgeGo = !step.done
-                        && ['iron_spears', 'iron_shields', 'guard_halberds', 'wall_plates', 'iron_pickaxes'].includes(step.id)
-                        && smith;
-                      return (
-                        <div key={step.id} className={`rounded px-2 py-1 text-[9px] ${step.done ? 'bg-emerald-900/30 text-emerald-300' : 'bg-stone-800/50 text-stone-400'}`}>
-                          <span>{step.done ? '✓' : '○'} {step.label}</span>
-                          {!step.done && <p className="mt-0.5 text-[8px] text-stone-500">{step.detail}</p>}
-                          {showForgeGo && (
-                            <button
-                              type="button"
-                              onClick={() => focusBuildingOnMap(
-                                smith.id,
-                                smith.x + smith.width / 2,
-                                smith.y + smith.height / 2,
-                              )}
-                              className="mt-1 rounded bg-orange-900/50 px-1.5 py-0.5 text-[8px] font-bold text-orange-200 hover:bg-orange-800/60"
-                            >
-                              Open Blacksmith →
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CollapsibleSection>
-
-                <details className="rounded-xl border border-stone-600/40 bg-stone-800/30 px-3 py-2">
-                  <summary className="cursor-pointer text-[10px] font-semibold text-stone-400 hover:text-stone-300">
-                    ⭐ How reputation grows
-                  </summary>
-                  <p className="mt-2 text-[9px] leading-relaxed text-stone-500">
-                    Buildings (+2), festivals (+10), research (+3), staffed Hospital (+2) &amp; Town Hall (+3),
-                    {' '}
-                    {world.unlockedTechs.includes('architecture_2') || world.researchNodes.some((n) => n.id === 'architecture_2' && n.researched)
-                      ? 'completed roads (+rep with Urban Planning)'
-                      : 'roads (+rep after Urban Planning research)'}
-                    .
-                  </p>
-                </details>
+                </div>
+                <VillageTabPanel
+                  state={world}
+                  villageStats={villageStats}
+                  onRecruitSettler={() => applyGameAction({ proto: 1, op: 'recruitSettler' })}
+                  onFocusBuilding={focusBuildingOnMap}
+                  onFocusCitizen={focusCitizenOnMap}
+                  onOpenGoals={() => { openTab('progress'); setProgressSubTab('goals'); }}
+                  onHintAction={handleHintAction}
+                />
               </div>
             )}
 
-            {activeTab === 'frontier' && (
-              <Suspense fallback={<p className="text-[10px] text-stone-500">Loading frontier…</p>}>
-                <FrontierPanel
+            {openTabs.has('frontier') && (
+              <div className="mb-3 rounded-xl border border-stone-600/30 bg-stone-800/20 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-stone-300">🏕️ Frontier</h3>
+                  <button
+                    type="button"
+                    onClick={() => toggleTab('frontier')}
+                    className="text-xs text-stone-500 hover:text-stone-300"
+                    title="Close panel"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <FrontierTabPanel
                   state={world}
                   pendingRaidCount={pendingRaids.length}
                   pendingOutgoingRaidCount={pendingOutgoingRaids.length}
@@ -2321,699 +2343,112 @@ export default function App() {
                     applyGameAction({ proto: 1, op: 'launchRaidOnRival', rivalId });
                   }}
                 />
-              </Suspense>
-            )}
-
-            {/* Nature Tab */}
-            {activeTab === 'nature' && (
-              <div className="space-y-3">
-                {grazingPressure.level !== 'stable' && (
-                  <div className={`rounded-xl border p-3 ${
-                    grazingPressure.level === 'critical'
-                      ? 'border-rose-500/40 bg-rose-950/40'
-                      : 'border-amber-500/40 bg-amber-950/30'
-                  }`}>
-                    <h3 className={`mb-1 text-xs font-bold ${
-                      grazingPressure.level === 'critical' ? 'text-rose-300' : 'text-amber-300'
-                    }`}>
-                      {grazingPressure.level === 'critical' ? '⚠️ Overgrazing warning' : '🦌 Grazing pressure rising'}
-                    </h3>
-                    <p className="text-[10px] leading-relaxed text-stone-300">{grazingPressure.headline}</p>
-                    <p className="mt-1.5 text-[9px] text-stone-400">{grazingPressure.advice}</p>
-                    <div className="mt-2 grid grid-cols-2 gap-1 text-[9px] text-stone-500">
-                      <span>🦌 Deer: {grazingPressure.deerCount}</span>
-                      <span>🌿 Grass: {grazingPressure.grassCount}</span>
-                      <span>Demand/day: {grazingPressure.grazingDemandPerDay}</span>
-                      <span>Recovery/day: {grazingPressure.grassRecoveryPerDay}</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-3 text-xs font-bold text-stone-300">Ecosystem Health</h3>
-                  
-                  <div className="mb-3 space-y-2">
-                    <div>
-                      <div className="mb-1 flex justify-between text-[10px]">
-                        <span className="text-stone-400">Health</span>
-                        <strong className={world.ecosystemHealth > 60 ? 'text-emerald-400' : world.ecosystemHealth > 30 ? 'text-amber-400' : 'text-rose-400'}>
-                          {Math.round(world.ecosystemHealth)}%
-                        </strong>
-                      </div>
-                      <div className="h-2.5 overflow-hidden rounded-full bg-stone-600">
-                        <div className={`h-full rounded-full transition-all ${
-                          world.ecosystemHealth > 60 ? 'bg-emerald-500' : world.ecosystemHealth > 30 ? 'bg-amber-500' : 'bg-rose-500'
-                        }`} style={{ width: `${Math.max(0, world.ecosystemHealth)}%` }} />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="mb-1 flex justify-between text-[10px]">
-                        <span className="text-stone-400">Pollution</span>
-                        <strong className="text-rose-400">{Math.round(world.pollutionLevel)}%</strong>
-                      </div>
-                      <div className="h-2.5 overflow-hidden rounded-full bg-stone-600">
-                        <div className="h-full rounded-full bg-rose-500 transition-all" style={{ width: `${Math.max(0, world.pollutionLevel)}%` }} />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-[10px]">
-                    <div className="rounded bg-stone-600/30 p-2">
-                      <div className="text-stone-500">Biodiversity</div>
-                      <strong className="text-lg text-white">{world.biodiversityIndex.toFixed(2)}</strong>
-                    </div>
-                    <div className="rounded bg-stone-600/30 p-2">
-                      <div className="text-stone-500">Weather</div>
-                      <strong className="text-lg text-white">{world.weather}</strong>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 rounded-lg border border-stone-600/40 bg-stone-800/40 p-2.5">
-                    <h4 className="mb-1 text-[9px] font-bold uppercase tracking-wider text-stone-400">Why this score</h4>
-                    <p className="mb-2 text-[9px] leading-relaxed text-stone-400">{ecoBreakdown.summary}</p>
-                    <div className="space-y-1 text-[9px]">
-                      {ecoBreakdown.lines.map((line) => (
-                        <div key={line.label} className="flex items-start justify-between gap-2">
-                          <span className="text-stone-500">{line.label}</span>
-                          <span className="text-right">
-                            <strong className={line.delta >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
-                              {line.delta >= 0 ? '+' : ''}{Math.round(line.delta)}
-                            </strong>
-                            <span className="block text-[8px] text-stone-600">{line.detail}</span>
-                          </span>
-                        </div>
-                      ))}
-                      <div className="flex justify-between border-t border-stone-700/60 pt-1 font-bold">
-                        <span className="text-stone-400">Health</span>
-                        <span className="text-stone-200">{Math.round(ecoBreakdown.health)}%</span>
-                      </div>
-                    </div>
-                    <p className="mt-2 text-[8px] text-stone-600">
-                      Growing towns shed pristine wilderness — there is no player tree planting yet. Early food-chain balance still matters for hunting.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-stone-300">Season & Climate</h3>
-                  <div className="space-y-1 text-[10px] text-stone-400">
-                    <p>
-                      <strong className={seasonTextClass(world.season)}>{SEASON_LABELS[world.season]}</strong>
-                      {' · '}
-                      <span className="font-mono text-stone-200">
-                        {formatTemperatureC(computeDailyTemperatureC(world.season, world.weather, world.dayInYear, world.year))}
-                      </span>
-                      {' today'}
-                    </p>
-                    {world.season === Season.Winter && (
-                      <p className="text-sky-300/90">
-                        Winter (days 270–359) — settlers burn wood for heat; grass and babies slow down.
-                      </p>
-                    )}
-                    {world.weather !== WeatherType.Clear && (
-                      <p>{WEATHER_ICONS[world.weather]} <strong className="text-stone-200">{world.weather}</strong> — shifts today&apos;s temperature and farming</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-stone-300">Wildlife Populations</h3>
-                  <p className="mb-2 text-[9px] text-stone-500">Healthy numbers keep the food chain balanced.</p>
-                  <div className="space-y-1 text-[10px]">
-                    <WildlifeBar label="Rabbits" count={world.wildlifeCounts.rabbits} max={120} color="bg-amber-600" icon="🐰" />
-                    <WildlifeBar label="Deer" count={world.wildlifeCounts.deer} max={60} color="bg-orange-700" icon="🦌" />
-                    <WildlifeBar label="Wolves" count={world.wildlifeCounts.wolves} max={25} color="bg-stone-500" icon="🐺" />
-                    <WildlifeBar label="Foxes" count={world.wildlifeCounts.foxes} max={35} color="bg-orange-600" icon="🦊" />
-                    <WildlifeBar label="Moon Howlers" count={world.wildlifeCounts.werewolves} max={10} color="bg-violet-700" icon="🌝" />
-                    <WildlifeBar label="Wildkin" count={world.wildlifeCounts.wildkin} max={15} color="bg-lime-700" icon="🦌" />
-                    <WildlifeBar label="Trees" count={world.wildlifeCounts.trees} max={200} color="bg-green-700" icon="🌲" />
-                    <WildlifeBar label="Grass" count={world.wildlifeCounts.grass} max={500} color="bg-green-500" icon="🌿" />
-                  </div>
-                </div>
-
-                {world.disasters.length > 0 && (
-                  <div className="rounded-xl border border-rose-500/30 bg-rose-900/30 p-3">
-                    <h3 className="mb-2 text-xs font-bold text-rose-400">Active Disasters</h3>
-                    {world.disasters.map((d, i) => (
-                      <div key={i} className="mb-1 text-[10px] text-rose-300">
-                        ⚠️ {d.type.charAt(0).toUpperCase() + d.type.slice(1)} — {Math.round((1 - d.progress / d.duration) * 100)}% remaining
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 
-            {/* Progress — research, trade, goals */}
-            {activeTab === 'progress' && (
-              <div className="space-y-3">
-                <div className="progress-subnav">
-                  {(['research', 'trade', 'goals'] as ProgressSubTab[]).map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      className="relative"
-                      data-active={progressSubTab === id}
-                      onClick={() => setProgressSubTab(id)}
-                    >
-                      {id === 'research' ? '🔬 Research' : id === 'trade' ? '🤝 Trade' : '🎯 Goals'}
-                      {id === 'research' && world.activeResearch && (
-                        <span className="progress-subnav-dot" title="Research in progress" />
-                      )}
-                      {id === 'trade' && tradeReadyCount > 0 && (
-                        <span className="progress-subnav-badge">{tradeReadyCount}</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-
-            {progressSubTab === 'research' && (
-              <div className="space-y-3">
-                {world.activeResearch && (
-                  <div className="rounded-xl border border-amber-600/30 bg-amber-900/30 p-3">
-                    <h3 className="mb-1 text-xs font-bold text-amber-400">Researching</h3>
-                    {(() => {
-                      const node = world.researchNodes.find(n => n.id === world.activeResearch);
-                      return node ? (
-                        <div>
-                          <div className="text-sm font-bold text-white">{node.name}</div>
-                          <div className="mt-1 h-2 overflow-hidden rounded-full bg-stone-600">
-                            <div className="h-full rounded-full bg-amber-500 transition-all" style={{ width: `${world.researchProgress}%` }} />
-                          </div>
-                          <div className="mt-1 text-[10px] text-amber-300">{Math.round(world.researchProgress)}% complete</div>
-                        </div>
-                      ) : null;
-                    })()}
-                  </div>
-                )}
-
-                {Object.values(ResearchType).map(rType => {
-                  const nodes = world.researchNodes.filter(n => n.type === rType);
-                  if (nodes.length === 0) return null;
-                  const color = RESEARCH_COLORS[rType as ResearchType];
-                  
-                  return (
-                    <div key={rType} className="rounded-xl bg-stone-700/50 p-3">
-                      <div className="mb-2 flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-                        <h3 className="text-xs font-bold capitalize" style={{ color }}>{rType}</h3>
-                      </div>
-                      <div className="space-y-1.5">
-                        {nodes.map(node => {
-                          const canResearch = node.unlocked && !node.researched && !world.activeResearch &&
-                            world.resources.wood >= node.cost.wood &&
-                            world.resources.stone >= node.cost.stone &&
-                            world.resources.gold >= node.cost.gold;
-                          
-                          return (
-                            <div key={node.id} className={`rounded-lg border p-2 text-[10px] ${
-                              node.researched ? 'border-emerald-500/30 bg-emerald-500/10' :
-                              node.unlocked ? 'border-stone-600 bg-stone-600/20' :
-                              'border-stone-700 bg-stone-800 opacity-50'
-                            }`}>
-                              <div className="flex items-center justify-between">
-                                <span className="font-bold text-stone-200">{node.name}</span>
-                                <span className="text-[8px] text-stone-500">T{node.tier}</span>
-                              </div>
-                              <p className="mt-0.5 text-stone-400">{node.description}</p>
-                              {!node.researched && (
-                                <>
-                                  <div className="mt-1 text-stone-500">
-                                    Cost: {node.cost.wood > 0 && `${node.cost.wood}w `}
-                                    {node.cost.stone > 0 && `${node.cost.stone}s `}
-                                    {node.cost.gold > 0 && `${node.cost.gold}g`}
-                                  </div>
-                                  {node.unlocked && (
-                                    <button onClick={() => applyGameAction({ proto: 1, op: 'startResearch', researchId: node.id })}
-                                      disabled={!canResearch}
-                                      className={`mt-1 w-full rounded py-1 text-[9px] font-bold transition-all ${
-                                        canResearch ? 'bg-amber-600 text-white hover:bg-amber-500' : 'bg-stone-600 text-stone-400 cursor-not-allowed'
-                                      }`}>
-                                      {world.activeResearch === node.id ? 'Researching...' : 'Research'}
-                                    </button>
-                                  )}
-                                </>
-                              )}
-                              {node.researched && <span className="text-emerald-400">✓ Researched</span>}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {progressSubTab === 'trade' && (
-              <div className="space-y-3">
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-stone-300">Trade Routes</h3>
-                  <p className="mb-2 text-[10px] text-stone-400">Reputation: <strong className="text-emerald-400">{world.villageReputation}</strong> / 100</p>
-                  
-                  <div className="space-y-2">
-                    {world.tradeRoutes.map(route => (
-                      <div key={route.id} className={`rounded-lg border p-2 text-[10px] ${
-                        route.active ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-stone-600 bg-stone-600/20'
-                      }`}>
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-stone-200">{route.targetName}</span>
-                          <span className={route.active ? 'text-emerald-400' : 'text-stone-500'}>
-                            {route.active ? 'Active' : `Need ${route.reputationRequired} rep`}
-                          </span>
-                        </div>
-                        <p className="text-stone-400">
-                          Receive: +{route.resourcesReceived.gold > 0 ? `${route.resourcesReceived.gold}g` : `${route.resourcesReceived.stone}s`} per round-trip
-                        </p>
-                        {route.active && (
-                          <p className="text-emerald-300/80">
-                            {route.caravanCarrierId != null
-                              ? `🚚 Merchant en route (${route.caravanLeg === 'inbound' ? 'returning' : route.caravanLeg === 'at_partner' ? 'at partner' : 'outbound'})`
-                              : `Trips completed: ${route.caravansCompleted ?? 0}`}
-                          </p>
-                        )}
-                        {!route.active && (
-                          <button onClick={() => applyGameAction({ proto: 1, op: 'establishTradeRoute', routeId: route.id })}
-                            disabled={world.villageReputation < route.reputationRequired}
-                            className={`mt-1 w-full rounded py-1 text-[9px] font-bold transition-all ${
-                              world.villageReputation >= route.reputationRequired ? 'bg-emerald-600 text-white hover:bg-emerald-500' : 'bg-stone-600 text-stone-400 cursor-not-allowed'
-                            }`}>
-                            Establish Route
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {progressSubTab === 'goals' && (
-              <div className="space-y-3">
-                {world.victoryAchieved && (
-                  <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-center">
-                    <span className="text-2xl">🏆</span>
-                    <h3 className="text-sm font-bold text-amber-300">Victory Achieved!</h3>
-                    <p className="text-[10px] text-amber-200/80">
-                      {world.victories.find(v => v.path === world.victoryAchieved)?.label}
-                    </p>
-                  </div>
-                )}
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-stone-300">Victory Paths</h3>
-                  <p className="mb-2 text-[10px] text-stone-400 leading-relaxed">
-                    Pursue any of four victory legacies — eco, city, trade, or harmony with the wild.
-                  </p>
-                  <details className="mb-3 rounded-lg border border-stone-600/60 bg-stone-800/40">
-                    <summary className="cursor-pointer px-2 py-1.5 text-[10px] font-semibold text-stone-300 hover:text-stone-200">
-                      How each path works
-                    </summary>
-                    <ul className="space-y-1.5 border-t border-stone-600/40 px-2 py-2 text-[9px] leading-relaxed text-stone-400">
-                      <li><strong className="text-stone-300">🌿 Eco-Utopia</strong> — 250 people and a healthy ecosystem for 20 years.</li>
-                      <li><strong className="text-stone-300">🏰 Great City</strong> — 400 people and 60 finished buildings.</li>
-                      <li><strong className="text-stone-300">💰 Trade Empire</strong> — open all 7 trade routes; merchants <em>walk</em> each route (hub → partner → back). Complete 40 round-trips and earn 50,000 gold from caravan trade. Watch the map **🚚** line and Progress → Trade for status.</li>
-                      <li><strong className="text-stone-300">🐺 Harmony</strong> — 8 <em>wild</em> wolves in the valley (untamed — Taming Post does not count) plus 15 wildkin.</li>
-                      <li className="text-stone-500 pt-1 border-t border-stone-700/50">
-                        <strong className="text-stone-400">Raids & elections</strong> — raid fighters earn Guard XP; the village head gets extra XP and reputation on wins, which feeds merit elections (all skills ×2) and the incumbent record score.
-                      </li>
-                    </ul>
-                  </details>
-                  <div className="space-y-2">
-                    {world.victories.filter((v) => ACTIVE_VICTORY_PATHS.includes(v.path as typeof ACTIVE_VICTORY_PATHS[number])).map(v => (
-                      <div key={v.path} className={`rounded-lg border p-2 ${
-                        v.achieved ? 'border-amber-500/40 bg-amber-500/10' : 'border-stone-600 bg-stone-600/20'
-                      }`}>
-                        <div className="mb-1 flex items-center justify-between">
-                          <span className="text-[10px] font-bold text-stone-200">{v.label}</span>
-                          <span className={`text-[9px] font-bold ${v.achieved ? 'text-amber-400' : 'text-stone-500'}`}>
-                            {v.achieved ? '✓ Won' : `${v.progress}%`}
-                          </span>
-                        </div>
-                        <p className="mb-1.5 text-[9px] text-stone-400">{v.description}</p>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-stone-700">
-                          <div
-                            className={`h-full rounded-full transition-all ${v.achieved ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                            style={{ width: `${v.progress}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {COMING_SOON_VICTORY_PATHS.length > 0 && (
-                    <details className="mt-3 rounded-lg border border-stone-600/60 bg-stone-800/40">
-                      <summary className="cursor-pointer px-2 py-1.5 text-[10px] font-semibold text-stone-400 hover:text-stone-300">
-                        Coming later
-                      </summary>
-                      <div className="space-y-2 border-t border-stone-600/40 p-2">
-                        {world.victories.filter((v) => COMING_SOON_VICTORY_PATHS.includes(v.path as typeof COMING_SOON_VICTORY_PATHS[number])).map(v => (
-                          <div key={v.path} className="rounded-lg border border-stone-700 bg-stone-700/20 p-2 opacity-70">
-                            <div className="mb-1 flex items-center justify-between">
-                              <span className="text-[10px] font-bold text-stone-300">{v.label}</span>
-                              <span className="text-[9px] font-bold text-stone-500">Soon</span>
-                            </div>
-                            <p className="text-[9px] text-stone-500">{v.description}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </details>
-                  )}
-                </div>
-                <CollapsibleSection icon="🏆" title="Challenges" accent="amber" defaultOpen>
-                  <Suspense fallback={<p className="text-[10px] text-stone-500">Loading challenges…</p>}>
-                    <ChallengesPanel state={world} />
-                  </Suspense>
-                </CollapsibleSection>
-                <Suspense fallback={<p className="text-[10px] text-stone-500">Loading statistics…</p>}>
-                  <StatisticsPanel state={world} />
-                </Suspense>
-              </div>
-            )}
-              </div>
-            )}
-
-            {/* Log Tab */}
-            {activeTab === 'log' && (
-              <div>
-                <div className="progress-subnav mb-2">
-                  {(['chronicle', 'combat'] as LogSubTab[]).map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      data-active={logSubTab === id}
-                      onClick={() => setLogSubTab(id)}
-                    >
-                      {id === 'chronicle' ? '📜 Chronicle' : '⚔️ Combat'}
-                    </button>
-                  ))}
-                </div>
-                {logSubTab === 'chronicle' ? (
-                  <>
-                    <h3 className="mb-2 text-xs font-bold text-amber-300">Village Chronicle</h3>
-                    <p className="mb-2 text-[9px] leading-relaxed text-stone-500">
-                      Full history of your settlement — births, marriages, scandals, research, disasters, and more.
-                      Scroll to read older entries, filter by type, or <strong className="text-stone-400">Copy log</strong> to save it in a note. Saved with your game.
-                    </p>
-                    <Suspense fallback={<p className="text-[10px] text-stone-500">Loading chronicle…</p>}>
-                      <EventLogPanel
-                        events={world.eventLog}
-                        meta={{
-                          villageName: world.villageName,
-                          year: world.year,
-                          day: world.dayInYear,
-                          tick: world.tick,
-                          population: world.humanPopulation,
-                        }}
-                      />
-                    </Suspense>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="mb-2 text-xs font-bold text-rose-300">Combat Chronicle</h3>
-                    <p className="mb-2 text-[9px] leading-relaxed text-stone-500">
-                      Incoming raids, proactive strikes, counter-raids, militia battles, and barricades — dedicated combat log with export.
-                    </p>
-                    <Suspense fallback={<p className="text-[10px] text-stone-500">Loading combat log…</p>}>
-                      <CombatLogPanel
-                        events={world.eventLog}
-                        meta={{
-                          villageName: world.villageName,
-                          year: world.year,
-                          day: world.dayInYear,
-                          tick: world.tick,
-                          population: world.humanPopulation,
-                        }}
-                      />
-                    </Suspense>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* More — guide & roadmap */}
-            {activeTab === 'more' && (
-              <div className="space-y-3">
-                <div className="progress-subnav">
-                  {(['guide', 'roadmap'] as MoreSubTab[]).map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      data-active={moreSubTab === id}
-                      onClick={() => setMoreSubTab(id)}
-                    >
-                      {id === 'guide' ? '❓ Guide' : '🗺️ Roadmap'}
-                    </button>
-                  ))}
-                </div>
-
-            {moreSubTab === 'roadmap' && (
-              <Suspense fallback={<p className="text-[10px] text-stone-500">Loading roadmap…</p>}>
-                <RoadmapPanel />
-              </Suspense>
-            )}
-
-            {moreSubTab === 'guide' && (
-              <div className="space-y-3 text-[10px] text-stone-300">
-                <div className="rounded-xl border border-amber-700/40 bg-amber-950/20 p-3">
-                  <h3 className="mb-1 text-xs font-bold text-amber-300">⚠️ {GAME_PHASE} · v{GAME_VERSION}</h3>
-                  <p className="text-stone-400">Playtest build — expect bugs, rough edges, and features that change. Saves may break between updates. Feedback helps shape the real release.</p>
+            {openTabs.has('nature') && (
+              <div className="mb-3 rounded-xl border border-stone-600/30 bg-stone-800/20 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-stone-300">🌿 Nature</h3>
                   <button
                     type="button"
-                    onClick={() => setMoreSubTab('roadmap')}
-                    className="mt-2 w-full rounded-lg border border-indigo-600/40 bg-indigo-950/40 px-3 py-2 text-[10px] font-bold text-indigo-200 hover:bg-indigo-900/50"
+                    onClick={() => toggleTab('nature')}
+                    className="text-xs text-stone-500 hover:text-stone-300"
+                    title="Close panel"
                   >
-                    🗺️ View development roadmap
+                    ✕
                   </button>
                 </div>
-
-                <div className="rounded-xl border border-violet-700/30 bg-violet-950/20 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-violet-300">Why play? (honest answer)</h3>
-                  <div className="space-y-1.5 text-stone-400">
-                    <p>This is a <strong className="text-stone-200">sandbox frontier sim</strong>, not a campaign with one quest giver. Purpose comes from layers you choose:</p>
-                    <p>• <strong className="text-stone-200">Challenges</strong> (Progress → Goals) — stepped goals with resource rewards.</p>
-                    <p>• <strong className="text-stone-200">Victory paths</strong> (Progress → Goals) — Eco 250, Great City 400/60, Trade Empire (7 walking caravan routes, 40 trips, 50k gold), Harmony (8 wild wolves + 15 wildkin). Raid Guard XP feeds elections.</p>
-                    <p>• <strong className="text-stone-200">Living drama</strong> — marriages, scandals, babies, moon howlers (Log / .txt chronicle).</p>
-                    <p>• <strong className="text-stone-200">The wider world</strong> — pilgrims, performers, rival camps appear as you grow.</p>
-                    <p>• <strong className="text-stone-200">Trade &amp; reputation</strong> — become a known township, link routes, unlock gold.</p>
-                    <p className="text-stone-500 italic">v0.4 is a playtest — more scripted story and rivals are planned. For now, pick one legacy and watch your chronicle unfold.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-emerald-700/30 bg-emerald-950/20 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-emerald-300">Getting Started</h3>
-                  <p className="mb-2 text-stone-400">
-                    {tutorialsEnabled
-                      ? 'Tips pop up the first time traders, rivals, winter, raids, and other mechanics appear. Replay quick start anytime.'
-                      : 'Tutorials are off. Turn them back on from the ☰ menu or below.'}
-                  </p>
-                  <div className="space-y-2">
-                    <button
-                      type="button"
-                      disabled={!tutorialsEnabled}
-                      onClick={() => { setTutorialStep(0); setShowTutorial(true); }}
-                      className="w-full rounded-lg bg-emerald-700 px-3 py-2 text-[10px] font-bold text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-stone-700 disabled:text-stone-500"
-                    >
-                      ↺ Replay Quick Start
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleToggleTutorials}
-                      className="w-full rounded-lg border border-stone-600 px-3 py-2 text-[10px] font-semibold text-stone-300 hover:border-stone-500 hover:text-white"
-                    >
-                      {tutorialsEnabled ? 'Turn off all tutorials' : 'Turn tutorials back on'}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-blue-300">Interface Overview</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p><strong className="text-stone-200">Alert strip</strong> — Under the header. Click raids, diplomacy, low food, or ready trade routes to jump there.</p>
-                    <p><strong className="text-stone-200">Build panel (left)</strong> — Press <strong className="text-stone-200">B</strong> to open. Pick a category, then a building. Keys <strong className="text-stone-200">1–9</strong> quick-select common types.</p>
-                    <p><strong className="text-stone-200">Grid</strong> — Press <strong className="text-stone-200">G</strong> to toggle the placement grid (auto-on when building).</p>
-                    <p><strong className="text-stone-200">Inspector</strong> — Top of the right panel; collapsible, auto-opens when you click the map.</p>
-                    <p><strong className="text-stone-200">Village</strong> — Focus hints with <strong className="text-stone-200">Go →</strong>, population, leadership, armament.</p>
-                    <p><strong className="text-stone-200">Frontier</strong> — Visitors, rivals, raids, diplomacy (badge when action needed).</p>
-                    <p><strong className="text-stone-200">Nature</strong> — Ecosystem health and wildlife counts.</p>
-                    <p><strong className="text-stone-200">Progress</strong> — Research · Trade · Goals (challenges + victory paths). Sub-tabs show badges when researching or trade is ready.</p>
-                    <p><strong className="text-stone-200">More</strong> — Guide (this page) and Roadmap.</p>
-                    <p><strong className="text-stone-200">Tab hotkeys</strong> — <strong className="text-stone-200">V</strong> Village · <strong className="text-stone-200">F</strong> Frontier · <strong className="text-stone-200">N</strong> Nature · <strong className="text-stone-200">P</strong> Progress · <strong className="text-stone-200">L</strong> Log · <strong className="text-stone-200">M</strong> More.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-cyan-300">🧳 Visitors & Rival Settlements</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>• <strong className="text-cyan-200">Traveling groups</strong> camp near your village — traders, pilgrims, scholars, performers, and more. They bring gifts and leave after a while.</p>
-                    <p>• <strong className="text-amber-200">Rival settlements</strong> can appear on the same map with their own camp, people, and buildings (indigo markers).</p>
-                    <p>• Relationships vary: <em>friendly</em> neighbors trade, <em>competitive</em> ones hunt your deer, <em>tense</em> ones grumble about borders.</p>
-                    <p>• Check the <strong className="text-stone-200">Frontier tab</strong> to see who's currently on the map.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-emerald-300">🌍 Why Animals & Humans?</h3>
-                  <p className="mb-2 text-stone-400 leading-relaxed">
-                    This world is a living ecosystem. Humans cannot survive alone — they are part of the food chain.
-                  </p>
-                  <div className="space-y-1.5 rounded bg-stone-800/60 p-2">
-                    <p><strong className="text-emerald-300">🌿 Producers:</strong> Grass and trees create food from sunlight.</p>
-                    <p><strong className="text-amber-300">🐰 Prey:</strong> Rabbits and deer eat grass. They are the bridge between plants and predators.</p>
-                    <p><strong className="text-rose-300">🐺 Predators:</strong> Wolves and foxes hunt prey to keep populations balanced.</p>
-                    <p><strong className="text-cyan-300">👨 Humans:</strong> Hunt animals for food AND build farms. But overbuilding pollutes and destroys habitat.</p>
-                  </div>
-                  <p className="mt-2 text-stone-500 italic">
-                    If wolves die out, deer overpopulate, eat all grass, rabbits starve, and humans have nothing to hunt. Balance is everything.
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-amber-300">👨‍👩‍👧 Family & Relationships</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>• Every human has a <strong className="text-amber-200">name and surname</strong> passed down generations.</p>
-                    <p>• Single adults will <strong className="text-pink-300">court</strong> nearby singles (💕 hearts appear).</p>
-                    <p>• At 100% courtship, they <strong className="text-yellow-300">marry</strong> (💍 golden ring connects them).</p>
-                    <p>• Married couples can have <strong className="text-pink-300">babies</strong> (🤰 pregnant indicator).</p>
-                    <p>• Settlers may pursue <strong className="text-rose-300">secret affairs</strong> in the evenings — spouses can catch them; a <strong className="text-violet-300">Church</strong> makes gossip travel faster.</p>
-                    <p>• <strong className="text-violet-300">Bastards</strong> are born when the father isn't the mother's spouse — they take the mother's surname and village gossip spreads.</p>
-                    <p>• Legitimate children inherit their <strong className="text-amber-200">father's surname</strong>.</p>
-                    <p>• Click any person to see their <strong className="text-amber-200">full family tree</strong>.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-rose-300">⚔️ Hunting & Combat</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>• <strong className="text-orange-300">Food chain:</strong> Grass → rabbits/deer → foxes/wolves → humans. Everyone hunts someone.</p>
-                    <p>• <strong className="text-cyan-300">Settlers hunt</strong> deer and rabbits when hungry and off-duty. Watch for orange <strong className="text-orange-300">🏹 chase lines</strong> and floating <em>Hunted!</em> text.</p>
-                    <p>• <strong className="text-stone-300">Wolves & foxes</strong> chase prey with grey dashed lines. Prey flees when predators get close.</p>
-                    <p>• <strong className="text-violet-300">Moon Howlers</strong> hunt settlers on full-moon nights — settlers flee home.</p>
-                    <p>• <strong className="text-amber-300">Weapons:</strong> Stone/wood gear unlocks from Defense research. <strong className="text-stone-200">Iron Spears & Shields</strong> need research <strong className="text-stone-200">and</strong> a forge order at a staffed Blacksmith (click the building → Village forge).</p>
-                    <p>• Click a settler to see <strong className="text-stone-200">Village gear</strong> once research (and Blacksmith for iron) is done.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-cyan-300">🏕️ Other tribes</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>• <strong className="text-stone-200">Visitors</strong> camp nearby (traders, pilgrims, refugees…) — passive bonuses while they stay.</p>
-                    <p>• <strong className="text-stone-200">Rival settlements</strong> appear from ~6 population / yearly events — another camp on the map with its own houses.</p>
-                    <p>• <strong className="text-stone-200">Diplomacy</strong> — click a rival camp for gifts, pacts, peace treaties (🕊️), militia, raids, and event responses.</p>
-                    <p>• <strong className="text-stone-200">Visitor camps</strong> — talk to the caravan leader (once per visit), trade goods, or negotiate refugees.</p>
-                    <p className="text-stone-500 italic">Full raids & wars are not in v0.4 yet — relations affect gold gifts, hunting competition, and reputation.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-violet-300">🌝 Moon Howlers</h3>
-                  <p className="text-stone-400 leading-relaxed">
-                    Sometimes a grown settler is <strong className="text-violet-200">cursed as a Moon Howler</strong>.
-                    Cursed settlers stay <strong className="text-violet-200">normal humans most nights</strong>. Only on a
-                    <strong className="text-violet-200"> full moon</strong> (about every 2 weeks) do they transform and
-                    <strong className="text-rose-300"> hunt settlers</strong>. Staff a
-                    <strong className="text-indigo-200"> Church</strong> — uncured settlers transform every 14 days; at dawn after each hunt the priest may break the curse while they are still in 🌝 form (village-wide, ~18% chance).
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-dashed border-violet-700/40 bg-violet-950/20 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-violet-300">🧪 Testing</h3>
-                  <p className="mb-2 text-[9px] text-stone-500">Spawn a Moon Howler instantly for playtesting.</p>
-                  <button
-                    onClick={() => applyGameAction({ proto: 1, op: 'spawnMoonHowlerDebug' })}
-                    className="w-full rounded-lg bg-violet-800 px-3 py-2 text-[10px] font-bold text-violet-100 transition-all hover:bg-violet-700"
-                  >
-                    🌝 Spawn Moon Howler
-                  </button>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-blue-300">🎮 Controls</h3>
-                  <div className="grid grid-cols-2 gap-1 text-stone-400">
-                    <span><strong className="text-stone-200">WASD / Arrows</strong></span><span>Pan camera</span>
-                    <span><strong className="text-stone-200">Mouse drag</strong></span><span>Pan camera</span>
-                    <span><strong className="text-stone-200">Scroll</strong></span><span>Zoom in/out</span>
-                    <span><strong className="text-stone-200">Click</strong></span><span>Select / Build</span>
-                    <span><strong className="text-stone-200">Space</strong></span><span>Pause/Play</span>
-                    <span><strong className="text-stone-200">B</strong></span><span>Full build catalog (left)</span>
-                    <span><strong className="text-stone-200">G</strong></span><span>Toggle grid</span>
-                    <span><strong className="text-stone-200">1–9</strong></span><span>Quick-build (opens left catalog)</span>
-                    <span><strong className="text-stone-200">V F N P L M</strong></span><span>Sidebar tabs</span>
-                    <span><strong className="text-stone-200">H</strong></span><span>Find settlers (center camera)</span>
-                    <span><strong className="text-stone-200">ESC</strong></span><span>Cancel build</span>
-                    <span><strong className="text-stone-200">+ / -</strong></span><span>Zoom</span>
-                    <span><strong className="text-stone-200">🔊 / 🔇</strong></span><span>Mute sound — or pick Soft / Normal / Loud</span>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-emerald-300">🏗️ Buildings Guide</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>• <strong className="text-amber-200">House</strong> — Family home (6 slots). Click house → <strong className="text-stone-200">Expand</strong> for up to 10.</p>
-                    <p>• <strong className="text-amber-200">Farm</strong> — Produces food every season.</p>
-                    <p>• <strong className="text-amber-200">Lumber Mill</strong> — Produces wood. Needs workers.</p>
-                    <p>• <strong className="text-amber-200">Quarry/Mine</strong> — Produces stone.</p>
-                    <p>• <strong className="text-amber-200">Roads</strong> — Infra tab (key 8). Horizontal strips — zigzag them (step north/south each segment) for paths up hills. Boost nearby buildings +15%.</p>
-                    <p>• <strong className="text-amber-200">Town Hall</strong> — After <strong className="text-stone-200">Urban Planning</strong>. Staff officials for taxes, trade &amp; immigration boosts, election site, scandal buffer, and hosted festivals.</p>
-                    <p>• <strong className="text-amber-200">Church</strong> — Community tab, no research needed. Faster marriages, breaks Moon Howler curses, stricter morals.</p>
-                    <p>• <strong className="text-amber-200">Hospital</strong> — Staffed: +2 reputation every 5 days. Any hospital lowers energy drain.</p>
-                    <p>• <strong className="text-amber-200">Demolish</strong> — Click any building → sidebar → <strong className="text-stone-200">🗑 Demolish</strong> (works on houses too; residents are reassigned).</p>
-                    <p>• <strong className="text-amber-200">Reputation ⭐</strong> — Village header &amp; Progress → Trade. From Town Hall, Hospital, pilgrims, festivals, and avoiding scandals. Unlocks trade routes.</p>
-                    <p>• <strong className="text-amber-200">Village head 👑</strong> — First male leads until Year 10; merit elections every 10 years after that. Village tab → Leadership for standings and record score. Scandals hurt re-election; a strong challenger can still win.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-emerald-300">🦌 What Does Wildlife Do?</h3>
-                  <div className="space-y-1.5 text-stone-400">
-                    <p>Every animal has a role in the ecosystem. Without balance, your village will starve.</p>
-                    <div className="space-y-1 rounded bg-stone-800/60 p-2">
-                      <p><strong className="text-green-300">🌿 Grass</strong> — Grows naturally. Rabbits and deer eat it. If grass dies, everything starves.</p>
-                      <p><strong className="text-amber-300">🐰 Rabbits</strong> — Eat grass, reproduce fast. Foxes and wolves hunt them. Humans can hunt rabbits for food.</p>
-                      <p><strong className="text-orange-300">🦌 Deer</strong> — Eat grass, move in herds. Wolves and humans hunt deer. More deer = more food for predators.</p>
-                      <p><strong className="text-orange-500">🦊 Foxes</strong> — Hunt rabbits to keep their population in check. Without foxes, rabbits overpopulate and eat all the grass.</p>
-                      <p><strong className="text-stone-300">🐺 Wolves</strong> — Hunt deer and rabbits. Apex predators. Without wolves, deer overpopulate and destroy grasslands.</p>
-                      <p><strong className="text-cyan-300">👨 Humans</strong> — Hunt animals for food, build farms for stable food. Build too much and pollution rises, harming wildlife.</p>
-                    </div>
-                    <p className="text-stone-500 italic">If wolves die out, deer explode, eat all grass, rabbits starve, and your people have nothing to hunt. Balance is everything.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-amber-300">📜 Village Chronicle (Log tab)</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>Right sidebar → <strong className="text-stone-200">📜 Log</strong> — scrollable history of everything that happened (newest on top).</p>
-                    <p>Filter by type, hit <strong className="text-stone-200">Download .txt</strong> for a text file (opens in Notepad), or enable export when you 💾 Save.</p>
-                    <p className="text-stone-500">File name: <strong className="text-stone-400">wilderfolk-YourVillage-chronicle.txt</strong> in your Downloads folder.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-violet-300">🦴 Taming Animals</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>1. Build a <strong className="text-stone-200">Taming Post</strong> (Community tab).</p>
-                    <p>2. Click a wild <strong className="text-stone-200">wolf, fox, deer, or rabbit</strong> within ~140px of the post.</p>
-                    <p>3. Pick an adult settler — costs food: rabbit 10, fox 25, deer 30, wolf 40.</p>
-                    <p>4. Tamed animals <strong className="text-stone-200">follow their owner</strong>. Wolves and foxes sometimes hunt nearby prey for them.</p>
-                    <p className="text-stone-500 italic">Moon Howlers cannot be tamed — staff a Church; cures roll at dawn (7am) after the hunt in 🌝 form.</p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-stone-700/50 p-3">
-                  <h3 className="mb-2 text-xs font-bold text-rose-300">⚠️ Disasters & Seasons</h3>
-                  <div className="space-y-1 text-stone-400">
-                    <p>• <strong className="text-rose-300">Fire/Flood/Tornado</strong> — Damage buildings and kill wildlife.</p>
-                    <p>• <strong className="text-rose-300">Plague</strong> — Can be prevented with Medicine research.</p>
-                    <p>• <strong className="text-amber-200">Winter</strong> — Grass stops growing, animals struggle.</p>
-                    <p>• <strong className="text-emerald-300">Spring</strong> — Best season for growth and babies!</p>
-                  </div>
-                </div>
+                <NatureTabPanel
+                  state={world}
+                  grazingPressure={grazingPressure}
+                  ecoBreakdown={ecoBreakdown}
+                />
               </div>
             )}
+
+            {openTabs.has('progress') && (
+              <div className="mb-3 rounded-xl border border-stone-600/30 bg-stone-800/20 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-stone-300">📊 Progress</h3>
+                  <button
+                    type="button"
+                    onClick={() => toggleTab('progress')}
+                    className="text-xs text-stone-500 hover:text-stone-300"
+                    title="Close panel"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <ProgressTabPanel
+                  state={world}
+                  progressSubTab={progressSubTab}
+                  setProgressSubTab={setProgressSubTab}
+                  tradeReadyCount={tradeReadyCount}
+                  onStartResearch={(researchId) => applyGameAction({ proto: 1, op: 'startResearch', researchId })}
+                  onEstablishTradeRoute={(routeId) => applyGameAction({ proto: 1, op: 'establishTradeRoute', routeId })}
+                />
+              </div>
+            )}
+
+            {openTabs.has('log') && (
+              <div className="mb-3 rounded-xl border border-stone-600/30 bg-stone-800/20 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-stone-300">📜 Log</h3>
+                  <button
+                    type="button"
+                    onClick={() => toggleTab('log')}
+                    className="text-xs text-stone-500 hover:text-stone-300"
+                    title="Close panel"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <LogTabPanel
+                  state={world}
+                  logSubTab={logSubTab}
+                  setLogSubTab={setLogSubTab}
+                />
+              </div>
+            )}
+
+            {openTabs.has('more') && (
+              <div className="mb-3 rounded-xl border border-stone-600/30 bg-stone-800/20 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-stone-300">⋯ More</h3>
+                  <button
+                    type="button"
+                    onClick={() => toggleTab('more')}
+                    className="text-xs text-stone-500 hover:text-stone-300"
+                    title="Close panel"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <MoreTabPanel
+                  moreSubTab={moreSubTab}
+                  setMoreSubTab={setMoreSubTab}
+                  tutorialsEnabled={tutorialsEnabled}
+                  onReplayTutorial={() => { setTutorialStep(0); setShowTutorial(true); }}
+                  onToggleTutorials={handleToggleTutorials}
+                  onSpawnMoonHowlerDebug={() => applyGameAction({ proto: 1, op: 'spawnMoonHowlerDebug' })}
+                />
               </div>
             )}
           </div>
         </aside>
-      </div>
+        </div>
+
+      {showActiveEventBanner && activeEventForBanner && (
+        <ActiveEventBanner event={activeEventForBanner} onDismiss={dismissActiveEvent} />
+      )}
+
+      {activeBigNews.length > 0 && !showActiveEventBanner && (
+        <BigNewsBanner
+          news={activeBigNews}
+          onDismiss={dismissBigNewsItem}
+        />
+      )}
 
       {showShortcuts && (
         <ShortcutsOverlay onClose={() => setShowShortcuts(false)} />
@@ -3024,35 +2459,98 @@ export default function App() {
 
 // ============ SUB-COMPONENTS ============
 
-function BigNewsBanner({ news, onDismiss }: { news: { id: string; title: string; message: string; type: 'positive' | 'negative' | 'neutral' }[]; onDismiss: () => void }) {
+function ActiveEventBanner({
+  event,
+  onDismiss,
+}: {
+  event: { emoji: string; title: string; description: string; effect: string; type: 'positive' | 'negative' | 'neutral' };
+  onDismiss: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        onDismiss();
+      }}
+      className={`pointer-events-auto fixed left-1/2 top-14 z-[199] w-[min(100%-1.5rem,20rem)] -translate-x-1/2 cursor-pointer rounded-lg border p-2.5 pr-8 text-left shadow-lg backdrop-blur hover:brightness-110 ${
+        event.type === 'positive' ? 'border-emerald-500/40 bg-emerald-950/95' :
+        event.type === 'negative' ? 'border-rose-500/40 bg-rose-950/95' :
+        'border-stone-500/40 bg-stone-900/95'
+      }`}
+      aria-label="Dismiss event"
+    >
+      <span className="absolute right-1.5 top-1 text-base leading-none text-stone-400" aria-hidden>×</span>
+      <div className="flex items-start gap-2">
+        <Emoji className="text-lg">{event.emoji}</Emoji>
+        <div className="min-w-0">
+          <h3 className="truncate text-sm font-bold text-white">{event.title}</h3>
+          <p className="line-clamp-2 text-[11px] text-stone-300">{event.description}</p>
+          <p className={`mt-0.5 truncate text-[10px] font-semibold ${
+            event.type === 'positive' ? 'text-emerald-400' :
+            event.type === 'negative' ? 'text-rose-400' : 'text-amber-400'
+          }`}>{event.effect}</p>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+function BigNewsTypeBadge({ type }: { type: 'positive' | 'negative' | 'neutral' }) {
+  const styles = {
+    positive: 'border-emerald-400/40 bg-emerald-500/20 text-emerald-200',
+    negative: 'border-rose-400/40 bg-rose-500/20 text-rose-200',
+    neutral: 'border-amber-400/40 bg-amber-500/20 text-amber-200',
+  }[type];
+  const label = type === 'positive' ? '+' : type === 'negative' ? '!' : 'i';
+  const title = type === 'positive' ? 'Good news' : type === 'negative' ? 'Urgent news' : 'News';
+  return (
+    <span
+      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-black ${styles}`}
+      title={title}
+      aria-label={title}
+    >
+      {label}
+    </span>
+  );
+}
+
+function BigNewsBanner({
+  news,
+  onDismiss,
+}: {
+  news: { id: string; title: string; message: string; type: 'positive' | 'negative' | 'neutral' }[];
+  onDismiss: (id: string) => void;
+}) {
   if (news.length === 0) return null;
   const item = news[news.length - 1];
   return (
-    <div className="absolute left-1/2 top-16 z-20 w-full max-w-lg -translate-x-1/2 animate-in fade-in slide-in-from-top">
-      <div className={`relative rounded-xl border p-4 shadow-2xl backdrop-blur ${
+    <button
+      type="button"
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        onDismiss(item.id);
+      }}
+      className={`pointer-events-auto fixed left-1/2 top-24 z-[200] w-[min(100%-1.5rem,22rem)] -translate-x-1/2 cursor-pointer rounded-lg border p-2.5 pr-8 text-left shadow-lg backdrop-blur hover:brightness-110 ${
         item.type === 'positive' ? 'border-emerald-400/50 bg-emerald-950/90' :
         item.type === 'negative' ? 'border-rose-400/50 bg-rose-950/90' :
         'border-amber-400/50 bg-amber-950/90'
-      }`}>
-        <button
-          onClick={onDismiss}
-          className="absolute right-2 top-1.5 text-lg leading-none text-stone-400 hover:text-white"
-          title="Dismiss"
-        >
-          ×
-        </button>
-        <div className="flex items-start gap-3 pr-6">
-          <span className="text-3xl">{item.type === 'positive' ? '✨' : item.type === 'negative' ? '⚠️' : '📜'}</span>
-          <div>
-            <h3 className={`text-sm font-bold ${
-              item.type === 'positive' ? 'text-emerald-300' :
-              item.type === 'negative' ? 'text-rose-300' : 'text-amber-300'
-            }`}>{item.title}</h3>
-            <p className="text-xs text-stone-200">{item.message}</p>
-          </div>
+      }`}
+    >
+      <span className="absolute right-1.5 top-1 text-base leading-none text-stone-400" aria-hidden>×</span>
+      <div className="flex items-start gap-2">
+        <BigNewsTypeBadge type={item.type} />
+        <div className="min-w-0">
+          <h3 className={`truncate text-sm font-bold ${
+            item.type === 'positive' ? 'text-emerald-300' :
+            item.type === 'negative' ? 'text-rose-300' : 'text-amber-300'
+          }`}>{item.title}</h3>
+          <p className="line-clamp-3 text-[11px] text-stone-200">{item.message}</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -3070,6 +2568,7 @@ function ShortcutsOverlay({ onClose }: { onClose: () => void }) {
     ['R', 'Rotate road / wall / gate while placing'],
     ['ESC', 'Cancel build · clear selection'],
     ['?', 'This help overlay'],
+    ['Menu → Settings', 'Show sim tick (raw t + day)'],
   ];
   return (
     <div
@@ -3097,16 +2596,6 @@ function ShortcutsOverlay({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
-
-const StatBadge = memo(function StatBadge({ label, value, icon }: { label: string; value: number; icon: string }) {
-  return (
-    <div className="flex items-center gap-1.5 rounded bg-stone-600/30 px-2 py-1">
-      <span>{icon}</span>
-      <span className="text-stone-400">{label}:</span>
-      <strong className="text-white">{value}</strong>
-    </div>
-  );
-});
 
 const VISITOR_KIND_EMOJI: Record<VisitorGroup['kind'], string> = {
   traders: '🛒', pilgrims: '🕯️', scholars: '📚', hunters: '🏹',
@@ -3155,7 +2644,7 @@ function VisitorCampPanel({
     <div className="rounded-xl border border-cyan-600/40 bg-cyan-950/30 p-2.5">
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="text-lg">{emoji}</span>
+          <Emoji className="text-lg">{emoji}</Emoji>
           <div className="min-w-0">
             <h3 className="truncate text-xs font-bold text-cyan-200">{group.name}</h3>
             <p className="text-[9px] capitalize text-cyan-300/80">{group.kind} · {group.daysLeft}d · {group.entityIds.length} people</p>
@@ -3244,21 +2733,6 @@ function VisitorCampPanel({
     </div>
   );
 }
-
-const WildlifeBar = memo(function WildlifeBar({ label, count, max, color, icon }: { label: string; count: number; max: number; color: string; icon: string }) {
-  const pct = Math.min(100, (count / max) * 100);
-  return (
-    <div>
-      <div className="mb-0.5 flex justify-between">
-        <span>{icon} {label}</span>
-        <strong>{count}</strong>
-      </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-stone-600">
-        <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-});
 
 function getFamilyMembers(entity: Entity, allEntities: Entity[]): { label: string; name: string; relation: string }[] {
   const members: { label: string; name: string; relation: string }[] = [];
@@ -3551,6 +3025,7 @@ function SelectedEntityPanel({ entity, allEntities, state, onTame, onMoveOut, on
 
 const BUILDING_OUTPUT_HINTS: Partial<Record<BuildingType, string>> = {
   [BuildingType.Farm]: 'Produces food — check the Food counter in the header.',
+  [BuildingType.HuntingSpot]: 'Hunters produce meat from nearby wildlife — check Food counter.',
   [BuildingType.Greenhouse]: 'Produces food year-round — watch Food in the header.',
   [BuildingType.Silo]: 'Passive food every 2 days, +600 food storage, less spoilage — no workers.',
   [BuildingType.Mill]: 'Passive — standing mill boosts all food production +25%. No workers needed.',
@@ -3561,7 +3036,7 @@ const BUILDING_OUTPUT_HINTS: Partial<Record<BuildingType, string>> = {
   [BuildingType.Store]: 'Generates passive gold income.',
   [BuildingType.Market]: 'Trades goods for gold with assigned workers.',
   [BuildingType.Workshop]: 'Pick a recipe below — crafts every 2 days when staffed and stocked.',
-  [BuildingType.Church]: 'Staffed church boosts courtship, may break Moon Howler curses at dawn after full-moon hunts, and catches affairs.',
+  [BuildingType.Church]: 'Staffed church boosts courtship/morals. Full-moon nights: more priests = higher cure chance vs a Moon Howler; no priest = howler unopposed.',
   [BuildingType.School]: 'Assign a teacher — children walk here by day; schooling speeds growth and grants graduation perks.',
   [BuildingType.Blacksmith]: 'Forge iron spears & shields here after Defense research. Staffed smith boosts lumber, quarry & mine (+25% per worker).',
   [BuildingType.Hospital]: 'Staffed hospital adds reputation every 5 days; any hospital lowers energy drain.',
@@ -3583,8 +3058,8 @@ function canAffordRecipe(resources: WorldState['resources'], recipe: ReturnType<
   return true;
 }
 
-function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assignableWorkers, onRemove, onRepair, onUpgrade, onDemolish, onSetWorkshopRecipe, onQueueForge, idleWorkers, canAssignWorker, onDiplomacyAction, onTownHallAction, onFocusCamp }: {
-  building: Building; state: WorldState; onAssign: () => void; onAssignWorker: (humanId: number) => void;
+function SelectedBuildingPanel({ building, state, onAssign, onAutoStaffAll, onAssignWorker, assignableWorkers, onRemove, onRepair, onUpgrade, onDemolish, onSetWorkshopRecipe, onQueueForge, idleWorkers, canAssignWorker, onDiplomacyAction, onTownHallAction, onFocusCamp }: {
+  building: Building; state: WorldState; onAssign: () => void; onAutoStaffAll: () => void; onAssignWorker: (humanId: number) => void;
   assignableWorkers: Entity[]; onRemove: (id: number) => void;
   onRepair: () => void; onUpgrade: () => void; onDemolish: () => void;
   onSetWorkshopRecipe?: (recipeId: string) => void;
@@ -3859,13 +3334,26 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
           <p className="text-[9px] text-stone-400">{BUILDING_OUTPUT_HINTS[building.type]}</p>
         )}
         {building.completed && building.type === BuildingType.Church && building.occupants.length === 0 && (
-          <p className="text-[9px] text-amber-400">⚠️ No priest — Moon Howler cures disabled; courtship/morals bonuses reduced.</p>
+          <p className="text-[9px] text-amber-400">⚠️ No priest — nothing stops Moon Howlers on full-moon nights; courtship/morals bonuses reduced.</p>
         )}
         {building.completed && building.type === BuildingType.Church && (() => {
           const totalCursed = state.entities.filter((e) => e.alive && e.moonHowlerCursed).length;
           const huntingTonight = state.entities.filter(
             (e) => e.alive && e.type === EntityType.Werewolf && e.moonHowlerCursed,
           ).length;
+          const priestCount = state.buildings
+            .filter((b) => b.completed && b.type === BuildingType.Church && b.faction !== 'rival')
+            .reduce((n, b) => {
+              for (const id of b.occupants) {
+                const e = state.entities.find((x) => x.id === id);
+                if (e?.alive && e.type === EntityType.Human && !e.faction && !e.moonHowlerCursed) n++;
+              }
+              return n;
+            }, 0);
+          const w = moonHowlerRiteWeights(Math.max(1, priestCount));
+          const curePct = Math.round(moonHowlerCureChanceForPriests(Math.max(1, priestCount)) * 100);
+          const killPct = Math.round(w.killPriest * 100);
+          const fleePct = Math.round(w.flee * 100);
           if (totalCursed === 0) {
             return (
               <p className="text-[9px] text-emerald-400">✓ No active Moon Howler curses in the village.</p>
@@ -3875,8 +3363,8 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
           return (
             <p className="text-[9px] text-violet-300">
               {huntingTonight > 0
-                ? `🌝 ${huntingTonight} Moon Howler${huntingTonight === 1 ? '' : 's'} abroad — priest exorcises at dawn while still in 🌝 form (~${Math.round(MOON_HOWLER_CHURCH_CURE_CHANCE * 100)}%, anywhere in village).`
-                : `🌝 ${totalCursed} curse${totalCursed === 1 ? '' : 's'} — transforms every 14 days; dawn exorcism in 🌝 form (~${Math.round(MOON_HOWLER_CHURCH_CURE_CHANCE * 100)}%).`}
+                ? `🌝 ${huntingTonight} outside (20:00–06:00) · ${priestCount} priest${priestCount === 1 ? '' : 's'} on duty → ~${curePct}% cure / ~${killPct}% priest dies / ~${fleePct}% flees (more priests = higher cure). No church staff = howler hunts freely.`
+                : `🌝 ${totalCursed} curse${totalCursed === 1 ? '' : 's'} · ${priestCount} priest${priestCount === 1 ? '' : 's'} → ~${curePct}% cure chance on the next full-moon night (stacks with more priests).`}
             </p>
           );
         })()}
@@ -4048,7 +3536,19 @@ function SelectedBuildingPanel({ building, state, onAssign, onAssignWorker, assi
           <div className="grid grid-cols-2 gap-1">
           {canAssignWorker && building.occupants.length < config.maxOccupants && assignableWorkers.length === 0 && (
             <button onClick={onAssign} className="rounded bg-emerald-600 px-2 py-1.5 text-[9px] font-bold text-white hover:bg-emerald-500 transition-all">
-              + {!building.completed ? 'Assign builder' : idleWorkers > 0 ? `Assign worker (${idleWorkers})` : 'Reassign worker'}
+              + {!building.completed ? 'Fill builders' : idleWorkers > 0 ? `Fill workers (${idleWorkers})` : 'Fill workers'}
+            </button>
+          )}
+          {building.completed && BUILDING_JOB_TYPES[building.type]
+            && building.type !== BuildingType.Church
+            && building.type !== BuildingType.Prison
+            && building.type !== BuildingType.Barracks && (
+            <button
+              type="button"
+              onClick={onAutoStaffAll}
+              className="col-span-2 rounded border border-sky-600/50 bg-sky-900/40 px-2 py-1 text-[9px] font-semibold text-sky-200 hover:bg-sky-800/50"
+            >
+              Auto-staff all job buildings
             </button>
           )}
           {!canAssignWorker && building.occupants.length < config.maxOccupants && (
@@ -4163,7 +3663,7 @@ function MiniMap({
   }, [worldRef, viewRef]);
 
   return (
-    <div className="absolute bottom-4 left-4 overflow-hidden rounded-lg border border-stone-600 bg-stone-800/80 shadow-xl backdrop-blur">
+    <div className="pointer-events-auto absolute bottom-4 left-4 overflow-hidden rounded-lg border border-stone-600 bg-stone-800/80 shadow-xl backdrop-blur">
       <canvas ref={canvasRef} width={140} height={100} className="block" />
     </div>
   );

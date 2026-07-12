@@ -1,3 +1,4 @@
+import Emoji from './Emoji';
 import type { ContextualTutorialTip } from '../game/contextualTutorial';
 import type { FocusHintAction } from '../game/focusHints';
 
@@ -16,7 +17,7 @@ export default function ContextualTutorialCard({ tip, onDismiss, onDisableAll, o
       <div className="rounded-xl border border-amber-500/35 bg-stone-900/95 p-3 shadow-2xl backdrop-blur-sm">
         <div className="mb-1 flex items-start justify-between gap-2">
           <div className="flex min-w-0 items-start gap-2">
-            <span className="text-lg leading-none">{tip.icon}</span>
+            <Emoji className="text-lg">{tip.icon}</Emoji>
             <div className="min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-wide text-amber-400">New</p>
               <h3 className="text-sm font-bold text-white">{tip.title}</h3>
@@ -24,7 +25,10 @@ export default function ContextualTutorialCard({ tip, onDismiss, onDisableAll, o
           </div>
           <button
             type="button"
-            onClick={onDismiss}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDismiss();
+            }}
             className="shrink-0 rounded px-1.5 py-0.5 text-[10px] text-stone-500 hover:bg-stone-800 hover:text-stone-200"
             aria-label="Dismiss tip"
           >
@@ -44,7 +48,10 @@ export default function ContextualTutorialCard({ tip, onDismiss, onDisableAll, o
           )}
           <button
             type="button"
-            onClick={onDismiss}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDismiss();
+            }}
             className={`rounded-lg bg-stone-700 px-2 py-1.5 text-[10px] font-semibold text-stone-200 hover:bg-stone-600 ${action ? '' : 'w-full'}`}
           >
             Got it

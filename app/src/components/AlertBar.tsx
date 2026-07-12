@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Emoji from './Emoji';
 import type { PriorityAlert, PriorityAlertSeverity } from '../game/priorityAlerts';
 
 const SEVERITY_STYLE: Record<PriorityAlertSeverity, string> = {
@@ -32,7 +33,7 @@ export default function AlertBar({ alerts, onAlert }: Props) {
           title={alert.detail}
           className={`flex max-w-[10rem] items-center gap-1 rounded-lg border px-2 py-0.5 text-left transition-colors ${SEVERITY_STYLE[alert.severity]}`}
         >
-          <span className="shrink-0 text-xs">{alert.icon}</span>
+          <Emoji className="text-xs">{alert.icon}</Emoji>
           <span className="truncate text-[10px] font-semibold">{alert.title}</span>
           <span className="shrink-0 text-[9px] opacity-60">→</span>
         </button>

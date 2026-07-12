@@ -4,6 +4,16 @@
 
 **Targeting v0.5.0** (end July 2026) — see [ROADMAP_0.5.0.md](ROADMAP_0.5.0.md).
 
+### Added — v2 rewrite (`wilderfolk-v2`, July 9, 2026)
+
+Parallel **React + canvas** colony sim in `v2/` (`npm run dev:v2` · `npm run test:v2`). **1 tick = 1 day**; procedural valley per new game (`mapSeed`).
+
+- **Education (legacy port)** — `school` building in build menu; staffed school (`maxWorkers: 1`) lets juveniles attend each day (`schoolDays`); faster maturation after 3+ days; graduation at 15+ days when adult → skill bonuses + event log (`📘` / `📖` / `🎓`); children commute to school in day schedule; starter colony ships school + teacher (h2) + child (h5 age 8)
+- **Save / load** — `localStorage` key `wilderfolk_v2_save`; persists world slice + `mapSeed` (terrain regenerated on load); intro **Continue colony** / **New valley**; auto-save each day tick + sidebar **💾 Save**
+- **Tests** — **26** vitest (`v2/src/test/`); trimmed weak smoke tests; strengthened hunt, hunger→death, `canConceive` negatives, `phaseHunt` rabbit fallback, ecology deer growth, `tickDay` hunt + index invariants
+
+**Not in v2 yet:** research/education multiplier, assign-worker UI, elections UI polish, Renffr event wiring tests, full app feature parity (raids, visitors, research tree).
+
 ### Added — spatial perf & query metrics (July 8, 2026)
 
 **Priority 1–4 implemented; #5 (skip mobile rebuild) and #6 (type-partitioned buckets) deferred until profiling shows need.**

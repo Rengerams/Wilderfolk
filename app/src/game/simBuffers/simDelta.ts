@@ -8,6 +8,40 @@ import { RENDER_MAX_SLOTS } from './schema';
 
 export const SIM_DELTA_PROTO = 1;
 
+/** Keep player-dismissed Big News across worker ticks (sim delta overwrites UI flags). */
+export function preserveBigNewsDismissals(
+  prev: WorldState['bigNews'],
+  incoming: WorldState['bigNews'],
+  dismissedIds?: readonly string[],
+): WorldState['bigNews'] {
+  const dismissed = new Set([
+    ...prev.filter((n) => n.dismissed).map((n) => n.id),
+    ...(dismissedIds ?? []),
+  ]);
+  if (dismissed.size === 0) return incoming;
+  return incoming.filter((n) => !dismissed.has(n.id));
+}
+
+/** Keep player-dismissed active event banners across worker ticks. */
+export function preserveActiveEventDismissal(
+  incoming: WorldState['activeEvent'],
+  dismissedIds?: readonly string[],
+): WorldState['activeEvent'] {
+  if (!incoming) return null;
+  const hidden = new Set(dismissedIds ?? []);
+  return hidden.has(incoming.id) ? null : incoming;
+}
+
+/** Keep player-dismissed toasts across worker ticks. */
+export function preserveNotificationDismissals(
+  incoming: WorldState['notifications'],
+  dismissedIds: readonly string[] | undefined,
+): WorldState['notifications'] {
+  const hidden = new Set(dismissedIds ?? []);
+  if (hidden.size === 0) return incoming;
+  return incoming.filter((n) => !hidden.has(n.id));
+}
+
 /** Max event-log entries shipped per worker tick (overflow-safe). */
 export const EVENT_LOG_DELTA_TAIL_MAX = 128;
 
@@ -120,7 +154,8 @@ const CATALOG_PATCH_KEYS = [
   'moonHowlerCursed', 'moonHowlerSaved', 'educated', 'pregnant', 'pregnantById',
   'pregnancyProgress', 'courtshipProgress', 'relationshipStatus',
   'partnerId', 'homeBuildingId', 'residenceBuildingId', 'tamedBy', 'combatTicks',
-  'job', 'occupation', 'skills', 'energy', 'maxEnergy', 'x', 'y', 'vx', 'vy',
+  'job', 'occupation', 'skills', 'age', 'birthYear', 'birthMonth', 'birthDay', 'generation',
+  'energy', 'maxEnergy', 'x', 'y', 'vx', 'vy',
   'spriteAngle', 'animFrame', 'size', 'flash', 'huntTargetId', 'chatTicks',
   'prisonBuildingId', 'prisonerUntilTick', 'prisonSentenceCrime', 'affairPartnerId',
   'affairProgress', 'isJuvenile', 'alive',
@@ -267,8 +302,15 @@ export function applySimTickDelta(
   world.floatingTexts = deltaClone(delta.floatingTexts, cloneMode);
   world.deathParticles = deltaClone(delta.deathParticles, cloneMode);
   world.buildings = deltaClone(delta.buildings, cloneMode);
-  world.bigNews = deltaClone(delta.bigNews, cloneMode);
-  world.notifications = deltaClone(delta.notifications, cloneMode);
+  world.bigNews = preserveBigNewsDismissals(
+    world.bigNews,
+    deltaClone(delta.bigNews, cloneMode),
+    world.dismissedBigNewsIds,
+  );
+  world.notifications = preserveNotificationDismissals(
+    deltaClone(delta.notifications, cloneMode),
+    world.dismissedNotificationIds,
+  );
   world.festival = deltaCloneOptional(delta.festival, cloneMode);
   world.townHallFestivalCooldownUntilTick = delta.townHallFestivalCooldownUntilTick;
   world.visitorGroups = deltaClone(delta.visitorGroups, cloneMode);
@@ -296,7 +338,10 @@ export function applySimTickDelta(
   world.yearlyStats = deltaClone(delta.yearlyStats, cloneMode);
   world.lifetimeStats = deltaClone(delta.lifetimeStats, cloneMode);
   world.eventsThisYear = cloneMode === 'isolated' ? [...delta.eventsThisYear] : delta.eventsThisYear;
-  world.activeEvent = deltaCloneOptional(delta.activeEvent, cloneMode);
+  world.activeEvent = preserveActiveEventDismissal(
+    deltaCloneOptional(delta.activeEvent, cloneMode),
+    world.dismissedActiveEventIds,
+  );
   world.lastEventYear = delta.lastEventYear;
   world.bountifulHarvest = delta.bountifulHarvest;
   world.ecoHealthYearsAbove80 = delta.ecoHealthYearsAbove80;

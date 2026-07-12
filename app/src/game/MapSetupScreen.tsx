@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState } from 'react';
+import Emoji from '../components/Emoji';
 import { GAME_VERSION, GAME_PHASE } from './gameEngine';
 import { ensureIntroAudio } from '../audio';
 import { MapPreset, MapSize, MAP_SIZE_DIMENSIONS } from './gameTypes';
@@ -144,7 +145,7 @@ export default function MapSetupScreen({
                       : 'border-stone-700 bg-stone-800/50 hover:border-stone-600'
                   }`}
                 >
-                  <span className="text-xl leading-none">{info.emoji}</span>
+                  <Emoji className="text-xl">{info.emoji}</Emoji>
                   <span className="min-w-0 flex-1">
                     <span className={`block text-sm font-semibold ${selected ? 'text-emerald-200' : 'text-stone-200'}`}>
                       {info.label}

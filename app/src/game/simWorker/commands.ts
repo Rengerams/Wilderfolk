@@ -8,6 +8,8 @@ import {
   startBuilding,
   placeStripChain,
   assignIdleWorkerToBuilding,
+  fillBuildingWorkers,
+  autoStaffAllWorkers,
   removeWorkerFromBuilding,
   repairBuilding,
   upgradeBuilding,
@@ -42,6 +44,7 @@ export type WorkerCommand =
   | { proto: 1; op: 'startBuilding'; type: BuildingType; x: number; y: number; rotation: BuildingRotation }
   | { proto: 1; op: 'placeStripChain'; type: BuildingType; segments: StripSegment[]; rotation: BuildingRotation }
   | { proto: 1; op: 'assignWorker'; buildingId: number; humanId?: number }
+  | { proto: 1; op: 'autoStaffWorkers' }
   | { proto: 1; op: 'removeWorker'; buildingId: number; humanId: number }
   | { proto: 1; op: 'repairBuilding'; buildingId: number }
   | { proto: 1; op: 'upgradeBuilding'; buildingId: number }
@@ -72,6 +75,7 @@ const WORKER_COMMAND_OPS = new Set<WorkerCommand['op']>([
   'startBuilding',
   'placeStripChain',
   'assignWorker',
+  'autoStaffWorkers',
   'removeWorker',
   'repairBuilding',
   'upgradeBuilding',
@@ -163,6 +167,7 @@ function validateWorkerCommandShape(cmd: { op: WorkerCommand['op'] } & Record<st
     case 'queueForgeOrder':
       return isFiniteNumber(cmd.buildingId) && typeof cmd.orderId === 'string' && FORGE_ORDER_IDS.has(cmd.orderId);
     case 'recruitSettler':
+    case 'autoStaffWorkers':
     case 'spawnMoonHowlerDebug':
       return true;
     case 'moveOutOfFamilyHome':
@@ -228,7 +233,11 @@ export function applyWorkerCommand(world: WorldState, cmd: WorkerCommand): World
     case 'placeStripChain':
       return placeStripChain(world, cmd.type, cmd.segments, cmd.rotation);
     case 'assignWorker':
-      return assignIdleWorkerToBuilding(world, cmd.buildingId, cmd.humanId);
+      return cmd.humanId != null
+        ? assignIdleWorkerToBuilding(world, cmd.buildingId, cmd.humanId)
+        : fillBuildingWorkers(world, cmd.buildingId);
+    case 'autoStaffWorkers':
+      return autoStaffAllWorkers(world);
     case 'removeWorker':
       return removeWorkerFromBuilding(world, cmd.buildingId, cmd.humanId);
     case 'repairBuilding':

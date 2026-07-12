@@ -47,6 +47,11 @@ export type WorkerRequest =
       floatingTexts: WorldState['floatingTexts'];
       autoSave: boolean;
       nextFloatingTextId: number;
+      dismissedBigNewsIds?: string[];
+      dismissedNotificationIds?: string[];
+      dismissedActiveEventIds?: string[];
+      activeEvent: WorldState['activeEvent'];
+      tutorialSeen?: string[];
     }
   | { type: 'returnBuffer'; proto: typeof WORKER_PROTO; bufferIndex: number; buffer: ArrayBuffer };
 

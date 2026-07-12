@@ -7,7 +7,7 @@ import { updateRenderSoABuckets, getRenderSoABuckets } from './simBuffers/render
 import { collectGrassInViewport, viewportFromCamera } from './spatialGrid';
 import type { RenderSoABuckets } from './simBuffers/renderSoAEntities';
 import { invalidateRenderSoABucketsCache } from './simBuffers/renderSoAEntities';
-import { EntityType, BuildingType, Season, WeatherType, SPECIES_CONFIG, BUILDING_CONFIGS, GRID_SIZE, snapToGrid, TerrainType } from './gameEngine';
+import { EntityType, BuildingType, Season, WeatherType, SPECIES_CONFIG, BUILDING_CONFIGS, GRID_SIZE, TERRAIN_TILE_SIZE, snapToGrid, TerrainType } from './gameEngine';
 import { WEATHER_CONFIGS } from './gameTypes';
 import { categoryBorderDashForType } from './buildCatalog';
 import type { Camera, MapPreset } from './gameTypes';
@@ -130,16 +130,18 @@ function getTerrainColor(type: TerrainType, variation: number, preset?: MapPrese
   const r = (hex >> 16) & 0xff;
   const g = (hex >> 8) & 0xff;
   const b = hex & 0xff;
-  const v = (variation - 0.5) * 10;
+  const v = (variation - 0.5) * 3;
   return `rgb(${Math.min(255,Math.max(0,r+v))|0},${Math.min(255,Math.max(0,g+v))|0},${Math.min(255,Math.max(0,b+v))|0})`;
 }
 
 function buildTerrainCache(state: RenderSnapshot) {
   if (!state.worldMap) return;
-  if (terrainLayerNeedsRebuild(terrainCache, state.worldMap, Season.Spring)) {
+  if (terrainLayerNeedsRebuild(terrainCache, state.worldMap, Season.Spring, state.width, state.height)) {
     disposeTerrainLayer(terrainCache);
     terrainCache = bakeTerrainLayer(
       state.worldMap,
+      state.width,
+      state.height,
       Season.Spring,
       (type, _season, variation, preset) => getTerrainColor(type, variation, preset),
     );
@@ -167,6 +169,7 @@ let _cachedTrees: Entity[] = [];
 let _cachedAnimals: Entity[] = [];
 let _cachedHumans: Entity[] = [];
 let _cachedGrass: Entity[] = [];
+const _cachedPartnerById = new Map<number, number>();
 let _renderSoABuckets: RenderSoABuckets | null = null;
 
 function grassViewportKey(
@@ -238,6 +241,13 @@ function syncEntityDrawViewport(
   _cachedTrees = filterEntitiesInViewport(_tickTrees, cam, cw, ch);
   _cachedAnimals = filterEntitiesInViewport(_tickAnimals, cam, cw, ch);
   _cachedHumans = filterEntitiesInViewport(_tickHumans, cam, cw, ch);
+
+  _cachedPartnerById.clear();
+  for (const h of _cachedHumans) {
+    if (h.partnerId && h.relationshipStatus === 'married') {
+      _cachedPartnerById.set(h.id, h.partnerId);
+    }
+  }
 }
 
 function updateCachedEntities(
@@ -598,13 +608,14 @@ function drawProceduralGround(ctx: CanvasRenderingContext2D, state: RenderSnapsh
 
   if (state.worldMap && terrainCache) {
     const [sx0, sy0] = w2s(0, 0, cam, cw, ch);
-    const drawTileSize = 10 * cam.zoom;
+    const drawW = terrainCache.width * cam.zoom;
+    const drawH = terrainCache.height * cam.zoom;
     ctx.drawImage(
       terrainCache.surface as CanvasImageSource,
       sx0,
       sy0,
-      terrainCache.width * drawTileSize,
-      terrainCache.height * drawTileSize,
+      drawW,
+      drawH,
     );
 
     if (terrainDecorCache) {
@@ -733,10 +744,10 @@ function drawBuildZoneOverlay(ctx: CanvasRenderingContext2D, state: RenderSnapsh
   const wt = cam.y - (ch / 2) / cam.zoom;
   const wb = cam.y + (ch / 2) / cam.zoom;
 
-  const startTx = Math.max(0, Math.floor(wl / 10));
-  const endTx = Math.min(map.width - 1, Math.ceil(wr / 10));
-  const startTy = Math.max(0, Math.floor(wt / 10));
-  const endTy = Math.min(map.height - 1, Math.ceil(wb / 10));
+  const startTx = Math.max(0, Math.floor(wl / TERRAIN_TILE_SIZE));
+  const endTx = Math.min(map.width - 1, Math.ceil(wr / TERRAIN_TILE_SIZE));
+  const startTy = Math.max(0, Math.floor(wt / TERRAIN_TILE_SIZE));
+  const endTy = Math.min(map.height - 1, Math.ceil(wb / TERRAIN_TILE_SIZE));
 
   for (let ty = startTy; ty <= endTy; ty++) {
     for (let tx = startTx; tx <= endTx; tx++) {
@@ -744,11 +755,11 @@ function drawBuildZoneOverlay(ctx: CanvasRenderingContext2D, state: RenderSnapsh
       if (!tile || !isUnbuildableTerrainType(tile.type)) continue;
       // Water is visible on terrain tiles — only highlight less obvious blockers.
       if (isWaterTerrainType(tile.type)) continue;
-      const wx = tx * 10 + 5;
-      const wy = ty * 10 + 5;
-      const px = worldToScreenX(wx, cam, cw) - 5 * cam.zoom;
-      const py = worldToScreenY(wy, cam, ch) - 5 * cam.zoom;
-      const psz = 10 * cam.zoom;
+      const wx = tx * TERRAIN_TILE_SIZE + TERRAIN_TILE_SIZE / 2;
+      const wy = ty * TERRAIN_TILE_SIZE + TERRAIN_TILE_SIZE / 2;
+      const px = worldToScreenX(wx, cam, cw) - (TERRAIN_TILE_SIZE / 2) * cam.zoom;
+      const py = worldToScreenY(wy, cam, ch) - (TERRAIN_TILE_SIZE / 2) * cam.zoom;
+      const psz = TERRAIN_TILE_SIZE * cam.zoom;
       ctx.fillStyle = 'rgba(220, 38, 38, 0.28)';
       ctx.fillRect(px, py, psz, psz);
     }
@@ -1474,13 +1485,15 @@ function drawTradeRouteLines(ctx: CanvasRenderingContext2D, state: RenderSnapsho
 }
 
 function drawRaidMarchLines(ctx: CanvasRenderingContext2D, state: RenderSnapshot, cw: number, ch: number) {
-  if (!state.pendingRaidEvents?.length || state.camera.zoom < 0.35) return;
+  const hasIncoming = (state.pendingRaidEvents?.length ?? 0) > 0;
+  const hasOutgoing = (state.pendingOutgoingRaidEvents?.length ?? 0) > 0;
+  if ((!hasIncoming && !hasOutgoing) || state.camera.zoom < 0.35) return;
   const cam = state.camera;
   const village = getPlayerCampCenterFromBuildings(state.buildings);
   const vx = (village.x - cam.x) * cam.zoom + cw / 2;
   const vy = (village.y - cam.y) * cam.zoom + ch / 2;
 
-  for (const raid of state.pendingRaidEvents) {
+  for (const raid of state.pendingRaidEvents ?? []) {
     const rival = state.rivalSettlements.find((r) => r.id === raid.rivalId);
     if (!rival) continue;
     const rx = (rival.campX - cam.x) * cam.zoom + cw / 2;
@@ -1497,6 +1510,25 @@ function drawRaidMarchLines(ctx: CanvasRenderingContext2D, state: RenderSnapshot
     ctx.textAlign = 'center';
     ctx.fillStyle = '#f87171';
     ctx.fillText('⚔️', (rx + vx) / 2, (ry + vy) / 2 - 6);
+  }
+
+  for (const raid of state.pendingOutgoingRaidEvents ?? []) {
+    const rival = state.rivalSettlements.find((r) => r.id === raid.rivalId);
+    if (!rival) continue;
+    const rx = (rival.campX - cam.x) * cam.zoom + cw / 2;
+    const ry = (rival.campY - cam.y) * cam.zoom + ch / 2;
+    ctx.strokeStyle = raid.isCounterRaid ? 'rgba(251,191,36,0.55)' : 'rgba(249,115,22,0.55)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.beginPath();
+    ctx.moveTo(vx, vy);
+    ctx.lineTo(rx, ry);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = `${Math.max(9, 11 * cam.zoom)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = raid.isCounterRaid ? '#fbbf24' : '#fb923c';
+    ctx.fillText(raid.isCounterRaid ? '🛡️' : '🥾', (vx + rx) / 2, (vy + ry) / 2 - 6);
   }
 }
 
@@ -1597,7 +1629,6 @@ function drawHumans(
       if (isDrawableSpriteFrame(frame)) {
         const aspect = frame.sw / frame.sh;
         const anchorY = frame.anchorY ?? 1;
-        // fit:'height' + feet anchor — full 27x72 body, not a cropped head
         drawSpriteFrame(
           ctx, frame, sx, footY, spriteH * aspect, spriteH,
           0.5, anchorY, flipX, { bobY }, 'height',
@@ -1924,10 +1955,11 @@ function drawEcoConnections(ctx: CanvasRenderingContext2D, _state: RenderSnapsho
   if (cam.zoom < 0.6) return;
 
   const humanById = new Map(_cachedHumans.map((h) => [h.id, h]));
-  for (const h of _cachedHumans) {
-    if (h.partnerId && h.relationshipStatus === 'married' && h.id < h.partnerId) {
-      const p = humanById.get(h.partnerId);
-      if (!p) continue;
+  for (const [id, partnerId] of _cachedPartnerById) {
+    if (id > partnerId) continue;
+    const h = humanById.get(id);
+    const p = humanById.get(partnerId);
+    if (!h || !p) continue;
       const x1 = (h.x - cam.x) * cam.zoom + cw / 2;
       const y1 = (h.y - 8 - cam.y) * cam.zoom + ch / 2;
       const x2 = (p.x - cam.x) * cam.zoom + cw / 2;
@@ -1947,7 +1979,6 @@ function drawEcoConnections(ctx: CanvasRenderingContext2D, _state: RenderSnapsho
       ctx.font = '10px sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('💍', (x1 + x2) / 2, (y1 + y2) / 2);
-    }
   }
 }
 
@@ -2217,6 +2248,7 @@ export function resetRendererCaches(): void {
   _cachedAnimals = [];
   _cachedHumans = [];
   _cachedGrass = [];
+  _cachedPartnerById.clear();
   _renderSoABuckets = null;
   _nameWidthCache.clear();
   wParts = [];

@@ -1,5 +1,9 @@
 /// <reference lib="webworker" />
+import dialogueBankJson from '../data/sim_dialogue_trees.json';
+import { installDialogueBankPayload } from '../dialogueTrees';
 import { gameTick } from '../gameEngine';
+
+installDialogueBankPayload(dialogueBankJson as unknown as Parameters<typeof installDialogueBankPayload>[0]);
 import type { Entity, WorldState } from '../gameTypes';
 import { packRenderSoA } from '../simBuffers/packRenderSoA';
 import { RenderBufferPool } from '../simBuffers/renderBufferPool';
@@ -49,6 +53,8 @@ function packAndPostTickResult(
       focus: lastFocus,
       cloneMode: 'transfer',
     });
+    // Impulse is one-shot — clear on worker so it is not re-sent every tick.
+    world.screenShakeImpulse = 0;
 
     const transferables: ArrayBuffer[] = [pack.buffer];
     let scentBuffer: ArrayBuffer | undefined;
@@ -213,6 +219,11 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
         world.floatingTexts = msg.floatingTexts;
         world.autoSave = msg.autoSave;
         world.nextFloatingTextId = msg.nextFloatingTextId;
+        world.dismissedBigNewsIds = msg.dismissedBigNewsIds;
+        world.dismissedNotificationIds = msg.dismissedNotificationIds;
+        world.dismissedActiveEventIds = msg.dismissedActiveEventIds;
+        world.activeEvent = msg.activeEvent;
+        world.tutorialSeen = msg.tutorialSeen;
         break;
       }
       case 'tick': {
@@ -233,6 +244,7 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
               headless: true,
               cloneMode: 'transfer',
             });
+            world.screenShakeImpulse = 0;
             const response: WorkerResponse = {
               type: 'tickResult',
               proto: WORKER_PROTO,

@@ -15,7 +15,8 @@ export const WORLD_STATE_SAVE_KEYS = [
   'renffrOmen', 'renffrChatterUntilTick', 'victories', 'victoryAchieved',
   'ecoHealthYearsAbove80', 'firstWeekVisitorSpawned', 'villageLeaderId', 'leaderSinceYear',
   'lastElectionYear', 'pendingElectionYear', 'electionBuildupNotifiedYear', 'electionCeremony',
-  'villageForge', 'tutorialSeen', 'lastWildlifeReplenishLogDay', 'eventsThisYear',
+  'villageForge', 'tutorialSeen', 'dismissedBigNewsIds', 'dismissedActiveEventIds',
+  'dismissedNotificationIds', 'lastWildlifeReplenishLogDay', 'eventsThisYear',
   'appliedSaveMigrations',
 ] as const satisfies readonly (keyof WorldState)[];
 

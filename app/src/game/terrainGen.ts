@@ -1,4 +1,4 @@
-import { TerrainType, type TerrainTile, type WorldMap, type MapPreset, MapSize, MAP_SIZE_DIMENSIONS } from './gameTypes';
+import { TerrainType, type TerrainTile, type WorldMap, type MapPreset, MapSize, MAP_SIZE_DIMENSIONS, TERRAIN_TILE_SIZE } from './gameTypes';
 
 // ─── Seeded PRNG ─────────────────────────────────────────────────────────────
 // Park-Miller LCG. Seed 0 is fatal (0 * 16807 % N = 0), so we coerce it.
@@ -288,8 +288,8 @@ export function generateWorldMap(
   }
 
   const rng = seededRandom(seed);
-  const tileW = Math.ceil(width / 10);
-  const tileH = Math.ceil(height / 10);
+  const tileW = Math.ceil(width / TERRAIN_TILE_SIZE);
+  const tileH = Math.ceil(height / TERRAIN_TILE_SIZE);
 
   const tiles: TerrainTile[][] = [];
   const pm = PRESET_MODIFIERS[preset];
@@ -298,8 +298,8 @@ export function generateWorldMap(
   for (let ty = 0; ty < tileH; ty++) {
     tiles[ty] = [];
     for (let tx = 0; tx < tileW; tx++) {
-      const worldX = tx * 10;
-      const worldY = ty * 10;
+      const worldX = tx * TERRAIN_TILE_SIZE;
+      const worldY = ty * TERRAIN_TILE_SIZE;
 
       const elevation = Math.min(1, Math.max(0, (noise(worldX, worldY, seed) + pm.elevationBias) * pm.elevationScale));
       const moisture = Math.min(1, Math.max(0, (moistureNoise(worldX, worldY, seed) + pm.moistureBias) * pm.moistureScale));
@@ -308,7 +308,7 @@ export function generateWorldMap(
         type: TerrainType.Grassland,
         elevation: elevation * 100,
         moisture: moisture * 100,
-        variation: rng(),
+        variation: noise(worldX * 0.25, worldY * 0.25, seed + 5000),
       };
     }
   }

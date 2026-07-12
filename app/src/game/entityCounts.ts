@@ -1,7 +1,13 @@
 import type { Entity, WildlifeCounts } from './gameTypes';
 import { EntityType } from './gameTypes';
+import { isPlayerHuman } from './groupEvents';
 
-export type PopulationCounts = WildlifeCounts & { humans: number };
+export type PopulationCounts = WildlifeCounts & {
+  /** Village settlers (player humans). Matches `WorldState.humanPopulation`. */
+  humans: number;
+  visitorHumans: number;
+  rivalHumans: number;
+};
 
 function emptyWildlifeCounts(): WildlifeCounts {
   return {
@@ -17,7 +23,12 @@ function emptyWildlifeCounts(): WildlifeCounts {
 }
 
 function emptyPopulationCounts(): PopulationCounts {
-  return { humans: 0, ...emptyWildlifeCounts() };
+  return {
+    humans: 0,
+    visitorHumans: 0,
+    rivalHumans: 0,
+    ...emptyWildlifeCounts(),
+  };
 }
 
 /**
@@ -66,22 +77,33 @@ export function computeWildlifeCounts(entities: Entity[]): WildlifeCounts {
 
 /** Strip the human tally from population counts — safe source for `wildlifeCounts`. */
 export function wildlifeCountsFromPopulation(counts: PopulationCounts): WildlifeCounts {
-  const { humans: _humans, ...wildlife } = counts;
+  const { humans: _humans, visitorHumans: _visitors, rivalHumans: _rivals, ...wildlife } = counts;
   return wildlife;
 }
 
-/** All humans + wildlife — same rules as gameTick population counting. */
+/** Village settlers + transient humans + wildlife — same rules as gameTick. */
 export function computePopulationCounts(entities: Entity[]): PopulationCounts {
   const counts = emptyPopulationCounts();
   for (const e of entities) {
     if (!e.alive) continue;
-    // Count ALL humans (player, visitors, rivals, caravans), not just player humans.
     if (e.type === EntityType.Human) {
-      counts.humans++;
+      if (isPlayerHuman(e)) counts.humans++;
+      else if (e.faction === 'visitor') counts.visitorHumans++;
+      else if (e.faction === 'rival') counts.rivalHumans++;
       continue;
     }
     const bucket = wildlifeCountBucket(e);
     if (bucket) counts[bucket]++;
   }
   return counts;
+}
+
+export function formatPopulationBrief(
+  counts: Pick<PopulationCounts, 'humans' | 'visitorHumans' | 'rivalHumans'>,
+  maxPop?: number,
+): string {
+  const cap = maxPop != null ? `/${maxPop}` : '';
+  let line = `settlers=${counts.humans}${cap} visitors=${counts.visitorHumans}`;
+  if (counts.rivalHumans > 0) line += ` rivals=${counts.rivalHumans}`;
+  return line;
 }

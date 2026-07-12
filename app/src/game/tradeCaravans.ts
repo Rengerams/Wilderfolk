@@ -10,8 +10,12 @@ import { createEntity } from './worldGen';
 import { indexLivingEntity, unindexEntityFromState } from './entityIndex';
 
 export const TRADE_CARAVAN_ARRIVAL_DIST = 28;
-const PARTNER_WAIT_TICKS = ticksForDays(1);
-const FIRST_CARAVAN_DELAY = ticksForDays(2);
+function getPartnerWaitTicks(): number {
+  return ticksForDays(1);
+}
+function getFirstCaravanDelay(): number {
+  return ticksForDays(2);
+}
 
 export type TradeCaravanLeg = 'outbound' | 'at_partner' | 'inbound';
 
@@ -122,7 +126,7 @@ export function onTradeRouteEstablished(state: WorldState, routeId: string): voi
   if (!route) return;
   const idx = state.tradeRoutes.findIndex((r) => r.id === routeId);
   enrichTradeRoute(route, state, idx);
-  scheduleTradeRouteDeparture(state, route, FIRST_CARAVAN_DELAY);
+  scheduleTradeRouteDeparture(state, route, getFirstCaravanDelay());
   logEvent(
     state,
     'trade',
@@ -221,7 +225,7 @@ export function tryAdvanceCaravanLeg(state: WorldState, entity: Entity): void {
     const dist = Math.hypot(route.partnerX - entity.x, route.partnerY - entity.y);
     if (dist > TRADE_CARAVAN_ARRIVAL_DIST) return;
     route.caravanLeg = 'at_partner';
-    route.caravanWaitTicks = PARTNER_WAIT_TICKS;
+    route.caravanWaitTicks = getPartnerWaitTicks();
     addFloatingText(state, entity.x, entity.y - 20, `📦 At ${route.targetName}`, '#fbbf24');
     return;
   }

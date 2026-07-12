@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { getActiveChallengeId, getChallengeProgress } from '../game/challengeProgress';
+import { getActiveChallengeId, getChallengeProgress } from '../game/challenges';
 import type { WorldState } from '../game/gameTypes';
 
 function ChallengesPanel({ state }: { state: WorldState }) {
@@ -16,7 +16,7 @@ function ChallengesPanel({ state }: { state: WorldState }) {
         return (
           <div
             key={c.id}
-            className={`flex items-start gap-2 rounded-lg p-1.5 text-[10px] ${
+            className={`flex items-start gap-2 rounded-lg p-1.5 text-[11px] ${
               c.completed
                 ? 'bg-emerald-500/10 text-emerald-400'
                 : isActive
@@ -48,7 +48,7 @@ function ChallengesPanel({ state }: { state: WorldState }) {
                 </div>
               )}
               {c.rewardText && (
-                <div className={`mt-0.5 text-[9px] font-semibold ${c.completed ? 'text-emerald-300' : 'text-amber-400'}`}>
+                <div className={`mt-0.5 text-[11px] font-semibold ${c.completed ? 'text-emerald-300' : 'text-amber-400'}`}>
                   🎁 {c.rewardText}
                 </div>
               )}

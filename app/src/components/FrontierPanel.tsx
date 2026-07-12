@@ -57,12 +57,12 @@ function FrontierPanel({
     const year = state.year ?? 0;
     return (
       <div className="rounded-xl border border-dashed border-stone-600 bg-stone-800/40 p-4 text-center">
-        <p className="text-[10px] text-stone-400">No caravans or rival camps yet.</p>
-        <p className="mt-1 text-[9px] text-stone-500">
+        <p className="text-[11px] text-stone-400">No caravans or rival camps yet.</p>
+        <p className="mt-1 text-[11px] text-stone-500">
           Grow your village — trade caravans arrive as reputation spreads.
         </p>
         {year < 2 && (
-          <p className="mt-2 text-[9px] text-amber-400/90">
+          <p className="mt-2 text-[11px] text-amber-400/90">
             Rival camps usually appear from Year 2 onward (you are Year {year}).
           </p>
         )}
@@ -73,11 +73,11 @@ function FrontierPanel({
   return (
     <div className="space-y-3">
       <div className="rounded-lg border border-slate-600/50 bg-slate-950/40 px-3 py-2">
-        <h4 className="mb-1.5 text-[9px] font-bold uppercase tracking-wider text-slate-400">Village readiness</h4>
+        <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">Village readiness</h4>
         <p className="mb-2 text-[8px] leading-relaxed text-stone-500">
           Raids test prep you already made — no battle screen. Stock spears, walls, guards, and tribute food before they arrive.
         </p>
-        <div className="grid grid-cols-2 gap-1.5 text-[9px]">
+        <div className="grid grid-cols-2 gap-1.5 text-[11px]">
           <div className="rounded bg-stone-800/80 px-2 py-1">
             <div className="text-stone-500">Militia</div>
             <strong className="text-emerald-300">{militia.militiaStrength}</strong>
@@ -101,7 +101,7 @@ function FrontierPanel({
       </div>
 
       {(pendingRaidCount > 0 || pendingOutgoingRaidCount > 0 || pendingDiplomacyCount > 0) && (
-        <div className="rounded-lg border border-rose-500/30 bg-rose-950/25 px-3 py-2 text-[9px] text-rose-200">
+        <div className="rounded-lg border border-rose-500/30 bg-rose-950/25 px-3 py-2 text-[11px] text-rose-200">
           {pendingRaidCount > 0 && <p>⚔️ {pendingRaidCount} incoming raid(s) — respond in the map banner</p>}
           {pendingOutgoingRaidCount > 0 && (
             <p className={pendingRaidCount > 0 ? 'mt-0.5' : ''}>
@@ -132,7 +132,7 @@ function FrontierPanel({
 
       {state.visitorGroups.length > 0 && (
         <div>
-          <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">Visitors</h4>
+          <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">Visitors</h4>
           <div className="space-y-1.5">
             {state.visitorGroups.map((g) => (
               <button
@@ -142,12 +142,12 @@ function FrontierPanel({
                 className="flex w-full items-center justify-between gap-2 rounded-lg bg-stone-800/60 px-2.5 py-2 text-left transition-colors hover:bg-cyan-900/30"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-[10px] font-bold text-cyan-200">🧳 {g.name}</p>
-                  <p className="text-[9px] capitalize text-stone-500">
+                  <p className="truncate text-[11px] font-bold text-cyan-200">🧳 {g.name}</p>
+                  <p className="text-[11px] capitalize text-stone-500">
                     {g.kind} · {g.daysLeft}d · click for trade &amp; leader
                   </p>
                 </div>
-                <span className="shrink-0 text-[9px] text-cyan-500">→</span>
+                <span className="shrink-0 text-[11px] text-cyan-500">→</span>
               </button>
             ))}
           </div>
@@ -156,7 +156,7 @@ function FrontierPanel({
 
       {state.rivalSettlements.length > 0 && (
         <div>
-          <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-400">Rival camps</h4>
+          <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-amber-400">Rival camps</h4>
           <div className="space-y-1.5">
             {state.rivalSettlements.map((r) => {
               const hasRaid = pendingRaids.some((e) => e.rivalId === r.id);
@@ -175,10 +175,10 @@ function FrontierPanel({
                     className="flex w-full flex-col gap-1 text-left transition-colors hover:opacity-90"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-[10px] font-bold text-amber-200">🏕️ {r.name}</p>
-                      <span className="shrink-0 text-[9px] capitalize text-amber-400">{formatRivalRelationshipLabel(r)}</span>
+                      <p className="truncate text-[11px] font-bold text-amber-200">🏕️ {r.name}</p>
+                      <span className="shrink-0 text-[11px] capitalize text-amber-400">{formatRivalRelationshipLabel(r)}</span>
                     </div>
-                    <p className="text-[9px] text-stone-500">
+                    <p className="text-[11px] text-stone-500">
                       {formatRivalPopulationLabel(r)} · {formatCampDistance(getCampDistancePixels(state, state.buildings, r))}
                       · raid {raidFoodCost}🍖
                       {isRivalAtPeace(r) && <span className="text-cyan-400"> · 🕊️ {r.peaceTreatyDays}d</span>}

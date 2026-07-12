@@ -11,9 +11,10 @@ interface Props {
   gamePhase: string;
   gameSubtitle: string;
   hasSavedGame: boolean;
-  autoSave: boolean;
+autoSave: boolean;
   tutorialsEnabled: boolean;
   juiceEffectsEnabled: boolean;
+  showSimTick: boolean;
   muted: boolean;
   volumePreset: VolumePreset;
   onSave: () => void;
@@ -21,6 +22,7 @@ interface Props {
   onToggleAutoSave: () => void;
   onToggleTutorials: () => void;
   onToggleJuiceEffects: () => void;
+  onToggleShowSimTick: () => void;
   onToggleMute: () => void;
   onVolumePreset: (v: VolumePreset) => void;
   onOpenGuide: () => void;
@@ -138,9 +140,10 @@ export default function GameMenu({
   gamePhase,
   gameSubtitle,
   hasSavedGame,
-  autoSave,
+autoSave,
   tutorialsEnabled,
   juiceEffectsEnabled,
+  showSimTick,
   muted,
   volumePreset,
   onSave,
@@ -148,6 +151,7 @@ export default function GameMenu({
   onToggleAutoSave,
   onToggleTutorials,
   onToggleJuiceEffects,
+  onToggleShowSimTick,
   onToggleMute,
   onVolumePreset,
   onOpenGuide,
@@ -297,12 +301,19 @@ export default function GameMenu({
                   checked={autoSave}
                   onChange={onToggleAutoSave}
                 />
-                <MenuToggle
+<MenuToggle
                   icon="💡"
                   label="Tutorials"
                   hint="Tips when new events happen"
                   checked={tutorialsEnabled}
                   onChange={onToggleTutorials}
+                />
+                <MenuToggle
+                  icon="⏱"
+                  label="Show sim tick"
+                  hint="Raw tick + absolute day on the clock bar (24 ticks = 1 day)"
+                  checked={showSimTick}
+                  onChange={onToggleShowSimTick}
                 />
               </MenuSection>
 

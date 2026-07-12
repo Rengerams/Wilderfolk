@@ -235,6 +235,8 @@ export function loadGame(): { world: WorldState; view: ViewState } | null {
     world.lifetimeStats = world.lifetimeStats ?? createEmptyLifetimeStats();
     world.eventsThisYear = worldData.eventsThisYear ?? [];
     world.wildlifeCounts = computeWildlifeCounts(world.entities);
+    world.workingSettlers = world.workingSettlers ?? 0;
+    world.idleSettlers = world.idleSettlers ?? 0;
 
     world.buildings = (world.buildings || []).map((b) =>
       b.type === BuildingType.Workshop && !b.workshopRecipeId

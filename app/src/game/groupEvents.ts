@@ -12,7 +12,7 @@ import {
   syncResidenceOccupants,
   TICKS_PER_DAY,
 } from './dayCycle';
-import { createEntity } from './worldGen';
+import { createEntity, finalizeSettlerAge } from './worldGen';
 import { indexLivingEntity, unindexEntityFromState } from './entityIndex';
 import { SPECIES_CONFIG } from './gameEngine';
 import { addCappedResource } from './resourceUtils';
@@ -1192,6 +1192,7 @@ function admitRefugees(state: WorldState, group: VisitorGroup, allAlive: Entity[
     ent.faction = undefined;
     ent.occupation = 'settler';
     ent.job = JobType.Settler;
+    finalizeSettlerAge(ent, state);
     allAlive.push(ent);
     indexLivingEntity(state, ent);
     joined++;

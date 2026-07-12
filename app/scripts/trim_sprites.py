@@ -56,6 +56,14 @@ def trim_sprite(path: Path) -> tuple[str, tuple[int, int]]:
 
 
 def main() -> None:
+    import sys
+    if "--confirm" not in sys.argv:
+        print(
+            "Refusing to modify sprites without --confirm "
+            "(this script overwrites public/sprites in place).",
+            file=sys.stderr,
+        )
+        sys.exit(1)
     results: list[tuple[str, tuple[int, int]]] = []
     for path in sorted(SPRITES_DIR.glob("*.png")):
         results.append(trim_sprite(path))
