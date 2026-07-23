@@ -462,12 +462,9 @@ export interface GameEvent {
   type: 'positive' | 'negative' | 'neutral';
 }
 
-export interface Resources {
-  wood: number;
-  stone: number;
-  food: number;
-  gold: number;
-}
+import type { Resources, ResourceKey } from './resourceTypes';
+export type { Resources, ResourceKey };
+
 
 /**
  * One sample in `WorldState.populationHistory` (stats layer / charts).
@@ -576,6 +573,92 @@ export interface VictoryProgress {
 
 export type ElectionCeremonyPhase = 'gathering' | 'gossip' | 'tension' | 'reveal';
 
+export type ForgeOrderId =
+  | 'iron_spears'
+  | 'iron_shields'
+  | 'guard_halberds'
+  | 'wall_plates'
+  | 'iron_pickaxes';
+
+export interface ForgeOrder {
+  id: ForgeOrderId;
+  label: string;
+  emoji: string;
+  description: string;
+  techId: string;
+  /** Other forge runs that must finish first. */
+  requiresForge?: ForgeOrderId[];
+  inputs: Partial<Resources>;
+  /** Progress gained per staffed forge tick (3 ticks ≈ 6 in-game days). */
+  progressPerTick: number;
+}
+
+export interface VillageForgeState {
+  activeOrder: ForgeOrderId | null;
+  progress: number;
+  completed: Partial<Record<ForgeOrderId, boolean>>;
+}
+
+export interface RaidChoice {
+  id: string;
+  label: string;
+  hint: string;
+  cost?: Partial<Resources>;
+}
+
+export interface RaidLootBundle {
+  food: number;
+  wood: number;
+  stone: number;
+  gold: number;
+}
+
+export type OutgoingRaidRivalResponse = 'payoff_offer' | 'fight';
+
+export interface RaidEvent {
+  id: string;
+  rivalId: string;
+  rivalName: string;
+  title: string;
+  description: string;
+  emoji: string;
+  choices: RaidChoice[];
+  createdAtTick: number;
+  /** Tick when unanswered raid auto-resolves (distance-scaled march time). */
+  expiresAtTick: number;
+  /** Camp distance in tiles when the raid was declared. */
+  marchDistanceTiles: number;
+  attackerStrength: number;
+  lootFood: number;
+  lootGold: number;
+  lootWood: number;
+  lootStone: number;
+}
+
+/** Player war-band marching on a rival camp — rival may buy you off or fight. */
+export interface OutgoingRaidEvent {
+  id: string;
+  rivalId: string;
+  rivalName: string;
+  title: string;
+  description: string;
+  emoji: string;
+  choices: RaidChoice[];
+  createdAtTick: number;
+  expiresAtTick: number;
+  marchDistanceTiles: number;
+  /** Provisions already spent when the march began. */
+  marchFoodCost: number;
+  isCounterRaid: boolean;
+  rivalResponse: OutgoingRaidRivalResponse;
+  attackerStrength: number;
+  defenderStrength: number;
+  lootFood: number;
+  lootGold: number;
+  lootWood: number;
+  lootStone: number;
+}
+
 export interface ElectionCeremonyState {
   phase: ElectionCeremonyPhase;
   phaseTicksLeft: number;
@@ -673,11 +756,11 @@ export interface WorldState {
   /** Rival diplomacy events awaiting a player response (v0.4.1). */
   pendingDiplomacyEvents: DiplomacyEvent[];
   /** Incoming raids — defend, barricade, or pay off. */
-  pendingRaidEvents: import('./frontierCombat').RaidEvent[];
+  pendingRaidEvents: RaidEvent[];
   /** Outgoing raids — rival may offer tribute or fight when your war-band arrives. */
-  pendingOutgoingRaidEvents: import('./frontierCombat').OutgoingRaidEvent[];
+  pendingOutgoingRaidEvents: OutgoingRaidEvent[];
   /** Rare night-sky easter egg */
-  renffrOmen?: import('./renffrStar').RenffrOmen | null;
+  renffrOmen?: import('./omenTypes').RenffrOmen | null;
   /** Settlers gossip about Renffr until this tick (after a night omen). */
   renffrChatterUntilTick?: number;
   victories: VictoryProgress[];
@@ -698,7 +781,7 @@ export interface WorldState {
   /** Multi-phase election day ceremony (decennial). */
   electionCeremony: ElectionCeremonyState | null;
   /** Blacksmith forge queue — iron gear requires research + forging. */
-  villageForge?: import('./forge').VillageForgeState;
+  villageForge?: VillageForgeState;
   /** Contextual tutorial tips already shown this playthrough. */
   tutorialSeen?: string[];
   /** Colony day of last wildlife replenish event-log entry (throttles meadow spam). */
@@ -724,9 +807,6 @@ export interface WorldState {
   grassGrid?: import('./spatialGrid').EntitySpatialGrid;
   /** Mobile spatial index — rebuilt each sim tick for hunt/flee/social queries; not saved. */
   mobileGrid?: import('./spatialGrid').EntitySpatialGrid;
-  /** Tree spatial index — rebuilt when alive tree count changes; not saved. */
-  treeGrid?: import('./spatialGrid').EntitySpatialGrid;
-  treeGridAlive?: number;
   /** Road avoidance index — rebuilt when completed road layout changes; not saved. */
   roadAvoidance?: import('./spatialGrid').RoadAvoidanceIndex;
   /** `computeRoadLayoutStamp` fingerprint of completed roads; not saved. */
@@ -1028,7 +1108,7 @@ export const BUILDING_CONFIGS: Record<BuildingType, BuildingConfig> = {
     cost: { wood: 30, stone: 10, gold: 15 },
     buildTime: 3, maxOccupants: 2,
     emoji: '🏹', label: 'Hunting Spot', description: 'Staff hunters to harvest nearby wildlife for food. Wolves may fight back.',
-    sprite: '/sprites/rabbit.png', backgroundColor: '#854d0e', padShape: 'circle',
+    sprite: '/sprites/Huntingspot.png', backgroundColor: '#854d0e', padShape: 'circle',
   },
 };
 

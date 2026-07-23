@@ -14,8 +14,6 @@ import { createInitialVictories } from './victory';
 import { loadAutoSavePreference } from './preferences';
 import { ensureNamesLoaded, getRandomName, getRandomSurname } from './nameLoader';
 import {
-  computeHumanAgeYears,
-  DAYS_PER_YEAR,
   getColonyDay,
   HUMAN_ADULT_MIN_AGE,
   setHumanBirthFromAge,
@@ -228,17 +226,6 @@ export function setEntityBirthDate(entity: Entity, year?: number, month?: number
   if (year !== undefined) entity.birthYear = year;
   if (month !== undefined) entity.birthMonth = month;
   if (day !== undefined) entity.birthDay = day;
-}
-
-/** Display age — humans use the colony calendar; wildlife converts life-days to years. */
-export function getAgeInYears(
-  entity: Entity,
-  state: Pick<WorldState, 'year' | 'dayInYear' | 'tick'>,
-): number {
-  if (entity.type === EntityType.Human) {
-    return computeHumanAgeYears(entity, getColonyDay(state));
-  }
-  return Math.max(0, Math.floor(entity.age / DAYS_PER_YEAR));
 }
 
 export function createBuilding(

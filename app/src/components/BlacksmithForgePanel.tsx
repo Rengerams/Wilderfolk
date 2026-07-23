@@ -3,8 +3,8 @@ import {
   getForgeBlockReason,
   getForgeOrder,
   isForgeOrderComplete,
-  type ForgeOrderId,
 } from '../game/forge';
+import type { ForgeOrderId } from '../game/gameTypes';
 import Emoji from './Emoji';
 import ResourceCost from './ResourceCost';
 import type { WorldState } from '../game/gameTypes';

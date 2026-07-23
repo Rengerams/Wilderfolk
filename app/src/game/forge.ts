@@ -1,12 +1,15 @@
-import type { Building, Resources, WorldState } from './gameTypes';
-import { formatResourceCost } from './resourceCost';
+import type { Building, Resources, VillageForgeState, WorldState, ForgeOrderId, ForgeOrder } from './gameTypes';
 import { BuildingType } from './gameTypes';
+import { formatResourceCost } from './resourceCost';
 import { isProductionTick, PRODUCTION_INTERVAL } from './dayCycle';
 import { COMBAT_TECH } from './combatTech';
-import { hasCompletedBlacksmith } from './combat';
 import { logEvent } from './eventLog';
 import { addNotification } from './gameEngine';
 import { pushTransientParticle } from './juiceEffects';
+
+export function hasCompletedBlacksmith(state: { buildings: Building[] }): boolean {
+  return state.buildings.some((b) => b.completed && b.type === BuildingType.Blacksmith);
+}
 
 function addForgeFloat(state: WorldState, x: number, y: number, text: string, color: string) {
   if (!state.floatingTexts) state.floatingTexts = [];
@@ -20,32 +23,6 @@ function addForgeFloat(state: WorldState, x: number, y: number, text: string, co
     maxLife: 18,
     scale: 1,
   });
-}
-
-export type ForgeOrderId =
-  | 'iron_spears'
-  | 'iron_shields'
-  | 'guard_halberds'
-  | 'wall_plates'
-  | 'iron_pickaxes';
-
-export interface ForgeOrder {
-  id: ForgeOrderId;
-  label: string;
-  emoji: string;
-  description: string;
-  techId: string;
-  /** Other forge runs that must finish first. */
-  requiresForge?: ForgeOrderId[];
-  inputs: Partial<Resources>;
-  /** Progress gained per staffed forge tick (3 ticks ≈ 6 in-game days). */
-  progressPerTick: number;
-}
-
-export interface VillageForgeState {
-  activeOrder: ForgeOrderId | null;
-  progress: number;
-  completed: Partial<Record<ForgeOrderId, boolean>>;
 }
 
 export const FORGE_BONUSES = {

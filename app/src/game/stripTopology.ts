@@ -8,7 +8,7 @@ import {
   normalizeCornerRotation,
   normalizeBuildingRotation,
 } from './buildingRotation';
-import { computeStripSegmentCenters, isStripBuildType } from './stripBuild';
+import { computeStripSegmentCenters, isStripBuildType, type EnclosedArea } from './stripBuild';
 import {
   analyzeStripJunction,
   collectStripCenters,
@@ -308,13 +308,6 @@ export function findStripBuildingAt(
     if (Math.hypot(b.x - x, b.y - y) <= tolerance) return b;
   }
   return undefined;
-}
-
-export interface EnclosedArea {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
 }
 
 const ENCLOSURE_CELL = 24;

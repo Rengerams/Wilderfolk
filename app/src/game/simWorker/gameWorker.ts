@@ -17,7 +17,7 @@ import {
   safeExtractCommandDelta,
 } from './commands';
 import { syncEventLogIdFromState } from '../eventLog';
-import { applySimPrep, extractSimPrep } from './simPrep';
+import { applySimPrep, extractSimPrep, type SimPrepPayload } from './simPrep';
 import { isWorkerProto, WORKER_PROTO, workerProtoMismatch, type WorkerRequest, type WorkerResponse } from './protocol';
 
 let world: WorldState | null = null;
@@ -110,7 +110,7 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
           postError('Worker not initialized');
           break;
         }
-        applySimPrep(world, msg.prep);
+        applySimPrep(world, msg.prep as SimPrepPayload);
         syncEventLogIdFromState(world);
         break;
       }

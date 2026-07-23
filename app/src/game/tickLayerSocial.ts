@@ -2,18 +2,19 @@ import type { WorldState } from './gameTypes';
 import { EntityType } from './gameTypes';
 import type { TickContext } from './lifeSimulation';
 import { syncResidenceOccupants, assignMissingResidences } from './dayCycle';
+import { assignMissingWorkers } from './workforce';
 
-/** Social layer pulse — 4× per in-game day when the host gates on `tick % 6 === 0`. */
+/** Social layer pulse — 4× per in-game day when the host gates on tick % 6 === 0. */
 export const LAYER_SOCIAL_INTERVAL = 6;
 
 /**
- * Social layer — housing / residence bookkeeping.
+ * Social layer — housing / residence bookkeeping and workforce assignment.
  *
- * Daily mortality, conception, and affairs stay in `tickHumans` under
- * `isNewCalendarDay`. Do not call `tryDailyHumanMortality` here: that roll has
+ * Daily mortality, conception, and affairs stay in tickHumans under
+ * isNewCalendarDay. Do not call tryDailyHumanMortality here: that roll has
  * no internal day-lock and would multiply death chance for some settlers.
  *
- * Host should call only when `world.tick % LAYER_SOCIAL_INTERVAL === 0`.
+ * Host should call only when world.tick % LAYER_SOCIAL_INTERVAL === 0.
  */
 export function tickLayerSocial(world: WorldState, ctx: TickContext): void {
   const { playerHumans, updatedBuildings } = ctx;
@@ -24,4 +25,5 @@ export function tickLayerSocial(world: WorldState, ctx: TickContext): void {
 
   syncResidenceOccupants(allHumans, updatedBuildings);
   assignMissingResidences(playerHumans, updatedBuildings, allHumans);
+  assignMissingWorkers(playerHumans, updatedBuildings);
 }

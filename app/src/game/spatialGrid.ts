@@ -53,10 +53,6 @@ export function isGrassGridEntity(entity: Entity): boolean {
   return entity.type === EntityType.Grass;
 }
 
-export function isTreeGridEntity(entity: Entity): boolean {
-  return entity.type === EntityType.Tree && entity.alive;
-}
-
 export function distSq(ax: number, ay: number, bx: number, by: number): number {
   const dx = bx - ax;
   const dy = by - ay;
@@ -453,20 +449,15 @@ export function viewportFromCamera(
   };
 }
 
-/** Keep grass/mobile/tree grids aligned after mid-tick movement, birth, or death. */
+/** Keep grass/mobile grids aligned after mid-tick movement, birth, or death. */
 export function syncSpatialGridEntity(
   entity: Entity,
   grassGrid?: EntitySpatialGrid,
   mobileGrid?: EntitySpatialGrid,
-  treeGrid?: EntitySpatialGrid,
 ): void {
   if (!USE_SPATIAL_GRID) return;
   if (grassGrid && isGrassGridEntity(entity)) grassGrid.update(entity);
   if (mobileGrid && isMobileGridEntity(entity)) mobileGrid.update(entity);
-  if (treeGrid && entity.type === EntityType.Tree) {
-    if (entity.alive) treeGrid.update(entity);
-    else treeGrid.remove(entity);
-  }
 }
 
 const ROAD_AVOID_CELL = 128;
@@ -595,33 +586,6 @@ export function buildRoadAvoidanceIndex(
   return new RoadAvoidanceIndex(mapWidth, mapHeight, roads);
 }
 
-/** Static tree layer — event-driven updates; full rebuild only on layout/clone recovery. */
-export function buildTreeGrid(
-  mapWidth: number,
-  mapHeight: number,
-  trees: Iterable<Entity>,
-): EntitySpatialGrid | undefined {
-  if (!USE_SPATIAL_GRID) return undefined;
-  const grid = new EntitySpatialGrid(mapWidth, mapHeight, MOBILE_CELL_SIZE);
-  grid.rebuild(trees, isTreeGridEntity);
-  return grid;
-}
-
-/** Allocate tree index; full rebuild only on first tick or after layout/clone recovery. */
-export function syncTreeSimGrid(
-  existing: EntitySpatialGrid | undefined,
-  mapWidth: number,
-  mapHeight: number,
-  trees: Iterable<Entity>,
-): EntitySpatialGrid | undefined {
-  if (!USE_SPATIAL_GRID) return undefined;
-  const grid = resolveSpatialGrid(existing, mapWidth, mapHeight, MOBILE_CELL_SIZE);
-  if (grid !== existing) {
-    grid.rebuild(trees, isTreeGridEntity);
-  }
-  return grid;
-}
-
 /** Rebuild (or allocate) the mobile layer once per sim tick. */
 export function syncMobileSimGrid(
   existing: EntitySpatialGrid | undefined,
@@ -664,7 +628,6 @@ export function assertSpatialGridInvariants(
   grassGrid: EntitySpatialGrid | undefined,
   mobileGrid: EntitySpatialGrid | undefined,
   entities: Iterable<Entity>,
-  treeGrid?: EntitySpatialGrid,
 ): void {
   if (!SPATIAL_GRID_INVARIANT_CHECK || !grassGrid || !mobileGrid) return;
 
@@ -673,10 +636,7 @@ export function assertSpatialGridInvariants(
     .map((msg) => `[grass] ${msg}`);
   const mobileErrors = mobileGrid.validateInvariant(list, isMobileGridEntity)
     .map((msg) => `[mobile] ${msg}`);
-  const treeErrors = treeGrid
-    ? treeGrid.validateInvariant(list, isTreeGridEntity).map((msg) => `[tree] ${msg}`)
-    : [];
-  const errors = [...grassErrors, ...mobileErrors, ...treeErrors];
+  const errors = [...grassErrors, ...mobileErrors];
   if (errors.length > 0) {
     throw new Error(`Spatial grid invariant failed:\n${errors.slice(0, 8).join('\n')}`);
   }

@@ -125,7 +125,7 @@ export type { PopulationGrowthReport, PopulationGrowthTone } from './populationG
 export { formatRivalPopulationLabel, formatRivalRelationshipLabel } from './rivalDisplay';
 export {
   getArmamentSteps, getHumanArmamentLabel,
-  hasIronSpears, hasStoneSpears, hasCompletedBlacksmith,
+  hasIronSpears, hasStoneSpears,
 } from './combat';
 export {
   ELECTION_INTERVAL_YEARS,
@@ -180,7 +180,6 @@ export {
   canAffordWorkshopRecipe,
   consumeWorkshopRecipeInputs,
   initTradeRoutes,
-  establishTradeRoute,
   ensureFullTradeRoutes,
 } from './economy';
 export {
@@ -198,9 +197,9 @@ export {
   createImmigrantSettler,
   initGame,
   setEntityBirthDate,
-  getAgeInYears,
   type InitGameOptions,
 } from './worldGen';
+export { getAgeInYears } from './dayCycle';
 export { tickHumans, tickWildlife } from './lifeSimulation';
 export { updateWeather, updateDisasters } from './worldEvents';
 export { GAME_VERSION, GAME_PHASE, GAME_TITLE, GAME_SUBTITLE, ECOLOGICAL_FACTS } from './version';
@@ -212,4 +211,4 @@ export {
   FORGE_ORDERS, getForgeOrder, formatForgeInputs, getForgeBlockReason,
   queueForgeOrder, createInitialForgeState,
 } from './forge';
-export type { ForgeOrder, ForgeOrderId, VillageForgeState } from './forge';
+export type { ForgeOrder, ForgeOrderId, VillageForgeState } from './gameTypes';

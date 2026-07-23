@@ -2,8 +2,31 @@ import { BuildingType, JobType } from './gameTypes';
 import type { Building, WorldState } from './gameTypes';
 import { isImprisoned } from './dayCycle';
 import { ensureEntityByIdMap } from './entityIndex';
-import { FORGE_BONUSES, isForgeOrderComplete, type VillageForgeState } from './forge';
-import { MILITIA_BALANCE } from './militiaBalance';
+import { FORGE_BONUSES, isForgeOrderComplete } from './forge';
+import type { VillageForgeState } from './gameTypes';
+
+/** Tuned July 2026 — spear/militia balance review (10-year sim targets). */
+export const MILITIA_BALANCE = {
+  basePerAdult: 10,
+  /** Iron replaces stone — not multiplied together. */
+  stoneSpearMult: 1.3,
+  ironSpearMult: 1.52,
+  /** Iron replaces wooden — per-adult additive, not stacked. */
+  woodenShieldPerAdult: 4,
+  ironShieldPerAdult: 9,
+  /**
+   * Trained barracks guards — bonus ON TOP of their adult base.
+   * Guards ARE counted in adultCount, so they receive base (10) + this bonus.
+   */
+  guardBonusPerGuard: 14,
+  /**
+   * Barricade factor: militia strength is multiplied by this when entrenched.
+   * 0.85 represents a deliberate trade-off — barricades reduce mobility
+   * but add a flat bonus + structure defenses.
+   */
+  barricadeMilitiaFactor: 0.85,
+  barricadeFlatBonus: 25,
+} as const;
 
 const EMPTY_FORGE: VillageForgeState = {
   activeOrder: null,

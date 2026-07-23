@@ -1,4 +1,3 @@
-import { loadHumanWalkSheets } from './humanSprites';
 import { BUILDING_CONFIGS } from './gameTypes';
 
 export interface SpriteFrame {
@@ -14,6 +13,8 @@ export interface SpriteFrame {
 const spriteCache = new Map<string, HTMLImageElement>();
 const frameCache = new Map<string, SpriteFrame>();
 const loadingPromises = new Map<string, Promise<SpriteFrame>>();
+
+let humanSpritesReady = false;
 
 /** Kept in sync with humanSprites path constants (no import — avoids circular dep). */
 const HUMAN_SPRITE_PATHS = new Set<string>([
@@ -74,6 +75,17 @@ export function getSpriteFrame(src: string): SpriteFrame | null {
 export function isSpriteLoaded(src: string): boolean {
   return frameCache.has(src);
 }
+
+export function isHumanSpritesReady(): boolean {
+  return humanSpritesReady;
+}
+
+export async function loadHumanWalkSheets(): Promise<void> {
+  await Promise.all(Array.from(HUMAN_SPRITE_PATHS).map(loadSprite));
+  humanSpritesReady = true;
+}
+
+export const generateHumanSprites = loadHumanWalkSheets;
 
 export function preloadAllSprites(): Promise<void> {
   const wildlifeAndHumans = [

@@ -99,18 +99,38 @@ export function wrapChatLines(
 
   const lines: string[] = [];
   let current = '';
+  let overflow = false;
   for (const word of words) {
+    if (lines.length >= maxLines) {
+      overflow = true;
+      break;
+    }
     const candidate = current ? `${current} ${word}` : word;
     if (candidate.length > maxCharsPerLine && current) {
       lines.push(current);
       current = word;
-      if (lines.length >= maxLines) break;
+      if (lines.length >= maxLines) {
+        overflow = true;
+        break;
+      }
     } else {
       current = candidate;
     }
   }
-  if (lines.length < maxLines && current) lines.push(current);
+  if (!overflow && current) {
+    if (lines.length < maxLines) {
+      lines.push(current);
+    } else {
+      overflow = true;
+    }
+  }
   if (lines.length === 0) return [text.slice(0, maxCharsPerLine)];
+  if (overflow) {
+    const lastIdx = Math.min(maxLines, lines.length) - 1;
+    const last = lines[lastIdx] ?? '';
+    const trimmed = last.length <= maxCharsPerLine - 1 ? last : last.slice(0, maxCharsPerLine - 1);
+    lines[lastIdx] = `${trimmed}…`;
+  }
   return lines.slice(0, maxLines);
 }
 
@@ -445,4 +465,15 @@ export function getChatBubbleText(
 
 export function resetDialogueSessions(): void {
   dialogueSessions.clear();
+}
+
+/** Remove a dead/despawned entity's dialogue session and clear its chat state. */
+export function cleanupEntityDialogueState(entity: ChatSpeaker): void {
+  const key = entity.chatDialogueSessionKey;
+  if (key) {
+    dialogueSessions.delete(key);
+  }
+  entity.chatDialogueSessionKey = undefined;
+  entity.chatPartnerId = undefined;
+  clearEntityChat(entity);
 }

@@ -434,21 +434,22 @@ export class GameWorkerHost {
     }
 
     if (msg.type === 'commandResult' && this.worldRef) {
+      const delta = msg.delta as SimTickDelta;
       if (msg.ok === false) {
-        this.onCommandResult?.(this.worldRef, msg.delta, null, false, msg.reason);
+        this.onCommandResult?.(this.worldRef, delta, null, false, msg.reason);
         this.pendingCommand?.reject(new Error(msg.reason ?? 'Command failed'));
         this.pendingCommand = null;
         this.resolveIdleWaiters();
         return;
       }
-      applySimTickDelta(this.worldRef, msg.delta, { cloneMode: 'transfer' });
+      applySimTickDelta(this.worldRef, delta, { cloneMode: 'transfer' });
       let render: WorkerTickRender | null = null;
       if (msg.renderBuffer != null && msg.bufferIndex != null) {
         this.adoptRenderBuffer(msg.bufferIndex, msg.renderBuffer);
-        render = this.buildRender(msg.renderBuffer, msg.delta, undefined);
+        render = this.buildRender(msg.renderBuffer, delta, undefined);
       }
-      this.onCommandResult?.(this.worldRef, msg.delta, render, true, msg.reason);
-      this.pendingCommand?.resolve(msg.delta);
+      this.onCommandResult?.(this.worldRef, delta, render, true, msg.reason);
+      this.pendingCommand?.resolve(delta);
       this.pendingCommand = null;
       this.resolveIdleWaiters();
       return;
@@ -464,20 +465,21 @@ export class GameWorkerHost {
     if (msg.type !== 'tickResult' || !this.worldRef) return;
 
     this.ticksInFlight = Math.max(0, this.ticksInFlight - 1);
-    applySimTickDelta(this.worldRef, msg.delta, { cloneMode: 'transfer' });
+    const delta = msg.delta as SimTickDelta;
+    applySimTickDelta(this.worldRef, delta, { cloneMode: 'transfer' });
 
     if (msg.headless || msg.renderBuffer == null || msg.bufferIndex == null) {
-      this.onTickResult?.(this.worldRef, msg.delta, null, true);
+      this.onTickResult?.(this.worldRef, delta, null, true);
     } else {
       const reader = createRenderSoAReader(msg.renderBuffer);
       if (!reader) {
         console.error('[GameWorker] Invalid render SoA buffer');
         this.returnRenderBuffer(msg.bufferIndex, msg.renderBuffer);
-        this.onTickResult?.(this.worldRef, msg.delta, null, true);
+        this.onTickResult?.(this.worldRef, delta, null, true);
       } else {
         this.adoptRenderBuffer(msg.bufferIndex, msg.renderBuffer);
-        const render = this.buildRender(msg.renderBuffer, msg.delta, msg.scentBuffer);
-        this.onTickResult?.(this.worldRef, msg.delta, render, true);
+        const render = this.buildRender(msg.renderBuffer, delta, msg.scentBuffer);
+        this.onTickResult?.(this.worldRef, delta, render, true);
       }
     }
 

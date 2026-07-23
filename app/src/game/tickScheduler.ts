@@ -11,15 +11,10 @@ import type { SimulationFocus } from './gameEngine';
 
 export type { SimulationFocus } from './gameEngine';
 
-export { tickLayerStatic } from './tickLayerStatic';
+export { tickLayerRealtime, STATS_SAMPLE_INTERVAL_TICKS, POPULATION_HISTORY_MAX } from './tickLayerRealtime';
+export { tickLayerSystems, LAYER_SYSTEMS_INTERVAL } from './tickLayerSystems';
 export { tickLayerSocial, LAYER_SOCIAL_INTERVAL } from './tickLayerSocial';
-export { tickLayerEcological, LAYER_ECO_INTERVAL } from './tickLayerEcological';
-export { tickLayerActive } from './tickLayerActive';
-export {
-  tickLayerStats,
-  STATS_SAMPLE_INTERVAL_TICKS,
-  POPULATION_HISTORY_MAX,
-} from './tickLayerStats';
+export { tickLayerDaily } from './tickLayerDaily';
 
 /** Entity-like record for focus / throttle iteration. */
 export interface FocusableEntity {

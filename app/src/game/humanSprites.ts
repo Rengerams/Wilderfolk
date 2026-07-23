@@ -1,5 +1,5 @@
 import type { Entity } from './gameTypes';
-import { getSpriteFrame, loadSprite, type SpriteFrame } from './spriteLoader';
+import { getSpriteFrame, isHumanSpritesReady, type SpriteFrame } from './spriteLoader';
 
 export const HUMAN_WALK_FRAMES = 4;
 export const HUMAN_VARIANT_COUNT = 4;
@@ -114,8 +114,6 @@ const FEMALE_PALETTES: PioneerPalette[] = [
   { skin: '#e8b888', hair: '#501010', shirt: '#902028', pants: '#ece4d8', shoe: '#28180c', accent: '#f5f0e8', outline: '#0c0604' },
 ];
 
-let ready = false;
-
 function normalizeVariant(variant: number): number {
   return ((variant % HUMAN_VARIANT_COUNT) + HUMAN_VARIANT_COUNT) % HUMAN_VARIANT_COUNT;
 }
@@ -226,28 +224,11 @@ export function getHumanSpriteFrame(
   variant: number,
   _frame: number,
 ): SpriteFrame | null {
-  if (!ready) return null;
+  if (!isHumanSpritesReady()) return null;
   const g = gender ?? 'male';
   const v = normalizeVariant(variant);
   return getSpriteFrame(getHumanWalkSheetPath(g, v)) ?? getSpriteFrame(HUMAN_BASE_SPRITES[g]);
 }
-
-export function isHumanSpritesReady(): boolean {
-  return ready;
-}
-
-const ALL_HUMAN_SPRITE_PATHS = [
-  ...Object.values(HUMAN_BASE_SPRITES),
-  ...WALK_SHEET_PATHS.male,
-  ...WALK_SHEET_PATHS.female,
-];
-
-export async function loadHumanWalkSheets(): Promise<void> {
-  await Promise.all(ALL_HUMAN_SPRITE_PATHS.map(loadSprite));
-  ready = true;
-}
-
-export const generateHumanSprites = loadHumanWalkSheets;
 
 /** Match renderer HUMAN_WALK_SPEED_THRESHOLD — idle settlers must not advance walk frames. */
 export const HUMAN_WALK_SPEED_THRESHOLD = 0.12;

@@ -9,6 +9,7 @@ import {
   getColonyDay,
   HUMAN_ADULT_MIN_AGE,
   HUMAN_MAX_LIFESPAN_YEARS,
+  isNewCalendarDayTick,
   syncResidenceOccupants,
   TICKS_PER_DAY,
 } from './dayCycle';
@@ -70,6 +71,21 @@ function cloneWorldStateForAction(originalState: WorldState): WorldState {
 export function playerHumanCount(entities: Entity[]): number {
   return entities.filter((e) => e.alive && isPlayerHuman(e)).length;
 }
+
+function buildAliveEntityIndex(allAlive: Entity[]): Map<number, Entity> {
+  const index = new Map<number, Entity>();
+  for (const e of allAlive) {
+    if (e.alive) index.set(e.id, e);  }
+  return index;}
+
+function buildAliveDeerList(allAlive: Entity[]): Entity[] {
+  const deer: Entity[] = [];
+  for (const e of allAlive) {    if (e.alive && e.type === EntityType.Deer) deer.push(e);  }  return deer;}
+
+function makeNextAliveDeer(deerList: Entity[]): () => Entity | undefined {
+  let idx = 0;
+  return () => {
+    while (idx < deerList.length) {      const deer = deerList[idx];      if (deer?.alive) return deer;      idx++;    }    return undefined;  };}
 
 function pickSite(
   state: WorldState,
@@ -317,8 +333,10 @@ export function spawnRivalSettlement(
 
 export function tickVisitorGroups(state: WorldState, allAlive: Entity[]): void {
   const remaining: VisitorGroup[] = [];
+  const aliveById = buildAliveEntityIndex(allAlive);
+  const nextDeer = makeNextAliveDeer(buildAliveDeerList(allAlive));
 
-  const newCalendarDay = state.tick > 0 && state.tick % TICKS_PER_DAY === 0;
+  const newCalendarDay = isNewCalendarDayTick(state);
   const calendarDay = getAbsoluteCalendarDay(state.tick);
 
   for (const group of state.visitorGroups) {
@@ -366,7 +384,7 @@ export function tickVisitorGroups(state: WorldState, allAlive: Entity[]): void {
         case 'refugees':
           break;
         case 'hunters': {
-          const deer = allAlive.find((e) => e.alive && e.type === EntityType.Deer);
+          const deer = nextDeer();
           const poachChance = group.leaderTalked ? 0.1 : 0.25;
           if (deer && Math.random() < poachChance) {
             deer.alive = false;
@@ -381,10 +399,11 @@ export function tickVisitorGroups(state: WorldState, allAlive: Entity[]): void {
     if (group.daysLeft <= 0) {
       for (const id of group.entityIds) {
         clearFactionWanderState(id);
-        const ent = allAlive.find((e) => e.id === id);
+        const ent = aliveById.get(id);
         if (ent?.faction === 'visitor') {
           ent.alive = false;
           unindexEntityFromState(state, ent.id);
+          aliveById.delete(id);
         }
       }
       pushNews(state, '👋 Visitors Departed', `${group.name} packed up and left the valley.`, 'neutral');
@@ -1133,7 +1152,8 @@ export function negotiateRefugees(
       pushFloat(state, group.campX, group.campY - 20, 'Need 40🍖', '#f97316');
       return state;
     }
-    if (playerHumanCount(allAlive) >= state.maxHumanPopulation) {
+    const currentPopulation = playerHumanCount(allAlive);
+    if (currentPopulation >= state.maxHumanPopulation) {
       pushFloat(state, group.campX, group.campY - 20, 'Population cap reached', '#f97316');
       return state;
     }
@@ -1141,6 +1161,7 @@ export function negotiateRefugees(
       state,
       group,
       allAlive,
+      currentPopulation,
       2 + getRefugeeWelcomeBonus(state.buildings),
     );
     if (joined === 0) {
@@ -1162,11 +1183,12 @@ export function negotiateRefugees(
       pushFloat(state, group.campX, group.campY - 20, 'Need 20🍖', '#f97316');
       return state;
     }
-    if (playerHumanCount(allAlive) >= state.maxHumanPopulation) {
+    const currentPopulation = playerHumanCount(allAlive);
+    if (currentPopulation >= state.maxHumanPopulation) {
       pushFloat(state, group.campX, group.campY - 20, 'Population cap reached', '#f97316');
       return state;
     }
-    const joined = Math.random() < 0.55 ? admitRefugees(state, group, allAlive, 1) : 0;
+    const joined = Math.random() < 0.55 ? admitRefugees(state, group, allAlive, currentPopulation, 1) : 0;
     group.refugeeResolved = true;
     if (joined > 0) {
       state.resources.food -= 20;
@@ -1184,10 +1206,16 @@ export function negotiateRefugees(
   return state;
 }
 
-function admitRefugees(state: WorldState, group: VisitorGroup, allAlive: Entity[], max: number): number {
+function admitRefugees(
+  state: WorldState,
+  group: VisitorGroup,
+  allAlive: Entity[],
+  currentPopulation: number,
+  max: number,
+): number {
   let joined = 0;
   for (let i = 0; i < max; i++) {
-    if (playerHumanCount(allAlive) >= state.maxHumanPopulation) break;
+    if (currentPopulation + joined >= state.maxHumanPopulation) break;
     const ent = createFactionHuman(state, group.campX, group.campY, 'visitor', group.id, getRandomSurname());
     ent.faction = undefined;
     ent.occupation = 'settler';
@@ -1225,10 +1253,13 @@ export function hitTestCamp(
 }
 
 export function tickRivalSettlements(state: WorldState, allAlive: Entity[]): void {
-  const newCalendarDay = state.tick > 0 && state.tick % TICKS_PER_DAY === 0;
+  const newCalendarDay = isNewCalendarDayTick(state);
   if (!newCalendarDay) return;
 
   tickPendingDiplomacyEvents(state);
+
+  const aliveById = buildAliveEntityIndex(allAlive);
+  const nextDeer = makeNextAliveDeer(buildAliveDeerList(allAlive));
 
   let tenseRepDrainToday = 0;
   const maxTenseRepDrainPerDay = 2;
@@ -1236,7 +1267,7 @@ export function tickRivalSettlements(state: WorldState, allAlive: Entity[]): voi
   for (const rival of state.rivalSettlements) {
     let pop = 0;
     for (const id of rival.entityIds) {
-      const ent = allAlive.find((e) => e.id === id);
+      const ent = aliveById.get(id);
       if (ent?.alive) pop++;
     }
     rival.population = pop;
@@ -1267,7 +1298,7 @@ export function tickRivalSettlements(state: WorldState, allAlive: Entity[]): voi
       pushFloat(state, rival.campX, rival.campY - 20, `Trade +${gold}g`, '#22d3ee');
       logEvent(state, 'trade', `${rival.name} sent a trade gift (+${gold} gold)`, rival.name);
     } else if (rival.relationship === 'competitive') {
-      const deer = allAlive.find((e) => e.alive && e.type === EntityType.Deer);
+      const deer = nextDeer();
       if (deer && Math.random() < 0.5) {
         deer.alive = false;
         unindexEntityFromState(state, deer.id);
@@ -1347,6 +1378,9 @@ export function rollYearlyWorldEvent(
     return true;
   });
   const totalWeight = pool.reduce((s, e) => s + e.weight, 0);
+  if (totalWeight <= 0) {
+    return { event: null, bountifulHarvest: false };
+  }
   let roll = Math.random() * totalWeight;
   let picked = pool[0];
   for (const entry of pool) {

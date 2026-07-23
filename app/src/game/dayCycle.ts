@@ -1,13 +1,23 @@
 import { BuildingType, BUILDING_CONFIGS, EntityType } from './gameTypes';
 import type { Building, Entity } from './gameTypes';
 import { finalizeMoonHowlerDeath } from './moonHowler';
+import { cleanupEntityDialogueState } from './humanChat';
+
+import { HUMAN_ADULT_MIN_AGE, isNightHour } from './dayCycleConstants';
+
+export {
+  DAYS_PER_MOON_CYCLE,
+  HUMAN_ADULT_MIN_AGE,
+  isFullMoonDay,
+  isFullMoonNight,
+  isNightHour,
+  NIGHT_END,
+  NIGHT_START,
+} from './dayCycleConstants';
 
 /** 24 ticks = one in-game day. At 1× speed (~1 tick/s) a day lasts ~24 real seconds. */
 export const TICKS_PER_DAY = 24;
 export const DAYS_PER_YEAR = 360;
-/** Full moon hits every ~2 in-game weeks */
-export const DAYS_PER_MOON_CYCLE = 14;
-
 export const GAME_YEAR_OFFSET = 1700;
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -32,7 +42,6 @@ export function tryGraduateHumanChild(
   onGraduate?.(entity);
   return true;
 }
-export const HUMAN_ADULT_MIN_AGE = 16;
 /** Adult children may leave the parental home at this age when a house is free. */
 export const HUMAN_MOVE_OUT_MIN_AGE = 18;
 
@@ -128,6 +137,17 @@ export function syncHumanAgeFromCalendar(
   entity.maxAge = HUMAN_MAX_LIFESPAN_YEARS;
 }
 
+/** Display age — humans use the colony calendar; wildlife converts life-days to years. */
+export function getAgeInYears(
+  entity: Entity,
+  state: Pick<import('./gameTypes').WorldState, 'year' | 'dayInYear' | 'tick'>,
+): number {
+  if (entity.type === EntityType.Human) {
+    return computeHumanAgeYears(entity, getColonyDay(state));
+  }
+  return Math.max(0, Math.floor(entity.age / DAYS_PER_YEAR));
+}
+
 export function getOldAgeDeathChance(age: number): number {
   if (age < HUMAN_VENERABLE_AGE) return 0;
   if (age >= HUMAN_MAX_LIFESPAN_YEARS) return 1;
@@ -176,8 +196,6 @@ export const EVENT_INTERVAL = {
   tamedHuntAssist: ticksForDays(3),
 } as const;
 
-export const NIGHT_START = 20;
-export const NIGHT_END = 6;
 export const WORK_START = 7;
 export const WORK_END = 19;
 export const EVENING_START = 19;
@@ -234,25 +252,6 @@ export function getBirthDateString(entity: { birthYear: number; birthMonth: numb
   const month = ((monthIndex % 12) + 12) % 12;
   const dayOfMonth = (entity.birthDay % 30) + 1;
   return `${MONTH_NAMES[month]} ${dayOfMonth}, ${realYear}`;
-}
-
-/** @param colonyDay Absolute colony day (year × DAYS_PER_YEAR + dayInYear), never wrapping per year. */
-export function isFullMoonDay(colonyDay: number): boolean {
-  return colonyDay % DAYS_PER_MOON_CYCLE === 0;
-}
-
-/** Full-moon night spans 8pm on a full-moon day through 6am the next morning. */
-export function isFullMoonNight(colonyDay: number, hourOfDay: number): boolean {
-  if (!isNightHour(hourOfDay)) return false;
-  if (isFullMoonDay(colonyDay)) return true;
-  if (hourOfDay < NIGHT_END) {
-    return isFullMoonDay(colonyDay - 1);
-  }
-  return false;
-}
-
-export function isNightHour(hour: number): boolean {
-  return hour >= NIGHT_START || hour < NIGHT_END;
 }
 
 export function isWorkHour(hour: number): boolean {
@@ -1369,6 +1368,8 @@ export function finalizeHumanDeath(
       }
     }
   }
+
+  cleanupEntityDialogueState(entity);
 }
 
 /** Player settler eligible for human death cleanup (human or cursed full-moon werewolf form). */

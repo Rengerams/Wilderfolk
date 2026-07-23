@@ -1,10 +1,5 @@
 import type { WorldState } from '../gameTypes';
-import type { SimulationFocus } from '../gameEngine';
-import type { SimTickDelta } from '../simBuffers/simDelta';
-import type { WorkerCommand } from './commands';
-import type { SimPrepPayload } from './simPrep';
 
-export type { SimPrepPayload };
 
 export const WORKER_PROTO = 1;
 
@@ -15,6 +10,23 @@ export function isWorkerProto(proto: unknown): proto is typeof WORKER_PROTO {
 export function workerProtoMismatch(got: unknown): string {
   return `Worker protocol mismatch: expected ${WORKER_PROTO}, got ${String(got)}`;
 }
+
+/** Viewport region receiving full simulation this tick. Defined locally so protocol.ts stays a pure contract module. */
+export interface SimulationFocus {
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+}
+
+/** Opaque command payload — concrete shape lives in commands.ts. */
+export type WorkerCommand = { proto: 1; op: string };
+
+/** Opaque sim-prep payload — concrete shape lives in simPrep.ts. */
+export type SimPrepPayload = unknown;
+
+/** Opaque tick delta payload — concrete shape lives in simBuffers/simDelta.ts. */
+export type SimTickDelta = unknown;
 
 /** Ensure the worker `ready` handshake advertises every feature the host requested. */
 export function assertWorkerFeatures(

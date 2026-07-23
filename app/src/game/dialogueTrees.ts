@@ -30,6 +30,7 @@ interface DialogueBankFile {
 
 let bank: DialogueBankFile | null = null;
 let treesByCategory = new Map<DialogueCategory, DialogueTree[]>();
+let treesById = new Map<string, DialogueTree>();
 let loadPromise: Promise<void> | null = null;
 
 /** Headless sims/tests (tsx/node) cannot rely on Vite async JSON chunks. */
@@ -43,10 +44,12 @@ async function loadDialogueFromDisk(): Promise<boolean> {
 function indexDialogueBank(next: DialogueBankFile): void {
   bank = next;
   treesByCategory = new Map();
+  treesById = new Map();
   for (const tree of next.dialogue_trees) {
     const list = treesByCategory.get(tree.category) ?? [];
     list.push(tree);
     treesByCategory.set(tree.category, list);
+    treesById.set(tree.id, tree);
   }
 }
 
@@ -170,7 +173,7 @@ export function pickDialogueTree(
 }
 
 export function getDialogueTreeById(id: string): DialogueTree | undefined {
-  return getDialogueTrees().find((t) => t.id === id);
+  return treesById.get(id);
 }
 
 export function speakerRoleIndex(tree: DialogueTree, line: DialogueLine): 0 | 1 {

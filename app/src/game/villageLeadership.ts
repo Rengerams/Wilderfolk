@@ -1,7 +1,6 @@
 import type { ElectionCeremonyPhase, ElectionCeremonyState, Entity, WorldState } from './gameTypes';
 import { BuildingType, EntityType } from './gameTypes';
-import { HUMAN_ADULT_MIN_AGE, isImprisoned, TICKS_PER_DAY } from './dayCycle';
-import { getAgeInYears } from './worldGen';
+import { getAgeInYears, HUMAN_ADULT_MIN_AGE, isImprisoned, TICKS_PER_DAY } from './dayCycle';
 import { logEvent } from './eventLog';
 import { isPlayerHuman } from './groupEvents';
 import { sayHumanChatPhrase } from './humanChat';

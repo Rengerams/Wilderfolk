@@ -3,7 +3,7 @@ import { BuildingType } from '../gameTypes';
 import type { BuildingRotation } from '../buildingRotation';
 import type { StripSegment } from '../stripBuild';
 import type { VisitorTradeAction, RefugeeChoice } from '../groupEvents';
-import type { ForgeOrderId } from '../forge';
+import type { ForgeOrderId } from '../gameTypes';
 import {
   startBuilding,
   placeStripChain,
@@ -22,7 +22,7 @@ import {
 } from '../buildingActions';
 import { queueForgeOrder } from '../forge';
 import { notifyBuildingLocked, startResearch } from '../research';
-import { establishTradeRoute } from '../economy';
+import { establishTradeRoute } from '../tradeCaravans';
 import {
   sendRivalGift,
   establishRivalTradePact,

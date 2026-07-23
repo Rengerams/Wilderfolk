@@ -64,6 +64,7 @@ import {
   chatHintsFromWorld,
   maybeDialogueChat,
   maybeHousemateChat,
+  sayHumanChatPhrase,
   tickHumanChat,
   type HumanChatContext,
 } from './humanChat';
@@ -150,7 +151,6 @@ export interface TickContext {
   predators: Entity[];
   grassGrid?: EntitySpatialGrid;
   mobileGrid?: EntitySpatialGrid;
-  treeGrid?: EntitySpatialGrid;
   residenceOccupants?: Map<number, Entity[]>;
   grassPopulation?: GrassPopulationSnapshot;
   roadAvoidance?: RoadAvoidanceIndex;
@@ -208,7 +208,7 @@ function pushNewEntity(state: WorldState, ctx: TickContext, entity: Entity): voi
   if (entity.type === EntityType.Grass && ctx.grassPopulation) {
     recordGrassBirth(ctx.grassPopulation, entity.id);
   }
-  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid, ctx.treeGrid);
+  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid);
 }
 
 function markGrassDead(ctx: TickContext, grass: Entity): void {
@@ -234,7 +234,7 @@ function markWildlifeDead(
 }
 
 function syncEntityGrids(ctx: TickContext, entity: Entity): void {
-  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid, ctx.treeGrid);
+  syncSpatialGridEntity(entity, ctx.grassGrid, ctx.mobileGrid);
 }
 
 
@@ -897,6 +897,41 @@ function setScandalCooldown(entity: Entity, tick: number): void {
   entity.scandalCooldownUntilTick = tick + getScandalCooldownTicks();
 }
 
+function reassignDivorcedResidences(
+  a: Entity,
+  b: Entity,
+  buildings: Building[],
+  villagers: Entity[],
+): void {
+  const residences = buildings.filter(isResidenceBuilding);
+  const formerHomes = new Set<number>();
+  for (const resident of [a, b]) {
+    if (resident.residenceBuildingId != null) {
+      formerHomes.add(resident.residenceBuildingId);
+      const oldHome = buildings.find((building) => building.id === resident.residenceBuildingId);
+      if (oldHome) {
+        oldHome.occupants = oldHome.occupants.filter((id) => id !== resident.id);
+      }
+    }
+  }
+
+  if (residences.length === 0) {
+    a.residenceBuildingId = undefined;
+    b.residenceBuildingId = undefined;
+    return;
+  }
+
+  a.residenceBuildingId = pickResidenceForHuman(a, villagers, residences);
+  if (b.prisonBuildingId == null) {
+    const excludeHomes = new Set(formerHomes);
+    if (a.residenceBuildingId != null) excludeHomes.add(a.residenceBuildingId);
+    b.residenceBuildingId = pickResidenceForHumanExcluding(b, villagers, residences, excludeHomes);
+  } else {
+    b.residenceBuildingId = undefined;
+  }
+  syncResidenceOccupants(villagers, buildings);
+}
+
 function tryDivorceOnCaughtCheater(
   state: WorldState,
   cheater: Entity,
@@ -929,37 +964,8 @@ function tryDivorceOnCaughtCheater(
   addNotification(state, 'Divorce', formatCaughtCheaterDivorceDetail(spouse, cheater), 'warning');
   addFloatingText(state, (spouse.x + cheater.x) / 2, (spouse.y + cheater.y) / 2 - 22, 'Divorced!', '#f97316');
 
-  const residences = buildings.filter(isResidenceBuilding);
   const villagers = playerHumans.filter(isPlayerHuman);
-  const formerSharedHomes = new Set<number>();
-  for (const resident of [spouse, cheater]) {
-    if (resident.residenceBuildingId != null) {
-      formerSharedHomes.add(resident.residenceBuildingId);
-      const oldHome = buildings.find((b) => b.id === resident.residenceBuildingId);
-      if (oldHome) {
-        oldHome.occupants = oldHome.occupants.filter((id) => id !== resident.id);
-      }
-    }
-  }
-  if (residences.length === 0) {
-    spouse.residenceBuildingId = undefined;
-    if (cheater.prisonBuildingId == null) cheater.residenceBuildingId = undefined;
-  } else {
-    spouse.residenceBuildingId = pickResidenceForHuman(spouse, villagers, residences);
-    if (cheater.prisonBuildingId == null) {
-      const excludeHomes = new Set(formerSharedHomes);
-      if (spouse.residenceBuildingId != null) excludeHomes.add(spouse.residenceBuildingId);
-      cheater.residenceBuildingId = pickResidenceForHumanExcluding(
-        cheater,
-        villagers,
-        residences,
-        excludeHomes,
-      );
-    } else {
-      cheater.residenceBuildingId = undefined;
-    }
-    syncResidenceOccupants(villagers, buildings);
-  }
+  reassignDivorcedResidences(spouse, cheater, buildings, villagers);
 
   if (paramour.relationshipStatus === 'married' && paramour.partnerId != null) {
     const paramourSpouse = getLivingEntity(paramour.partnerId, entityById);
@@ -979,35 +985,7 @@ function tryDivorceOnCaughtCheater(
         formatCaughtCheaterDivorceDetail(paramourSpouse, paramour),
         'warning',
       );
-      const formerParamourHomes = new Set<number>();
-      for (const resident of [paramourSpouse, paramour]) {
-        if (resident.residenceBuildingId != null) {
-          formerParamourHomes.add(resident.residenceBuildingId);
-          const oldHome = buildings.find((b) => b.id === resident.residenceBuildingId);
-          if (oldHome) {
-            oldHome.occupants = oldHome.occupants.filter((id) => id !== resident.id);
-          }
-        }
-      }
-      if (residences.length === 0) {
-        paramourSpouse.residenceBuildingId = undefined;
-        if (paramour.prisonBuildingId == null) paramour.residenceBuildingId = undefined;
-      } else {
-        paramourSpouse.residenceBuildingId = pickResidenceForHuman(paramourSpouse, villagers, residences);
-        if (paramour.prisonBuildingId == null) {
-          const excludeHomes = new Set(formerParamourHomes);
-          if (paramourSpouse.residenceBuildingId != null) excludeHomes.add(paramourSpouse.residenceBuildingId);
-          paramour.residenceBuildingId = pickResidenceForHumanExcluding(
-            paramour,
-            villagers,
-            residences,
-            excludeHomes,
-          );
-        } else {
-          paramour.residenceBuildingId = undefined;
-        }
-        syncResidenceOccupants(villagers, buildings);
-      }
+      reassignDivorcedResidences(paramourSpouse, paramour, buildings, villagers);
     }
   }
 }
@@ -1357,7 +1335,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
   const {
     width, height, hourOfDay, season, canHeat,
     byType, newEntities, updatedBuildings, roadBuildings, playerHumans, focus,
-    entityById, buildingById, mobileGrid, treeGrid,
+    entityById, buildingById, mobileGrid,
   } = ctx;
 
   const config = SPECIES_CONFIG[EntityType.Human];
@@ -1366,6 +1344,8 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
   const goHomeTime = shouldBeAtHome(hourOfDay);
   const goWorkTime = isWorkHour(hourOfDay);
   const isNewCalendarDay = isNewCalendarDayTick(state);
+  const humanFleeMult = getHumanFleeSpeedMultiplier(state);
+  const isTick8 = hourOfDay === 8 && state.tick % TICKS_PER_DAY === 8;
   const allHumans: Entity[] = [];
   const humanIds = new Set<number>();
   for (const h of byType[EntityType.Human]) {
@@ -1612,7 +1592,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
     let energyLoss = hasWell ? config.energyLossPerTick * 0.8 : config.energyLossPerTick;
     if (isWinter && !canHeat) {
       energyLoss *= 1.5;
-      if (hourOfDay === 8 && state.tick % TICKS_PER_DAY === 8) entity.flash = 5;
+      if (isTick8) entity.flash = 5;
     }
 
     if (goHomeTime && hasResidenceAssignment(entity)) {
@@ -1658,7 +1638,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
       const fdx = entity.x - huntingWere.x;
       const fdy = entity.y - huntingWere.y;
       const fdist = Math.sqrt(fdx * fdx + fdy * fdy) || 1;
-      const fleeMult = getHumanFleeSpeedMultiplier(state);
+      const fleeMult = humanFleeMult;
       entity.vx = (fdx / fdist) * config.speed * 1.6 * fleeMult;
       entity.vy = (fdy / fdist) * config.speed * 1.6 * fleeMult;
       entity.spriteAngle = Math.atan2(entity.vy, entity.vx);
@@ -2126,10 +2106,8 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
               const married2 = humanDisplayName(closest);
               logEvent(state, 'marriage', `${married1} and ${married2} got married`, married1);
               addNotification(state, 'Marriage', `${married1} & ${married2} are now married`, 'success');
-              entity.chatPhrase = 'Yes!';
-              entity.chatTicks = 120;
-              closest.chatPhrase = 'Yes!';
-              closest.chatTicks = 120;
+              sayHumanChatPhrase(entity, 'Yes!', 120);
+              sayHumanChatPhrase(closest, 'Yes!', 120);
               syncPartnerResidence(
                 entity,
                 closest,
@@ -2309,8 +2287,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
           suppressIdle = true;
         }
       } else {
-        const livingHumans = allLivingHumans(state, newEntities, entityById);
-        const custodian = getChildCustodian(entity, livingHumans);
+        const custodian = getChildCustodian(entity, allHumans);
         if (custodian) {
           const pdx = custodian.x - entity.x;
           const pdy = custodian.y - entity.y;
@@ -2509,7 +2486,7 @@ export function tickHumans(state: WorldState, ctx: TickContext): void {
         }
       } else if (leisureKind === 8) {
         const tree = findClosestEntityInRadius(
-          treeGrid,
+          undefined,
           entity.x,
           entity.y,
           socialScanRadius * 1.2,

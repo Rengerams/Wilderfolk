@@ -1,5 +1,12 @@
 import { BuildingType, EntityType, JobType } from './gameTypes';
-import type { Building, Entity, WorldState } from './gameTypes';
+import type { Building, Entity, EntityByType, WorldState } from './gameTypes';
+import {
+  WEREWOLF_ATTACK_LINES,
+  WEREWOLF_CURE_LINES,
+  WEREWOLF_CURSE_LINES,
+  WEREWOLF_TRANSFORM_LINES,
+  WEREWOLF_TAME_LINES,
+} from './gameTypes';
 import {
   DAYS_PER_MOON_CYCLE,
   HUMAN_ADULT_MIN_AGE,
@@ -7,17 +14,17 @@ import {
   isFullMoonNight,
   NIGHT_END,
   NIGHT_START,
-} from './dayCycle';
+} from './dayCycleConstants';
+import { syncResidenceOccupants } from './dayCycle';
+import { isPlayerHuman } from './groupEvents';
+import { buildEntityByType } from './simFocus';
 import {
+  addBigNews,
   addFloatingText,
   createDeathParticles,
   impulseScreenShake,
 } from './simEffects';
 import { logEvent } from './eventLog';
-import {
-  WEREWOLF_ATTACK_LINES,
-  WEREWOLF_CURE_LINES,
-} from './gameTypes';
 
 /**
  * Night exorcism — only if a Church is **staffed** (priest on duty).
@@ -652,4 +659,94 @@ export function syncMoonHowlerForms(
     reverted,
     nightFall: transformTick && (transformed.length > 0 || huntingTonight),
   };
+}
+
+export interface MoonHowlerTickResult {
+  byType: EntityByType;
+  entityById: Map<number, Entity>;
+  changed: boolean;
+}
+
+/**
+ * Full Moon Howler cycle for one game tick.
+ *
+ * - Syncs werewolf ↔ human forms at transform/revert hours.
+ * - Applies a new curse at full-moon nightfall if no cursed settler exists.
+ * - Attempts church cures during the cure window.
+ *
+ * Mutates `aliveEntities` and `entityById` in place. Returns the rebuilt
+ * `byType` index and a flag indicating whether any entity changed form.
+ */
+export function tickMoonHowlerCycle(
+  state: WorldState,
+  aliveEntities: Entity[],
+  buildings: Building[],
+  colonyDay: number,
+  hourOfDay: number,
+  entityById: Map<number, Entity>,
+): MoonHowlerTickResult {
+  let byType = buildEntityByType(aliveEntities);
+  let changed = false;
+
+  const moonSync = syncMoonHowlerForms(aliveEntities, colonyDay, hourOfDay, buildings, state.width, state.height);
+  if (moonSync.transformed.length > 0 || moonSync.reverted.length > 0) {
+    byType = buildEntityByType(aliveEntities);
+    syncResidenceOccupants(
+      aliveEntities.filter((e) => e.alive && e.type === EntityType.Human),
+      buildings,
+    );
+    changed = true;
+  }
+
+  if (moonSync.nightFall) {
+    addBigNews(state, '🌝 Full Moon!', 'Moon Howlers are abroad. Keep settlers indoors — they hunt tonight.', 'negative');
+    logEvent(state, 'event', 'Full moon rose — cursed settlers transformed');
+  }
+
+  for (const were of moonSync.transformed) {
+    const who = were.name ? `${were.name}${were.surname ? ` ${were.surname}` : ''}` : 'A settler';
+    const line = WEREWOLF_TRANSFORM_LINES[Math.floor(Math.random() * WEREWOLF_TRANSFORM_LINES.length)](who);
+    addFloatingText(state, were.x, were.y - 20, 'AWOO!', '#c4b5fd');
+    logEvent(state, 'event', line, who);
+  }
+
+  const activeMoonCurses = countActiveMoonHowlerCurses(aliveEntities);
+  const humanPop = aliveEntities.filter((e) => e.alive && isPlayerHuman(e)).length;
+  if (shouldApplyNewMoonHowlerCurse(colonyDay, hourOfDay, humanPop, activeMoonCurses)) {
+    const candidates = byType[EntityType.Human].filter((h) => isPlayerHuman(h) && canMoonHowlerCurse(h));
+    const human = candidates[Math.floor(Math.random() * candidates.length)];
+    if (human) {
+      const who = human.name ? `${human.name}${human.surname ? ` ${human.surname}` : ''}` : 'A settler';
+      curseMoonHowler(human);
+      transformToWerewolfForm(human);
+      byType = buildEntityByType(aliveEntities);
+      changed = true;
+      const line = WEREWOLF_CURSE_LINES[Math.floor(Math.random() * WEREWOLF_CURSE_LINES.length)](who);
+      addBigNews(state, '🌝 Moon Howler Curse!', line, 'negative');
+      addFloatingText(state, human.x, human.y - 20, 'Cursed…', '#c4b5fd');
+      logEvent(state, 'event', `${who} was cursed as a Moon Howler`, who);
+      const transformLine = WEREWOLF_TRANSFORM_LINES[Math.floor(Math.random() * WEREWOLF_TRANSFORM_LINES.length)](who);
+      addFloatingText(state, human.x, human.y - 20, 'AWOO!', '#c4b5fd');
+      logEvent(state, 'event', transformLine, who);
+      if (!moonSync.nightFall) {
+        addBigNews(state, '🌝 Full Moon!', 'Moon Howlers are abroad. Keep settlers indoors — they hunt tonight.', 'negative');
+        logEvent(state, 'event', 'Full moon rose — cursed settlers transformed');
+      }
+    }
+  }
+
+  const dawnCures = tryMoonHowlerChurchCures(state, aliveEntities, buildings, colonyDay, hourOfDay, entityById);
+  if (dawnCures.cured.length > 0) {
+    for (const curedOne of dawnCures.cured) {
+      const who = curedOne.name ? `${curedOne.name}${curedOne.surname ? ` ${curedOne.surname}` : ''}` : 'A settler';
+      const line = WEREWOLF_TAME_LINES[Math.floor(Math.random() * WEREWOLF_TAME_LINES.length)];
+      addBigNews(state, '⛪ Curse Broken!', `${who} — ${line}`, 'positive');
+      addFloatingText(state, curedOne.x, curedOne.y - 20, 'Cured!', '#22c55e');
+      logEvent(state, 'event', `${who} was cured of the Moon Howler curse`, who);
+    }
+    byType = buildEntityByType(aliveEntities);
+    changed = true;
+  }
+
+  return { byType, entityById, changed };
 }

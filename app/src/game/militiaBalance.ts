@@ -13,32 +13,10 @@ import {
   countCompletedDefenseBuildings,
   getWallSegmentBonus,
   getWatchtowerBonus,
+  MILITIA_BALANCE,
 } from './defenseStructures';
 import { BuildingType } from './gameTypes';
 import { isPlayerHuman } from './groupEvents';
-
-/** Tuned July 2026 — spear/militia balance review (10-year sim targets). */
-export const MILITIA_BALANCE = {
-  basePerAdult: 10,
-  /** Iron replaces stone — not multiplied together. */
-  stoneSpearMult: 1.3,
-  ironSpearMult: 1.52,
-  /** Iron replaces wooden — per-adult additive, not stacked. */
-  woodenShieldPerAdult: 4,
-  ironShieldPerAdult: 9,
-  /** 
-   * Trained barracks guards — bonus ON TOP of their adult base.
-   * Guards ARE counted in adultCount, so they receive base (10) + this bonus.
-   */
-  guardBonusPerGuard: 14,
-  /** 
-   * Barricade factor: militia strength is multiplied by this when entrenched.
-   * 0.85 represents a deliberate trade-off — barricades reduce mobility 
-   * but add a flat bonus + structure defenses.
-   */
-  barricadeMilitiaFactor: 0.85,
-  barricadeFlatBonus: 25,
-} as const;
 
 export type MilitiaSpearTier = 'none' | 'stone' | 'iron';
 export type MilitiaShieldTier = 'none' | 'wooden' | 'iron';

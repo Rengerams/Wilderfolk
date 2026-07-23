@@ -121,6 +121,25 @@ export function scheduleTradeRouteDeparture(
   route.nextDepartureTick = state.tick + delayTicks;
 }
 
+export function establishTradeRoute(state: WorldState, routeId: string): WorldState {
+  const s = structuredClone(state) as WorldState;
+  const route = s.tradeRoutes.find(r => r.id === routeId);
+  if (!route || route.active) return s;
+  if (s.villageReputation < route.reputationRequired) {
+    addNotification(s, 'Trade Failed', `Need ${route.reputationRequired} reputation`, 'warning');
+    return s;
+  }
+
+  route.active = true;
+  s.lifetimeStats = {
+    ...s.lifetimeStats,
+    tradeRoutesEstablished: s.lifetimeStats.tradeRoutesEstablished + 1,
+  };
+  onTradeRouteEstablished(s, routeId);
+  addNotification(s, 'Trade Route Established', `Merchants will walk to ${route.targetName} and back!`, 'success');
+  return s;
+}
+
 export function onTradeRouteEstablished(state: WorldState, routeId: string): void {
   const route = state.tradeRoutes.find((r) => r.id === routeId);
   if (!route) return;

@@ -70,7 +70,11 @@ export function updateWeather(state: WorldState) {
 }
 
 export function updateDisasters(state: WorldState) {
-  // Random disaster chance
+  // Domain-specific cadence: disasters are a rare calendar-aligned event.
+  // tickLayerSystems calls this every 4 ticks; the internal gate keeps the
+  // intended ~40-day interval so the layer does not need to know disaster tuning.
+  // tickLayerEcological calls this every 4 ticks; the internal gate keeps the
+  // intended ~40-day interval so the layer does not need to know disaster tuning.
   if (isProductionTick(state.tick, EVENT_INTERVAL.disaster) && state.year > 3 && Math.random() < 0.15) {
     const rollable = hasTech(state, 'medicine_2')
       ? ALL_DISASTER_TYPES.filter((t) => t !== 'plague')

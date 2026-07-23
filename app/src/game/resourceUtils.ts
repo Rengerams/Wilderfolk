@@ -21,6 +21,11 @@ function storageCapFor(state: WorldState, type: keyof Resources): number {
 }
 
 /** Add resources respecting storage caps (wood, stone, food). Gold uses the same helper for consistency. */
+/** Thin wrapper around addCappedResource for direct resource gains. */
+export function addResource(state: WorldState, type: keyof Resources, amount: number): number {
+  return addCappedResource(state, type, amount);
+}
+
 export function addCappedResource(state: WorldState, type: keyof Resources, amount: number): number {
   if (amount <= 0) return 0;
   const current = state.resources[type] as number;

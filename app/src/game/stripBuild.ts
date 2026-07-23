@@ -1,5 +1,4 @@
 import { BuildingType } from './gameTypes';
-import type { EnclosedArea } from './stripTopology';
 import type { StripJunctionInfo } from './stripJunction';
 import {
   getBuildingFootprintForType,
@@ -27,6 +26,13 @@ export interface StripSegment {
   junctionInfo?: StripJunctionInfo;
   /** Existing building removed when placing (refunded at 50%). */
   replacesBuildingId?: number;
+}
+
+export interface EnclosedArea {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 export interface StripBuildPreview {

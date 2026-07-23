@@ -3,8 +3,8 @@ import {
   createInitialResearchNodes,
   type Building, type Entity, type ResearchNode, type WorldState,
 } from './gameTypes';
-import type { ForgeOrderId, VillageForgeState } from './forge';
-import { isForgeOrderComplete } from './forge';
+import type { ForgeOrderId, VillageForgeState } from './gameTypes';
+import { hasCompletedBlacksmith, isForgeOrderComplete } from './forge';
 import { COMBAT_TECH } from './combatTech';
 
 export { COMBAT_TECH } from './combatTech';
@@ -37,9 +37,6 @@ function researchedEffect(state: CombatContext, target: string, mode: 'mult' | '
   return found ? value : undefined;
 }
 
-export function hasCompletedBlacksmith(state: CombatContext): boolean {
-  return state.buildings.some((b) => b.completed && b.type === BuildingType.Blacksmith);
-}
 
 export function hasStoneSpears(state: CombatContext): boolean {
   return hasTech(state, COMBAT_TECH.stoneSpears);

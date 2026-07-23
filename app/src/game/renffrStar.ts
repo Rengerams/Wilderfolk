@@ -1,3 +1,4 @@
+import type { RenffrLetter, RenffrOmen } from './omenTypes';
 import { TICKS_PER_DAY } from './dayCycle';
 import { sayHumanChatPhrase } from './humanChat';
 import { isPlayerHuman } from './groupEvents';
@@ -12,25 +13,6 @@ export const RENFFR_OMEN_LINES = [
 ];
 
 const RENFFR_GOSSIP_DAYS = 3;
-
-export interface RenffrLetter {
-  char: string;
-  nx: number;
-  ny: number;
-  vx: number;
-  vy: number;
-  rot: number;
-  vr: number;
-}
-
-export interface RenffrOmen {
-  life: number;
-  maxLife: number;
-  phase: number;
-  phaseTimer: number;
-  streakT: number;
-  letters: RenffrLetter[];
-}
 
 const NAME = 'Renffr';
 const STREAK_DURATION = 50;
